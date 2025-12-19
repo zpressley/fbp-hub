@@ -1,0 +1,455 @@
+/* ============================================
+   Players Page Specific Styles
+   ============================================ */
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.page-header h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.search-bar i.fa-search {
+    color: var(--color-text-secondary);
+    margin-right: var(--spacing-sm);
+}
+
+.search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.clear-search {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+}
+
+.clear-search:hover {
+    color: var(--color-primary);
+}
+
+/* Filters */
+.filters-container {
+    position: relative;
+}
+
+.filter-toggle {
+    width: 100%;
+    background-color: var(--color-surface);
+    border: none;
+    color: var(--color-text-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    position: relative;
+}
+
+.filter-toggle:hover {
+    background-color: var(--color-surface-light);
+}
+
+.filter-toggle i {
+    color: var(--color-primary);
+}
+
+.filter-count {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.filters-panel {
+    display: none;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    gap: var(--spacing-md);
+}
+
+.filters-panel.active {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.filter-group label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.filter-select {
+    background-color: var(--color-surface-light);
+    border: 1px solid var(--border-color);
+    color: var(--color-text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.btn-primary:hover {
+    background-color: #FFA666;
+}
+
+.btn-secondary {
+    background-color: var(--color-surface-light);
+    color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-surface);
+}
+
+/* Results Info */
+.results-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+}
+
+#resultCount {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.view-toggle {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.view-btn {
+    background-color: var(--color-surface);
+    border: none;
+    color: var(--color-text-secondary);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-btn:hover,
+.view-btn.active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+/* Player Cards View */
+.players-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+.player-card {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.player-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.player-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-sm);
+}
+
+.player-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.player-team {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.player-badges {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-sm);
+}
+
+.player-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+}
+
+.info-value {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+/* Player List View */
+.players-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.player-list-item {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.player-list-item:hover {
+    background-color: var(--color-surface-light);
+}
+
+.player-list-main {
+    flex: 1;
+}
+
+.player-list-name {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.player-list-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* Badges */
+.team-badge,
+.position-badge,
+.contract-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.team-badge {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.position-badge {
+    background-color: var(--color-surface-light);
+    color: var(--color-text-primary);
+}
+
+.position-badge.pitcher {
+    background-color: #2196F3;
+    color: white;
+}
+
+.position-badge.catcher {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.position-badge.infield {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.position-badge.outfield {
+    background-color: #FF9800;
+    color: white;
+}
+
+.contract-badge {
+    background-color: var(--color-surface-light);
+    color: var(--color-text-primary);
+}
+
+.contract-badge.farm {
+    background-color: #8BC34A;
+    color: var(--color-background);
+}
+
+.contract-badge.purchased {
+    background-color: #2196F3;
+    color: white;
+}
+
+.contract-badge.development {
+    background-color: #9C27B0;
+    color: white;
+}
+
+.contract-badge.rookie {
+    background-color: #00BCD4;
+    color: white;
+}
+
+/* Load More */
+.load-more-container {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+}
+
+#loadMoreBtn {
+    margin: 0 auto;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+/* Responsive - Tablet */
+@media (min-width: 768px) {
+    .players-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filters-panel.active {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filter-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Responsive - Desktop */
+@media (min-width: 1024px) {
+    .players-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .filters-panel.active {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

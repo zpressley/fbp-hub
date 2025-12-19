@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Players - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/players.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>FBP HUB</h1>
+                <p class="season-year">Season 13 - 2025</p>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link active">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html?type=keepers" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Keepers</span>
+            </a>
+            <a href="rosters.html?type=prospects" class="nav-link">
+                <i class="fas fa-seedling"></i>
+                <span>Prospects</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h2>
+                <i class="fas fa-users"></i>
+                Player Database
+            </h2>
+            <p class="page-subtitle">Search and filter all FBP players</p>
+        </section>
+
+        <!-- Search & Filters -->
+        <section class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input 
+                    type="text" 
+                    id="playerSearch" 
+                    placeholder="Search by player name..."
+                    autocomplete="off"
+                >
+                <button class="clear-search" id="clearSearch" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="filters-container">
+                <button class="filter-toggle" id="filterToggle">
+                    <i class="fas fa-filter"></i>
+                    <span>Filters</span>
+                    <span class="filter-count" id="filterCount" style="display: none;"></span>
+                </button>
+                
+                <div class="filters-panel" id="filtersPanel">
+                    <div class="filter-group">
+                        <label for="typeFilter">Player Type</label>
+                        <select id="typeFilter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="MLB">MLB</option>
+                            <option value="Farm">Prospects</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="positionFilter">Position</label>
+                        <select id="positionFilter" class="filter-select">
+                            <option value="">All Positions</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="teamFilter">MLB Team</label>
+                        <select id="teamFilter" class="filter-select">
+                            <option value="">All Teams</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="managerFilter">FBP Manager</label>
+                        <select id="managerFilter" class="filter-select">
+                            <option value="">All Managers</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="btn-secondary" id="clearFilters">
+                            <i class="fas fa-redo"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <span id="resultCount">Loading...</span>
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="cards">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Player Grid/List -->
+        <section class="players-container" id="playersContainer">
+            <div class="loading-message">
+                <div class="spinner"></div>
+                Loading players...
+            </div>
+        </section>
+
+        <!-- Load More Button -->
+        <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+            <button class="btn-primary" id="loadMoreBtn">
+                <i class="fas fa-chevron-down"></i>
+                Load More Players
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+        <p class="footer-note">Built with ⚾ for mobile-first experience</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/players.js"></script>
+</body>
+</html>
