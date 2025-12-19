@@ -1,0 +1,65 @@
+{
+  "teams": {
+    "WIZ": {
+      "name": "Whiz Kids",
+      "discord_id": "161967242118955008",
+      "manager": "Zach"
+    },
+    "B2J": {
+      "name": "Btwn2Jackies",
+      "discord_id": "689952988957245578",
+      "manager": "Jackie"
+    },
+    "CFL": {
+      "name": "Country Fried Lamb",
+      "discord_id": "689887002887454815",
+      "manager": "CFL"
+    },
+    "HAM": {
+      "name": "Hammers",
+      "discord_id": "347571660230230017",
+      "manager": "HAM"
+    },
+    "RV": {
+      "name": "Rick Vaughn",
+      "discord_id": "689911142432112657",
+      "manager": "RV"
+    },
+    "LAW": {
+      "name": "Law-Abiding Citizens",
+      "discord_id": "892152416718422056",
+      "manager": "LAW"
+    },
+    "LFB": {
+      "name": "La Flama Blanca",
+      "discord_id": "890059214586773574",
+      "manager": "LFB"
+    },
+    "JEP": {
+      "name": "Jepordizers!",
+      "discord_id": "814294382529347594",
+      "manager": "JEP"
+    },
+    "TBB": {
+      "name": "The Bluke Blokes",
+      "discord_id": "161932197308137473",
+      "manager": "TBB"
+    },
+    "DRO": {
+      "name": "Andromedans",
+      "discord_id": "541092942455242754",
+      "manager": "DRO"
+    },
+    "SAD": {
+      "name": "not much of a donkey",
+      "discord_id": "875750135005597728",
+      "manager": "SAD"
+    },
+    "WAR": {
+      "name": "Weekend Warriors",
+      "discord_id": "664280448788201522",
+      "manager": "WAR"
+    }
+  },
+  "commissioner": "161967242118955008"
+}

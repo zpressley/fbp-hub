@@ -1,0 +1,28 @@
+{
+  "league": {
+    "name": "Fantasy Baseball Pantheon",
+    "abbreviation": "FBP",
+    "season": 2025,
+    "founded": 2012
+  },
+  "colors": {
+    "primary": "#FF6B35",
+    "secondary": "#004E89",
+    "background": "#1A1A2E",
+    "card": "#16213E",
+    "text": "#E8E8E8",
+    "accent": "#FFB347"
+  },
+  "limits": {
+    "mlb": {
+      "at_bats": 130,
+      "innings_pitched": 50,
+      "active_days": 45
+    },
+    "fbp": {
+      "at_bats": 300,
+      "innings_pitched": 100,
+      "pitching_appearances": 30
+    }
+  }
+}

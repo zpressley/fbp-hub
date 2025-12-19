@@ -1,0 +1,17 @@
+# Local development
+.DS_Store
+*.log
+node_modules/
+.env
+.vscode/
+
+# Secrets (if any)
+config/secrets.json
+
+# Large files (use Git LFS if needed)
+*.xlsx
+*.xls
+
+# Temporary files
+*.tmp
+.cache/
