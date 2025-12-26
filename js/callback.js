@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         setTimeout(() => {
-            window.location.href = '/dashboard.html';
+            window.location.href = 'dashboard.html';
         }, 2000);
         
     } catch (err) {
