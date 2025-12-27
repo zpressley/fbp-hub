@@ -206,7 +206,7 @@ class AuthManager {
         localStorage.removeItem('fbp_session');
         localStorage.removeItem('oauth_state');
         this.session = null;
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
     }
     
     /**
@@ -310,7 +310,7 @@ const AuthUI = {
     requireAuth(redirectToLogin = true) {
         if (!authManager.isAuthenticated()) {
             if (redirectToLogin) {
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
             }
             return false;
         }
@@ -322,13 +322,13 @@ const AuthUI = {
      */
     requireCommissioner() {
         if (!authManager.isAuthenticated()) {
-            window.location.href = '/login.html';
+            window.location.href = 'login.html';
             return false;
         }
         
         if (!authManager.isCommissioner()) {
             alert('This page is only accessible to commissioners.');
-            window.location.href = '/dashboard.html';
+            window.location.href = 'dashboard.html';
             return false;
         }
         
