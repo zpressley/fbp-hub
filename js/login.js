@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             form.style.display = 'none';
             
-            // Redirect to dashboard
+            // Redirect to dashboard (relative URL for GitHub Pages project site)
             setTimeout(() => {
-                window.location.href = '/dashboard.html';
+                window.location.href = 'dashboard.html';
             }, 1500);
         }
         return;

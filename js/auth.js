@@ -366,12 +366,12 @@ function addUserMenu() {
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="user-menu-dropdown" id="userMenuDropdown">
-            <a href="/dashboard.html">
+            <a href="dashboard.html">
                 <i class="fas fa-tachometer-alt"></i>
                 Dashboard
             </a>
             ${authManager.isCommissioner() ? `
-                <a href="/admin.html">
+                <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>
                     Admin
                 </a>
