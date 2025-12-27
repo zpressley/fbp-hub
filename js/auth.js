@@ -9,7 +9,7 @@ const AUTH_CONFIG = {
     clientId: '1452125015876173975', // Get from Discord Developer Portal
     
     // Your Cloudflare Worker URL (we'll set this up next)
-    workerUrl: 'fbp-auth.zpressley.workers.dev',
+    workerUrl: 'https://fbp-auth.zpressley.workers.dev',
     
     // Redirect URI (should match Discord app settings)
     redirectUri: 'https://zpressley.github.io/fbp-hub/callback.html',
@@ -206,7 +206,7 @@ class AuthManager {
         localStorage.removeItem('fbp_session');
         localStorage.removeItem('oauth_state');
         this.session = null;
-        window.location.href = 'login.html';
+        window.location.href = '/login.html';
     }
     
     /**
@@ -310,7 +310,7 @@ const AuthUI = {
     requireAuth(redirectToLogin = true) {
         if (!authManager.isAuthenticated()) {
             if (redirectToLogin) {
-                window.location.href = 'login.html';
+                window.location.href = '/login.html';
             }
             return false;
         }
@@ -322,13 +322,13 @@ const AuthUI = {
      */
     requireCommissioner() {
         if (!authManager.isAuthenticated()) {
-            window.location.href = 'login.html';
+            window.location.href = '/login.html';
             return false;
         }
         
         if (!authManager.isCommissioner()) {
             alert('This page is only accessible to commissioners.');
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard.html';
             return false;
         }
         
@@ -366,12 +366,12 @@ function addUserMenu() {
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="user-menu-dropdown" id="userMenuDropdown">
-            <a href="dashboard.html">
+            <a href="/dashboard.html">
                 <i class="fas fa-tachometer-alt"></i>
                 Dashboard
             </a>
             ${authManager.isCommissioner() ? `
-                <a href="admin.html">
+                <a href="/admin.html">
                     <i class="fas fa-shield-alt"></i>
                     Admin
                 </a>
