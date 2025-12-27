@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WizBucks Ledger - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/wizbucks.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>FBP HUB</h1>
+                <p class="season-year">Season 13 - 2025</p>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link active">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h2>
+                <i class="fas fa-coins"></i>
+                WizBucks Ledger
+            </h2>
+            <p class="page-subtitle">Transaction history and balance tracking</p>
+        </section>
+
+        <!-- Current Balances Summary -->
+        <section class="balances-summary">
+            <div class="summary-header">
+                <h3>Current Balances</h3>
+                <div class="total-wb">
+                    Total: $<span id="totalWB">0</span>
+                </div>
+            </div>
+            <div class="balances-grid" id="balancesGrid">
+                <!-- Populated by JS -->
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    Loading balances...
+                </div>
+            </div>
+        </section>
+
+        <!-- Transaction Filters -->
+        <section class="ledger-filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="managerFilter">Manager</label>
+                    <select id="managerFilter" class="filter-select">
+                        <option value="">All Managers</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="actionFilter">Action Type</label>
+                    <select id="actionFilter" class="filter-select">
+                        <option value="">All Actions</option>
+                        <option value="PC">Purchase Contract</option>
+                        <option value="DC Slot">DC Slot</option>
+                        <option value="Trade">Trade</option>
+                        <option value="Waiver">Waiver</option>
+                        <option value="Refund">Refund</option>
+                        <option value="Buy-In RD">Buy-In Round</option>
+                        <option value="Admin Add">Admin Add</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-row">
+                <div class="search-bar-ledger">
+                    <i class="fas fa-search"></i>
+                    <input 
+                        type="text" 
+                        id="ledgerSearch" 
+                        placeholder="Search transactions by note, player name..."
+                        autocomplete="off"
+                    >
+                    <button class="clear-search" id="clearSearch" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn-secondary" id="clearFilters">
+                    <i class="fas fa-redo"></i>
+                    Clear Filters
+                </button>
+                <button class="btn-secondary" id="exportLedger">
+                    <i class="fas fa-download"></i>
+                    Export CSV
+                </button>
+            </div>
+        </section>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <span id="transactionCount">Loading...</span>
+            <span class="sort-toggle">
+                <label>
+                    <input type="checkbox" id="reverseOrder" checked>
+                    Newest First
+                </label>
+            </span>
+        </div>
+
+        <!-- Ledger Table -->
+        <section class="ledger-container">
+            <div class="ledger-table-wrapper">
+                <table class="ledger-table" id="ledgerTable">
+                    <thead>
+                        <tr>
+                            <th class="col-action">Action</th>
+                            <th class="col-note">Note</th>
+                            <th class="col-date">Date</th>
+                            <th class="col-credit">Credit</th>
+                            <th class="col-debit">Debit</th>
+                            <th class="col-manager">Manager</th>
+                            <th class="col-balance">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerBody">
+                        <tr>
+                            <td colspan="7" class="loading-row">
+                                <div class="spinner"></div>
+                                Loading transactions...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Load More -->
+        <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+            <button class="btn-primary" id="loadMoreBtn">
+                <i class="fas fa-chevron-down"></i>
+                Load More Transactions
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/wizbucks.js"></script>
+</body>
+</html>

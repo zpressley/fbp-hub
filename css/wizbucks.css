@@ -1,0 +1,296 @@
+/* ============================================
+   WizBucks Ledger Page Styles
+   ============================================ */
+
+/* Balances Summary */
+.balances-summary {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    border: 2px solid var(--color-primary);
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.summary-header h3 {
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.total-wb {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.balances-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.balance-card {
+    background-color: var(--color-surface-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.balance-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.balance-card.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-background);
+}
+
+.balance-team {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.balance-amount {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.balance-pc-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* Ledger Filters */
+.ledger-filters {
+    background-color: var(--color-surface);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.filter-row:last-child {
+    margin-bottom: 0;
+}
+
+.search-bar-ledger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-surface-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+}
+
+.search-bar-ledger i.fa-search {
+    color: var(--color-text-secondary);
+    margin-right: var(--spacing-sm);
+}
+
+.search-bar-ledger input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    outline: none;
+}
+
+.search-bar-ledger input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.filter-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Sort Toggle */
+.sort-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.sort-toggle input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* Ledger Table */
+.ledger-container {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.ledger-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.ledger-table thead {
+    background-color: var(--color-surface-light);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.ledger-table th {
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.ledger-table td {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--font-size-sm);
+}
+
+.ledger-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.ledger-table tbody tr:hover {
+    background-color: var(--color-surface-light);
+}
+
+/* Column Widths */
+.col-action { width: 15%; }
+.col-note { width: 30%; }
+.col-date { width: 12%; }
+.col-credit { width: 10%; text-align: right; }
+.col-debit { width: 10%; text-align: right; }
+.col-manager { width: 12%; }
+.col-balance { width: 11%; text-align: right; font-weight: 600; }
+
+/* Transaction Type Badges */
+.action-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.action-pc { background-color: #2196F3; color: white; }
+.action-dc { background-color: #9C27B0; color: white; }
+.action-trade { background-color: #FF9800; color: white; }
+.action-waiver { background-color: #4CAF50; color: white; }
+.action-refund { background-color: #00BCD4; color: white; }
+.action-buy-in { background-color: #F44336; color: white; }
+.action-admin { background-color: #607D8B; color: white; }
+
+/* Credit/Debit Styling */
+.credit-amount {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.debit-amount {
+    color: var(--color-danger);
+    font-weight: 600;
+}
+
+/* Balance Column */
+.balance-amount-cell {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Transaction Note */
+.transaction-note {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Empty State */
+.empty-ledger {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--color-text-secondary);
+}
+
+.empty-ledger i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+    .balances-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ledger-table {
+        font-size: var(--font-size-xs);
+    }
+    
+    .ledger-table th,
+    .ledger-table td {
+        padding: var(--spacing-sm);
+    }
+    
+    /* Hide less important columns on mobile */
+    .col-note {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@media (min-width: 768px) {
+    .filter-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .balances-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .balances-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
