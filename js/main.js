@@ -166,6 +166,16 @@ function initializePage(pageName) {
                 initRostersPage();
             }
             break;
+        case 'wizbucks':  // ADD THIS!
+            if (typeof initWizBucksPage === 'function') {
+                initWizBucksPage();
+            }
+            break;
+        case 'dashboard':
+            if (typeof initDashboard === 'function') {
+                initDashboard();
+            }
+            break;
         default:
             console.log(`No specific initialization for ${pageName}`);
     }
