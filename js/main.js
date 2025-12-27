@@ -176,6 +176,11 @@ function initializePage(pageName) {
                 initDashboard();
             }
             break;
+        case 'salaries':
+            if (typeof initSalariesPage === 'function') {
+                initSalariesPage();
+            }
+            break;
         default:
             console.log(`No specific initialization for ${pageName}`);
     }

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keeper Salaries - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/salaries.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>FBP HUB</h1>
+                <p class="season-year">Season 13 - 2025</p>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="salaries.html" class="nav-link active">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Salaries</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h2>
+                <i class="fas fa-dollar-sign"></i>
+                Keeper Salary Calculator
+            </h2>
+            <p class="page-subtitle">Calculate salaries, tax brackets, and plan your keepers</p>
+        </section>
+
+        <!-- Team Selector -->
+        <div class="team-selector">
+            <label for="teamSelect">Select Team:</label>
+            <select id="teamSelect" class="team-select">
+                <option value="">Choose a team...</option>
+                <!-- Populated by JS -->
+            </select>
+        </div>
+
+        <!-- Salary Summary -->
+        <section class="salary-summary" id="salarySummary" style="display: none;">
+            <div class="summary-grid">
+                <div class="summary-card total-salary">
+                    <div class="summary-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Total Keeper Salary</div>
+                        <div class="summary-value" id="totalSalary">$0</div>
+                        <div class="summary-meta"><span id="keeperCount">0</span> keepers</div>
+                    </div>
+                </div>
+
+                <div class="summary-card tax-bracket">
+                    <div class="summary-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Draft Tax Bracket</div>
+                        <div class="summary-value" id="taxBracket">—</div>
+                        <div class="summary-meta" id="taxRounds">No tax</div>
+                    </div>
+                </div>
+
+                <div class="summary-card roster-cap">
+                    <div class="summary-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">26-Man Roster</div>
+                        <div class="summary-value"><span id="rosterCount">0</span> / 26</div>
+                        <div class="summary-meta" id="rosterStatus">Within limit</div>
+                    </div>
+                </div>
+
+                <div class="summary-card il-tags">
+                    <div class="summary-icon">
+                        <i class="fas fa-medkit"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">IL Tags Used</div>
+                        <div class="summary-value" id="ilTagsUsed">0</div>
+                        <div class="summary-meta" id="ilTagsAvailable">3 available</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contract Tier Breakdown -->
+        <section class="contract-breakdown" id="contractBreakdown" style="display: none;">
+            <h3>Contract Breakdown</h3>
+            <div class="tier-cards">
+                <div class="tier-card" id="tcCard">
+                    <div class="tier-header">
+                        <span class="tier-name">Team Contracts (TC)</span>
+                        <span class="tier-count">0 players</span>
+                    </div>
+                    <div class="tier-salary">$0 total</div>
+                    <div class="tier-details">
+                        <span class="detail-item">TC(R): $5 each</span>
+                        <span class="detail-item">TC(1): $15 each</span>
+                        <span class="detail-item">TC(2): $25 each</span>
+                        <span class="detail-item">IL Tag: -$10</span>
+                    </div>
+                </div>
+
+                <div class="tier-card" id="vcCard">
+                    <div class="tier-header">
+                        <span class="tier-name">Vested Contracts (VC)</span>
+                        <span class="tier-count">0 players</span>
+                    </div>
+                    <div class="tier-salary">$0 total</div>
+                    <div class="tier-details">
+                        <span class="detail-item">VC(1): $35 each</span>
+                        <span class="detail-item">VC(2): $55 each</span>
+                        <span class="detail-item">IL Tag: -$15</span>
+                    </div>
+                </div>
+
+                <div class="tier-card" id="fcCard">
+                    <div class="tier-header">
+                        <span class="tier-name">Franchise Contracts (FC)</span>
+                        <span class="tier-count">0 players</span>
+                    </div>
+                    <div class="tier-salary">$0 total</div>
+                    <div class="tier-details">
+                        <span class="detail-item">FC(1): $85 each</span>
+                        <span class="detail-item">FC(2+): $125 each</span>
+                        <span class="detail-item">IL Tag: -$35</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keeper List -->
+        <section class="keeper-list" id="keeperList" style="display: none;">
+            <div class="section-header">
+                <h3>Your Keepers</h3>
+                <button class="btn-secondary" id="toggleSimulator">
+                    <i class="fas fa-calculator"></i>
+                    Open Simulator
+                </button>
+            </div>
+            
+            <div class="keepers-table-wrapper">
+                <table class="keepers-table" id="keepersTable">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Position</th>
+                            <th>Contract</th>
+                            <th>Base Salary</th>
+                            <th>IL Tag</th>
+                            <th>Net Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keepersBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-right"><strong>Total Salary:</strong></td>
+                            <td class="total-cell" id="totalSalaryFooter">$0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tax Bracket Reference -->
+        <section class="tax-reference">
+            <h3>Draft Tax Brackets Reference</h3>
+            <div class="tax-table-wrapper">
+                <table class="tax-table">
+                    <thead>
+                        <tr>
+                            <th>Keeper Salary</th>
+                            <th>Taxed Rounds</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tax-row-highest">
+                            <td>$421+</td>
+                            <td>Rounds 4-8</td>
+                            <td>Need picks in 4-8 to spend</td>
+                        </tr>
+                        <tr>
+                            <td>$401-$420</td>
+                            <td>Rounds 5-7</td>
+                            <td>Need picks in 5-7 to spend</td>
+                        </tr>
+                        <tr>
+                            <td>$376-$400</td>
+                            <td>Rounds 6-8</td>
+                            <td>Need picks in 6-8 to spend</td>
+                        </tr>
+                        <tr>
+                            <td>$351-$375</td>
+                            <td>Rounds 7-9</td>
+                            <td>Need picks in 7-9 to spend</td>
+                        </tr>
+                        <tr>
+                            <td>$326-$350</td>
+                            <td>Rounds 8-10</td>
+                            <td>Need picks in 8-10 to spend</td>
+                        </tr>
+                        <tr class="tax-row-none">
+                            <td>≤$325</td>
+                            <td>None</td>
+                            <td>No restrictions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-hand-pointer"></i>
+            <p>Select a team above to view keeper salaries</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+    </footer>
+
+    <!-- Salary Simulator Modal (Hidden) -->
+    <div class="modal" id="simulatorModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calculator"></i> Salary Simulator</h3>
+                <button class="modal-close" id="closeSimulator">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="simulatorBody">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/salaries.js"></script>
+</body>
+</html>
