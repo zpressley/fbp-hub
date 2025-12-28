@@ -1,0 +1,33 @@
+{
+  "season": 2025,
+  "note": "Draft order based on 2024 final standings (worst to best)",
+  "order": [
+    "SAD",
+    "DRO", 
+    "WIZ",
+    "LFB",
+    "B2J",
+    "LAW",
+    "CFL",
+    "HAM",
+    "TBB",
+    "JEP",
+    "RV",
+    "WAR"
+  ],
+  "lastUpdated": "2025-01-15",
+  "comments": {
+    "SAD": "12th place - 1st pick",
+    "DRO": "11th place - 2nd pick",
+    "WIZ": "10th place - 3rd pick",
+    "LFB": "9th place - 4th pick",
+    "B2J": "8th place - 5th pick",
+    "LAW": "7th place - 6th pick",
+    "CFL": "6th place - 7th pick",
+    "HAM": "5th place - 8th pick",
+    "TBB": "4th place - 9th pick",
+    "JEP": "3rd place - 10th pick",
+    "RV": "2nd place - 11th pick",
+    "WAR": "1st place - 12th pick"
+  }
+}
