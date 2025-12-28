@@ -181,6 +181,16 @@ function initializePage(pageName) {
                 initSalariesPage();
             }
             break;
+        case 'draft-picks':
+            if (typeof initDraftPicksPage === 'function') {
+                initDraftPicksPage();
+            }
+            break; 
+        case 'transactions':
+            if (typeof initTransactionsPage === 'function') {
+                initTransactionsPage();
+            }
+            break;       
         default:
             console.log(`No specific initialization for ${pageName}`);
     }

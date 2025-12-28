@@ -1,0 +1,32 @@
+{
+  "picks": [
+    {
+      "round": 1,
+      "pick": 1,
+      "originalOwner": "HAM",
+      "currentOwner": "HAM",
+      "traded": false
+    },
+    {
+      "round": 1,
+      "pick": 2,
+      "originalOwner": "RV",
+      "currentOwner": "RV",
+      "traded": false
+    }
+  ],
+  "buyins": {
+    "HAM": [1, 2],
+    "WIZ": [1, 2, 3],
+    "B2J": [1]
+  },
+  "trades": [
+    {
+      "date": "2025-02-20",
+      "pick": 13,
+      "from": "HAM",
+      "to": "WIZ",
+      "note": "Traded for prospect"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/transactions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>FBP HUB</h1>
+                <p class="season-year">Season 13 - 2025</p>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="transactions.html" class="nav-link active"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="page-header">
+            <h2><i class="fas fa-exchange-alt"></i> Self-Service Transactions</h2>
+            <p class="page-subtitle">Manage graduations, DC slots, and roster compliance</p>
+        </section>
+
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access transactions</p>
+            <a href="login.html" class="btn-primary">Login with Discord</a>
+        </div>
+
+        <!-- Transaction Dashboard -->
+        <div class="transaction-dashboard" id="transactionDashboard" style="display: none;">
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="eligibleGrads">0</div>
+                        <div class="stat-label">Eligible Graduations</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="dcSlotsAvailable">2</div>
+                        <div class="stat-label">DC Slots Available</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="rosterAlerts">0</div>
+                        <div class="stat-label">30-Man Alerts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="transaction-tabs">
+                <button class="tab-btn active" data-tab="graduations">Graduate Prospects</button>
+                <button class="tab-btn" data-tab="dc-slots">Buy DC Slots</button>
+                <button class="tab-btn" data-tab="roster-30">30-Man Roster</button>
+                <button class="tab-btn" data-tab="history">Transaction History</button>
+            </div>
+
+            <!-- Tab: Graduate Prospects -->
+            <div class="tab-content active" id="graduations-tab">
+                <div class="section-header">
+                    <h3>Graduate Prospects</h3>
+                    <p class="text-muted">Prospects who exceeded MLB or FBP limits</p>
+                </div>
+                <div id="graduationsList"></div>
+            </div>
+
+            <!-- Tab: DC Slots -->
+            <div class="tab-content" id="dc-slots-tab">
+                <div class="section-header">
+                    <h3>Development Contract Slots</h3>
+                    <p class="text-muted">Purchase DC slots for $5 each (max 2)</p>
+                </div>
+                <div class="dc-purchase">
+                    <div class="dc-info">
+                        <p><strong>DC Slots:</strong> Protect prospects from draft without calling up to MLB</p>
+                        <p><strong>Cost:</strong> $5 per slot (from PAD balance)</p>
+                        <p><strong>Limit:</strong> Maximum 2 slots per team</p>
+                        <p><strong>Deadline:</strong> Must fill by Opening Day or forfeit</p>
+                    </div>
+                    <div class="dc-actions">
+                        <button class="btn-primary" id="buyDCSlot" disabled>
+                            <i class="fas fa-shopping-cart"></i>
+                            Buy DC Slot ($5)
+                        </button>
+                        <div class="dc-status" id="dcStatus"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: 30-Man Roster -->
+            <div class="tab-content" id="roster-30-tab">
+                <div class="section-header">
+                    <h3>30-Man Roster Compliance</h3>
+                    <p class="text-muted">26 Yahoo + 4 Hub spots for MLB-active prospects</p>
+                </div>
+                <div id="roster30List"></div>
+            </div>
+
+            <!-- Tab: History -->
+            <div class="tab-content" id="history-tab">
+                <div class="section-header">
+                    <h3>Your Recent Transactions</h3>
+                </div>
+                <div id="transactionHistory"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/transactions.js"></script>
+</body>
+</html>
