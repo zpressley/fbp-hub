@@ -190,7 +190,12 @@ function initializePage(pageName) {
             if (typeof initTransactionsPage === 'function') {
                 initTransactionsPage();
             }
-            break;       
+            break; 
+        case 'auction':
+            if (typeof initAuctionPage === 'function') {
+                initAuctionPage();
+            }
+            break;      
         default:
             console.log(`No specific initialization for ${pageName}`);
     }
