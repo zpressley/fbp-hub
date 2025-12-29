@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FBP Hub - Fantasy Baseball Pantheon</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -13,7 +14,7 @@
         <div class="nav-container">
             <div class="nav-brand">
                 <h1>FBP HUB</h1>
-                <p class="season-year">Season 13 - 2025</p>
+                <p class="season-year established-year">Est. 2012</p>
             </div>
             <button class="nav-toggle" id="navToggle">
                 <i class="fas fa-bars"></i>
@@ -24,26 +25,6 @@
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-            <a href="wizbucks.html" class="nav-link">
-                <i class="fas fa-coins"></i>
-                <span>WizBucks</span>
-            </a>
-            <a href="salaries.html" class="nav-link">
-                <i class="fas fa-dollar-sign"></i>
-                <span>Salaries</span>
-            </a>
-            <a href="transactions.html" class="nav-link">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Transactions</span>
-            </a>
-            <a href="draft-picks.html" class="nav-link">
-                <i class="fas fa-list-ol"></i>
-                <span>Draft Picks</span>
-            </a>
-            <a href="auction.html" class="nav-link">
-                <i class="fas fa-gavel"></i>
-                <span>Auction</span>
-            </a>
             <a href="players.html" class="nav-link">
                 <i class="fas fa-users"></i>
                 <span>Players</span>
@@ -52,146 +33,175 @@
                 <i class="fas fa-baseball-ball"></i>
                 <span>Rosters</span>
             </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="auction.html" class="nav-link">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
         </div>
-        <!-- Deadline Banner -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Header -->
+        <section class="hero-header">
+            <div class="hero-content">
+                <h1 class="hero-title">FANTASY BASEBALL PANTHEON</h1>
+                <p class="hero-subtitle established-year">Season 13 · Est. 2012</p>
+                <p class="hero-tagline">Where Legends Are Built, One Draft at a Time</p>
+            </div>
+        </section>
+
+        <!-- Upcoming Deadline -->
         <div class="deadline-banner" id="deadlineBanner">
             <div class="deadline-content">
-                <i class="fas fa-calendar-exclamation"></i>
+                <i class="fas fa-calendar-alt"></i>
                 <div class="deadline-text">
                     <strong id="deadlineName">Loading...</strong>
-                    <span id="deadlineDate"></span>
+                    <span id="deadlineDate">...</span>
                 </div>
             </div>
         </div>
 
-        <!-- Welcome Section -->
-        <section class="welcome-section">
-            <h2>Welcome to FBP Hub</h2>
-            <p class="subtitle">Fantasy Baseball Pantheon - Season 13</p>
-        </section>
-
-        <!-- Current Standings -->
-        <section class="standings-section">
-            <div class="section-header">
-                <h3>
-                    <i class="fas fa-trophy"></i>
-                    Current Standings
-                </h3>
-                <span class="last-updated" id="standingsDate">Loading...</span>
-            </div>
-            
-            <div class="standings-table-container">
-                <table class="standings-table" id="standingsTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Team</th>
-                            <th>Record</th>
-                            <th>PCT</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingsBody">
-                        <!-- Populated by JS -->
-                        <tr>
-                            <td colspan="4" class="loading-row">
-                                <div class="spinner"></div>
-                                Loading standings...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- This Week's Matchups -->
-        <section class="matchups-section">
-            <div class="section-header">
-                <h3>
-                    <i class="fas fa-handshake"></i>
-                    This Week's Matchups
-                </h3>
-            </div>
-            
-            <div class="matchups-grid" id="matchupsGrid">
-                <!-- Populated by JS -->
-                <div class="loading-message">
-                    <div class="spinner"></div>
-                    Loading matchups...
-                </div>
+        <!-- Quick Navigation Cards -->
+        <section class="quick-nav-section">
+            <div class="quick-nav-grid">
+                <a href="players.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Player Database</h3>
+                    <p>Search all players & prospects</p>
+                </a>
+                
+                <a href="rosters.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-baseball-ball"></i>
+                    </div>
+                    <h3>Team Rosters</h3>
+                    <p>View keepers & prospects</p>
+                </a>
+                
+                <a href="wizbucks.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3>WizBucks Ledger</h3>
+                    <p>Track league currency</p>
+                </a>
+                
+                <a href="auction.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h3>Weekly Auction</h3>
+                    <p>Bid on prospects</p>
+                </a>
+                
+                <a href="salaries.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Salary Calculator</h3>
+                    <p>Plan your keepers</p>
+                </a>
+                
+                <a href="draft-picks.html" class="quick-nav-card">
+                    <div class="nav-card-icon">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                    <h3>Draft Picks</h3>
+                    <p>Track pick ownership</p>
+                </a>
             </div>
         </section>
 
-        <!-- Recent Activity -->
-        <section class="activity-section">
+        <!-- Recent Transactions Feed (PRIORITY #1) -->
+        <section class="transactions-feed">
             <div class="section-header">
-                <h3>
-                    <i class="fas fa-history"></i>
-                    Recent Activity
-                </h3>
-                <a href="transactions.html" class="view-all-link">View All</a>
+                <h3><i class="fas fa-exchange-alt"></i> Recent League Activity</h3>
+                <a href="wizbucks.html" class="view-all-link">
+                    View Full Ledger <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             
             <div class="activity-feed" id="activityFeed">
-                <!-- Populated by JS when transaction data available -->
-                <div class="empty-state">
-                    <i class="fas fa-clipboard-list"></i>
-                    <p>Transaction tracking coming soon</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quick Stats -->
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-content">
-                    <p class="stat-label">Total Players</p>
-                    <p class="stat-value" id="totalPlayers">--</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-seedling"></i>
-                </div>
-                <div class="stat-content">
-                    <p class="stat-label">Prospects</p>
-                    <p class="stat-value" id="totalProspects">--</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-exchange-alt"></i>
-                </div>
-                <div class="stat-content">
-                    <p class="stat-label">Trades (2025)</p>
-                    <p class="stat-value" id="totalTrades">--</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="stat-content">
-                    <p class="stat-label">WizBucks Active</p>
-                    <p class="stat-value" id="totalWizBucks">--</p>
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    Loading recent activity...
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- League Stats Section (Cream Background) -->
+    <section class="league-stats-section bg-cream">
+        <div class="container">
+            <div class="section-header">
+                <h3 style="color: var(--text-navy);"><i class="fas fa-chart-bar"></i> League Statistics</h3>
+                <span class="last-updated" id="statsUpdated" style="color: var(--text-muted);">Loading...</span>
+            </div>
+            
+            <div class="stats-grid-league">
+                <div class="league-stat-card">
+                    <div class="league-stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="league-stat-content">
+                        <div class="league-stat-value stat-number" id="totalPlayers">0</div>
+                        <div class="league-stat-label">Total Players</div>
+                    </div>
+                </div>
+                
+                <div class="league-stat-card">
+                    <div class="league-stat-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="league-stat-content">
+                        <div class="league-stat-value stat-number" id="totalProspects">0</div>
+                        <div class="league-stat-label">Active Prospects</div>
+                    </div>
+                </div>
+                
+                <div class="league-stat-card">
+                    <div class="league-stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="league-stat-content">
+                        <div class="league-stat-value money-value" id="totalWizBucks">$0</div>
+                        <div class="league-stat-label">Total WizBucks</div>
+                    </div>
+                </div>
+                
+                <div class="league-stat-card">
+                    <div class="league-stat-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="league-stat-content">
+                        <div class="league-stat-value stat-number" id="totalTrades">--</div>
+                        <div class="league-stat-label">Trades (2025)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="site-footer">
-        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
-        <p class="footer-note">Built with ⚾ for mobile-first experience</p>
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+        <p class="footer-note established-year">Thirteen seasons of dynasty baseball excellence</p>
     </footer>
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/homepage.js"></script>
 </body>
 </html>
