@@ -39,18 +39,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
- * Setup navigation toggle for mobile
+ * Setup navigation for mobile & desktop
  */
 function setupNavigation() {
-    const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
     
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', () => {
+    if (navMenu) {
+        const navToggle = document.getElementById('navToggle');
+        const bottomMenuToggle = document.getElementById('bottomMenuToggle');
+
+        const toggleMenu = () => {
             navMenu.classList.toggle('active');
-        });
+        };
+
+        // Allow either the legacy header toggle or the bottom nav toggle
+        if (navToggle) {
+            navToggle.addEventListener('click', toggleMenu);
+        }
+        if (bottomMenuToggle) {
+            bottomMenuToggle.addEventListener('click', toggleMenu);
+        }
         
-        // Close menu when clicking a link
+        // Close menu when clicking a link on mobile
         const navLinks = navMenu.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -66,6 +76,9 @@ function setupNavigation() {
     
     // Highlight active page
     highlightActivePage();
+
+    // Enable scroll-based header behavior
+    setupHeaderScrollBehavior();
 }
 
 /**
@@ -155,6 +168,46 @@ function highlightActivePage() {
         if (linkPage === currentPage || 
             (currentPage === '' && linkPage === 'index.html')) {
             link.classList.add('active');
+        }
+    });
+}
+
+/**
+ * Shrink and hide the sticky header on scroll (mobile-first)
+ */
+function setupHeaderScrollBehavior() {
+    const nav = document.querySelector('.mobile-nav');
+    if (!nav) return;
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function update() {
+        const currentY = window.scrollY;
+        const diff = currentY - lastScrollY;
+
+        // Compact once user scrolls a bit
+        if (currentY > 40) {
+            nav.classList.add('nav-compact');
+        } else {
+            nav.classList.remove('nav-compact');
+        }
+
+        // Hide when scrolling down, show when scrolling up
+        if (currentY > lastScrollY && currentY > 80 && diff > 5) {
+            nav.classList.add('nav-hidden');
+        } else if (currentY < lastScrollY && diff < -5) {
+            nav.classList.remove('nav-hidden');
+        }
+
+        lastScrollY = currentY;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(update);
+            ticking = true;
         }
     });
 }

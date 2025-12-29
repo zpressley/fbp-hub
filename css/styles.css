@@ -189,6 +189,17 @@ a:hover {
     z-index: 100;
     box-shadow: var(--shadow-lg);
     padding-bottom: var(--space-sm);
+    transition: transform var(--transition-fast), padding var(--transition-fast);
+}
+
+/* Compact & hidden states for scroll behavior */
+.mobile-nav.nav-compact .nav-container {
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
+}
+
+.mobile-nav.nav-hidden {
+    transform: translateY(-100%);
 }
 
 .nav-container {
@@ -215,6 +226,7 @@ a:hover {
     cursor: pointer;
     padding: var(--space-sm);
     transition: color var(--transition-fast);
+    display: none; /* Hidden on mobile; bottom nav controls full menu */
 }
 
 .nav-toggle:hover {
@@ -315,6 +327,8 @@ a:hover {
     text-align: center;
     color: var(--primary-red);
 }
+
+.nav-brand h1 {
     font-family: var(--font-hero);
     font-weight: 900;
     font-size: var(--text-xl);
@@ -816,7 +830,55 @@ input::placeholder {
 
 .site-footer p {
     margin: var(--space-xs) 0;
+}
+
+/* ============================================
+   BOTTOM NAV (Twitter-style)
+   ============================================ */
+.bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background: rgba(15, 15, 15, 0.92);
+    backdrop-filter: blur(16px);
+    border-top: var(--border-width-thin) solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 120;
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
     color: var(--text-gray);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.bottom-nav-item i {
+    font-size: 18px;
+}
+
+.bottom-nav-item.is-active {
+    color: var(--primary-red);
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        display: none;
+    }
+}
     font-size: var(--text-sm);
     font-family: var(--font-body);
 }
@@ -900,6 +962,11 @@ input::placeholder {
     .section-header h3 {
         font-size: var(--text-lg);
     }
+
+    /* Give space so content isn't hidden behind bottom nav */
+    body {
+        padding-bottom: 72px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -908,6 +975,10 @@ input::placeholder {
         display: grid;
         grid-template-columns: 200px 1fr 200px;
         gap: var(--space-xl);
+    }
+
+    .nav-toggle {
+        display: none;
     }
     
     .nav-brand {
