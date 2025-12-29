@@ -2,31 +2,10 @@
    Homepage Specific Styles
    ============================================ */
 
-/* Site Banner (Top) */
-.site-banner {
-    background-color: var(--bg-charcoal);
-    text-align: center;
-    padding: var(--space-2xl) var(--space-lg);
-    border-bottom: var(--border-width-thick) solid var(--primary-red);
-}
-
-.site-banner h1 {
-    font-family: var(--font-hero);
-    font-weight: 900;
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    color: var(--primary-red);
-    margin-bottom: var(--space-sm);
-    letter-spacing: 3px;
-}
-
-.site-banner .established-year {
-    font-size: var(--text-lg);
-}
-
 /* Quick Navigation Tiles Section (Stats Integrated) */
 .tiles-section {
     background-color: var(--bg-charcoal);
-    padding: var(--space-2xl) 0;
+    padding: var(--space-xl) 0 var(--space-md) 0;
 }
 
 .tiles-container {
@@ -37,15 +16,15 @@
 
 .tiles-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
 }
 
 .tile-card {
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    padding: var(--space-xl);
+    padding: var(--space-lg) var(--space-md);
     text-align: center;
     transition: all var(--transition-normal);
     cursor: pointer;
@@ -54,28 +33,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 140px;
 }
 
 .tile-card:hover {
     border-color: var(--accent-yellow);
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
 .tile-icon {
-    width: 72px;
-    height: 72px;
+    width: 56px;
+    height: 56px;
     background-color: var(--primary-red);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
     transition: all var(--transition-normal);
 }
 
 .tile-icon i {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     color: var(--text-white);
 }
 
@@ -88,14 +68,14 @@
     font-family: var(--font-body);
     font-weight: 800;
     color: var(--text-white);
-    margin-bottom: var(--space-md);
-    font-size: var(--text-base);
+    margin-bottom: var(--space-sm);
+    font-size: var(--text-sm);
     letter-spacing: 1.5px;
 }
 
 .tile-stat {
     font-family: var(--font-mono);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 700;
     color: var(--primary-red);
     margin-bottom: var(--space-xs);
@@ -110,13 +90,13 @@
     letter-spacing: 1px;
 }
 
-/* Deadline Banner */
+/* Deadline Banner - Reduced top padding */
 .deadline-banner {
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-md);
     display: flex;
     align-items: center;
     gap: var(--space-lg);
@@ -258,6 +238,12 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+@media (max-width: 767px) {
+    .tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (min-width: 768px) {
     .tiles-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -270,7 +256,7 @@
 
 @media (min-width: 1024px) {
     .tiles-grid {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
     
     .site-banner {

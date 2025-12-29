@@ -188,6 +188,7 @@ a:hover {
     top: 0;
     z-index: 100;
     box-shadow: var(--shadow-lg);
+    padding-bottom: var(--space-sm);
 }
 
 .nav-container {
@@ -200,17 +201,18 @@ a:hover {
 }
 
 .nav-brand h1 {
-    font-family: var(--font-vintage);
+    font-family: var(--font-hero);
+    font-weight: 900;
     font-size: var(--text-2xl);
     color: var(--primary-red);
     margin: 0 0 var(--space-xs) 0;
-    font-weight: 400;
+    letter-spacing: 2px;
 }
 
 .season-year {
     font-family: var(--font-vintage);
     font-style: italic;
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--text-gray);
     margin: 0;
 }
@@ -234,7 +236,9 @@ a:hover {
     flex-direction: column;
     gap: var(--space-xs);
     padding: var(--space-md);
+    padding-top: var(--space-lg);
     border-top: var(--border-width-thin) solid rgba(255, 255, 255, 0.1);
+    margin-top: var(--space-md);
 }
 
 .nav-menu.active {

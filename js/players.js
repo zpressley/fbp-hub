@@ -1,10 +1,9 @@
 /**
  * FBP Hub - Players Page JavaScript
- * Handles player search, filtering, and display
+ * Handles player search, filtering, and compact list display
  */
 
 // Page state
-let currentView = 'cards';
 let currentFilters = {
     search: '',
     type: '',
@@ -12,8 +11,9 @@ let currentFilters = {
     team: '',
     manager: ''
 };
-let displayedCount = 50; // Show 50 at a time
+let displayedCount = 50;
 const LOAD_MORE_INCREMENT = 50;
+let selectedPlayer = null;
 
 /**
  * Initialize players page
@@ -27,8 +27,8 @@ function initPlayersPage() {
     // Setup search
     setupSearch();
     
-    // Setup view toggle
-    setupViewToggle();
+    // Setup quick filters
+    setupQuickFilters();
     
     // Setup filter toggle
     setupFilterToggle();
@@ -44,7 +44,44 @@ function initPlayersPage() {
 }
 
 /**
- * Setup filter dropdown options
+ * Setup quick filter chips
+ */
+function setupQuickFilters() {
+    const chips = document.querySelectorAll('.filter-chip');
+    
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const filter = chip.dataset.filter;
+            
+            // Remove active from all
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            
+            // Apply filter
+            if (filter === 'all') {
+                currentFilters.type = '';
+            } else if (filter === 'keepers') {
+                currentFilters.type = 'MLB';
+            } else if (filter === 'prospects') {
+                currentFilters.type = 'Farm';
+            } else if (filter === 'my-team') {
+                // Get user's team if authenticated
+                if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
+                    const team = authManager.getTeam();
+                    if (team) {
+                        currentFilters.manager = team.abbreviation;
+                    }
+                }
+            }
+            
+            displayedCount = LOAD_MORE_INCREMENT;
+            displayPlayers();
+        });
+    });
+}
+
+/**
+ * Setup filter dropdowns
  */
 function setupFilterDropdowns() {
     // Position filter
@@ -102,16 +139,6 @@ function setupFilterDropdowns() {
             displayPlayers();
         });
     }
-    
-    // Type filter
-    const typeFilter = document.getElementById('typeFilter');
-    if (typeFilter) {
-        typeFilter.addEventListener('change', (e) => {
-            currentFilters.type = e.target.value;
-            displayedCount = LOAD_MORE_INCREMENT;
-            displayPlayers();
-        });
-    }
 }
 
 /**
@@ -151,28 +178,6 @@ function setupSearch() {
 }
 
 /**
- * Setup view toggle (cards/list)
- */
-function setupViewToggle() {
-    const viewBtns = document.querySelectorAll('.view-btn');
-    
-    viewBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const view = btn.dataset.view;
-            
-            if (view !== currentView) {
-                currentView = view;
-                
-                viewBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                displayPlayers();
-            }
-        });
-    });
-}
-
-/**
  * Setup filter toggle
  */
 function setupFilterToggle() {
@@ -206,10 +211,17 @@ function setupClearFilters() {
         
         // Reset form elements
         document.getElementById('playerSearch').value = '';
-        document.getElementById('typeFilter').value = '';
         document.getElementById('positionFilter').value = '';
         document.getElementById('teamFilter').value = '';
         document.getElementById('managerFilter').value = '';
+        
+        // Reset quick filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.classList.remove('active');
+            if (chip.dataset.filter === 'all') {
+                chip.classList.add('active');
+            }
+        });
         
         document.getElementById('clearSearch').style.display = 'none';
         
@@ -277,7 +289,7 @@ function displayPlayers() {
         loadMoreContainer.style.display = filtered.length > displayedCount ? 'block' : 'none';
     }
     
-    // Display based on view type
+    // Display players
     const playersToShow = filtered.slice(0, displayedCount);
     
     if (playersToShow.length === 0) {
@@ -287,82 +299,177 @@ function displayPlayers() {
                 <p>No players found matching your criteria</p>
                 <button class="btn-secondary" onclick="document.getElementById('clearFilters').click()">
                     <i class="fas fa-redo"></i>
-                    Clear Filters
+                    CLEAR FILTERS
                 </button>
             </div>
         `;
         return;
     }
     
-    if (currentView === 'cards') {
-        displayPlayersAsCards(playersToShow, container);
-    } else {
-        displayPlayersAsList(playersToShow, container);
-    }
+    // Always display as list (compact)
+    displayPlayersList(playersToShow, container);
 }
 
 /**
- * Display players as cards
+ * Display players as compact list
  */
-function displayPlayersAsCards(players, container) {
-    const cards = players.map(player => `
-        <div class="player-card">
-            <div class="player-card-header">
-                <div>
-                    <div class="player-name">${player.name}</div>
-                    <div class="player-team">${player.team || 'FA'}</div>
-                </div>
-            </div>
+function displayPlayersList(players, container) {
+    const items = players.map(player => {
+        // Determine contract badge class
+        let contractBadgeHTML = '';
+        if (player.years_simple) {
+            const contract = player.years_simple.toUpperCase();
+            let badgeClass = 'tc';
             
-            <div class="player-badges">
-                ${createPositionBadge(player.position)}
-                ${player.years_simple ? createContractBadge(player.years_simple) : ''}
-                ${player.manager ? createTeamBadge(player.manager) : ''}
-            </div>
+            if (contract.includes('VC')) badgeClass = 'vc';
+            else if (contract.includes('FC') || contract.includes('F')) badgeClass = 'fc';
+            else if (contract.includes('PC')) badgeClass = 'pc';
+            else if (contract.includes('DC')) badgeClass = 'dc';
             
-            <div class="player-info">
-                <div class="info-item">
-                    <span class="info-label">Type</span>
-                    <span class="info-value">${player.player_type === 'MLB' ? 'Keeper' : 'Prospect'}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Contract</span>
-                    <span class="info-value">${player.contract_type || 'N/A'}</span>
-                </div>
-                ${player.player_type === 'Farm' ? `
-                    <div class="info-item">
-                        <span class="info-label">Status</span>
-                        <span class="info-value">${player.years_simple || 'N/A'}</span>
+            contractBadgeHTML = `<span class="contract-badge ${badgeClass}">${player.years_simple}</span>`;
+        }
+        
+        return `
+            <div class="player-list-item" data-player-id="${player.upid || player.name}">
+                <div class="player-list-main">
+                    <div class="player-list-name">${player.name}</div>
+                    <div class="player-list-meta">
+                        <span>${player.position || '??'}</span>
+                        <span>|</span>
+                        <span>${player.team || 'FA'}</span>
+                        <span>|</span>
+                        <span>${player.player_type === 'MLB' ? 'Keeper' : 'Prospect'}</span>
                     </div>
-                ` : ''}
-            </div>
-        </div>
-    `).join('');
-    
-    container.innerHTML = `<div class="players-grid">${cards}</div>`;
-}
-
-/**
- * Display players as list
- */
-function displayPlayersAsList(players, container) {
-    const items = players.map(player => `
-        <div class="player-list-item">
-            <div class="player-list-main">
-                <div class="player-list-name">${player.name}</div>
-                <div class="player-list-meta">
-                    <span>${createPositionBadge(player.position)}</span>
-                    <span>${player.team || 'FA'}</span>
-                    <span>${player.player_type === 'MLB' ? 'Keeper' : 'Prospect'}</span>
-                    ${player.years_simple ? `<span>${player.years_simple}</span>` : ''}
+                </div>
+                <div class="player-list-badges">
+                    ${contractBadgeHTML}
+                    ${player.manager ? `<span class="team-badge">${player.manager}</span>` : ''}
                 </div>
             </div>
-            ${player.manager ? createTeamBadge(player.manager) : '<span class="text-muted">Free Agent</span>'}
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     container.innerHTML = `<div class="players-list">${items}</div>`;
+    
+    // Add click handlers for detail panel
+    document.querySelectorAll('.player-list-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const playerId = item.dataset.playerId;
+            openPlayerDetail(playerId);
+            
+            // Highlight selected
+            document.querySelectorAll('.player-list-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+        });
+    });
 }
 
-// Make function available globally
+/**
+ * Open player detail panel
+ */
+function openPlayerDetail(playerId) {
+    const panel = document.getElementById('playerDetailPanel');
+    if (!panel) return;
+    
+    // Find player data
+    const player = FBPHub.data.players.find(p => 
+        (p.upid && p.upid === playerId) || p.name === playerId
+    );
+    
+    if (!player) {
+        console.error('Player not found:', playerId);
+        return;
+    }
+    
+    selectedPlayer = player;
+    
+    // Build detail panel content
+    panel.innerHTML = `
+        <div class="player-detail-header">
+            <button class="detail-close-btn" onclick="closePlayerDetail()">
+                <i class="fas fa-times"></i> CLOSE
+            </button>
+            <div class="player-detail-name">${player.name}</div>
+            <div class="player-detail-title">${player.position} - ${player.team || 'Free Agent'}</div>
+            <div class="player-detail-badges">
+                ${player.years_simple ? createContractBadgeWithClass(player.years_simple) : ''}
+                ${player.manager ? `<span class="team-badge">${player.manager}</span>` : ''}
+            </div>
+        </div>
+        
+        <div class="player-detail-content">
+            <div class="detail-section">
+                <h3>PLAYER INFORMATION</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Position</div>
+                        <div class="info-value">${player.position || 'N/A'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">MLB Team</div>
+                        <div class="info-value">${player.team || 'FA'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Player Type</div>
+                        <div class="info-value">${player.player_type === 'MLB' ? 'Keeper' : 'Prospect'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">FBP Manager</div>
+                        <div class="info-value">${player.manager || 'Free Agent'}</div>
+                    </div>
+                    ${player.contract_type ? `
+                        <div class="info-item">
+                            <div class="info-label">Contract</div>
+                            <div class="info-value">${player.contract_type}</div>
+                        </div>
+                    ` : ''}
+                    ${player.years_simple ? `
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">${player.years_simple}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    panel.classList.add('active');
+}
+
+/**
+ * Close player detail panel
+ */
+function closePlayerDetail() {
+    const panel = document.getElementById('playerDetailPanel');
+    if (panel) {
+        panel.classList.remove('active');
+    }
+    
+    // Remove selection highlight
+    document.querySelectorAll('.player-list-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    selectedPlayer = null;
+}
+
+/**
+ * Create contract badge with proper class
+ */
+function createContractBadgeWithClass(contractStr) {
+    const contract = contractStr.toUpperCase();
+    let badgeClass = 'tc';
+    
+    if (contract.includes('VC')) badgeClass = 'vc';
+    else if (contract.includes('FC') || contract.includes('F')) badgeClass = 'fc';
+    else if (contract.includes('PC')) badgeClass = 'pc';
+    else if (contract.includes('DC')) badgeClass = 'dc';
+    
+    return `<span class="contract-badge ${badgeClass}">${contractStr}</span>`;
+}
+
+// Expose functions globally
 window.initPlayersPage = initPlayersPage;
+window.openPlayerDetail = openPlayerDetail;
+window.closePlayerDetail = closePlayerDetail;
