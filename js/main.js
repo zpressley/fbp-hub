@@ -61,8 +61,84 @@ function setupNavigation() {
         });
     }
     
+    // Setup user menu
+    setupUserMenu();
+    
     // Highlight active page
     highlightActivePage();
+}
+
+/**
+ * Setup user menu dropdown
+ */
+function setupUserMenu() {
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const userMenuDropdown = document.getElementById('userMenuDropdown');
+    const userMenu = document.getElementById('userMenu');
+    
+    if (!userMenuToggle || !userMenuDropdown) return;
+    
+    // Toggle dropdown
+    userMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userMenuDropdown.classList.toggle('active');
+    });
+    
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (userMenu && !userMenu.contains(e.target)) {
+            userMenuDropdown.classList.remove('active');
+        }
+    });
+    
+    // Update menu if authenticated
+    if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
+        updateUserMenuForAuth();
+    }
+}
+
+/**
+ * Update user menu when authenticated
+ */
+function updateUserMenuForAuth() {
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const userMenuDropdown = document.getElementById('userMenuDropdown');
+    
+    if (!userMenuToggle || !userMenuDropdown) return;
+    
+    const user = authManager.getUser();
+    const team = authManager.getTeam();
+    
+    if (!user || !team) return;
+    
+    // Update toggle button
+    userMenuToggle.innerHTML = `
+        <img src="${authManager.getAvatarUrl(32)}" alt="${user.username}" class="user-avatar-small">
+        <span class="user-team-abbr">${team.abbreviation}</span>
+        <i class="fas fa-chevron-down"></i>
+    `;
+    
+    // Update dropdown menu
+    userMenuDropdown.innerHTML = `
+        <a href="dashboard.html">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </a>
+        <a href="rosters.html?team=${team.abbreviation}">
+            <i class="fas fa-baseball-ball"></i>
+            My Roster
+        </a>
+        ${authManager.isCommissioner() ? `
+            <a href="admin.html">
+                <i class="fas fa-shield-alt"></i>
+                Admin
+            </a>
+        ` : ''}
+        <button onclick="authManager.logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+    `;
 }
 
 /**
