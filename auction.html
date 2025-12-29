@@ -9,11 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Banner -->
+    <div class="site-banner">
+        <h1>FBP HUB 3.0</h1>
+        <p class="established-year">Est. 2012</p>
+    </div>
+    
+    <!-- Navigation -->
     <nav class="mobile-nav">
         <div class="nav-container">
             <div class="nav-brand">
                 <h1>FBP HUB</h1>
-                <p class="season-year">Season 13 - 2025</p>
+                <p class="season-year">Season 13</p>
             </div>
             <button class="nav-toggle" id="navToggle">
                 <i class="fas fa-bars"></i>
@@ -24,26 +31,6 @@
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-            <a href="wizbucks.html" class="nav-link">
-                <i class="fas fa-coins"></i>
-                <span>WizBucks</span>
-            </a>
-            <a href="salaries.html" class="nav-link">
-                <i class="fas fa-dollar-sign"></i>
-                <span>Salaries</span>
-            </a>
-            <a href="transactions.html" class="nav-link">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Transactions</span>
-            </a>
-            <a href="draft-picks.html" class="nav-link">
-                <i class="fas fa-list-ol"></i>
-                <span>Draft Picks</span>
-            </a>
-            <a href="auction.html" class="nav-link active">
-                <i class="fas fa-gavel"></i>
-                <span>Auction</span>
-            </a>
             <a href="players.html" class="nav-link">
                 <i class="fas fa-users"></i>
                 <span>Players</span>
@@ -52,151 +39,129 @@
                 <i class="fas fa-baseball-ball"></i>
                 <span>Rosters</span>
             </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="auction.html" class="nav-link active">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="container">
-        <section class="page-header">
-            <h2><i class="fas fa-gavel"></i> Weekly Prospect Auction</h2>
-            <p class="page-subtitle">Bid on unowned prospects every week</p>
-        </section>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>WEEKLY PROSPECT AUCTION</h2>
+            <p class="page-subtitle">One bid per team per week</p>
+        </div>
 
         <!-- Auction Timer -->
         <div class="auction-timer" id="auctionTimer">
-            <div class="timer-status" id="timerStatus">Loading...</div>
-            <div class="timer-countdown" id="timerCountdown"></div>
+            <div class="timer-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="timer-content">
+                <div class="timer-status" id="timerStatus">Loading...</div>
+                <div class="timer-countdown" id="timerCountdown">...</div>
+            </div>
         </div>
 
         <!-- Auction Rules -->
         <div class="auction-rules">
-            <h3>How It Works</h3>
+            <h3>HOW IT WORKS</h3>
             <div class="rules-grid">
-                <div class="rule-card">
-                    <div class="rule-icon"><i class="fas fa-clock"></i></div>
-                    <div class="rule-content">
-                        <strong>Monday 3pm</strong>
-                        <span>Auction opens, OBs start</span>
+                <div class="rule-item">
+                    <div class="rule-number">1</div>
+                    <div class="rule-text">
+                        <strong>Mon 3pm:</strong> OB opens
                     </div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="rule-content">
-                        <strong>Tuesday EOD</strong>
-                        <span>OB window closes</span>
+                <div class="rule-item">
+                    <div class="rule-number">2</div>
+                    <div class="rule-text">
+                        <strong>Tue EOD:</strong> OB closes
                     </div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                    <div class="rule-content">
-                        <strong>Wed-Fri 9pm</strong>
-                        <span>CB window</span>
+                <div class="rule-item">
+                    <div class="rule-number">3</div>
+                    <div class="rule-text">
+                        <strong>Wed-Fri:</strong> CB window
                     </div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon"><i class="fas fa-trophy"></i></div>
-                    <div class="rule-content">
-                        <strong>Saturday</strong>
-                        <span>OB final bid window</span>
+                <div class="rule-item">
+                    <div class="rule-number">4</div>
+                    <div class="rule-text">
+                        <strong>Sat:</strong> OB final bid
                     </div>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="rule-content">
-                        <strong>Sunday</strong>
-                        <span>Process & resolve</span>
+                <div class="rule-item">
+                    <div class="rule-number">5</div>
+                    <div class="rule-text">
+                        <strong>Sun:</strong> Process
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Auth Required -->
-        <div class="auth-required" id="authRequired">
+        <!-- Auth Required Message -->
+        <div class="auth-required" id="authRequired" style="display: none;">
             <i class="fas fa-lock"></i>
             <p>Please log in to participate in auctions</p>
-            <a href="login.html" class="btn-primary">Login with Discord</a>
+            <a href="login.html" class="btn-primary">LOGIN WITH DISCORD</a>
         </div>
 
-        <!-- Auction Dashboard -->
-        <div class="auction-dashboard" id="auctionDashboard" style="display: none;">
-            
-            <!-- Priority & Balance -->
-            <div class="auction-info-cards">
-                <div class="info-card priority-card">
-                    <div class="info-label">Your Priority</div>
-                    <div class="info-value" id="userPriority">#1</div>
-                    <div class="info-meta">Based on Week 21 standings</div>
-                </div>
-                <div class="info-card balance-card">
-                    <div class="info-label">Available Balance</div>
-                    <div class="info-value" id="userBalance">$0</div>
-                    <div class="info-meta" id="committedAmount">$0 committed in bids</div>
-                </div>
+        <!-- Auction Table (12 rows - one per team) -->
+        <div class="auction-table-section" id="auctionTableSection">
+            <div class="table-wrapper">
+                <table class="auction-table table-compact">
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>Team</th>
+                            <th>WB Balance</th>
+                            <th>Prospect Claim</th>
+                            <th>Bid Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auctionTableBody">
+                        <tr>
+                            <td colspan="6" class="loading-row">
+                                <div class="spinner"></div>
+                                Loading auction data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Tabs -->
-            <div class="auction-tabs">
-                <button class="tab-btn active" data-tab="my-bids">My Bids</button>
-                <button class="tab-btn" data-tab="all-claims">All Claims</button>
-                <button class="tab-btn" data-tab="available">Available Prospects</button>
-                <button class="tab-btn" data-tab="priority">Priority Order</button>
-            </div>
-
-            <!-- Tab: My Bids -->
-            <div class="tab-content active" id="my-bids-tab">
-                <div class="section-header">
-                    <h3>Your Active Bids</h3>
-                    <button class="btn-primary" id="placeOBBtn">
-                        <i class="fas fa-plus"></i>
-                        Place Originating Bid
-                    </button>
-                </div>
-                <div id="myBidsList"></div>
-            </div>
-
-            <!-- Tab: All Claims -->
-            <div class="tab-content" id="all-claims-tab">
-                <div class="section-header">
-                    <h3>All Active Claims</h3>
-                </div>
-                <div id="allClaimsList"></div>
-            </div>
-
-            <!-- Tab: Available Prospects -->
-            <div class="tab-content" id="available-tab">
-                <div class="section-header">
-                    <h3>Available Prospects</h3>
-                    <input type="text" id="prospectSearch" placeholder="Search prospects..." class="search-input">
-                </div>
-                <div id="availableProspectsList"></div>
-            </div>
-
-            <!-- Tab: Priority Order -->
-            <div class="tab-content" id="priority-tab">
-                <div class="section-header">
-                    <h3>Auction Priority Order</h3>
-                    <p class="text-muted">Based on current standings (resets Monday)</p>
-                </div>
-                <div id="priorityOrderList"></div>
-            </div>
-
+        <!-- Bid Instructions -->
+        <div class="bid-instructions">
+            <h4>BIDDING INSTRUCTIONS</h4>
+            <ul>
+                <li><strong>OB (Originating Bid):</strong> $10 minimum, 1 per team per week</li>
+                <li><strong>CB (Challenge Bid):</strong> +$5 minimum raise over current high bid</li>
+                <li><strong>Tiebreaker:</strong> Originating manager wins ties</li>
+                <li><strong>30-Man Poach:</strong> Can bid on non-compliant prospects (owner can block for $5)</li>
+            </ul>
         </div>
     </main>
 
-    <!-- Bid Modal -->
-    <div class="modal" id="bidModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Place Bid</h3>
-                <button class="modal-close" id="closeBidModal"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body" id="bidModalBody"></div>
-        </div>
-    </div>
-
+    <!-- Footer -->
     <footer class="site-footer">
-        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+        <p class="established-year">Thirteen seasons of dynasty baseball excellence</p>
     </footer>
 
+    <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/auction.js"></script>

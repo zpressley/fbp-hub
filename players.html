@@ -9,12 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Banner -->
+    <div class="site-banner">
+        <h1>FBP HUB 3.0</h1>
+        <p class="established-year">Est. 2012</p>
+    </div>
+    
     <!-- Navigation -->
     <nav class="mobile-nav">
         <div class="nav-container">
             <div class="nav-brand">
                 <h1>FBP HUB</h1>
-                <p class="season-year established-year">Est. 2012</p>
+                <p class="season-year">Season 13</p>
             </div>
             <button class="nav-toggle" id="navToggle">
                 <i class="fas fa-bars"></i>
@@ -48,111 +54,110 @@
         </div>
     </nav>
 
-    <!-- Main Content - Split View -->
-    <main class="players-layout">
-        <!-- Player List (Left Side) -->
-        <div class="player-list-container" id="playerListContainer">
-            <div class="list-header">
-                <div class="list-title">
-                    <h2>PLAYER DATABASE</h2>
-                    <p class="list-subtitle">All keepers & prospects</p>
-                </div>
-                
-                <!-- Search Bar -->
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input 
-                        type="text" 
-                        id="playerSearch" 
-                        placeholder="Search players..."
-                        autocomplete="off"
-                    >
-                    <button class="clear-search" id="clearSearch" style="display: none;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <!-- Quick Filters -->
-                <div class="quick-filters">
-                    <button class="filter-chip active" data-filter="all">All</button>
-                    <button class="filter-chip" data-filter="keepers">Keepers</button>
-                    <button class="filter-chip" data-filter="prospects">Prospects</button>
-                    <button class="filter-chip" data-filter="my-team" id="myTeamFilter">My Team</button>
-                </div>
-                
-                <!-- Advanced Filters Toggle -->
-                <button class="filter-toggle-btn" id="filterToggle">
-                    <i class="fas fa-sliders-h"></i>
-                    <span>Advanced Filters</span>
-                    <span class="filter-count" id="filterCount" style="display: none;">0</span>
-                </button>
-                
-                <!-- Advanced Filters Panel -->
-                <div class="filters-panel" id="filtersPanel">
-                    <div class="filter-group">
-                        <label>Position</label>
-                        <select id="positionFilter" class="filter-select">
-                            <option value="">All Positions</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label>MLB Team</label>
-                        <select id="teamFilter" class="filter-select">
-                            <option value="">All Teams</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label>FBP Manager</label>
-                        <select id="managerFilter" class="filter-select">
-                            <option value="">All Managers</option>
-                        </select>
-                    </div>
-                    
-                    <button class="btn-secondary btn-full" id="clearFilters">
-                        <i class="fas fa-redo"></i>
-                        Clear All Filters
-                    </button>
-                </div>
-                
-                <!-- Results Info -->
-                <div class="results-info">
-                    <span id="resultCount">Loading...</span>
-                </div>
+    <!-- Main Content -->
+    <main class="container-compact">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>PLAYER DATABASE</h2>
+            <p class="page-subtitle">All keepers & prospects</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input 
+                type="text" 
+                id="playerSearch" 
+                placeholder="Search players..."
+                autocomplete="off"
+            >
+            <button class="clear-search" id="clearSearch" style="display: none;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Quick Filters -->
+        <div class="quick-filters">
+            <button class="filter-chip active" data-filter="all">ALL</button>
+            <button class="filter-chip" data-filter="keepers">KEEPERS</button>
+            <button class="filter-chip" data-filter="prospects">PROSPECTS</button>
+            <button class="filter-chip" data-filter="my-team" id="myTeamFilter">MY TEAM</button>
+        </div>
+
+        <!-- Advanced Filters Toggle -->
+        <button class="filter-toggle-btn" id="filterToggle">
+            <i class="fas fa-sliders-h"></i>
+            <span>Advanced Filters</span>
+            <span class="filter-count" id="filterCount" style="display: none;">0</span>
+        </button>
+
+        <!-- Advanced Filters Panel -->
+        <div class="filters-panel" id="filtersPanel">
+            <div class="filter-group">
+                <label>Position</label>
+                <select id="positionFilter" class="filter-select">
+                    <option value="">All Positions</option>
+                </select>
             </div>
             
-            <!-- Player List -->
-            <div class="player-list-scroll" id="playerListScroll">
-                <div id="playersContainer">
-                    <div class="loading-message">
-                        <div class="spinner"></div>
-                        Loading players...
-                    </div>
-                </div>
-                
-                <!-- Load More -->
-                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
-                    <button class="btn-secondary btn-full" id="loadMoreBtn">
-                        <i class="fas fa-chevron-down"></i>
-                        Load More Players
-                    </button>
+            <div class="filter-group">
+                <label>MLB Team</label>
+                <select id="teamFilter" class="filter-select">
+                    <option value="">All Teams</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>FBP Manager</label>
+                <select id="managerFilter" class="filter-select">
+                    <option value="">All Managers</option>
+                </select>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn-outline btn-full" id="clearFilters">
+                    <i class="fas fa-redo"></i>
+                    CLEAR FILTERS
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <span id="resultCount">Loading...</span>
+        </div>
+
+        <!-- Player List (Compact) -->
+        <div class="player-list-wrapper">
+            <div id="playersContainer">
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Loading players...</p>
                 </div>
             </div>
         </div>
-        
-        <!-- Player Detail Panel (Right Side) -->
-        <div class="player-detail-panel" id="playerDetailPanel">
-            <div class="detail-placeholder">
-                <i class="fas fa-hand-pointer"></i>
-                <p>Select a player to view details</p>
-            </div>
+
+        <!-- Load More -->
+        <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+            <button class="btn-outline btn-full" id="loadMoreBtn">
+                <i class="fas fa-chevron-down"></i>
+                LOAD MORE PLAYERS
+            </button>
         </div>
     </main>
+
+    <!-- Player Detail Panel (Slides in from right on click) -->
+    <div class="player-detail-panel" id="playerDetailPanel">
+        <div class="detail-placeholder">
+            <i class="fas fa-hand-pointer"></i>
+            <p>Click a player to view details</p>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="site-footer">
         <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+        <p class="established-year">Thirteen seasons of dynasty baseball excellence</p>
     </footer>
 
     <!-- Scripts -->
