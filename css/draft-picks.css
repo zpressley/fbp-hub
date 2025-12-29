@@ -1,335 +1,91 @@
-/* ============================================
-   Draft Picks Page Styles
-   ============================================ */
-
-/* Info Banner */
+/* Draft Picks Page */
 .info-banner {
-    background: linear-gradient(135deg, #2196F3, #1976D2);
-    color: white;
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--spacing-lg);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width-thick) solid var(--primary-red);
+    color: var(--text-white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--space-lg);
     align-items: center;
 }
 
 .info-icon {
-    font-size: 2rem;
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-icon i {
+    font-size: var(--text-xl);
+    color: white;
 }
 
 .info-content {
     flex: 1;
+    font-family: var(--font-body);
 }
 
 .info-content strong {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-lg);
-}
-
-/* View Toggle */
-.view-toggle-section {
-    display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-    background-color: var(--color-surface);
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-md);
-}
-
-.view-mode-btn {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--color-text-secondary);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    font-weight: 600;
-}
-
-.view-mode-btn:hover {
-    background-color: var(--color-surface-light);
-}
-
-.view-mode-btn.active {
-    background-color: var(--color-primary);
-    color: var(--color-background);
-}
-
-/* Grid View */
-.draft-grid-view {
-    margin-bottom: var(--spacing-xl);
+    color: var(--accent-yellow);
 }
 
 .round-section {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .round-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-primary);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--primary-red);
 }
 
 .round-header h3 {
-    color: var(--color-primary);
-    margin: 0;
-}
-
-.buy-in-badge {
-    background-color: #FFC107;
-    color: var(--color-background);
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--primary-red);
+    letter-spacing: 2px;
 }
 
 .picks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: var(--spacing-sm);
+    gap: var(--space-md);
 }
 
 .pick-card {
-    background-color: var(--color-surface);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-md);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
     text-align: center;
     transition: all var(--transition-fast);
-    position: relative;
 }
 
 .pick-card:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent-yellow);
     transform: translateY(-2px);
 }
 
-.pick-card.traded-pick {
-    border-color: #FF9800;
-    background-color: rgba(255, 152, 0, 0.1);
-}
-
 .pick-number {
-    font-size: var(--font-size-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
     font-weight: 700;
-    margin-bottom: var(--spacing-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs);
-}
-
-.pick-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    font-size: var(--font-size-xs);
-}
-
-.pick-badge.traded {
-    background-color: #FF9800;
-    color: white;
-}
-
-.pick-badge.original {
-    background-color: var(--color-surface-light);
-    color: var(--color-text-secondary);
+    color: var(--accent-yellow);
+    margin-bottom: var(--space-sm);
 }
 
 .pick-owner {
-    margin-bottom: var(--spacing-xs);
-}
-
-.pick-original {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    margin-top: var(--spacing-xs);
-}
-
-.status-badge.bought-in {
-    background-color: var(--color-success);
-    color: white;
-}
-
-.status-badge.not-bought-in {
-    background-color: #FFC107;
-    color: var(--color-background);
-}
-
-.status-badge.free-round {
-    background-color: var(--color-surface-light);
-    color: var(--color-text-secondary);
-}
-
-/* List View (My Picks) */
-.my-picks-header {
-    background-color: var(--color-surface);
-    padding: var(--spacing-lg);
-    border-radius: var(--border-radius-md);
-    margin-bottom: var(--spacing-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.my-picks-header h3 {
-    color: var(--color-primary);
-    margin: 0;
-}
-
-.picks-summary {
-    display: flex;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-.separator {
-    color: var(--color-text-secondary);
-}
-
-.my-round-section {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-}
-
-.my-round-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.my-round-header h4 {
-    color: var(--color-primary);
-    margin: 0;
-}
-
-.buy-in-status .status-badge {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.my-picks-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
-
-.my-pick-card {
-    background-color: var(--color-surface-light);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.my-pick-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.my-pick-number {
-    font-weight: 600;
-    font-size: var(--font-size-md);
-}
-
-.my-pick-origin {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.my-pick-origin i {
-    color: #FF9800;
-}
-
-/* Legend */
-.legend-section {
-    background-color: var(--color-surface);
-    padding: var(--spacing-lg);
-    border-radius: var(--border-radius-md);
-    margin-top: var(--spacing-xl);
-}
-
-.legend-section h4 {
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.legend-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--spacing-md);
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-}
-
-/* Mobile Responsive */
-@media (max-width: 767px) {
-    .picks-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .my-picks-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-sm);
-    }
-    
-    .legend-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (min-width: 768px) {
-    .picks-grid {
-        grid-template-columns: repeat(6, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .picks-grid {
-        grid-template-columns: repeat(12, 1fr);
-    }
+    font-family: var(--font-body);
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
 }

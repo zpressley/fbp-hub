@@ -9,150 +9,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="mobile-nav">
         <div class="nav-container">
             <div class="nav-brand">
-                <h1>FBP HUB</h1>
-                <p class="season-year">Season 13 - 2025</p>
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
             </div>
-            <button class="nav-toggle" id="navToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
         </div>
         <div class="nav-menu" id="navMenu">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="wizbucks.html" class="nav-link">
-                <i class="fas fa-coins"></i>
-                <span>WizBucks</span>
-            </a>
-            <a href="salaries.html" class="nav-link">
-                <i class="fas fa-dollar-sign"></i>
-                <span>Salaries</span>
-            </a>
-            <a href="transactions.html" class="nav-link">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Transactions</span>
-            </a>
-            <a href="draft-picks.html" class="nav-link active">
-                <i class="fas fa-list-ol"></i>
-                <span>Draft Picks</span>
-            </a>
-            <a href="auction.html" class="nav-link">
-                <i class="fas fa-gavel"></i>
-                <span>Auction</span>
-            </a>
-            <a href="players.html" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>Players</span>
-            </a>
-            <a href="rosters.html" class="nav-link">
-                <i class="fas fa-baseball-ball"></i>
-                <span>Rosters</span>
-            </a>
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="players.html" class="nav-link"><i class="fas fa-users"></i><span>Players</span></a>
+            <a href="rosters.html" class="nav-link"><i class="fas fa-baseball-ball"></i><span>Rosters</span></a>
+            <a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="draft-picks.html" class="nav-link active"><i class="fas fa-list-ol"></i><span>Draft Picks</span></a>
+            <a href="auction.html" class="nav-link"><i class="fas fa-gavel"></i><span>Auction</span></a>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Page Header -->
-        <section class="page-header">
-            <h2>
-                <i class="fas fa-list-ol"></i>
-                2025 Keeper Draft Picks
-            </h2>
+        <div class="page-header">
+            <h2>2025 KEEPER DRAFT PICKS</h2>
             <p class="page-subtitle">Track draft pick ownership and buy-in status</p>
-        </section>
+        </div>
 
-        <!-- Buy-In Info Banner -->
         <div class="info-banner">
-            <div class="info-icon">
-                <i class="fas fa-info-circle"></i>
-            </div>
+            <div class="info-icon"><i class="fas fa-info-circle"></i></div>
             <div class="info-content">
                 <strong>Buy-In Requirements:</strong>
                 Round 1 ($55) • Round 2 ($35) • Round 3 ($10)
-                <br>
-                <span class="text-muted">Buy-ins required to draft in Rounds 1-3</span>
             </div>
         </div>
 
-        <!-- View Toggle -->
-        <div class="view-toggle-section">
-            <button class="view-mode-btn active" data-view="grid" id="gridViewBtn">
-                <i class="fas fa-th"></i>
-                Grid View
-            </button>
-            <button class="view-mode-btn" data-view="list" id="listViewBtn">
-                <i class="fas fa-list"></i>
-                My Picks
-            </button>
-        </div>
-
-        <!-- Grid View: All Picks by Round -->
         <section class="draft-grid-view" id="gridView">
             <div id="draftGridContainer">
-                <!-- Populated by JS -->
                 <div class="loading-message">
                     <div class="spinner"></div>
-                    Loading draft picks...
+                    <p>Loading draft picks...</p>
                 </div>
             </div>
         </section>
-
-        <!-- List View: Your Picks -->
-        <section class="draft-list-view" id="listView" style="display: none;">
-            <div class="my-picks-header">
-                <h3>Your Draft Picks</h3>
-                <div class="picks-summary">
-                    <span id="totalPicksCount">0 picks</span>
-                    <span class="separator">•</span>
-                    <span id="buyInStatus">0 / 3 buy-ins</span>
-                </div>
-            </div>
-
-            <div class="my-picks-container" id="myPicksContainer">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- Buy-In Legend -->
-        <div class="legend-section">
-            <h4>Legend</h4>
-            <div class="legend-grid">
-                <div class="legend-item">
-                    <span class="status-badge bought-in">✓</span>
-                    <span>Bought In</span>
-                </div>
-                <div class="legend-item">
-                    <span class="status-badge not-bought-in">$</span>
-                    <span>Buy-In Required</span>
-                </div>
-                <div class="legend-item">
-                    <span class="status-badge free-round">—</span>
-                    <span>No Buy-In</span>
-                </div>
-                <div class="legend-item">
-                    <span class="pick-badge traded">↔</span>
-                    <span>Traded Pick</span>
-                </div>
-                <div class="legend-item">
-                    <span class="pick-badge original">○</span>
-                    <span>Original Pick</span>
-                </div>
-            </div>
-        </div>
     </main>
 
-    <!-- Footer -->
     <footer class="site-footer">
-        <p>&copy; 2025 Fantasy Baseball Pantheon</p>
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+        <p class="established-year">Thirteen seasons of dynasty baseball excellence</p>
     </footer>
 
-    <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/draft-picks.js"></script>

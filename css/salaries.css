@@ -1,62 +1,43 @@
-/* ============================================
-   Keeper Salary Page Styles
-   ============================================ */
-
-/* Salary Summary Cards */
+/* Salaries Page - Generous Spacing */
 .salary-summary {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-xl);
 }
 
 .summary-card {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-lg);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width-thick) solid var(--primary-red);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
     display: flex;
-    gap: var(--spacing-md);
-    border: 2px solid var(--border-color);
-    transition: all var(--transition-fast);
+    gap: var(--space-lg);
+    transition: all var(--transition-normal);
 }
 
 .summary-card:hover {
-    border-color: var(--color-primary);
-}
-
-.summary-card.total-salary {
-    border-color: var(--color-primary);
+    border-color: var(--accent-yellow);
+    transform: translateY(-4px);
 }
 
 .summary-icon {
-    font-size: 2.5rem;
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
+    background-color: var(--primary-red);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-surface-light);
-    border-radius: var(--border-radius-md);
+    flex-shrink: 0;
 }
 
-.total-salary .summary-icon {
-    background: linear-gradient(135deg, var(--color-primary), #FF6B35);
-    color: white;
-}
-
-.tax-bracket .summary-icon {
-    color: #FFC107;
-}
-
-.roster-cap .summary-icon {
-    color: #2196F3;
-}
-
-.il-tags .summary-icon {
-    color: #4CAF50;
+.summary-icon i {
+    font-size: var(--text-2xl);
+    color: var(--text-white);
 }
 
 .summary-content {
@@ -67,387 +48,28 @@
 }
 
 .summary-label {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    margin-bottom: var(--space-xs);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    font-weight: 700;
 }
 
 .summary-value {
-    font-size: 2rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl);
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--accent-yellow);
     line-height: 1;
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--space-xs);
 }
 
 .summary-meta {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-/* Contract Tier Breakdown */
-.contract-breakdown {
-    margin-bottom: var(--spacing-xl);
-}
-
-.contract-breakdown h3 {
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.tier-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-}
-
-.tier-card {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-lg);
-    border: 2px solid var(--border-color);
-}
-
-.tier-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.tier-name {
-    font-weight: 700;
-    color: var(--color-text-primary);
-}
-
-.tier-count {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-.tier-salary {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.tier-details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.detail-item {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-/* Keeper List Table */
-.keeper-list {
-    margin-bottom: var(--spacing-xl);
-}
-
-.keeper-list .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-}
-
-.keeper-list h3 {
-    color: var(--color-primary);
-    margin: 0;
-}
-
-.keepers-table-wrapper {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-md);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.keepers-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
-}
-
-.keepers-table thead {
-    background-color: var(--color-surface-light);
-}
-
-.keepers-table th {
-    padding: var(--spacing-md);
-    text-align: left;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.keepers-table td {
-    padding: var(--spacing-md);
-    border-top: 1px solid var(--border-color);
-}
-
-.keepers-table tbody tr:hover {
-    background-color: var(--color-surface-light);
-}
-
-.keepers-table tfoot {
-    background-color: var(--color-surface-light);
-    font-weight: 700;
-}
-
-.keepers-table tfoot td {
-    border-top: 2px solid var(--color-primary);
-}
-
-.player-name-cell {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.player-team-mini {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-}
-
-.contract-display {
-    font-family: monospace;
-    font-size: var(--font-size-sm);
-}
-
-.salary-cell,
-.net-salary-cell {
-    text-align: right;
-    font-weight: 600;
-}
-
-.net-salary-cell {
-    color: var(--color-primary);
-    font-size: var(--font-size-lg);
-}
-
-.il-cell {
-    text-align: center;
-}
-
-.il-tag-icon {
-    color: #4CAF50;
-    margin-right: var(--spacing-xs);
-}
-
-.text-right {
-    text-align: right;
-}
-
-.total-cell {
-    font-size: var(--font-size-xl);
-    color: var(--color-primary);
-}
-
-/* Tax Reference Table */
-.tax-reference {
-    margin-bottom: var(--spacing-xl);
-}
-
-.tax-reference h3 {
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-md);
-}
-
-.tax-table-wrapper {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-md);
-    overflow-x: auto;
-}
-
-.tax-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.tax-table thead {
-    background-color: var(--color-surface-light);
-}
-
-.tax-table th {
-    padding: var(--spacing-md);
-    text-align: left;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-}
-
-.tax-table td {
-    padding: var(--spacing-md);
-    border-top: 1px solid var(--border-color);
-}
-
-.tax-table tbody tr:hover {
-    background-color: var(--color-surface-light);
-}
-
-.tax-row-highest {
-    background-color: rgba(244, 67, 54, 0.1);
-}
-
-.tax-row-none {
-    background-color: rgba(76, 175, 80, 0.1);
-}
-
-/* Simulator Modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-md);
-}
-
-.modal-content {
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-lg);
-    max-width: 600px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-lg);
-    border-bottom: 2px solid var(--color-primary);
-}
-
-.modal-header h3 {
-    color: var(--color-primary);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-xl);
-    cursor: pointer;
-    padding: var(--spacing-xs);
-    transition: color var(--transition-fast);
-}
-
-.modal-close:hover {
-    color: var(--color-primary);
-}
-
-.modal-body {
-    padding: var(--spacing-lg);
-}
-
-.simulator-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-}
-
-.simulator-intro {
-    background-color: var(--color-surface-light);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin: 0;
-}
-
-.simulator-current {
-    background-color: var(--color-surface-light);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-md);
-}
-
-.simulator-current h4 {
-    margin-bottom: var(--spacing-md);
-    color: var(--color-primary);
-}
-
-.sim-stat-row {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--spacing-sm) 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.sim-stat-row:last-child {
-    border-bottom: none;
-}
-
-.sim-value {
-    font-weight: 700;
-    color: var(--color-primary);
-}
-
-.simulator-tools h4 {
-    margin-bottom: var(--spacing-md);
-}
-
-.feature-list {
-    list-style: none;
-    padding: 0;
-}
-
-.feature-list li {
-    padding: var(--spacing-sm) 0;
-    padding-left: var(--spacing-lg);
-    position: relative;
-}
-
-.feature-list li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--color-primary);
-    font-weight: 700;
-}
-
-/* Mobile Responsive */
-@media (max-width: 767px) {
-    .summary-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .tier-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .keepers-table {
-        font-size: var(--font-size-xs);
-    }
-    
-    .keepers-table th,
-    .keepers-table td {
-        padding: var(--spacing-sm);
-    }
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
 }
 
 @media (min-width: 768px) {

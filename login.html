@@ -11,39 +11,32 @@
 <body class="auth-page">
     <div class="auth-container">
         <div class="auth-card">
-            <!-- Logo/Header -->
             <div class="auth-header">
                 <div class="auth-logo">
                     <i class="fas fa-baseball-ball"></i>
                 </div>
-                <h1>FBP Hub</h1>
-                <p class="auth-subtitle">Fantasy Baseball Pantheon</p>
+                <h1>FBP HUB 3.0</h1>
+                <p class="auth-subtitle established-year">Est. 2012</p>
             </div>
 
-            <!-- Login Status -->
-            <div id="authStatus" class="auth-status">
-                <!-- Populated by JS -->
-            </div>
+            <div id="authStatus" class="auth-status"></div>
 
-            <!-- Login Form -->
             <div class="auth-form" id="loginForm">
-                <h2>Sign In</h2>
+                <h2>SIGN IN</h2>
                 <p class="auth-description">
                     Sign in with your Discord account to access your team dashboard
                 </p>
 
                 <button class="btn-discord" id="discordLoginBtn">
                     <i class="fab fa-discord"></i>
-                    <span>Continue with Discord</span>
+                    <span>CONTINUE WITH DISCORD</span>
                 </button>
 
-                <div class="auth-divider">
-                    <span>or</span>
-                </div>
+                <div class="auth-divider"><span>or</span></div>
 
                 <a href="index.html" class="btn-secondary btn-full">
                     <i class="fas fa-home"></i>
-                    <span>Continue as Guest</span>
+                    <span>CONTINUE AS GUEST</span>
                 </a>
 
                 <p class="auth-note">
@@ -51,60 +44,14 @@
                     Guest mode: View-only access to public data
                 </p>
             </div>
-
-            <!-- Processing State -->
-            <div class="auth-processing" id="authProcessing" style="display: none;">
-                <div class="spinner-large"></div>
-                <h3>Signing you in...</h3>
-                <p>Please wait while we authenticate with Discord</p>
-            </div>
-
-            <!-- Error State -->
-            <div class="auth-error" id="authError" style="display: none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Authentication Failed</h3>
-                <p id="authErrorMessage"></p>
-                <button class="btn-primary" onclick="location.reload()">
-                    Try Again
-                </button>
-            </div>
-        </div>
-
-        <!-- Info Cards -->
-        <div class="auth-info-grid">
-            <div class="info-card">
-                <i class="fas fa-lock"></i>
-                <h3>Secure</h3>
-                <p>OAuth 2.0 authentication via Discord</p>
-            </div>
-            <div class="info-card">
-                <i class="fas fa-user-shield"></i>
-                <h3>Private</h3>
-                <p>We only access your Discord username</p>
-            </div>
-            <div class="info-card">
-                <i class="fas fa-bolt"></i>
-                <h3>Fast</h3>
-                <p>One-click sign in with Discord</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="auth-footer">
-            <p>By signing in, you agree to use FBP Hub responsibly</p>
-            <p class="auth-footer-links">
-                <a href="index.html">Home</a>
-                <span>•</span>
-                <a href="players.html">Players</a>
-                <span>•</span>
-                <a href="rosters.html">Rosters</a>
-                <span>•</span>
-                <a href="wizbucks.html">Rosters</a>
-            </p>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+        <p class="established-year">Thirteen seasons of dynasty baseball excellence</p>
+    </footer>
+
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/login.js"></script>
