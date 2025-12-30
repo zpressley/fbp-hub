@@ -37,15 +37,15 @@
 
 .balances-grid {
     display: grid;
-    /* Mobile-first: 2 columns → 2 x 6 grid for 12 teams */
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-md);
+    /* Mobile-first: 4 across x 3 deep for 12 teams */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-sm);
 }
 
 .balance-card {
     background-color: var(--bg-charcoal);
     border: var(--border-width) solid var(--primary-red);
-    padding: var(--space-lg);
+    padding: var(--space-md);
     border-radius: var(--radius-md);
     text-align: center;
     transition: all var(--transition-fast);
@@ -64,19 +64,19 @@
 }
 
 .balance-team {
-    font-family: var(--font-title);
-    font-weight: 700;
-    font-size: var(--text-lg);
+    font-family: var(--font-hero);
+    font-weight: 900;
+    font-size: var(--text-sm);
     color: var(--text-white);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-xs);
     letter-spacing: 1px;
 }
 
 .balance-amount {
     font-family: var(--font-mono);
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     font-weight: 700;
-    color: var(--primary-red);
+    color: var(--accent-yellow);
 }
 
 .balance-pc-count {
@@ -257,17 +257,14 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 767px) {
-    /* Make balance tiles more compact on small screens */
+    /* iPhone-style small tiles: 4 across */
+    .balances-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-xs);
+    }
+
     .balance-card {
-        padding: var(--space-md);
-    }
-
-    .balance-team {
-        font-size: var(--text-sm);
-    }
-
-    .balance-amount {
-        font-size: var(--text-lg);
+        padding: var(--space-sm);
     }
 }
 

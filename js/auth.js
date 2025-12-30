@@ -386,17 +386,25 @@ function addUserMenu() {
                     Admin
                 </a>
             ` : ''}
-            <button onclick="authManager.logout()">
+            <a href="#" id="userMenuLogout">
                 <i class="fas fa-sign-out-alt"></i>
                 Logout
-            </button>
+            </a>
         </div>
     `;
 
     const toggle = userMenu.querySelector('#userMenuToggle');
     const dropdown = userMenu.querySelector('#userMenuDropdown');
+    const logoutLink = userMenu.querySelector('#userMenuLogout');
 
     if (!toggle || !dropdown) return;
+
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authManager.logout();
+        });
+    }
 
     // Toggle dropdown
     toggle.addEventListener('click', (e) => {

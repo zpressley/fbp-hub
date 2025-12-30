@@ -313,8 +313,21 @@
         justify-content: center;
     }
     
+    /* Make stats tiles similar footprint to quick actions on mobile */
     .dashboard-stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+    }
+
+    .stat-card-large {
+        flex-direction: column;
+        align-items: center;
+        padding: var(--space-lg);
+    }
+
+    .stat-card-large .stat-content {
+        align-items: center;
+        text-align: center;
     }
     
     .action-grid {

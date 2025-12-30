@@ -147,11 +147,19 @@ function updateUserMenuForAuth() {
                 Admin
             </a>
         ` : ''}
-        <button onclick="authManager.logout()">
+        <a href="#" id="headerLogout">
             <i class="fas fa-sign-out-alt"></i>
             Logout
-        </button>
+        </a>
     `;
+
+    const headerLogout = document.getElementById('headerLogout');
+    if (headerLogout) {
+        headerLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            authManager.logout();
+        });
+    }
 }
 
 /**
