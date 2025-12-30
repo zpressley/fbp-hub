@@ -963,6 +963,21 @@ input::placeholder {
         font-size: var(--text-lg);
     }
 
+    /* Left-align brand and keep user menu on the right on mobile */
+    .nav-container {
+        grid-template-columns: auto 1fr;
+    }
+
+    .nav-brand {
+        grid-column: 1;
+        text-align: left;
+    }
+
+    .user-menu {
+        grid-column: 2;
+        justify-self: end;
+    }
+
     /* Give space so content isn't hidden behind bottom nav */
     body {
         padding-bottom: 72px;

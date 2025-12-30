@@ -340,29 +340,39 @@ const AuthUI = {
 const authManager = new AuthManager();
 
 // Add logout functionality to navigation
+// Enhance the existing user menu on pages that have one,
+// or create it if missing.
 document.addEventListener('DOMContentLoaded', () => {
-    // Add user menu to navigation if authenticated
     if (authManager.isAuthenticated()) {
         addUserMenu();
     }
 });
 
 /**
- * Add user menu to navigation
+ * Add or upgrade user menu in navigation
  */
 function addUserMenu() {
     const nav = document.querySelector('.mobile-nav');
     if (!nav) return;
-    
+
     const user = authManager.getUser();
     const team = authManager.getTeam();
-    
-    const userMenu = document.createElement('div');
-    userMenu.className = 'user-menu';
+
+    const navContainer = nav.querySelector('.nav-container');
+    if (!navContainer) return;
+
+    // Reuse existing user-menu container if present to avoid duplicates
+    let userMenu = nav.querySelector('.user-menu');
+    if (!userMenu) {
+        userMenu = document.createElement('div');
+        userMenu.className = 'user-menu';
+        navContainer.appendChild(userMenu);
+    }
+
     userMenu.innerHTML = `
         <button class="user-menu-toggle" id="userMenuToggle">
             <img src="${authManager.getAvatarUrl(32)}" alt="${user.username}" class="user-avatar-small">
-            <span>${team?.abbreviation || user.username}</span>
+            <span class="user-team-abbr">${team?.abbreviation || user.username}</span>
             <i class="fas fa-chevron-down"></i>
         </button>
         <div class="user-menu-dropdown" id="userMenuDropdown">
@@ -382,18 +392,18 @@ function addUserMenu() {
             </button>
         </div>
     `;
-    
-    const navContainer = nav.querySelector('.nav-container');
-    navContainer.appendChild(userMenu);
-    
+
+    const toggle = userMenu.querySelector('#userMenuToggle');
+    const dropdown = userMenu.querySelector('#userMenuDropdown');
+
+    if (!toggle || !dropdown) return;
+
     // Toggle dropdown
-    const toggle = document.getElementById('userMenuToggle');
-    const dropdown = document.getElementById('userMenuDropdown');
-    
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         dropdown.classList.toggle('active');
     });
-    
+
     // Close on outside click
     document.addEventListener('click', (e) => {
         if (!userMenu.contains(e.target)) {
