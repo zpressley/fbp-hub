@@ -1010,11 +1010,11 @@ input::placeholder {
         font-size: var(--text-xl);
     }
     
-.nav-menu {
+    .nav-menu {
         grid-column: 2;
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: center; /* center group under banner */
         border-top: none;
         padding: 0;
         padding-top: 0;
@@ -1034,6 +1034,11 @@ input::placeholder {
     .container {
         padding: var(--space-xl);
     }
+
+    /* Ensure compact containers (players, etc.) align vertically with normal ones */
+    .container-compact {
+        padding-top: var(--space-xl);
+    }
 }
 
 @media (min-width: 1024px) {
@@ -1043,5 +1048,9 @@ input::placeholder {
     
     .container {
         padding: var(--space-2xl) var(--space-xl);
+    }
+
+    .container-compact {
+        padding-top: var(--space-2xl);
     }
 }
