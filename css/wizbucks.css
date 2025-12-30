@@ -37,8 +37,9 @@
 
 .balances-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--space-lg);
+    /* Mobile-first: 2 columns → 2 x 6 grid for 12 teams */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
 }
 
 .balance-card {
@@ -191,7 +192,7 @@
 
 .results-info span {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--text-gray);
 }
 
@@ -205,7 +206,7 @@
 }
 
 .ledger-table td {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
 }
 
 /* Transaction Type Badges */
@@ -255,17 +256,35 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+@media (max-width: 767px) {
+    /* Make balance tiles more compact on small screens */
+    .balance-card {
+        padding: var(--space-md);
+    }
+
+    .balance-team {
+        font-size: var(--text-sm);
+    }
+
+    .balance-amount {
+        font-size: var(--text-lg);
+    }
+}
+
 @media (min-width: 768px) {
     .filter-row {
         grid-template-columns: repeat(2, 1fr);
     }
     
+    /* Tablet: 4 columns (3 rows for 12 teams) */
     .balances-grid {
         grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-lg);
     }
 }
 
 @media (min-width: 1024px) {
+    /* Desktop: 6 columns for roomy layout */
     .balances-grid {
         grid-template-columns: repeat(6, 1fr);
     }

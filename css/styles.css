@@ -433,7 +433,8 @@ a:hover {
    PAGE HEADERS
    ============================================ */
 .page-header {
-    text-align: center;
+    text-align: left;
+    margin-top: var(--space-lg);
     margin-bottom: var(--space-xl);
     padding-bottom: var(--space-lg);
     border-bottom: var(--border-width-thick) solid var(--primary-red);
@@ -442,11 +443,11 @@ a:hover {
 .page-header h2 {
     font-family: var(--font-title);
     font-weight: 700;
-    color: var(--primary-red);
+    color: var(--text-white);
     margin-bottom: var(--space-sm);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: var(--space-md);
     letter-spacing: 2px;
 }
@@ -955,6 +956,10 @@ input::placeholder {
         font-size: var(--text-lg);
     }
     
+    .page-header {
+        margin-top: var(--space-xl);
+    }
+    
     .page-header h2 {
         font-size: var(--text-xl);
     }
@@ -1005,11 +1010,11 @@ input::placeholder {
         font-size: var(--text-xl);
     }
     
-    .nav-menu {
+.nav-menu {
         grid-column: 2;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         border-top: none;
         padding: 0;
         padding-top: 0;

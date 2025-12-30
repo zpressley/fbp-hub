@@ -217,7 +217,7 @@
     font-family: var(--font-body);
     font-weight: 700;
     color: var(--text-white);
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -228,7 +228,7 @@
     gap: var(--space-sm);
     flex-wrap: wrap;
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--text-gray);
     align-items: center;
 }
