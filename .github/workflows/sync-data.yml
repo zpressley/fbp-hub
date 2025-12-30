@@ -1,0 +1,134 @@
+name: Sync Data from Bot Repo
+
+on:
+  # Trigger 1: Immediate update when bot repo notifies us
+  repository_dispatch:
+    types: [data_updated]
+  
+  # Trigger 2: Scheduled backup sync (every 15 minutes)
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  
+  # Trigger 3: Manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout website repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Log trigger information
+        run: |
+          echo "🔄 Data Sync Triggered"
+          echo "================================"
+          
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "🔔 TRIGGER: Bot repo data change (immediate)"
+            echo "Source: ${{ github.event.client_payload.source }}"
+            echo "Time: ${{ github.event.client_payload.timestamp }}"
+            echo "Commit: ${{ github.event.client_payload.commit }}"
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "⏰ TRIGGER: Scheduled 15-minute sync"
+          else
+            echo "🖐️ TRIGGER: Manual execution"
+          fi
+          
+          echo "================================"
+      
+      - name: Download latest data from bot repo
+        run: |
+          echo "📥 Downloading data files from bot repo..."
+          
+          # Your GitHub info
+          GITHUB_USER="zpressley"
+          BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/fbp-trade-bot/main/data"
+          
+          # Create data directory if it doesn't exist
+          mkdir -p data
+          
+          # Download each data file
+          echo "  → combined_players.json"
+          curl -f -s -o data/combined_players.json "$BASE_URL/combined_players.json" || echo "⚠️ Failed to download combined_players.json"
+          
+          echo "  → wizbucks.json"
+          curl -f -s -o data/wizbucks.json "$BASE_URL/wizbucks.json" || echo "⚠️ Failed to download wizbucks.json"
+          
+          echo "  → standings.json"
+          curl -f -s -o data/standings.json "$BASE_URL/standings.json" || echo "⚠️ Failed to download standings.json"
+          
+          echo "  → yahoo_players.json"
+          curl -f -s -o data/yahoo_players.json "$BASE_URL/yahoo_players.json" || echo "⚠️ Failed to download yahoo_players.json"
+          
+          echo "  → service_stats.json"
+          curl -f -s -o data/service_stats.json "$BASE_URL/service_stats.json" || echo "⚠️ Failed to download service_stats.json"
+          
+          # Add more files if needed in the future:
+          # echo "  → transactions.json"
+          # curl -f -s -o data/transactions.json "$BASE_URL/transactions.json" || echo "⚠️ Failed"
+          
+          echo "✅ Download complete"
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet data/; then
+            echo "ℹ️ No changes detected in data files"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "✨ Data changes detected!"
+            git diff --stat data/
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "FBP Data Sync Bot"
+          git config user.email "bot@fbp.local"
+          
+          git add data/
+          
+          # Create commit message based on trigger type
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            COMMIT_MSG="🔄 Auto-sync: Data updated from bot repo"
+            COMMIT_BODY="Triggered by: ${{ github.event.client_payload.message }}"
+          else
+            COMMIT_MSG="⏰ Scheduled sync: Data updated"
+            COMMIT_BODY="Automatic 15-minute sync"
+          fi
+          
+          git commit -m "$COMMIT_MSG" -m "$COMMIT_BODY" -m "Synced at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
+          
+          echo "✅ Changes committed and pushed to website repo"
+      
+      - name: No changes needed
+        if: steps.check_changes.outputs.has_changes == 'false'
+        run: |
+          echo "✓ Data is already up to date"
+          echo "No commit necessary"
+      
+      - name: Create job summary
+        run: |
+          echo "### 📊 Data Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check_changes.outputs.has_changes }}" = "true" ]; then
+            echo "✅ **Status**: Data updated successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Changed files:**" >> $GITHUB_STEP_SUMMARY
+            git diff --name-only HEAD~1 HEAD data/ >> $GITHUB_STEP_SUMMARY || echo "Multiple files" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ **Status**: No changes needed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Data was already up to date." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Time**: $(date -u)" >> $GITHUB_STEP_SUMMARY
