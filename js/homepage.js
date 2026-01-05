@@ -18,7 +18,7 @@ function initHomepage() {
     // Display quick stats
     displayQuickStats();
     
-    // Display upcoming deadline
+    // Display upcoming deadline (async, fire-and-forget)
     displayUpcomingDeadline();
 }
 
@@ -148,16 +148,102 @@ function displayQuickStats() {
 }
 
 /**
+ * Load season_dates.json from the bot repo (single source of truth).
+ */
+async function loadSeasonDatesConfig() {
+    const url = 'https://raw.githubusercontent.com/zpressley/fbp-trade-bot/main/config/season_dates.json';
+
+    try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.warn('Could not load season_dates.json from bot repo:', err);
+        return null;
+    }
+}
+
+/**
  * Display upcoming deadline banner
  */
-function displayUpcomingDeadline() {
+async function displayUpcomingDeadline() {
     const deadlineName = document.getElementById('deadlineName');
     const deadlineDate = document.getElementById('deadlineDate');
     const deadlineBanner = document.getElementById('deadlineBanner');
     
     if (!deadlineName || !deadlineDate) return;
+
+    const now = new Date();
+
+    // Try dynamic config first
+    const config = await loadSeasonDatesConfig();
+    if (config && config.publish) {
+        const auction = config.auction || {};
+
+        // Map config keys to human-readable event names
+        const rawEvents = [
+            { key: 'pad_date', label: 'Prospect Assignment Day' },
+            { key: 'ppd_date', label: 'Prospect Draft' },
+            { key: 'franchise_tag_date', label: 'Franchise Tag Deadline' },
+            { key: 'trade_window_start', label: 'Trade Window Opens' },
+            { key: 'trade_window_end', label: 'Trade Window Closes' },
+            { key: 'keeper_deadline', label: 'Keeper Deadline' },
+            { key: 'keeper_draft', label: 'Keeper Draft' },
+            { key: 'division_draft', label: 'Division Draft' },
+            { key: 'week_1_start', label: 'Week 1 Starts' },
+            { key: 'regular_season_end', label: 'Final Day of Regular Season' },
+            { key: 'playoffs_end', label: 'Playoffs End' },
+            // Auction-specific milestones
+            { key: 'start', label: 'Prospect Auction Start', from: 'auction' },
+            { key: 'all_star_break_start', label: 'Auction Pauses – All-Star Break', from: 'auction' },
+            { key: 'restart', label: 'Prospect Auction Restart', from: 'auction' },
+            { key: 'playoffs_start', label: 'Auctions End for Playoffs', from: 'auction' }
+        ];
+
+        const deadlines = rawEvents
+            .map(ev => {
+                const source = ev.from === 'auction' ? auction : config;
+                const iso = source && source[ev.key];
+                if (!iso) return null;
+                const d = new Date(iso + 'T00:00:00');
+                if (Number.isNaN(d.getTime())) return null;
+                return { name: ev.label, date: d };
+            })
+            .filter(Boolean)
+            .sort((a, b) => a.date - b.date);
+
+        const upcoming = deadlines.find(d => d.date > now);
+
+        if (upcoming) {
+            deadlineName.textContent = upcoming.name;
+
+            const daysUntil = Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24));
+            if (daysUntil === 0) {
+                deadlineDate.textContent = 'Today!';
+            } else if (daysUntil === 1) {
+                deadlineDate.textContent = 'Tomorrow';
+            } else if (daysUntil < 7) {
+                deadlineDate.textContent = `In ${daysUntil} days`;
+            } else {
+                deadlineDate.textContent = formatDate(upcoming.date);
+            }
+
+            if (daysUntil <= 3 && deadlineBanner) {
+                deadlineBanner.style.background = 'linear-gradient(135deg, #F44336, #E53935)';
+            }
+            return;
+        }
+
+        // If publish=true but nothing upcoming, treat as off-season
+        deadlineName.textContent = 'Off-Season';
+        deadlineDate.textContent = `Season ${config.season_year || ''} complete`;
+        if (deadlineBanner) {
+            deadlineBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+        }
+        return;
+    }
     
-    // FBP Season 13 (2025) Important Dates
+    // Fallback: legacy 2025 hard-coded dates
     const deadlines = [
         { name: 'Prospect Assignment Day', date: new Date('2025-02-10') },
         { name: 'Prospect Draft', date: new Date('2025-02-17') },
@@ -172,8 +258,6 @@ function displayUpcomingDeadline() {
         { name: 'FBP Trade Deadline', date: new Date('2025-07-31') },
         { name: 'Final Day of Regular Season', date: new Date('2025-08-31') }
     ];
-    
-    const now = new Date();
     
     // Find next upcoming deadline
     const upcoming = deadlines.find(d => d.date > now);
