@@ -67,104 +67,67 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container">
+    <main class="container-compact">
         <!-- Page Header -->
         <div class="page-header">
-            <h2>WEEKLY PROSPECT AUCTION</h2>
-            <p class="page-subtitle">One bid per team per week</p>
+            <h2><i class="fas fa-gavel"></i> WEEKLY AUCTION PORTAL</h2>
+            <p class="page-subtitle">Prospect Auction Portal &mdash; synced with Discord bot</p>
         </div>
 
-        <!-- Auction Timer -->
-        <div class="auction-timer" id="auctionTimer">
-            <div class="timer-icon">
-                <i class="fas fa-clock"></i>
-            </div>
-            <div class="timer-content">
-                <div class="timer-status" id="timerStatus">Loading...</div>
-                <div class="timer-countdown" id="timerCountdown">...</div>
-            </div>
-        </div>
-
-        <!-- Auction Rules -->
-        <div class="auction-rules">
-            <h3>HOW IT WORKS</h3>
-            <div class="rules-grid">
-                <div class="rule-item">
-                    <div class="rule-number">1</div>
-                    <div class="rule-text">
-                        <strong>Mon 3pm:</strong> OB opens
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <div class="rule-number">2</div>
-                    <div class="rule-text">
-                        <strong>Tue EOD:</strong> OB closes
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <div class="rule-number">3</div>
-                    <div class="rule-text">
-                        <strong>Wed-Fri:</strong> CB window
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <div class="rule-number">4</div>
-                    <div class="rule-text">
-                        <strong>Sat:</strong> OB final bid
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <div class="rule-number">5</div>
-                    <div class="rule-text">
-                        <strong>Sun:</strong> Process
-                    </div>
+        <!-- Phase banner / non-auction message -->
+        <section class="container" id="auctionPhaseSection">
+            <div class="card" id="auctionPhaseCard">
+                <div id="auctionPhaseContent">
+                    <h3 id="auctionPhaseTitle">Loading auction status...</h3>
+                    <p id="auctionPhaseSubtitle" class="text-gray"></p>
+                    <p id="auctionPhaseCountdown" class="text-yellow"></p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Auth Required Message -->
-        <div class="auth-required" id="authRequired" style="display: none;">
-            <i class="fas fa-lock"></i>
-            <p>Please log in to participate in auctions</p>
-            <a href="login.html" class="btn-primary">LOGIN WITH DISCORD</a>
-        </div>
-
-        <!-- Auction Table (12 rows - one per team) -->
-        <div class="auction-table-section" id="auctionTableSection">
-            <div class="table-wrapper">
-                <table class="auction-table table-compact">
-                    <thead>
-                        <tr>
-                            <th>Priority</th>
-                            <th>Team</th>
-                            <th>WB Balance</th>
-                            <th>Prospect Claim</th>
-                            <th>Bid Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="auctionTableBody">
-                        <tr>
-                            <td colspan="6" class="loading-row">
-                                <div class="spinner"></div>
-                                Loading auction data...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- WizBucks summary for logged-in user -->
+        <section class="container" id="wizbucksSection">
+            <div class="section-header">
+                <h3><i class="fas fa-coins"></i> YOUR WIZBUCKS</h3>
             </div>
-        </div>
+            <div class="card" id="wizbucksCard">
+                <p class="text-gray" id="wizbucksGuestMessage">
+                    Login with Discord to see your WizBucks balance and active bids.
+                </p>
+                <div id="wizbucksStats" class="hidden">
+                    <p><strong>Team:</strong> <span id="wbTeam"></span></p>
+                    <p><strong>Total:</strong> <span id="wbTotal" class="money-value"></span></p>
+                    <p><strong>Committed:</strong> <span id="wbCommitted" class="money-value"></span></p>
+                    <p><strong>Available:</strong> <span id="wbAvailable" class="money-value"></span></p>
+                </div>
+            </div>
+        </section>
 
-        <!-- Bid Instructions -->
-        <div class="bid-instructions">
-            <h4>BIDDING INSTRUCTIONS</h4>
-            <ul>
-                <li><strong>OB (Originating Bid):</strong> $10 minimum, 1 per team per week</li>
-                <li><strong>CB (Challenge Bid):</strong> +$5 minimum raise over current high bid</li>
-                <li><strong>Tiebreaker:</strong> Originating manager wins ties</li>
-                <li><strong>30-Man Poach:</strong> Can bid on non-compliant prospects (owner can block for $5)</li>
-            </ul>
-        </div>
+        <!-- Your active bids -->
+        <section class="container" id="yourBidsSection">
+            <div class="section-header">
+                <h3><i class="fas fa-user-check"></i> YOUR ACTIVE BIDS</h3>
+            </div>
+            <div id="userBidsContainer" class="card">
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Loading your bids...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Available prospects -->
+        <section class="container" id="prospectsSection">
+            <div class="section-header">
+                <h3><i class="fas fa-user-astronaut"></i> AVAILABLE PROSPECTS</h3>
+            </div>
+            <div id="prospectsGrid" class="card">
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Loading prospects...</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Bottom Navigation (mobile) -->
