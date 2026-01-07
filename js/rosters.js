@@ -29,11 +29,17 @@ const TEAM_NAMES = {
 function initRostersPage() {
     console.log('📋 Initializing rosters page...');
     
-    // Check URL for roster type
+    // Check URL for roster type + team
     const urlParams = new URLSearchParams(window.location.search);
     const typeParam = urlParams.get('type');
+    const teamParam = urlParams.get('team');
+
     if (typeParam === 'prospects') {
         currentRosterType = 'prospects';
+    }
+
+    if (teamParam && TEAM_NAMES[teamParam]) {
+        selectedTeam = teamParam;
     }
     
     // Setup roster type toggle
@@ -95,8 +101,18 @@ function setupTeamSelector() {
         const option = document.createElement('option');
         option.value = abbr;
         option.textContent = `${abbr} - ${name}`;
+        if (selectedTeam === abbr) {
+            option.selected = true;
+        }
         teamSelect.appendChild(option);
     });
+
+    // If selectedTeam came from URL, ensure the select reflects it
+    if (selectedTeam && !TEAM_NAMES[selectedTeam]) {
+        // Fallback: reset to all teams if somehow invalid
+        selectedTeam = '';
+        teamSelect.value = '';
+    }
     
     // Listen for changes
     teamSelect.addEventListener('change', (e) => {
@@ -167,8 +183,11 @@ function displaySingleTeamRoster(teamAbbr, container) {
 function createTeamRosterCard(teamAbbr, detailed = false) {
     const teamName = TEAM_NAMES[teamAbbr];
     
-    // Get players for this team
-    const players = FBPHub.data.players.filter(p => p.manager === teamAbbr);
+    // Get players for this team. Some records use the team abbreviation (e.g. "WIZ"),
+    // others use the full team name (e.g. "Whiz Kids") in the `manager` field.
+    // Include both so keepers and prospects all appear.
+    const managerKeys = [teamAbbr, teamName];
+    const players = FBPHub.data.players.filter(p => managerKeys.includes(p.manager));
     
     // Filter by roster type
     let rosterPlayers;
