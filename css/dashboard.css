@@ -221,12 +221,83 @@
     padding: var(--space-xl);
 }
 
-.preview-section {
+/* New compact depth-chart roster layout */
+.dashboard-roster-section {
     margin-bottom: var(--space-xl);
 }
 
-.preview-section:last-child {
-    margin-bottom: 0;
+.dashboard-roster-section h4 {
+    font-family: var(--font-subhead);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-md);
+    color: var(--text-white);
+}
+
+.dash-roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-lg);
+}
+
+.dash-roster-group {
+    border-radius: var(--radius-md);
+    border: var(--border-width-thin) solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.dash-roster-group-header {
+    background-color: rgba(239, 62, 66, 0.15);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-yellow);
+}
+
+.dash-roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+}
+
+.dash-roster-table th,
+.dash-roster-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dash-roster-table th {
+    background-color: rgba(0, 0, 0, 0.25);
+    text-align: left;
+    color: var(--text-gray);
+    font-weight: 600;
+}
+
+.dash-roster-table tr:last-child td {
+    border-bottom: none;
+}
+
+.dash-roster-name {
+    color: var(--text-white);
+    font-weight: 600;
+}
+
+.dash-roster-status {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+}
+
+.dash-roster-team {
+    color: var(--text-gray);
+}
+
+.dash-roster-pos,
+.dash-roster-age {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
 }
 
 .preview-section h4 {

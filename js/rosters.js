@@ -254,17 +254,18 @@ function groupPlayersByPosition(players) {
     };
     
     players.forEach(player => {
-        const pos = player.position;
+        const posStr = player.position || '';
+        const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
         
-        if (pos === 'C') {
+        if (tokens.includes('C')) {
             groups['Catchers'].push(player);
-        } else if (['1B', '2B', '3B', 'SS'].includes(pos)) {
+        } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
             groups['Infielders'].push(player);
-        } else if (['LF', 'CF', 'RF', 'OF'].includes(pos)) {
+        } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
             groups['Outfielders'].push(player);
-        } else if (pos === 'SP') {
+        } else if (tokens.includes('SP')) {
             groups['Starting Pitchers'].push(player);
-        } else if (['RP', 'P'].includes(pos)) {
+        } else if (tokens.some(p => ['RP', 'P'].includes(p))) {
             groups['Relief Pitchers'].push(player);
         }
     });

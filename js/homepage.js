@@ -118,17 +118,20 @@ function displayMatchups() {
  * Display quick stats cards
  */
 function displayQuickStats() {
-    // Total players
+    // Total active players (on an FBP roster of any type)
     const totalPlayersEl = document.getElementById('totalPlayers');
     if (totalPlayersEl) {
-        totalPlayersEl.textContent = FBPHub.data.players.length.toLocaleString();
+        const activeCount = FBPHub.data.players.filter(p =>
+            p.manager && String(p.manager).trim() !== ''
+        ).length;
+        totalPlayersEl.textContent = activeCount.toLocaleString();
     }
     
-    // Total prospects
+    // Total prospects (owned farm players)
     const totalProspectsEl = document.getElementById('totalProspects');
     if (totalProspectsEl) {
         const prospectCount = FBPHub.data.players.filter(p => 
-            p.player_type === 'Farm'
+            p.player_type === 'Farm' && p.manager && String(p.manager).trim() !== ''
         ).length;
         totalProspectsEl.textContent = prospectCount.toLocaleString();
     }

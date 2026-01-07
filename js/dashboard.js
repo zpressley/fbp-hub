@@ -161,54 +161,21 @@ function loadRosterPreview(team) {
     const preview = document.getElementById('rosterPreview');
     if (!preview || !team) return;
     
-    // Get team players
     const teamPlayers = FBPHub.data.players.filter(p => p.manager === team.abbreviation);
-    const keepers = teamPlayers.filter(p => p.player_type === 'MLB').slice(0, 5);
-    const prospects = teamPlayers.filter(p => p.player_type === 'Farm').slice(0, 5);
+    const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
+    const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
     let html = '';
     
     if (keepers.length > 0) {
-        html += `
-            <div class="preview-section">
-                <h4>Recent Keepers</h4>
-                <div class="preview-list">
-                    ${keepers.map(p => `
-                        <div class="preview-player">
-                            ${createPositionBadge(p.position)}
-                            <span class="player-name">${p.name}</span>
-                            <span class="player-team">${p.team || 'FA'}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <a href="rosters.html?type=keepers&team=${team.abbreviation}" class="view-all-link">
-                    View all ${teamPlayers.filter(p => p.player_type === 'MLB').length} keepers →
-                </a>
-            </div>
-        `;
+        html += renderDashboardRosterSection(keepers, 'Keepers');
     }
     
     if (prospects.length > 0) {
-        html += `
-            <div class="preview-section">
-                <h4>Top Prospects</h4>
-                <div class="preview-list">
-                    ${prospects.map(p => `
-                        <div class="preview-player">
-                            ${createPositionBadge(p.position)}
-                            <span class="player-name">${p.name}</span>
-                            ${p.years_simple ? createContractBadge(p.years_simple) : ''}
-                        </div>
-                    `).join('')}
-                </div>
-                <a href="rosters.html?type=prospects&team=${team.abbreviation}" class="view-all-link">
-                    View all ${teamPlayers.filter(p => p.player_type === 'Farm').length} prospects →
-                </a>
-            </div>
-        `;
+        html += renderDashboardRosterSection(prospects, 'Prospects');
     }
     
-    if (html === '') {
+    if (!html) {
         html = `
             <div class="empty-state">
                 <i class="fas fa-inbox"></i>
@@ -218,4 +185,98 @@ function loadRosterPreview(team) {
     }
     
     preview.innerHTML = html;
+}
+
+/**
+ * Group players into dashboard roster buckets
+ */
+function groupPlayersForDashboard(players) {
+    const groups = {
+        'Catcher': [],
+        'Infield': [],
+        'Outfield': [],
+        'Starting Pitcher': [],
+        'Relief Pitcher': [],
+        'Pitcher': []
+    };
+
+    players.forEach(player => {
+        const posStr = player.position || '';
+        const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
+
+        if (tokens.includes('C')) {
+            groups['Catcher'].push(player);
+        } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
+            groups['Infield'].push(player);
+        } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
+            groups['Outfield'].push(player);
+        } else if (tokens.includes('SP')) {
+            groups['Starting Pitcher'].push(player);
+        } else if (tokens.includes('RP')) {
+            groups['Relief Pitcher'].push(player);
+        } else if (tokens.includes('P')) {
+            groups['Pitcher'].push(player);
+        }
+    });
+
+    return Object.fromEntries(
+        Object.entries(groups).filter(([, list]) => list.length > 0)
+    );
+}
+
+/**
+ * Render a full roster section (keepers or prospects) in compact depth-chart style
+ */
+function renderDashboardRosterSection(players, title) {
+    if (!players || players.length === 0) return '';
+
+    const groups = groupPlayersForDashboard(players);
+
+    const groupHtml = Object.entries(groups).map(([groupName, list]) => {
+        const rows = list.map(p => {
+            const status = p.years_simple || p.status || '';
+            const team = p.team || 'FA';
+            const pos = p.position || '';
+            const age = p.age || '--'; // Age not yet wired; placeholder
+
+            return `
+                <tr>
+                    <td class="dash-roster-status">${status}</td>
+                    <td class="dash-roster-name">${p.name}</td>
+                    <td class="dash-roster-team">${team}</td>
+                    <td class="dash-roster-pos">${pos}</td>
+                    <td class="dash-roster-age">${age}</td>
+                </tr>
+            `;
+        }).join('');
+
+        return `
+            <div class="dash-roster-group">
+                <div class="dash-roster-group-header">${groupName}</div>
+                <table class="dash-roster-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Player</th>
+                            <th>Team</th>
+                            <th>POS</th>
+                            <th>Age</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }).join('');
+
+    return `
+        <div class="dashboard-roster-section">
+            <h4>${title}</h4>
+            <div class="dash-roster-grid">
+                ${groupHtml}
+            </div>
+        </div>
+    `;
 }
