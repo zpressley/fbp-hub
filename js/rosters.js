@@ -7,22 +7,6 @@
 let currentRosterType = 'keepers';
 let selectedTeam = '';
 
-// Team mapping
-const TEAM_NAMES = {
-    'WIZ': 'Whiz Kids',
-    'B2J': 'Btwn2Jackies',
-    'CFL': 'Country Fried Lamb',
-    'HAM': 'Hammers',
-    'JEP': 'Jepordizers!',
-    'LFB': 'La Flama Blanca',
-    'LAW': 'Law-Abiding Citizens',
-    'SAD': 'not much of a donkey',
-    'DRO': 'Andromedans',
-    'RV': 'Rick Vaughn',
-    'TBB': 'The Bluke Blokes',
-    'WAR': 'Weekend Warriors'
-};
-
 /**
  * Initialize rosters page
  */
