@@ -328,6 +328,11 @@ function initializePage(pageName) {
                 initTransactionsPage();
             }
             break; 
+        case 'player-log':
+            if (typeof initPlayerLogPage === 'function') {
+                initPlayerLogPage();
+            }
+            break;
         case 'auction':
             if (typeof initAuctionPage === 'function') {
                 initAuctionPage();
