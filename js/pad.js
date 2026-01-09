@@ -415,10 +415,7 @@ function assignContract(upid, contractType) {
 /**
  * Upgrade prospect contract (kept for backwards-compat; now delegates to assignContract)
  */
-function upgradeContract
-    const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
-    if (!prospect) return;
-
+function upgradeContract(upid, targetContract) {
     // For older flows that still call upgradeContract, just delegate to assignContract
     assignContract(upid, targetContract);
 }
