@@ -75,8 +75,8 @@ function loadTeamStats(team) {
     const statsGrid = document.getElementById('teamStats');
     if (!statsGrid || !team) return;
     
-    // Filter players for this team
-    const teamPlayers = FBPHub.data.players.filter(p => p.manager === team.abbreviation);
+    // Filter players for this team using FBP_Team abbreviation
+    const teamPlayers = FBPHub.data.players.filter(p => p.FBP_Team === team.abbreviation);
     const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
@@ -161,7 +161,7 @@ function loadRosterPreview(team) {
     const preview = document.getElementById('rosterPreview');
     if (!preview || !team) return;
     
-    const teamPlayers = FBPHub.data.players.filter(p => p.manager === team.abbreviation);
+    const teamPlayers = FBPHub.data.players.filter(p => p.FBP_Team === team.abbreviation);
     const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     

@@ -118,7 +118,7 @@ function displayBalances() {
     const cards = sorted.map(([team, balance]) => {
         // Count PCs for this team
         const pcCount = FBPHub.data.players.filter(p => 
-            p.manager === team && 
+            p.FBP_Team === team && 
             p.player_type === 'Farm' && 
             (p.years_simple?.includes('PC') || p.contract_type?.includes('Purchased'))
         ).length;

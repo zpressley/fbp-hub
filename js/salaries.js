@@ -120,9 +120,9 @@ function loadTeamSalaries(team) {
     
     currentTeam = team;
     
-    // Get team's MLB players (keepers)
+    // Get team's MLB players (keepers) by FBP_Team abbreviation
     teamKeepers = FBPHub.data.players.filter(p => 
-        p.manager === team && p.player_type === 'MLB'
+        p.FBP_Team === team && p.player_type === 'MLB'
     );
     
     if (teamKeepers.length === 0) {

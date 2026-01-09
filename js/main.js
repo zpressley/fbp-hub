@@ -495,9 +495,9 @@ function filterPlayers(criteria) {
         filtered = filtered.filter(p => p.team === criteria.team);
     }
     
-    // Filter by manager
+    // Filter by FBP team (abbreviation)
     if (criteria.manager) {
-        filtered = filtered.filter(p => p.manager === criteria.manager);
+        filtered = filtered.filter(p => p.FBP_Team === criteria.manager);
     }
     
     // Search by name

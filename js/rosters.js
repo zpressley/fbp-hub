@@ -167,11 +167,8 @@ function displaySingleTeamRoster(teamAbbr, container) {
 function createTeamRosterCard(teamAbbr, detailed = false) {
     const teamName = TEAM_NAMES[teamAbbr];
     
-    // Get players for this team. Some records use the team abbreviation (e.g. "WIZ"),
-    // others use the full team name (e.g. "Whiz Kids") in the `manager` field.
-    // Include both so keepers and prospects all appear.
-    const managerKeys = [teamAbbr, teamName];
-    const players = FBPHub.data.players.filter(p => managerKeys.includes(p.manager));
+    // Get players for this team by FBP_Team abbreviation
+    const players = FBPHub.data.players.filter(p => p.FBP_Team === teamAbbr);
     
     // Filter by roster type
     let rosterPlayers;

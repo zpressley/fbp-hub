@@ -79,7 +79,7 @@ function checkEligibleGraduations(stats) {
     eligibleGraduations = [];
     
     const myProspects = FBPHub.data.players.filter(p => 
-        p.manager === userTeam && p.player_type === 'Farm'
+        p.FBP_Team === userTeam && p.player_type === 'Farm'
     );
     
     myProspects.forEach(prospect => {
@@ -155,7 +155,7 @@ function displayDCSlots() {
     
     // Check current DC usage
     const myProspects = FBPHub.data.players.filter(p => 
-        p.manager === userTeam && p.player_type === 'Farm'
+        p.FBP_Team === userTeam && p.player_type === 'Farm'
     );
     dcSlotsUsed = myProspects.filter(p => 
         p.years_simple?.includes('DC') || p.contract_type?.includes('Development')

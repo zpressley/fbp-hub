@@ -109,7 +109,7 @@ async function loadPADData() {
     // Load team's prospects from combined_players.json
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
         PAD_STATE.myProspects = FBPHub.data.players.filter(p => 
-            p.manager === PAD_STATE.team && 
+            p.FBP_Team === PAD_STATE.team && 
             p.player_type === 'Farm'
         ).map(p => ({
             upid: p.upid || '',
@@ -431,6 +431,12 @@ function adjustDCSlots(delta) {
  * Add BC slot
  */
 function addBCSlot() {
+    // Max 2 BC rounds (Rounds 1 & 2)
+    if (PAD_STATE.bcSlots.length >= 2) {
+        showToast('Maximum 2 BC rounds (Rounds 1 & 2)', 'error');
+        return;
+    }
+    
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
     if (remaining < 20) {

@@ -122,7 +122,7 @@ function displayQuickStats() {
     const totalPlayersEl = document.getElementById('totalPlayers');
     if (totalPlayersEl) {
         const activeCount = FBPHub.data.players.filter(p =>
-            p.manager && String(p.manager).trim() !== ''
+            p.FBP_Team && String(p.FBP_Team).trim() !== ''
         ).length;
         totalPlayersEl.textContent = activeCount.toLocaleString();
     }
@@ -131,7 +131,7 @@ function displayQuickStats() {
     const totalProspectsEl = document.getElementById('totalProspects');
     if (totalProspectsEl) {
         const prospectCount = FBPHub.data.players.filter(p => 
-            p.player_type === 'Farm' && p.manager && String(p.manager).trim() !== ''
+            p.player_type === 'Farm' && p.FBP_Team && String(p.FBP_Team).trim() !== ''
         ).length;
         totalProspectsEl.textContent = prospectCount.toLocaleString();
     }

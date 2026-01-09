@@ -169,7 +169,7 @@
         const players = window.FBPHub?.data?.players || [];
         const bids = auctionState.bids || [];
 
-        const eligible = players.filter(p => p.player_type === 'Farm' && !p.manager);
+        const eligible = players.filter(p => p.player_type === 'Farm' && !p.FBP_Team);
 
         if (!eligible.length) {
             grid.innerHTML = '<p class="text-gray">No eligible prospects this week.</p>';

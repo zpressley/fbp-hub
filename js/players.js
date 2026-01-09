@@ -122,10 +122,10 @@ function setupFilterDropdowns() {
         });
     }
     
-    // Manager filter
+    // Manager/team filter (by FBP team abbreviation)
     const managerFilter = document.getElementById('managerFilter');
     if (managerFilter) {
-        const managers = getUniqueValues('manager').filter(m => m);
+        const managers = getUniqueValues('FBP_Team').filter(m => m);
         managers.forEach(manager => {
             const option = document.createElement('option');
             option.value = manager;
@@ -343,7 +343,7 @@ function displayPlayersList(players, container) {
                 </div>
                 <div class="player-list-badges">
                     ${contractBadgeHTML}
-                    ${player.manager ? `<span class="team-badge">${player.manager}</span>` : ''}
+                    ${player.FBP_Team ? `<span class="team-badge">${player.FBP_Team}</span>` : ''}
                 </div>
             </div>
         `;
@@ -391,9 +391,9 @@ function openPlayerDetail(playerId) {
             </button>
             <div class="player-detail-name">${player.name}</div>
             <div class="player-detail-title">${player.position} - ${player.team || 'Free Agent'}</div>
-            <div class="player-detail-badges">
+                    <div class="player-detail-badges">
                 ${player.years_simple ? createContractBadgeWithClass(player.years_simple) : ''}
-                ${player.manager ? `<span class="team-badge">${player.manager}</span>` : ''}
+                ${player.FBP_Team ? `<span class="team-badge">${player.FBP_Team}</span>` : ''}
             </div>
         </div>
         
