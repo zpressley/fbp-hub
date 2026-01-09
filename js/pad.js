@@ -332,8 +332,6 @@ function displayProspects() {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
-        const isTop100 = !!p.top_100_rank;
-        const canUpgradeToBC = p.contract_type === 'DC';
         const bcStar = p.contract_type === 'BC' ? '<i class="fas fa-star bc-star"></i>' : '';
         
         return `
@@ -352,25 +350,16 @@ function displayProspects() {
                     <div class="contract-badge ${contractClass}">${contractLabel}</div>
                 </div>
                 <div class="prospect-actions">
-                    ${!hasContract && !p.has_mlb_service ? `
-                        <button class="btn-contract dc" onclick="assignContract('${p.upid}', 'DC')">
-                            <i class="fas fa-plus"></i> DC ($5)
-                        </button>
-                        <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
-                            <i class="fas fa-star"></i> PC ($10)
-                        </button>
-                    ` : ''}
-                    ${p.contract_type === 'DC' ? `
-                        <button class="btn-contract pc" onclick="upgradeContract('${p.upid}', 'PC')">
-                            <i class="fas fa-arrow-up"></i> → PC (+$5)
-                        </button>
-                        ${canUpgradeToBC ? `
-                            <button class="btn-contract bc" onclick="upgradeContract('${p.upid}', 'BC')">
-                                <i class="fas fa-star"></i> → BC${p.legacy_dc ? ' (FREE)' : ' (+$15)'}
-                            </button>
-                        ` : ''}
-                    ` : ''}
-                    ${hasContract && !p.top_100_rank && !p.legacy_dc ? `
+                    <button class="btn-contract dc" onclick="assignContract('${p.upid}', 'DC')">
+                        <i class="fas fa-plus"></i> DC ($5)
+                    </button>
+                    <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
+                        <i class="fas fa-star"></i> PC ($10)
+                    </button>
+                    <button class="btn-contract bc" onclick="assignContract('${p.upid}', 'BC')">
+                        <i class="fas fa-star"></i> BC${p.legacy_dc ? ' (FREE)' : ' ($20)'}
+                    </button>
+                    ${hasContract ? `
                         <button class="btn-secondary" onclick="removeContract('${p.upid}')">
                             <i class="fas fa-times"></i> Remove
                         </button>
@@ -398,7 +387,15 @@ function assignContract(upid, contractType) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
     
-    const cost = contractType === 'DC' ? 5 : 10;
+    let cost = 0;
+    if (contractType === 'DC') {
+        cost = 5;
+    } else if (contractType === 'PC') {
+        cost = 10;
+    } else if (contractType === 'BC') {
+        // Legacy DC → BC is free during 2026 PAD transition
+        cost = prospect.legacy_dc ? 0 : 20;
+    }
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
     if (remaining < cost) {
@@ -416,40 +413,14 @@ function assignContract(upid, contractType) {
 }
 
 /**
- * Upgrade prospect contract
+ * Upgrade prospect contract (kept for backwards-compat; now delegates to assignContract)
  */
-function upgradeContract(upid, targetContract) {
+function upgradeContract
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
-        if (!prospect) return;
+    if (!prospect) return;
 
-    // BC can be purchased for any prospect (via DC → BC),
-    // but BC from legacy DC is free during the 2026 transition.
-    
-    let cost;
-    if (targetContract === 'PC') {
-        cost = 5;
-    } else if (targetContract === 'BC') {
-        // Legacy DC → BC is free during 2026 PAD transition
-        cost = prospect.legacy_dc ? 0 : 15;
-    } else {
-        cost = 0;
-    }
-    const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
-    
-    if (cost > 0 && remaining < cost) {
-        showToast(`Insufficient PAD balance ($${cost} required)`, 'error');
-        return;
-    }
-    
-    prospect.contract_type = targetContract;
-    if (targetContract === 'PC') prospect.was_upgraded = true;
-    if (targetContract === 'BC') prospect.was_bc = true;
-    
-    updateWizBucksDisplay();
-    displayProspects();
-    saveDraft();
-    
-    showToast(`Upgraded to ${targetContract}`, 'success');
+    // For older flows that still call upgradeContract, just delegate to assignContract
+    assignContract(upid, targetContract);
 }
 
 /**
