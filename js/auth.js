@@ -382,7 +382,7 @@ function addUserMenu() {
             </a>
             <a href="pad.html">
                 <i class="fas fa-receipt"></i>
-                PAD Schedule
+                PAD
             </a>
             ${authManager.isCommissioner() ? `
                 <a href="admin.html">

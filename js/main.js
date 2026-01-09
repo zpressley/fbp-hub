@@ -337,7 +337,12 @@ function initializePage(pageName) {
             if (typeof initAuctionPage === 'function') {
                 initAuctionPage();
             }
-            break;      
+            break;     
+        case 'pad':
+            if (typeof initPADPage === 'function') {
+                initPADPage();
+            }
+            break;
         default:
             console.log(`No specific initialization for ${pageName}`);
     }
