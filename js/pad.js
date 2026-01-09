@@ -121,6 +121,8 @@ async function loadPADData() {
             // PAD requirement: prospects should start unassigned in the PAD UI,
             // regardless of any existing contract_type in combined_players.json.
             contract_type: null,
+            // Flag legacy DCs so they get special PAD treatment (e.g. free BC option).
+            legacy_dc: p.contract_type === 'Development Cont.' || p.contract_type === 'Development Contract',
             top_100_rank: p.top_100_rank || null,
             has_mlb_service: p.has_mlb_service || false
         }));
@@ -316,7 +318,7 @@ function displayProspects() {
                             <i class="fas fa-crown"></i> ${bcLabel}
                         </button>
                     ` : ''}
-                    ${hasContract && !p.top_100_rank ? `
+                    ${hasContract ? `
                         <button class="btn-secondary" onclick="removeContract('${p.upid}')">
                             <i class="fas fa-times"></i> Remove
                         </button>
