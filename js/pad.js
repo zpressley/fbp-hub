@@ -118,7 +118,9 @@ async function loadPADData() {
             position: p.position,
             age: p.age || null,
             level: p.level || 'Unknown',
-            contract_type: p.contract_type || null,
+            // PAD requirement: prospects should start unassigned in the PAD UI,
+            // regardless of any existing contract_type in combined_players.json.
+            contract_type: null,
             top_100_rank: p.top_100_rank || null,
             has_mlb_service: p.has_mlb_service || false
         }));
