@@ -270,30 +270,31 @@
     padding: var(--space-sm) var(--space-md);
     font-size: var(--text-sm);
     font-weight: 700;
-    border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-fast);
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-xs);
+    border: none;
 }
 
-279+.prospect-actions .btn-secondary {
-280+    flex: 1;
-281+    min-width: 100px;
-282+    padding: var(--space-sm) var(--space-md);
-283+    border-radius: var(--radius-md);
-284+    font-size: var(--text-sm);
-285+    font-weight: 700;
-286+}
-287+
-
+/* Style guide colors */
 .btn-contract.dc {
-    background-color: #26c6da; /* brighter teal for contrast */
-    color: #0b1020;
+    background-color: #FFFFFF;
+    color: #EF3E42;
+}
+
+.btn-contract.pc {
+    background-color: #FFB612;
+    color: #2B2B2B;
+}
+
+.btn-contract.bc {
+    background-color: #1E88C7;
+    color: #FFFFFF;
+}
 }
 
 .btn-contract.pc {

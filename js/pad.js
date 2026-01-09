@@ -346,6 +346,7 @@ function displayProspects() {
                             <span>${p.team}</span>
                             <span>Age ${p.age || '?'}</span>
                             <span>${p.level}</span>
+                            ${p.top_100_rank ? `<span>Pipeline: Top ${p.top_100_rank}</span>` : ''}
                         </div>
                     </div>
                     <div class="contract-badge ${contractClass}">${contractLabel}</div>
@@ -583,6 +584,7 @@ function updateSummary() {
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
     const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
+    const droppedProspects = PAD_STATE.myProspects.filter(p => !p.contract_type);
     
     const prospectsHTML = [];
     
@@ -619,6 +621,16 @@ function updateSummary() {
         `);
     }
     
+    if (droppedProspects.length > 0) {
+        prospectsHTML.push(`
+            <div class="summary-item">
+                <strong>Dropped Prospects (${droppedProspects.length})</strong>
+                <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
+                    ${droppedProspects.map(p => p.name).join(', ')}
+                </div>
+            </div>
+        `);
+    }
     
     if (prospectsHTML.length === 0) {
         prospectsHTML.push('<div class="summary-empty">No prospect contracts assigned</div>');
