@@ -20,6 +20,39 @@ let PAD_STATE = {
     submittedAt: null
 };
 
+// Cached Top 100 prospects map keyed by mlb_id or name
+let TOP100_PROSPECTS = null;
+
+async function loadTop100Prospects() {
+    if (TOP100_PROSPECTS) return TOP100_PROSPECTS;
+
+    TOP100_PROSPECTS = {
+        byMlbId: {},
+        byName: {}
+    };
+
+    try {
+        const res = await fetch('./data/top100_prospects.json', { cache: 'no-store' });
+        if (!res.ok) return TOP100_PROSPECTS;
+        const list = await res.json();
+
+        list.forEach(entry => {
+            const mlbId = entry.mlb_id != null ? String(entry.mlb_id) : '';
+            const nameKey = (entry.name || '').toLowerCase();
+            if (mlbId) {
+                TOP100_PROSPECTS.byMlbId[mlbId] = entry;
+            }
+            if (nameKey) {
+                TOP100_PROSPECTS.byName[nameKey] = entry;
+            }
+        });
+    } catch (err) {
+        console.log('No top100_prospects.json found or failed to load', err);
+    }
+
+    return TOP100_PROSPECTS;
+}
+
 /**
  * Initialize PAD page
  */
@@ -88,6 +121,7 @@ async function checkSubmissionStatus() {
  * Load PAD data for team
  */
 async function loadPADData() {
+    const top100 = await loadTop100Prospects();
     // Determine starting balance based on bracket finish
     // In production: fetch from standings/bracket data
     const bracket = 'elimination'; // Mock - would come from actual standings
@@ -108,20 +142,31 @@ async function loadPADData() {
     
     // Load team's prospects from combined_players.json
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
-        PAD_STATE.myProspects = FBPHub.data.players.filter(p => 
-            p.FBP_Team === PAD_STATE.team && 
-            p.player_type === 'Farm'
-        ).map(p => ({
-            upid: p.upid || '',
-            name: p.name,
-            team: p.team,
-            position: p.position,
-            age: p.age || null,
-            level: p.level || 'Unknown',
-            contract_type: p.contract_type || null,
-            top_100_rank: p.top_100_rank || null,
-            has_mlb_service: p.has_mlb_service || false
-        }));
+        PAD_STATE.myProspects = FBPHub.data.players
+            .filter(p => p.FBP_Team === PAD_STATE.team && p.player_type === 'Farm')
+            .map(p => {
+                const mlbKey = p.mlb_id != null ? String(p.mlb_id) : '';
+                const nameKey = (p.name || '').toLowerCase();
+                const top = (mlbKey && top100.byMlbId[mlbKey]) || top100.byName[nameKey] || null;
+
+                const originalContractType = p.contract_type || null;
+                const isLegacyDC = (originalContractType || '').toLowerCase().includes('development');
+
+                return {
+                    upid: p.upid || '',
+                    name: p.name,
+                    team: p.team,
+                    position: p.position,
+                    age: p.age || null,
+                    level: p.level || 'Unknown',
+                    // Normalize legacy Development Cont. to DC for PAD logic
+                    contract_type: isLegacyDC ? 'DC' : (p.contract_type || null),
+                    original_contract_type: originalContractType,
+                    legacy_dc: isLegacyDC,
+                    top_100_rank: top ? top.rank : null,
+                    has_mlb_service: p.has_mlb_service || false
+                };
+            });
     } else {
         // Fallback to mock data for testing
         PAD_STATE.myProspects = getMockProspects();
@@ -231,8 +276,12 @@ function calculateTotalSpend() {
         p.contract_type === 'PC' && !p.was_bc
     ).length * 10;
     
+    // BC costs:
+    // - Top 100 prospects: FREE (auto-retained)
+    // - Legacy DC (old system) upgraded to BC at PAD: FREE (one-time transition)
+    // - All other BC contracts: 20 WB
     const bcCost = PAD_STATE.myProspects.filter(p => 
-        p.contract_type === 'BC' && !p.top_100_rank
+        p.contract_type === 'BC' && !p.top_100_rank && !p.legacy_dc
     ).length * 20;
     
     const dcSlotsCost = PAD_STATE.dcSlots * 5;
@@ -276,12 +325,15 @@ function displayProspects() {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
+        const isTop100 = !!p.top_100_rank;
+        const canUpgradeToBC = p.contract_type === 'DC' && (isTop100 || p.legacy_dc);
+        const bcStar = p.contract_type === 'BC' ? '<i class="fas fa-star bc-star"></i>' : '';
         
         return `
             <div class="prospect-card ${hasContract ? 'has-contract' : ''}">
                 <div class="prospect-info">
                     <div class="prospect-details">
-                        <h4>${p.name}</h4>
+                        <h4>${bcStar}${p.name}</h4>
                         <div class="prospect-meta">
                             <span>${p.position}</span>
                             <span>${p.team}</span>
@@ -304,11 +356,13 @@ function displayProspects() {
                         <button class="btn-contract pc" onclick="upgradeContract('${p.upid}', 'PC')">
                             <i class="fas fa-arrow-up"></i> → PC (+$5)
                         </button>
-                        <button class="btn-contract bc" onclick="upgradeContract('${p.upid}', 'BC')">
-                            <i class="fas fa-trophy"></i> → BC (+$15)
-                        </button>
+                        ${canUpgradeToBC ? `
+                            <button class="btn-contract bc" onclick="upgradeContract('${p.upid}', 'BC')">
+                                <i class="fas fa-star"></i> → BC${p.legacy_dc ? ' (FREE)' : ' (+$15)'}
+                            </button>
+                        ` : ''}
                     ` : ''}
-                    ${hasContract && !p.top_100_rank ? `
+                    ${hasContract && !p.top_100_rank && !p.legacy_dc ? `
                         <button class="btn-secondary" onclick="removeContract('${p.upid}')">
                             <i class="fas fa-times"></i> Remove
                         </button>
@@ -359,11 +413,27 @@ function assignContract(upid, contractType) {
 function upgradeContract(upid, targetContract) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
+
+    if (targetContract === 'BC') {
+        const eligibleForBC = prospect.top_100_rank || prospect.legacy_dc;
+        if (!eligibleForBC) {
+            showToast('BC is only available for Top 100 or legacy DC prospects', 'error');
+            return;
+        }
+    }
     
-    const cost = targetContract === 'PC' ? 5 : 15;
+    let cost;
+    if (targetContract === 'PC') {
+        cost = 5;
+    } else if (targetContract === 'BC') {
+        // Legacy DC → BC is free during 2026 PAD transition
+        cost = prospect.legacy_dc ? 0 : 15;
+    } else {
+        cost = 0;
+    }
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
-    if (remaining < cost) {
+    if (cost > 0 && remaining < cost) {
         showToast(`Insufficient PAD balance ($${cost} required)`, 'error');
         return;
     }

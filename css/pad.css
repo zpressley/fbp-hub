@@ -247,6 +247,11 @@
     border: 1px solid #FFC107;
 }
 
+.bc-star {
+    color: #42a5f5;
+    margin-right: var(--space-xs);
+}
+
 .contract-badge.unassigned {
     background-color: rgba(158, 158, 158, 0.2);
     color: #9E9E9E;

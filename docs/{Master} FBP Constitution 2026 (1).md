@@ -37,7 +37,7 @@
 
 ## **Section 01: Overview**
 
-1. All Teams in the FBP will be allotted currency in the form of WizBucks (WB, $) during the pre-season to be spent on all forms of player/prospect acquisition and retention for that season.
+1. All Teams in the FBP will be allotted currency in the form of WizBucks (WB, $) during the pre-season to be spent on all forms of keeper/prospect acquisition and retention for that season.
 
 2. The FBP will use a contract salary system for retaining ownership rights to players/prospects from season to season.
 
@@ -50,7 +50,7 @@
       1. $375 WB for all teams  
    3. Installment 3 \- APA (Auction Portal Allotment)  
       1. $100 WB for all teams  
-   4. Installment 4 \- TDA (Trade Deadline Allotment, In-Season)  
+   4. Installment 4 \- PTDA (Post-Trade Deadline Allotment, In-Season)  
       1. Based on Current Bracket \- (Championship \= $15, Consolation \= $25, Elimination \= $35)
 
 2. Teams will be permitted to roll-over WBs from one season to the next, as well as from one installment to the next within the following limitations:  
@@ -84,6 +84,7 @@
 1. Keeper Contracts have 3 stages of maturation with sub-stages of maturation within each Contract type.  See Contract Types listed below and their associated Keeper Salary:  
    1. Team Contract (TC)  
       1. TC-R \= $5  
+         1. TC-BC-1 & TC-BC-2 if qualified \= ($5)  
       2. TC-1 \= $15  
       3. TC-2 \= $25  
    2. Veteran Contract (VC)  
@@ -95,6 +96,7 @@
 2. For Contract Assignment Rules \- See Below:  
    1. Players Drafted in RDs 1-3 of the FBP Draft are to be assigned a VC-1 contract value  
    2. Players drafted in all other RDs of FBP Draft are to be assigned a TC-1 contract value  
+      1. Players without a contract assigned (undrafted) and not qualified for rookie status are assigned a TC-1 contract value  
    3. Players that exceed their prospect status during the season in FBP are assigned a TC-R contract value  
       1. International Rookies ineligible for prospect status & drafted in the FBP Draft are subjected to these rules as well and are therefore ineligible for TC-R status
 
@@ -113,15 +115,16 @@
       4. *Ex: VC-2 ($55) player is injured and the manager applies IL Tag (-$15) to reduce the cost to $40 WB for that KAP*  
    2. Applying an IL Tag will still increase a player’s contract to the next tier  
    3. TC-R/TC-BC rookies are ineligible for IL Tag  
-   4. Players must have sustained in injury prior to September and they never returned to action (including October baseball) \- OR \- they are projected to miss time in the coming year (commissioner approval required)  
+   4. Players must have sustained an injury prior to September and then never returned to action (including October baseball) \- OR \- they are projected to miss time in the coming year (commissioner approval required)  
    5. Applying an IL Tag makes a player ineligible for play during the first 5 weeks of FBP regardless of injury status.  
-      1. Teams are required to roster but cannot place in lineup if the player returns healthy before week 6  
+      1. Teams are required to roster but cannot place in the lineup if the player returns healthy before week 6 without penalty.  
 3. Reduce a Tier Rules & Qualifications:  
-   1. Teams are permitted to spend $75 WB per Tier reduced of tax free spend during the KAP to lower a player’s contract tier.  
+   1. Teams are permitted to spend $75 WB of tax free spend during the KAP to lower a player’s contract tier.  
       1. *Ex: Manager spends $75 WB on FC-1 ($85) player to reduce his contract to VC-2 ($55).  Player is kept at only a $55 tax hit and becomes an FC-1 again for the next season as opposed to an $85 tax hit and raised to an FC-2 ($125).*  
    2. RaT may not be used on a Team Contract  
    3. RaT may not be used to reduce a contract to a Team Contract tier  
-   4. RaT may be used only during KAP
+   4. RaT may be used only during KAP  
+   5. RaT may be used multiple times on a keeper to continue lowering their tier
 
 # 
 
@@ -132,8 +135,8 @@
 ## **Section 01: Overview**
 
 1. Every Manager is awarded a Prospect System that holds multiple functions for prospect acquisition, development, and retention.  
-2. Prospects are defined as baseball players who have not reached MLB or FBP Rookie Service Limit Parameters but are a part of an MLB Organization as a player.  
-3. FBP Managers may maintain ownership of Prospects without rostering on their Yahoo Roster by following system rules and regulations  
+2. Prospects are defined as baseball players who have not exceeded MLB or FBP Rookie Service Limit Parameters but are a part of an MLB Organization as a player.  
+3. FBP Managers may maintain ownership of Prospects without rostering on their Yahoo Roster by following system rules and regulations.  
 4. Prospects hold their own contract statuses with teams until they are graduated to a keeper level contract.  These contracts are:  
    1. Development Contract (DC)  
    2. Purchased Contract (PC)  
@@ -145,17 +148,18 @@
 
 1. A Development Contract is the lowest level & most inexpensive form of a Contract a Prospect can obtain. ($5 WB)  
 2. Development Contracts are only issueable during Prospect Assignment Day in the FBP Pre-Season  
+   1. Prospects with MLB service time are not able to receive a DC  
 3. Prospects with a DC who make their MLB debut are compelled to be Purchased for a $15 WB fee.  
    1. Once this fee has been paid the prospect is now under a Purchased Contract (PC) and is no longer a DC  
    2. If a team chooses not to pay or cannot afford to pay the fee, the prospect’s DC contract is voided and the team will no longer have ownership of the Prospect  
-      1. Prospect enters next Auction Portal.  If no claims are placed and the prospect remains in the MLB, the Prospect becomes an addable Free Agent in Yahoo  
+      1. Prospect enters the next Auction Portal.  If no claims are placed and the prospect remains in the MLB, the Prospect becomes an addable Free Agent in Yahoo  
    3. DC Prospects called up in the month of September are not subjected to the call-up Purchase Fee \- however, they cannot be added to a yahoo roster unless they are purchased.
 
 ## **Section 03: Purchased Contract**
 
 1. A Purchased Contract for a Prospect is a more expansive form of Contract that can be awarded to a prospect at any time during the FBP pre-season or regular season. ($10 WB)  
 2. PC Prospects can be called up and sent down from a team’s Yahoo Roster freely.  
-3. Prospects that are won by teams in the Prospect Auction Portal are automatically given a Purchased Contract  
+3. Prospects that are won by teams in the Prospect Auction Portal are automatically given a Purchased Contract.  
 4. PC Prospects who make their MLB Debut are not subject to the automatic Purchase Fee because they are already Purchased.
 
 ## **Section 04: Blue-Chip Contract**
@@ -173,7 +177,8 @@
 1. Teams may choose to hold a prospect’s graduation to a Keeper Contract until they surpass FBP Prospect Limits \- defined below:  
    1. 350 PA  
    2. 100 IP \- or \- 30 Pitching Appearances  
-2. Prospects are able to remain prospects in season until the prospect graduation deadline (MLB All-Star Break).  At this point if they exceed FBP Prospect Limits, they will cease to be eligible for prospect status and must be rostered on the 26-man Yahoo Roster.  (NA or IL are acceptable slots if applicable)
+2. Prospects are able to remain prospects in season until the prospect graduation deadline (MLB All-Star Break).  At this point if they exceed FBP Prospect Limits, they will cease to be eligible for prospect status and must be rostered on the 26-man Yahoo Roster.  (NA or IL are acceptable slots if applicable)  
+   1. Contracted Prospects that do not graduate in-season at the deadline may remain a prospect through the remainder of the year.
 
 # **Article 4: Pre-Season Management**
 
@@ -205,13 +210,16 @@
 1. FBP Prospect Draft will occur after the completion of PAD and prior to the start of KAP  
 2. The FBP Prospect Draft order will be a non-snake format and reverse standings order from the previous season.  
 3. Players in the draft must not have a tendered contract and must be Prospect Eligible based on FBP Parameters  
-4. The First 2 RDs of the Prospect Draft will be only prospects from the most recent MLB FIrst Year Player Draft (FYPD)  
+4. The First 2 RDs of the Prospect Draft will be only prospects from the most recent MLB First Year Player Draft (FYPD) and that offseason’s prospect qualified international signing window  
    1. Teams must have paid for open Blue Chip Slot(s) to participate in these RDs  
    2. Prospect selected in these RDs are given a Blue Chip Contract  
 5. The Remaining RDs of the Prospect Draft will contain all remaining prospects including the FYPD prospects that were not selected in the opening RDs  
    1. Teams must pay for open DC Slot(s) to participate in remaining RDs  
       1. Ex: 6 Unassigned DC Slots paid for during PAD award entry to RDs 3-8 in the Prospect Draft  
-   2. Prospects selected in these RDs are given a Development Contract
+   2. Prospects selected in these RDs are given a Development Contract  
+   3. Capped at a maximum of 15 open DC Slots  
+6. After the Prospect Draft & before KAP, teams may use any rollover WB from PAD to elevate newly drafted DC’s to a PC or BC tier for an equal total investment as PAD rates.  
+   1. Ex: Team A drafts Leo de Vries in RD 3 with a DC Slot, they had $25 WB set to roll-over from PAD to KAP, they choose to BC de Vries for an additional $15 WB (20-5).  $10 WB are now set to roll over.
 
 ## **Section 04: Keeper Assignment Period (KAP)**
 
@@ -303,6 +311,7 @@
 2. A single trade may involve up to a maximum of 3 teams  
 3. To submit a trade for approval and official league posting, all teams involved must send the trade in a uniform format to their individual admin channels in the FBP Discord.  Example Format Below:
 
+     
    Team A Receives:
 
    Blake Snell \- VC-1
@@ -318,14 +327,15 @@
 
    $10 WB via Team A
 
-4. Standardized Processing Windows will be established for all trades throughout the season:  
+4. In-Season Trading may begin in the first Processing Window after the APA is allocated to the league until the Trade Deadline (July 31).  
+5. Standardized Processing Windows will be established for all trades throughout the season:  
    1. Submission: Sunday \- Monday  
       Processed: Tuesday  
    2. Submission: Tuesday-Wednesday  
       Processed Thursday  
    3. Submission: Thursday-Saturday  
       Processed: Sunday  
-5. A submitted trade may be voided under the following circumstance:  
+6. A submitted trade may be voided under the following circumstance:  
    1. A player involved in a trade is injured prior to the processing day and one or more manager involved was unaware of the possibility of the injury prior to processing
 
 ## **Section 03: Roster Regulations**
@@ -375,14 +385,15 @@
 3. Bids are considered “committed” when they are the leading bid  
    1. Committed Bids are deducted from Current WB balance  
    2. Managers may not commit to bids more than their WB balance  
-   3. Managers are not permitted to “uncommit” from their Committed Bids
+   3. Managers are not permitted to “uncommit” from their Committed Bidspr
 
 ## **Section 05: Dates/Deadlines**
 
 1. An FBP Calendar with official dates for pre-season & in-season events will be sent to the league by the commissioner’s office by February 1st every year  
 2. Prospects who surpass the MLB or FBP threshold for eligibility will be forced to graduate their status at the MLB All-Star Break  
    1. Teams must roster graduated prospects on their yahoo 26-man by the first Monday when moves reset or surrender their expired contract to free agency.  
-3. FBP Trade Deadline \= July 31st
+3. FBP Trade Deadline \= July 31st  
+   1. Post-Trade Deadline Allotment
 
 ## **Section 06: Fines/Penalties**
 
@@ -392,7 +403,7 @@
 2. Violation of missing IP Min (Yahoo Setting) will result in the following fine:  
    1. $25 WB from PAD per violation event during any week of the regular season  
       1. $10-$25 WB from these penalties go to the KAP of negatively affected team(s) based on the magnitude of the consequences  
-   2. $75 WB from KAP per violation event during any week in the last 6 weeks of the season  
+   2. Additional $75 WB from KAP per violation event during any week in the last 6 weeks of the season  
       1. Prevented from receiving standings based WB rewards in the top 2 of Consolation or Elimination Brackets  
 3. All other violations and honor code encroachments are to be handled at Commissioner’s Office discretion
 
@@ -458,12 +469,12 @@
 
 1. Due to the bracket format and reward layering, the FBP has integrated a unique Division Draft system and a season matchup schedule that is uniform from season to season based on where teams are drafted in said draft.  
 2. Every season will have 3 Divisions captained by the previous season’s FBP League Winner, Consolation Winner, and Last Place Finisher.  The Division Names are as follows:  
-   1. Colossus of Clout Division (A)  
-      1. Captained by FBP League Champion (A1)  
+   1. Stanky’s Grave Division (A)  
+      1. Captained by Last Place Finisher (A1)  
    2. Charlie Hustle Division (B)  
       1. Captained by FBP Consolation Champion (B1)  
-   3. Stanky’s Grave Division (C)  
-      1. Captained by Last Place Finisher (C1)
+   3. Colossus of Clout Division (C)  
+      1. Captained by FBP Champion (C1)
 
 ## **Section 02: Division Draft**
 
@@ -481,7 +492,7 @@
 ## **Section 03: League Schedule**
 
 1. The League Schedule will be weighted and balanced based on the Divisional Draft order.  See structure below \- we will refer to the individual picks based on the alphanumeric coding above with captains in () from the Overview.  
-   1. All teams will play their own division rival 3 times  
+   1. All teams will play their own division 3 times  
    2. Each team will play 4 other teams twice (2 from each division) and the remaining 4 teams once (other 2 from each division) \- groupings dictated below:  
       1. A1 & A4  
          2x \= C4,C3,B2,B4  
