@@ -195,18 +195,27 @@ function renderPlayerLogTable() {
 
         const dateText = rec.timestamp ? formatDate(rec.timestamp) : '';
         const playerText = rec.player_name || '';
+        const upidText = rec.upid || '';
         const teamText = rec.team || '';
+        const posText = rec.pos || '';
+        const typeText = rec.player_type || '';
         const ownerText = rec.owner || '';
-        const typeText = rec.update_type || '';
-        const contractStatus = [rec.contract, rec.status].filter(Boolean).join(' | ');
+        const updateTypeText = rec.update_type || '';
+        const contractStatus = [
+            rec.contract || rec.status || '',
+            rec.years || ''
+        ].filter(Boolean).join(' | ');
         const eventText = rec.event || '';
 
         tr.innerHTML = `
+            <td>${upidText}</td>
             <td>${dateText}</td>
             <td>${playerText}</td>
             <td>${teamText}</td>
-            <td>${ownerText}</td>
+            <td>${posText}</td>
             <td>${typeText}</td>
+            <td>${ownerText}</td>
+            <td>${updateTypeText}</td>
             <td>${contractStatus}</td>
             <td title="${eventText.replace(/"/g, '&quot;')}">${eventText}</td>
         `;
