@@ -612,9 +612,6 @@ function updateSummary() {
     const tbody = document.getElementById('summaryWBTable');
     const rows = [];
     
-    const bcPaid = bcContracts.filter(p => !(p.legacy_dc && p.top_100_rank));
-    const bcFree = bcContracts.filter(p => p.legacy_dc && p.top_100_rank);
-    
     if (dcContracts.length > 0) rows.push(`<tr><td>DC Contracts (${dcContracts.length})</td><td>$${dcContracts.length * 5}</td></tr>`);
     if (pcContracts.length > 0) rows.push(`<tr><td>PC Contracts (${pcContracts.length})</td><td>$${pcContracts.length * 10}</td></tr>`);
     if (bcPaid.length > 0) rows.push(`<tr><td>BC Contracts (${bcPaid.length})</td><td>$${bcPaid.length * 20}</td></tr>`);
