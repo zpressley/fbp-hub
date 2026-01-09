@@ -292,7 +292,8 @@
 287+
 
 .btn-contract.dc {
-    background-color: #2196F3;
+    background-color: #26c6da; /* brighter teal for contrast */
+    color: #0b1020;
 }
 
 .btn-contract.pc {

@@ -159,8 +159,8 @@ async function loadPADData() {
                     position: p.position,
                     age: p.age || null,
                     level: p.level || 'Unknown',
-                    // Normalize legacy Development Cont. to DC for PAD logic
-                    contract_type: isLegacyDC ? 'DC' : (p.contract_type || null),
+                    // All prospects must be repurchased for the new season
+                    contract_type: null,
                     original_contract_type: originalContractType,
                     legacy_dc: isLegacyDC,
                     top_100_rank: top ? top.rank : null,
@@ -172,17 +172,23 @@ async function loadPADData() {
         PAD_STATE.myProspects = getMockProspects();
     }
     
-    // Check for saved draft
+    // Check for saved draft (schema-versioned so we can safely evolve PAD_STATE)
     const savedDraft = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
     if (savedDraft) {
         try {
             const draft = JSON.parse(savedDraft);
-            PAD_STATE.myProspects = draft.prospects;
-            PAD_STATE.dcSlots = draft.dcSlots || 0;
-            PAD_STATE.bcSlots = draft.bcSlots || [];
-            console.log('✅ Loaded saved draft');
+            if (draft.schemaVersion === 2 && Array.isArray(draft.prospects)) {
+                PAD_STATE.myProspects = draft.prospects;
+                PAD_STATE.dcSlots = draft.dcSlots || 0;
+                PAD_STATE.bcSlots = draft.bcSlots || [];
+                console.log('✅ Loaded saved PAD draft (v2)');
+            } else {
+                console.log('Ignoring legacy PAD draft; clearing old localStorage value');
+                localStorage.removeItem(`pad_draft_${PAD_STATE.team}_2026`);
+            }
         } catch (e) {
             console.error('Failed to load draft:', e);
+            localStorage.removeItem(`pad_draft_${PAD_STATE.team}_2026`);
         }
     }
 }
@@ -277,12 +283,13 @@ function calculateTotalSpend() {
     ).length * 10;
     
     // BC costs:
-    // - Top 100 prospects: FREE (auto-retained)
     // - Legacy DC (old system) upgraded to BC at PAD: FREE (one-time transition)
     // - All other BC contracts: 20 WB
-    const bcCost = PAD_STATE.myProspects.filter(p => 
-        p.contract_type === 'BC' && !p.top_100_rank && !p.legacy_dc
-    ).length * 20;
+    const bcCost = PAD_STATE.myProspects.reduce((sum, p) => {
+        if (p.contract_type !== 'BC') return sum;
+        if (p.legacy_dc) return sum;
+        return sum + 20;
+    }, 0);
     
     const dcSlotsCost = PAD_STATE.dcSlots * 5;
     const bcSlotsCost = PAD_STATE.bcSlots.length * 20;
@@ -326,7 +333,7 @@ function displayProspects() {
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
         const isTop100 = !!p.top_100_rank;
-        const canUpgradeToBC = p.contract_type === 'DC' && (isTop100 || p.legacy_dc);
+        const canUpgradeToBC = p.contract_type === 'DC';
         const bcStar = p.contract_type === 'BC' ? '<i class="fas fa-star bc-star"></i>' : '';
         
         return `
@@ -412,15 +419,10 @@ function assignContract(upid, contractType) {
  */
 function upgradeContract(upid, targetContract) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
-    if (!prospect) return;
+        if (!prospect) return;
 
-    if (targetContract === 'BC') {
-        const eligibleForBC = prospect.top_100_rank || prospect.legacy_dc;
-        if (!eligibleForBC) {
-            showToast('BC is only available for Top 100 or legacy DC prospects', 'error');
-            return;
-        }
-    }
+    // BC can be purchased for any prospect (via DC → BC),
+    // but BC from legacy DC is free during the 2026 transition.
     
     let cost;
     if (targetContract === 'PC') {
@@ -580,8 +582,7 @@ function updateSummary() {
     // Prospect contracts summary
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
-    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC' && !p.top_100_rank);
-    const bcRetained = PAD_STATE.myProspects.filter(p => p.top_100_rank);
+    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
     
     const prospectsHTML = [];
     
@@ -618,16 +619,6 @@ function updateSummary() {
         `);
     }
     
-    if (bcRetained.length > 0) {
-        prospectsHTML.push(`
-            <div class="summary-item bc-auto">
-                <strong>BC Auto-Retained (${bcRetained.length})</strong>
-                <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
-                    ${bcRetained.map(p => `${p.name} (Top 100 #${p.top_100_rank})`).join(', ')}
-                </div>
-            </div>
-        `);
-    }
     
     if (prospectsHTML.length === 0) {
         prospectsHTML.push('<div class="summary-empty">No prospect contracts assigned</div>');
@@ -672,8 +663,7 @@ function updateSummary() {
     
     if (dcContracts.length > 0) rows.push(`<tr><td>DC Contracts (${dcContracts.length})</td><td>$${dcContracts.length * 5}</td></tr>`);
     if (pcContracts.length > 0) rows.push(`<tr><td>PC Contracts (${pcContracts.length})</td><td>$${pcContracts.length * 10}</td></tr>`);
-    if (bcContracts.length > 0) rows.push(`<tr><td>BC Contracts (${bcContracts.length})</td><td>$${bcContracts.length * 20}</td></tr>`);
-    if (bcRetained.length > 0) rows.push(`<tr><td>BC Auto-Retained (${bcRetained.length})</td><td style="color: var(--success);">FREE</td></tr>`);
+    if (bcContracts.length > 0) rows.push(`<tr><td>BC Contracts (${bcContracts.length})</td><td>$${bcContracts.reduce((s,p) => s + (p.legacy_dc ? 0 : 20), 0)}</td></tr>`);
     if (PAD_STATE.dcSlots > 0) rows.push(`<tr><td>DC Draft Slots (${PAD_STATE.dcSlots})</td><td>$${PAD_STATE.dcSlots * 5}</td></tr>`);
     if (PAD_STATE.bcSlots.length > 0) rows.push(`<tr><td>BC Draft Slots (${PAD_STATE.bcSlots.length})</td><td>$${PAD_STATE.bcSlots.length * 20}</td></tr>`);
     
@@ -701,18 +691,16 @@ function showConfirmation() {
     
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
-    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC' && !p.top_100_rank);
-    const bcRetained = PAD_STATE.myProspects.filter(p => p.top_100_rank);
+    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
     
     const summaryHTML = `
-        ${dcContracts.length > 0 || pcContracts.length > 0 || bcContracts.length > 0 || bcRetained.length > 0 ? `
+        ${dcContracts.length > 0 || pcContracts.length > 0 || bcContracts.length > 0 ? `
             <div class="confirmation-section">
                 <h4>Prospect Contracts</h4>
                 <ul>
                     ${dcContracts.length > 0 ? `<li><strong>${dcContracts.length} DC:</strong> ${dcContracts.map(p => p.name).join(', ')}</li>` : ''}
                     ${pcContracts.length > 0 ? `<li><strong>${pcContracts.length} PC:</strong> ${pcContracts.map(p => p.name).join(', ')}</li>` : ''}
                     ${bcContracts.length > 0 ? `<li><strong>${bcContracts.length} BC:</strong> ${bcContracts.map(p => p.name).join(', ')}</li>` : ''}
-                    ${bcRetained.length > 0 ? `<li style="color: var(--success);"><strong>${bcRetained.length} BC Auto-Retained:</strong> ${bcRetained.map(p => p.name).join(', ')}</li>` : ''}
                 </ul>
             </div>
         ` : ''}
@@ -769,7 +757,7 @@ async function confirmSubmit() {
     
     // Log all prospect contract assignments
     PAD_STATE.myProspects.forEach(prospect => {
-        if (!prospect.contract_type || prospect.top_100_rank) return;
+        if (!prospect.contract_type) return;
         
         let cost = 0;
         let txnType = '';
@@ -811,21 +799,6 @@ async function confirmSubmit() {
                 wizbucks_txn_id: wbTxnId
             });
         }
-    });
-    
-    // Log BC auto-retentions (no cost)
-    PAD_STATE.myProspects.filter(p => p.top_100_rank).forEach(prospect => {
-        logPlayerChange({
-            upid: prospect.upid,
-            player_name: prospect.name,
-            update_type: 'bc_retention',
-            changes: {
-                contract_type: { from: 'BC', to: 'BC' }
-            },
-            event: `BC auto-retained (Top 100 #${prospect.top_100_rank})`,
-            player_data: prospect,
-            wizbucks_txn_id: null
-        });
     });
     
     // Log DC slot purchases
@@ -908,6 +881,7 @@ async function confirmSubmit() {
  */
 function saveDraft() {
     const draft = {
+        schemaVersion: 2,
         prospects: PAD_STATE.myProspects,
         dcSlots: PAD_STATE.dcSlots,
         bcSlots: PAD_STATE.bcSlots,
