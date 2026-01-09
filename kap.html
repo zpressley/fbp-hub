@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keeper Assignment Period - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/kap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu"></div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="kap.html" class="nav-link active">
+                <i class="fas fa-trophy"></i>
+                <span>KAP</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access Keeper Assignment Period</p>
+            <a href="login.html" class="btn-primary">LOGIN WITH DISCORD</a>
+        </div>
+
+        <!-- KAP Content -->
+        <div id="kapContent" style="display: none;">
+            <div class="page-header">
+                <h2>KEEPER ASSIGNMENT PERIOD</h2>
+                <p class="page-subtitle">Select keepers, manage contracts, and allocate draft picks</p>
+            </div>
+
+            <!-- Sticky KAP Budget Bar -->
+            <div class="kap-sticky-bar" id="kapStickyBar">
+                <div class="kap-bar-grid">
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Available</span>
+                        <span class="kap-bar-value total" id="barTotalKAP">$405</span>
+                    </div>
+                    <div class="kap-bar-divider"></div>
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Taxable</span>
+                        <span class="kap-bar-value taxable" id="barTaxableSpend">$0</span>
+                        <span class="kap-bar-sublabel" id="barTaxLimit">/ $435 max</span>
+                    </div>
+                    <div class="kap-bar-divider"></div>
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Tax-Free</span>
+                        <span class="kap-bar-value taxfree" id="barTaxFreeSpend">$0</span>
+                        <span class="kap-bar-sublabel">RaT only</span>
+                    </div>
+                    <div class="kap-bar-divider"></div>
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Remaining</span>
+                        <span class="kap-bar-value remaining" id="barRemaining">$405</span>
+                    </div>
+                    <div class="kap-bar-divider"></div>
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Tax Bracket</span>
+                        <span class="kap-bar-value tax" id="barTaxBracket">None</span>
+                        <span class="kap-bar-sublabel" id="barTaxRounds"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="0">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Keepers</div>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="1">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Tools</div>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Buy-Ins</div>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Keeper Selection -->
+            <div class="kap-step active" id="step-0">
+                <div class="step-header">
+                    <h3>Select Your Keepers</h3>
+                    <p>Choose up to 26 players to keep • Contract advances one year when kept</p>
+                </div>
+
+                <div class="keeper-summary-cards">
+                    <div class="keeper-summary-card">
+                        <div class="summary-stat">
+                            <span class="summary-label">Keepers Selected</span>
+                            <span class="summary-value" id="keepersSelected">0</span>
+                            <span class="summary-sublabel">/ 26 max</span>
+                        </div>
+                    </div>
+                    <div class="keeper-summary-card">
+                        <div class="summary-stat">
+                            <span class="summary-label">Salary Cost</span>
+                            <span class="summary-value" id="salaryCost">$0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="keeperList"></div>
+
+                <div class="nav-buttons">
+                    <div></div>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Salary Tools (IL Tags & RaT) -->
+            <div class="kap-step" id="step-1">
+                <div class="step-header">
+                    <h3>Salary Manipulation Tools</h3>
+                    <p>Apply IL tags and Reduce-a-Tier to manage keeper costs</p>
+                </div>
+
+                <div class="tools-section">
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <h4><i class="fas fa-medkit"></i> IL Tags</h4>
+                            <p>Reduce keeper cost for injured players • 1 per tier</p>
+                        </div>
+                        <div class="il-tags-grid" id="ilTagsGrid"></div>
+                    </div>
+
+                    <div class="tool-card rat-card">
+                        <div class="tool-header">
+                            <h4><i class="fas fa-level-down-alt"></i> Reduce-a-Tier (RaT)</h4>
+                            <p>$75 tax-free • Lower contract tier • Can use multiple times</p>
+                        </div>
+                        <div class="rat-info">
+                            <div class="rat-stat">
+                                <span>RaT Used:</span>
+                                <strong id="ratUsedCount">0</strong>
+                            </div>
+                            <div class="rat-stat">
+                                <span>Cost:</span>
+                                <strong id="ratTotalCost">$0</strong>
+                            </div>
+                        </div>
+                        <div class="rat-list" id="ratList"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Draft Buy-Ins -->
+            <div class="kap-step" id="step-2">
+                <div class="step-header">
+                    <h3>Draft Round Buy-Ins</h3>
+                    <p>Purchase picks in Rounds 1-3 of the Keeper Draft</p>
+                </div>
+
+                <div class="info-banner">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Buy-In Rules</strong>
+                        <p>Buy-ins are taxable spend. Needed to trade picks in Rounds 1-3.</p>
+                    </div>
+                </div>
+
+                <div class="buyins-grid">
+                    <div class="buyin-card" data-round="1">
+                        <div class="buyin-header">
+                            <h4>Round 1</h4>
+                            <div class="buyin-cost">$55</div>
+                        </div>
+                        <div class="buyin-status" id="buyin1Status">Not Purchased</div>
+                        <button class="btn-buyin" id="buyin1Btn" onclick="toggleBuyIn(1, 55)">
+                            <i class="fas fa-shopping-cart"></i> Purchase
+                        </button>
+                    </div>
+
+                    <div class="buyin-card" data-round="2">
+                        <div class="buyin-header">
+                            <h4>Round 2</h4>
+                            <div class="buyin-cost">$35</div>
+                        </div>
+                        <div class="buyin-status" id="buyin2Status">Not Purchased</div>
+                        <button class="btn-buyin" id="buyin2Btn" onclick="toggleBuyIn(2, 35)">
+                            <i class="fas fa-shopping-cart"></i> Purchase
+                        </button>
+                    </div>
+
+                    <div class="buyin-card" data-round="3">
+                        <div class="buyin-header">
+                            <h4>Round 3</h4>
+                            <div class="buyin-cost">$10</div>
+                        </div>
+                        <div class="buyin-status" id="buyin3Status">Not Purchased</div>
+                        <button class="btn-buyin" id="buyin3Btn" onclick="toggleBuyIn(3, 10)">
+                            <i class="fas fa-shopping-cart"></i> Purchase
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Summary -->
+            <div class="kap-step" id="step-3">
+                <div class="step-header">
+                    <h3>Review & Submit</h3>
+                    <p>Review your keeper selections and allocations</p>
+                </div>
+
+                <div class="info-banner">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Final Review</strong>
+                        <p>You can go back to make changes before submitting</p>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-users"></i> Keepers Selected (<span id="summaryKeeperCount">0</span>/26)</h4>
+                    <div id="summaryKeepers"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-tools"></i> Salary Tools Used</h4>
+                    <div id="summaryTools"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-list-ol"></i> Draft Buy-Ins</h4>
+                    <div id="summaryBuyIns"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-coins"></i> Budget Summary</h4>
+                    <table class="summary-table">
+                        <tbody id="summaryBudgetTable"></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td>Total Taxable Spend</td>
+                                <td id="summaryTaxableTotal">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Tax-Free Spend (RaT)</td>
+                                <td id="summaryTaxFreeTotal">$0</td>
+                            </tr>
+                            <tr class="tax-row">
+                                <td>Draft Pick Tax</td>
+                                <td id="summaryTaxPicks">None</td>
+                            </tr>
+                            <tr class="rollover-row">
+                                <td>Rollover to APA</td>
+                                <td id="summaryRollover">$0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="validation-warnings" id="validationWarnings"></div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-submit" onclick="showConfirmation()" id="submitKAPBtn">
+                        <i class="fas fa-paper-plane"></i> Submit KAP
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Already Submitted View -->
+        <div id="submittedView" style="display: none;">
+            <div class="page-header">
+                <h2>KEEPER ASSIGNMENT PERIOD</h2>
+                <p class="page-subtitle">2026 KAP Submission</p>
+            </div>
+
+            <div class="submitted-banner">
+                <div class="submitted-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="submitted-content">
+                    <h3>KAP Submitted</h3>
+                    <p>Your 2026 keeper selections have been successfully submitted and locked</p>
+                    <p class="submitted-date">Submitted: <span id="submittedDate"></span></p>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4><i class="fas fa-clipboard-check"></i> Your Keeper Selections</h4>
+                <div id="submittedSummary"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--space-2xl);">
+                <a href="index.html" class="btn-primary">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Confirm KAP Submission</h2>
+                <p>Review your final keeper selections</p>
+            </div>
+            
+            <div id="confirmationSummary"></div>
+            
+            <div class="confirmation-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>This action cannot be undone</strong>
+                <p>Once submitted, all transactions will be logged and your keepers are locked for the 2026 season</p>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="cancelSubmit()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-submit" onclick="confirmSubmit()">
+                    <i class="fas fa-check"></i> Confirm & Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/kap.js"></script>
+</body>
+</html>
