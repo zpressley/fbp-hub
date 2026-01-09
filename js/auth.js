@@ -360,16 +360,16 @@ function addUserMenu() {
 
     const navContainer = nav.querySelector('.nav-container');
     if (!navContainer) return;
-
-    // Reuse existing user-menu container if present to avoid duplicates
-    let userMenu = nav.querySelector('.user-menu');
+        
+        // Reuse existing user-menu container if present to avoid duplicates
+        let userMenu = nav.querySelector('.user-menu');
     if (!userMenu) {
         userMenu = document.createElement('div');
         userMenu.className = 'user-menu';
         navContainer.appendChild(userMenu);
     }
 
-    userMenu.innerHTML = `
+        userMenu.innerHTML = `
         <button class="user-menu-toggle" id="userMenuToggle">
             <img src="${authManager.getAvatarUrl(32)}" alt="${user.username}" class="user-avatar-small">
             <span class="user-team-abbr">${team?.abbreviation || user.username}</span>
@@ -379,6 +379,10 @@ function addUserMenu() {
             <a href="dashboard.html">
                 <i class="fas fa-tachometer-alt"></i>
                 Dashboard
+            </a>
+            <a href="pad.html">
+                <i class="fas fa-receipt"></i>
+                PAD Schedule
             </a>
             ${authManager.isCommissioner() ? `
                 <a href="admin.html">
