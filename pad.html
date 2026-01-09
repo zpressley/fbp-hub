@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospect Allocation Day - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pad.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu"></div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access Prospect Allocation Day</p>
+            <a href="login.html" class="btn-primary">LOGIN WITH DISCORD</a>
+        </div>
+
+        <!-- PAD Form -->
+        <div id="padContent" style="display: none;">
+            <div class="page-header">
+                <h2>PROSPECT ALLOCATION DAY</h2>
+                <p class="page-subtitle">Assign contracts and allocate draft slots for 2026</p>
+            </div>
+
+            <!-- Sticky WizBucks Bar -->
+            <div class="wizbucks-sticky-bar" id="wizBucksStickyBar">
+                <div class="wb-bar-grid">
+                    <div class="wb-bar-item">
+                        <span class="wb-bar-label">Available</span>
+                        <span class="wb-bar-value total" id="barTotalAvailable">$165</span>
+                    </div>
+                    <div class="wb-bar-item">
+                        <span class="wb-bar-label">Spending</span>
+                        <span class="wb-bar-value spent" id="barCurrentSpend">$0</span>
+                    </div>
+                    <div class="wb-bar-item">
+                        <span class="wb-bar-label">Remaining</span>
+                        <span class="wb-bar-value remaining" id="barRemainingBalance">$165</span>
+                    </div>
+                    <div class="wb-bar-item">
+                        <span class="wb-bar-label">→ KAP</span>
+                        <span class="wb-bar-value rollover" id="barRolloverToKAP">$30</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="0">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Prospects</div>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="1">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Draft Slots</div>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Prospects -->
+            <div class="pad-step active" id="step-0">
+                <div class="step-header">
+                    <h3>Your Prospects from 2025</h3>
+                    <p>Assign contracts to carry over to 2026 • Changes are saved as draft</p>
+                </div>
+                <div id="prospectList"></div>
+                <div class="nav-buttons">
+                    <div></div>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Draft Slots -->
+            <div class="pad-step" id="step-1">
+                <div class="step-header">
+                    <h3>Draft Slot Allocation</h3>
+                    <p>Purchase slots to participate in Prospect Draft</p>
+                </div>
+
+                <div class="slot-section">
+                    <div class="slot-header">
+                        <h4>DC Slots <span class="slot-subtitle">(Rounds 3+)</span></h4>
+                        <p>$5 per slot • Maximum 15 slots</p>
+                    </div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="adjustDCSlots(-1)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <div class="counter-value" id="dcSlotsCount">0</div>
+                        <button class="counter-btn" onclick="adjustDCSlots(1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="slot-cost">
+                        Cost: <strong id="dcSlotsCost">$0</strong>
+                    </div>
+                </div>
+
+                <div class="slot-section bc-section">
+                    <div class="slot-header">
+                        <h4>BC Slots <span class="slot-subtitle">(Rounds 1-2 FYPD)</span></h4>
+                        <p>$20 per slot • For first-year player draft prospects</p>
+                    </div>
+                    <div class="bc-slots-list" id="bcSlotsList">
+                        <div class="bc-slots-empty">No BC slots purchased yet</div>
+                    </div>
+                    <button class="btn-primary btn-add-slot" onclick="addBCSlot()">
+                        <i class="fas fa-plus"></i> Add BC Slot ($20)
+                    </button>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Summary -->
+            <div class="pad-step" id="step-2">
+                <div class="step-header">
+                    <h3>Review & Submit</h3>
+                    <p>Review your allocations before submitting</p>
+                </div>
+
+                <div class="info-banner">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Final Review</strong>
+                        <p>You can go back to make changes before submitting</p>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-users"></i> Prospect Contracts</h4>
+                    <div id="summaryProspects"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-list-ol"></i> Draft Slots</h4>
+                    <div id="summarySlots"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h4><i class="fas fa-coins"></i> WizBucks Summary</h4>
+                    <table class="summary-table">
+                        <tbody id="summaryWBTable"></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td>Total Spend</td>
+                                <td id="summaryTotal">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Remaining</td>
+                                <td id="summaryRemaining">$165</td>
+                            </tr>
+                            <tr class="rollover-row">
+                                <td>Rollover to KAP</td>
+                                <td id="summaryRollover">$30</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-submit" onclick="showConfirmation()">
+                        <i class="fas fa-paper-plane"></i> Submit PAD
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Already Submitted View -->
+        <div id="submittedView" style="display: none;">
+            <div class="page-header">
+                <h2>PROSPECT ALLOCATION DAY</h2>
+                <p class="page-subtitle">2026 PAD Submission</p>
+            </div>
+
+            <div class="submitted-banner">
+                <div class="submitted-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="submitted-content">
+                    <h3>PAD Submitted</h3>
+                    <p>Your 2026 PAD has been successfully submitted and locked</p>
+                    <p class="submitted-date">Submitted: <span id="submittedDate"></span></p>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4><i class="fas fa-clipboard-check"></i> Your Allocations</h4>
+                <div id="submittedSummary"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--space-2xl);">
+                <a href="index.html" class="btn-primary">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Confirm PAD Submission</h2>
+                <p>Review your final allocations</p>
+            </div>
+            
+            <div id="confirmationSummary"></div>
+            
+            <div class="confirmation-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>This action cannot be undone</strong>
+                <p>Once submitted, all transactions will be logged and your PAD allocations are locked for the 2026 season</p>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="cancelSubmit()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-submit" onclick="confirmSubmit()">
+                    <i class="fas fa-check"></i> Confirm & Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pad.js"></script>
+</body>
+</html>
