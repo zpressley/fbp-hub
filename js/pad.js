@@ -329,7 +329,7 @@ function displayProspects() {
                             <span class="prospect-inline-meta">
                                 <span>${p.position}</span>
                                 <span>${p.team}</span>
-                                <span>Age ${p.age || '?'}</span>
+                                ${p.age != null ? `<span>Age ${p.age}</span>` : ''}
                                 ${p.top_100_rank ? `<span>Top 100 #${p.top_100_rank}</span>` : ''}
                             </span>
                         </h4>
