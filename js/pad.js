@@ -483,6 +483,12 @@ function adjustDCSlots(delta) {
  * Add BC slot
  */
 function addBCSlot() {
+    // Max 2 BC slots
+    if (PAD_STATE.bcSlots.length >= 2) {
+        showToast('Maximum 2 BC slots', 'error');
+        return;
+    }
+
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
     if (remaining < 20) {
