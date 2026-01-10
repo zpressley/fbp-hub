@@ -85,6 +85,31 @@ async function checkSubmissionStatus() {
 }
 
 /**
+ * Build prospect list for a given team from combined_players.json
+ */
+function buildProspectsForTeam(teamAbbr) {
+    if (typeof FBPHub === 'undefined' || !FBPHub.data?.players || !teamAbbr) return [];
+
+    return FBPHub.data.players
+        .filter(p => p.FBP_Team === teamAbbr && p.player_type === 'Farm')
+        .map(p => ({
+            upid: p.upid || '',
+            name: p.name,
+            team: p.team,
+            position: p.position,
+            age: p.age || null,
+            level: p.level || 'Unknown',
+            // PAD requirement: prospects should start unassigned in the PAD UI,
+            // regardless of any existing contract_type in combined_players.json.
+            contract_type: null,
+            // Flag legacy DCs so they get special PAD treatment (e.g. free BC option).
+            legacy_dc: p.contract_type === 'Development Cont.' || p.contract_type === 'Development Contract',
+            top_100_rank: p.top_100_rank || null,
+            has_mlb_service: p.has_mlb_service || false
+        }));
+}
+
+/**
  * Load PAD data for team
  */
 async function loadPADData() {
@@ -107,27 +132,10 @@ async function loadPADData() {
     PAD_STATE.totalAvailable = PAD_STATE.startingBalance + PAD_STATE.rolloverFrom2025;
     
     // Load team's prospects from combined_players.json
-    if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
-        PAD_STATE.myProspects = FBPHub.data.players.filter(p => 
-            p.manager === PAD_STATE.team && 
-            p.player_type === 'Farm'
-        ).map(p => ({
-            upid: p.upid || '',
-            name: p.name,
-            team: p.team,
-            position: p.position,
-            age: p.age || null,
-            level: p.level || 'Unknown',
-            // PAD requirement: prospects should start unassigned in the PAD UI,
-            // regardless of any existing contract_type in combined_players.json.
-            contract_type: null,
-            // Flag legacy DCs so they get special PAD treatment (e.g. free BC option).
-            legacy_dc: p.contract_type === 'Development Cont.' || p.contract_type === 'Development Contract',
-            top_100_rank: p.top_100_rank || null,
-            has_mlb_service: p.has_mlb_service || false
-        }));
-    } else {
-        // Fallback to mock data for testing
+    PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
+
+    // If no data loaded for some reason, fall back to mock data (dev only)
+    if (!PAD_STATE.myProspects || PAD_STATE.myProspects.length === 0) {
         PAD_STATE.myProspects = getMockProspects();
     }
     
@@ -136,7 +144,10 @@ async function loadPADData() {
     if (savedDraft) {
         try {
             const draft = JSON.parse(savedDraft);
-            PAD_STATE.myProspects = draft.prospects;
+            // Only override prospects if the draft actually has some
+            PAD_STATE.myProspects = (draft.prospects && draft.prospects.length)
+                ? draft.prospects
+                : PAD_STATE.myProspects;
             PAD_STATE.dcSlots = draft.dcSlots || 0;
             PAD_STATE.bcSlots = draft.bcSlots || [];
             console.log('✅ Loaded saved draft');
@@ -272,6 +283,12 @@ function updateWizBucksDisplay() {
 function displayProspects() {
     const container = document.getElementById('prospectList');
     
+    // If prospects array is empty but data is loaded, rebuild from source
+    if ((!PAD_STATE.myProspects || PAD_STATE.myProspects.length === 0) &&
+        typeof FBPHub !== 'undefined' && FBPHub.data?.players?.length) {
+        PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
+    }
+
     if (!PAD_STATE.myProspects || PAD_STATE.myProspects.length === 0) {
         container.innerHTML = `
             <div class="empty-message">
