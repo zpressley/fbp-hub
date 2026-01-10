@@ -238,21 +238,21 @@ function goToStep(stepIndex) {
  * Calculate total spend (draft mode - not yet committed)
  */
 function calculateTotalSpend() {
+    // 2026 transition: DC/PC/BC are FREE for legacy DC prospects
     const dcCost = PAD_STATE.myProspects.filter(p => 
-        p.contract_type === 'DC' && !p.was_upgraded
+        p.contract_type === 'DC' && !p.was_upgraded && !p.legacy_dc
     ).length * 5;
     
     const pcCost = PAD_STATE.myProspects.filter(p => 
-        p.contract_type === 'PC' && !p.was_bc
+        p.contract_type === 'PC' && !p.was_bc && !p.legacy_dc
     ).length * 10;
     
     // BC costs:
-    // - Legacy DC + Top 100: FREE (one-time 2026 transition)
+    // - Legacy DC: FREE in 2026 transition
     // - All other BC contracts: $20
     const bcCost = PAD_STATE.myProspects.reduce((sum, p) => {
         if (p.contract_type !== 'BC') return sum;
-        // Legacy DC + Top 100 = FREE
-        if (p.legacy_dc && p.top_100_rank) return sum;
+        if (p.legacy_dc) return sum; // free for legacy DC
         return sum + 20;
     }, 0);
     
@@ -304,8 +304,8 @@ function displayProspects() {
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
         
-        // Determine BC cost: FREE if legacy DC + Top 100, otherwise $20
-        const bcCost = (p.legacy_dc && p.top_100_rank) ? 0 : 20;
+        // 2026 transition: BC is FREE for legacy DC prospects, otherwise $20
+        const bcCost = p.legacy_dc ? 0 : 20;
         const bcLabel = bcCost === 0 ? 'BC (FREE)' : 'BC ($20)';
         
         return `
@@ -363,15 +363,16 @@ function assignContract(upid, contractType) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
     
-    // Calculate cost
+    // Calculate cost (2026 transition: legacy DC prospects are FREE for DC/PC/BC)
     let cost = 0;
-    if (contractType === 'DC') {
+    if (prospect.legacy_dc) {
+        cost = 0;
+    } else if (contractType === 'DC') {
         cost = 5;
     } else if (contractType === 'PC') {
         cost = 10;
     } else if (contractType === 'BC') {
-        // Legacy DC → BC is FREE if Top 100 (one-time 2026 transition)
-        cost = (prospect.legacy_dc && prospect.top_100_rank) ? 0 : 20;
+        cost = 20;
     }
     
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
@@ -387,7 +388,7 @@ function assignContract(upid, contractType) {
     displayProspects();
     saveDraft();
     
-    const costMsg = cost === 0 ? ' (FREE - Legacy DC + Top 100)' : ` ($${cost})`;
+    const costMsg = cost === 0 ? ' (FREE - Legacy DC 2026 Transition)' : ` ($${cost})`;
     showToast(`${contractType} assigned to ${prospect.name}${costMsg}`, 'success');
 }
 
@@ -398,7 +399,7 @@ function upgradeContract(upid, targetContract) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
     
-    const cost = targetContract === 'PC' ? 5 : 15;
+    const cost = prospect.legacy_dc ? 0 : (targetContract === 'PC' ? 5 : 15);
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
     if (remaining < cost) {
@@ -543,8 +544,9 @@ function updateSummary() {
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
     const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
-    const bcFree = bcContracts.filter(p => p.legacy_dc && p.top_100_rank);
-    const bcPaid = bcContracts.filter(p => !(p.legacy_dc && p.top_100_rank));
+    // 2026 transition: all BCs for legacy DC prospects are free
+    const bcFree = bcContracts.filter(p => p.legacy_dc);
+    const bcPaid = bcContracts.filter(p => !p.legacy_dc);
     
     const prospectsHTML = [];
     
@@ -586,7 +588,7 @@ function updateSummary() {
             <div class="summary-item bc-auto">
                 <strong>BC Free Upgrades (${bcFree.length})</strong>
                 <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
-                    ${bcFree.map(p => `${p.name} (Legacy DC + Top 100 #${p.top_100_rank})`).join(', ')}
+                    ${bcFree.map(p => p.top_100_rank ? `${p.name} (Legacy DC, Top 100 #${p.top_100_rank})` : `${p.name} (Legacy DC)`).join(', ')}
                 </div>
             </div>
         `);
@@ -633,8 +635,12 @@ function updateSummary() {
     const tbody = document.getElementById('summaryWBTable');
     const rows = [];
     
-    if (dcContracts.length > 0) rows.push(`<tr><td>DC Contracts (${dcContracts.length})</td><td>$${dcContracts.length * 5}</td></tr>`);
-    if (pcContracts.length > 0) rows.push(`<tr><td>PC Contracts (${pcContracts.length})</td><td>$${pcContracts.length * 10}</td></tr>`);
+    // Only charge for non-legacy DC prospects
+    const dcPaidCount = dcContracts.filter(p => !p.legacy_dc).length;
+    const pcPaidCount = pcContracts.filter(p => !p.legacy_dc).length;
+
+    if (dcPaidCount > 0) rows.push(`<tr><td>DC Contracts (${dcPaidCount})</td><td>$${dcPaidCount * 5}</td></tr>`);
+    if (pcPaidCount > 0) rows.push(`<tr><td>PC Contracts (${pcPaidCount})</td><td>$${pcPaidCount * 10}</td></tr>`);
     if (bcPaid.length > 0) rows.push(`<tr><td>BC Contracts (${bcPaid.length})</td><td>$${bcPaid.length * 20}</td></tr>`);
     if (bcFree.length > 0) rows.push(`<tr><td>BC Free Upgrades (${bcFree.length})</td><td style="color: var(--success);">FREE</td></tr>`);
     if (PAD_STATE.dcSlots > 0) rows.push(`<tr><td>DC Draft Slots (${PAD_STATE.dcSlots})</td><td>$${PAD_STATE.dcSlots * 5}</td></tr>`);
@@ -737,15 +743,18 @@ async function confirmSubmit() {
         let cost = 0;
         let txnType = '';
         
-        if (prospect.contract_type === 'DC' && !prospect.was_upgraded) {
-            cost = 5;
-            txnType = 'dc_purchase';
-        } else if (prospect.contract_type === 'PC' && !prospect.was_bc) {
-            cost = 10;
-            txnType = 'pc_purchase';
-        } else if (prospect.contract_type === 'BC') {
-            cost = 20;
-            txnType = 'bc_purchase';
+        // 2026 transition: no WizBucks charged for legacy DC prospects
+        if (!prospect.legacy_dc) {
+            if (prospect.contract_type === 'DC' && !prospect.was_upgraded) {
+                cost = 5;
+                txnType = 'dc_purchase';
+            } else if (prospect.contract_type === 'PC' && !prospect.was_bc) {
+                cost = 10;
+                txnType = 'pc_purchase';
+            } else if (prospect.contract_type === 'BC') {
+                cost = 20;
+                txnType = 'bc_purchase';
+            }
         }
         
         if (cost > 0) {
