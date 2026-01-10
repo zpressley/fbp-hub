@@ -101,6 +101,12 @@
                     <h3>Your Prospects from 2025</h3>
                     <p>Assign contracts to carry over to 2026 • Changes are saved as draft</p>
                 </div>
+                <div class="nav-buttons-top">
+                    <div></div>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
                 <div id="prospectList"></div>
                 <div class="nav-buttons">
                     <div></div>
@@ -115,6 +121,15 @@
                 <div class="step-header">
                     <h3>Draft Slot Allocation</h3>
                     <p>Purchase slots to participate in Prospect Draft</p>
+                </div>
+
+                <div class="nav-buttons-top">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
 
                 <div class="slot-section">
@@ -164,6 +179,15 @@
                 <div class="step-header">
                     <h3>Review & Submit</h3>
                     <p>Review your allocations before submitting</p>
+                </div>
+
+                <div class="nav-buttons-top">
+                    <button class="btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-submit" onclick="showConfirmation()">
+                        <i class="fas fa-paper-plane"></i> Submit PAD
+                    </button>
                 </div>
 
                 <div class="info-banner">

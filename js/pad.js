@@ -60,6 +60,16 @@ async function initPADPage() {
     
     // Setup sticky bar scroll behavior
     setupStickyBar();
+
+    // Make progress steps clickable
+    document.querySelectorAll('.progress-step').forEach(stepEl => {
+        stepEl.addEventListener('click', () => {
+            const stepIndex = parseInt(stepEl.dataset.step, 10);
+            if (!Number.isNaN(stepIndex)) {
+                goToStep(stepIndex);
+            }
+        });
+    });
 }
 
 /**
@@ -304,7 +314,9 @@ function displayProspects() {
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
         
-        // 2026 transition: BC is FREE for legacy DC prospects, otherwise $20
+        // 2026 transition: DC/PC/BC are FREE for legacy DC prospects
+        const dcLabel = p.legacy_dc ? 'DC (FREE)' : 'DC ($5)';
+        const pcLabel = p.legacy_dc ? 'PC (FREE)' : 'PC ($10)';
         const bcCost = p.legacy_dc ? 0 : 20;
         const bcLabel = bcCost === 0 ? 'BC (FREE)' : 'BC ($20)';
         
@@ -312,31 +324,32 @@ function displayProspects() {
             <div class="prospect-card ${hasContract ? 'has-contract' : ''}">
                 <div class="prospect-info">
                     <div class="prospect-details">
-                        <h4>${p.name}</h4>
-                        <div class="prospect-meta">
-                            <span>${p.position}</span>
-                            <span>${p.team}</span>
-                            <span>Age ${p.age || '?'}</span>
-                            <span>${p.level}</span>
-                            ${p.top_100_rank ? `<span style="color: var(--accent-yellow); font-weight: 700;">Top 100 #${p.top_100_rank}</span>` : ''}
-                        </div>
+                        <h4 class="prospect-name-line">
+                            <span class="prospect-name">${p.name}</span>
+                            <span class="prospect-inline-meta">
+                                <span>${p.position}</span>
+                                <span>${p.team}</span>
+                                <span>Age ${p.age || '?'}</span>
+                                ${p.top_100_rank ? `<span>Top 100 #${p.top_100_rank}</span>` : ''}
+                            </span>
+                        </h4>
                     </div>
                     <div class="contract-badge ${contractClass}">${contractLabel}</div>
                 </div>
                 <div class="prospect-actions">
                     ${!hasContract && !p.has_mlb_service ? `
                         <button class="btn-contract dc" onclick="assignContract('${p.upid}', 'DC')">
-                            <i class="fas fa-user-plus"></i> DC ($5)
+                            <i class="fas fa-user-plus"></i> ${dcLabel}
                         </button>
                         <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
-                            <i class="fas fa-star"></i> PC ($10)
+                            <i class="fas fa-star"></i> ${pcLabel}
                         </button>
                         <button class="btn-contract bc" onclick="assignContract('${p.upid}', 'BC')">
                             <i class="fas fa-crown"></i> ${bcLabel}
                         </button>
                     ` : ''}
                     ${hasContract ? `
-                        <button class="btn-secondary" onclick="removeContract('${p.upid}')">
+                        <button class="btn-remove-contract" onclick="removeContract('${p.upid}')">
                             <i class="fas fa-times"></i> Remove
                         </button>
                     ` : ''}
