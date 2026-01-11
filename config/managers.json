@@ -3,62 +3,74 @@
     "WIZ": {
       "name": "Whiz Kids",
       "discord_id": "161967242118955008",
-      "manager": "Zach"
+      "manager": "Zach",
+      "final_rank_2025": 1
     },
     "B2J": {
       "name": "Btwn2Jackies",
       "discord_id": "689952988957245578",
-      "manager": "Jackie"
+      "manager": "Jackie",
+      "final_rank_2025": 6
     },
     "CFL": {
       "name": "Country Fried Lamb",
       "discord_id": "689887002887454815",
-      "manager": "CFL"
+      "manager": "CFL",
+      "final_rank_2025": 8
     },
     "HAM": {
       "name": "Hammers",
       "discord_id": "347571660230230017",
-      "manager": "HAM"
+      "manager": "HAM",
+      "final_rank_2025": 9
     },
     "RV": {
       "name": "Rick Vaughn",
       "discord_id": "689911142432112657",
-      "manager": "RV"
+      "manager": "RV",
+      "final_rank_2025": 10
     },
     "LAW": {
       "name": "Law-Abiding Citizens",
       "discord_id": "892152416718422056",
-      "manager": "LAW"
+      "manager": "LAW",
+      "final_rank_2025": 7
     },
     "LFB": {
       "name": "La Flama Blanca",
       "discord_id": "890059214586773574",
-      "manager": "LFB"
+      "manager": "LFB",
+      "final_rank_2025": 2
     },
     "JEP": {
       "name": "Jepordizers!",
       "discord_id": "814294382529347594",
-      "manager": "JEP"
+      "manager": "JEP",
+      "final_rank_2025": 11
     },
     "TBB": {
       "name": "The Bluke Blokes",
       "discord_id": "161932197308137473",
-      "manager": "TBB"
+      "manager": "TBB",
+      "final_rank_2025": 5
     },
     "DRO": {
       "name": "Andromedans",
       "discord_id": "541092942455242754",
-      "manager": "DRO"
+      "manager": "DRO",
+      "final_rank_2025": 4
     },
     "SAD": {
       "name": "not much of a donkey",
       "discord_id": "875750135005597728",
-      "manager": "SAD"
+      "manager": "SAD",
+      "final_rank_2025": 3
     },
     "WAR": {
       "name": "Weekend Warriors",
       "discord_id": "664280448788201522",
-      "manager": "WAR"
+      "manager": "WAR",
+      "final_rank_2025": 12
     }
   },
   "commissioner": "161967242118955008"

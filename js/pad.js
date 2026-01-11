@@ -3,12 +3,23 @@
  * Multi-step wizard with OAuth integration and submit-only transaction logging
  */
 
+const PAD_SEASON = 2026;
+
 let PAD_STATE = {
     team: null,
     currentStep: 0,
-    startingBalance: 0,
-    rolloverFrom2025: 0,
+    // Final regular-season rank for 2025 (used to derive PAD bracket)
+    final_rank_2025: null,
+    // PAD installment based on prior-season bracket (100/120/140)
+    installment: 0,
+    // Max rollover that can be applied to PAD (capped at $25 and <= rolloverTotal)
+    rolloverCapPAD: 0,
+    // Total rollover available across installments (capped at $75)
+    rolloverTotal: 0,
+    // Total PAD spending capacity = installment + rolloverCapPAD
     totalAvailable: 0,
+    // 2026: one-time free BC for non-legacy prospects
+    freeBCUsed: false,
     
     // Allocations (draft mode - not committed until submit)
     myProspects: [],
@@ -115,7 +126,9 @@ function buildProspectsForTeam(teamAbbr) {
             // Flag legacy DCs so they get special PAD treatment (e.g. free BC option).
             legacy_dc: p.contract_type === 'Development Cont.' || p.contract_type === 'Development Contract',
             top_100_rank: p.top_100_rank || null,
-            has_mlb_service: p.has_mlb_service || false
+            // Has MLB service time (DC-ineligible). For now, accept either a
+            // dedicated flag or a future service_time_days field.
+            has_mlb_service: p.has_mlb_service || (p.service_time_days || 0) > 0
         }));
 }
 
@@ -123,24 +136,59 @@ function buildProspectsForTeam(teamAbbr) {
  * Load PAD data for team
  */
 async function loadPADData() {
-    // Determine starting balance based on bracket finish
-    // In production: fetch from standings/bracket data
-    const bracket = 'elimination'; // Mock - would come from actual standings
-    
-    if (bracket === 'championship') {
-        PAD_STATE.startingBalance = 100;
-    } else if (bracket === 'consolation') {
-        PAD_STATE.startingBalance = 120;
-    } else {
-        PAD_STATE.startingBalance = 140;
+    const team = PAD_STATE.team;
+
+    // Read final 2025 rank from config/managers.json and derive bracket
+    let finalRank = null;
+    try {
+        const res = await fetch('./config/managers.json');
+        if (res.ok) {
+            const cfg = await res.json();
+            finalRank = cfg?.teams?.[team]?.final_rank_2025 ?? null;
+        }
+    } catch (e) {
+        console.error('Failed to load managers config for PAD:', e);
     }
-    
-    // Check for rollover from previous season
-    // In production: fetch from wizbucks_ledger.json
-    PAD_STATE.rolloverFrom2025 = 25; // Mock value
-    
-    PAD_STATE.totalAvailable = PAD_STATE.startingBalance + PAD_STATE.rolloverFrom2025;
-    
+
+    if (typeof finalRank === 'number') {
+        PAD_STATE.final_rank_2025 = finalRank;
+    }
+
+    let bracket;
+    if (typeof finalRank === 'number') {
+        if (finalRank >= 1 && finalRank <= 4) {
+            bracket = 'championship';
+        } else if (finalRank >= 5 && finalRank <= 8) {
+            bracket = 'consolation';
+        } else {
+            bracket = 'elimination';
+        }
+    } else {
+        // Fallback if rank is missing: treat as elimination bracket
+        bracket = 'elimination';
+    }
+
+    let installment;
+    if (bracket === 'championship') {
+        installment = 100;
+    } else if (bracket === 'consolation') {
+        installment = 120;
+    } else {
+        installment = 140;
+    }
+    PAD_STATE.installment = installment;
+
+    // Determine rollover totals from WizBucks balance
+    const wizbucksBalances = FBPHub.data?.wizbucks || {};
+    const currentWB = wizbucksBalances[team] || 0;
+    // League rule: max $75 total rollover
+    PAD_STATE.rolloverTotal = Math.min(75, currentWB);
+    // PAD can use at most $25 of rollover
+    PAD_STATE.rolloverCapPAD = Math.min(25, PAD_STATE.rolloverTotal);
+
+    // Total PAD capacity = installment + PAD rollover share
+    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.rolloverCapPAD;
+
     // Load team's prospects from combined_players.json
     PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
 
@@ -165,6 +213,11 @@ async function loadPADData() {
             console.error('Failed to load draft:', e);
         }
     }
+
+    // Restore free BC flag from draft (if present)
+    PAD_STATE.freeBCUsed = PAD_STATE.myProspects?.some(
+        p => p.free_bc_special && p.contract_type === 'BC' && !p.legacy_dc
+    ) || false;
 }
 
 /**
@@ -259,10 +312,11 @@ function calculateTotalSpend() {
     
     // BC costs:
     // - Legacy DC: FREE in 2026 transition
+    // - 2026 one-time free BC: FREE when prospect.free_bc_special
     // - All other BC contracts: $20
     const bcCost = PAD_STATE.myProspects.reduce((sum, p) => {
         if (p.contract_type !== 'BC') return sum;
-        if (p.legacy_dc) return sum; // free for legacy DC
+        if (p.legacy_dc || p.free_bc_special) return sum;
         return sum + 20;
     }, 0);
     
@@ -273,18 +327,54 @@ function calculateTotalSpend() {
 }
 
 /**
+ * Compute rollover amount that will be sent to KAP
+ * - Based on remaining overall rollover (not installment)
+ * - Capped at $30
+ * - Cannot exceed remaining PAD balance tracked in this page
+ */
+function computeRolloverToKAP(spentOverride) {
+    const spent = typeof spentOverride === 'number' ? spentOverride : calculateTotalSpend();
+    const remaining = PAD_STATE.totalAvailable - spent;
+
+    const overInstallment = Math.max(0, spent - PAD_STATE.installment);
+    const rolloverUsedForPAD = Math.min(PAD_STATE.rolloverCapPAD, overInstallment);
+
+    const rolloverTotal = PAD_STATE.rolloverTotal || 0;
+    const remainingRolloverTotal = Math.max(0, rolloverTotal - rolloverUsedForPAD);
+
+    // KAP can only receive unused rollover, up to $30, and not more than
+    // the remaining PAD balance represented on this page.
+    return Math.max(0, Math.min(30, remainingRolloverTotal, remaining));
+}
+
+/**
  * Update WizBucks display (sticky bar)
  */
 function updateWizBucksDisplay() {
     const spent = calculateTotalSpend();
+
+    // Remaining capacity based on PAD installment + PAD rollover share
     const remaining = PAD_STATE.totalAvailable - spent;
-    const rollover = Math.min(remaining, 30);
-    
+
+    // How much spend is above the pure installment (i.e., using rollover)
+    const overInstallment = Math.max(0, spent - PAD_STATE.installment);
+    const rolloverUsedForPAD = Math.min(PAD_STATE.rolloverCapPAD, overInstallment);
+
+    const rolloverTotal = PAD_STATE.rolloverTotal || 0;
+    const remainingRolloverTotal = Math.max(0, rolloverTotal - rolloverUsedForPAD);
+
+    // KAP rollover: based on unused rollover only, capped at $30 and
+    // never more than the remaining PAD balance.
+    const rolloverToKAP = Math.max(0, Math.min(30, remainingRolloverTotal, remaining));
+
     // Update sticky bar
-    document.getElementById('barTotalAvailable').textContent = `$${PAD_STATE.totalAvailable}`;
     document.getElementById('barCurrentSpend').textContent = `$${spent}`;
     document.getElementById('barRemainingBalance').textContent = `$${remaining}`;
-    document.getElementById('barRolloverToKAP').textContent = `$${rollover}`;
+    document.getElementById('barRolloverToKAP').textContent = `$${rolloverToKAP}`;
+    const rolloverTotalEl = document.getElementById('barRolloverTotal');
+    if (rolloverTotalEl) {
+        rolloverTotalEl.textContent = `$${remainingRolloverTotal}`;
+    }
 }
 
 /**
@@ -317,7 +407,8 @@ function displayProspects() {
         // 2026 transition: DC/PC/BC are FREE for legacy DC prospects
         const dcLabel = p.legacy_dc ? 'DC (FREE)' : 'DC ($5)';
         const pcLabel = p.legacy_dc ? 'PC (FREE)' : 'PC ($10)';
-        const bcCost = p.legacy_dc ? 0 : 20;
+        const isFreeBC = p.legacy_dc || p.free_bc_special;
+        const bcCost = isFreeBC ? 0 : 20;
         const bcLabel = bcCost === 0 ? 'BC (FREE)' : 'BC ($20)';
         
         return `
@@ -376,16 +467,25 @@ function assignContract(upid, contractType) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
     
-    // Calculate cost (2026 transition: legacy DC prospects are FREE for DC/PC/BC)
+    // Calculate cost
     let cost = 0;
+
     if (prospect.legacy_dc) {
+        // 2026 transition: legacy DC prospects are FREE for DC/PC/BC
         cost = 0;
+    } else if (contractType === 'BC') {
+        // 2026: first non-legacy BC is free
+        if (PAD_SEASON === 2026 && !PAD_STATE.freeBCUsed) {
+            cost = 0;
+            PAD_STATE.freeBCUsed = true;
+            prospect.free_bc_special = true;
+        } else {
+            cost = 20;
+        }
     } else if (contractType === 'DC') {
         cost = 5;
     } else if (contractType === 'PC') {
         cost = 10;
-    } else if (contractType === 'BC') {
-        cost = 20;
     }
     
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
@@ -401,7 +501,16 @@ function assignContract(upid, contractType) {
     displayProspects();
     saveDraft();
     
-    const costMsg = cost === 0 ? ' (FREE - Legacy DC 2026 Transition)' : ` ($${cost})`;
+    let costMsg = '';
+    if (cost === 0) {
+        if (prospect.legacy_dc) {
+            costMsg = ' (FREE - Legacy DC 2026 Transition)';
+        } else if (prospect.free_bc_special && contractType === 'BC') {
+            costMsg = ' (FREE - 2026 One-Time BC)';
+        }
+    } else {
+        costMsg = ` ($${cost})`;
+    }
     showToast(`${contractType} assigned to ${prospect.name}${costMsg}`, 'success');
 }
 
@@ -412,7 +521,23 @@ function upgradeContract(upid, targetContract) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect) return;
     
-    const cost = prospect.legacy_dc ? 0 : (targetContract === 'PC' ? 5 : 15);
+    let cost = 0;
+    if (prospect.legacy_dc) {
+        // 2026 transition: upgrades for legacy DC prospects are free
+        cost = 0;
+    } else if (targetContract === 'PC') {
+        cost = 5;
+    } else if (targetContract === 'BC') {
+        // 2026: first non-legacy BC is free, even via upgrade
+        if (PAD_SEASON === 2026 && !PAD_STATE.freeBCUsed) {
+            cost = 0;
+            PAD_STATE.freeBCUsed = true;
+            prospect.free_bc_special = true;
+        } else {
+            cost = 15;
+        }
+    }
+
     const remaining = PAD_STATE.totalAvailable - calculateTotalSpend();
     
     if (remaining < cost) {
@@ -428,7 +553,10 @@ function upgradeContract(upid, targetContract) {
     displayProspects();
     saveDraft();
     
-    showToast(`Upgraded to ${targetContract}`, 'success');
+    const extra = cost === 0 && targetContract === 'BC' && prospect.free_bc_special && !prospect.legacy_dc
+        ? ' (FREE - 2026 One-Time BC)'
+        : '';
+    showToast(`Upgraded to ${targetContract}${extra}`, 'success');
 }
 
 /**
@@ -437,10 +565,18 @@ function upgradeContract(upid, targetContract) {
 function removeContract(upid) {
     const prospect = PAD_STATE.myProspects.find(p => p.upid === upid);
     if (!prospect || !prospect.contract_type) return;
+
+    const wasFreeBC = prospect.contract_type === 'BC' && prospect.free_bc_special && !prospect.legacy_dc;
     
     prospect.contract_type = null;
     prospect.was_upgraded = false;
     prospect.was_bc = false;
+    prospect.free_bc_special = false;
+
+    if (wasFreeBC) {
+        // If we removed the special free BC, allow it to be used again
+        PAD_STATE.freeBCUsed = PAD_STATE.myProspects.some(p => p.free_bc_special && p.contract_type === 'BC');
+    }
     
     updateWizBucksDisplay();
     displayProspects();
@@ -564,8 +700,9 @@ function updateSummary() {
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
     const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
     // 2026 transition: all BCs for legacy DC prospects are free
-    const bcFree = bcContracts.filter(p => p.legacy_dc);
-    const bcPaid = bcContracts.filter(p => !p.legacy_dc);
+    // Plus the 2026 one-time free BC (prospect.free_bc_special)
+    const bcFree = bcContracts.filter(p => p.legacy_dc || p.free_bc_special);
+    const bcPaid = bcContracts.filter(p => !p.legacy_dc && !p.free_bc_special);
     
     const prospectsHTML = [];
     
@@ -607,7 +744,14 @@ function updateSummary() {
             <div class="summary-item bc-auto">
                 <strong>BC Free Upgrades (${bcFree.length})</strong>
                 <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
-                    ${bcFree.map(p => p.top_100_rank ? `${p.name} (Legacy DC, Top 100 #${p.top_100_rank})` : `${p.name} (Legacy DC)`).join(', ')}
+                    ${bcFree.map(p => {
+                        if (p.legacy_dc) {
+                            return p.top_100_rank
+                                ? `${p.name} (Legacy DC, Top 100 #${p.top_100_rank})`
+                                : `${p.name} (Legacy DC)`;
+                        }
+                        return `${p.name} (2026 One-Time BC)`;
+                    }).join(', ')}
                 </div>
             </div>
         `);
@@ -673,10 +817,11 @@ function updateSummary() {
     
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
+    const rolloverToKAP = computeRolloverToKAP(total);
     
     document.getElementById('summaryTotal').textContent = `$${total}`;
     document.getElementById('summaryRemaining').textContent = `$${remaining}`;
-    document.getElementById('summaryRollover').textContent = `$${Math.min(remaining, 30)}`;
+    document.getElementById('summaryRollover').textContent = `$${rolloverToKAP}`;
 }
 
 /**
@@ -685,7 +830,7 @@ function updateSummary() {
 function showConfirmation() {
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
-    const rollover = Math.min(remaining, 30);
+    const rollover = computeRolloverToKAP(total);
     
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
@@ -750,7 +895,7 @@ async function confirmSubmit() {
     
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
-    const rollover = Math.min(remaining, 30);
+    const rollover = computeRolloverToKAP(total);
     
     // Track balance through all transactions
     let currentBalance = PAD_STATE.totalAvailable;
