@@ -31,6 +31,9 @@ let PAD_STATE = {
     submittedAt: null
 };
 
+// Cached map of Top 100 ranks by UPID for quick lookup in PAD.
+let PAD_TOP100_MAP = null;
+
 /**
  * Initialize PAD page
  */
@@ -133,6 +136,34 @@ function buildProspectsForTeam(teamAbbr) {
 }
 
 /**
+ * Load Top 100 prospect ranks and cache as a UPID → rank map.
+ */
+async function loadTop100MapForPAD() {
+    if (PAD_TOP100_MAP) return PAD_TOP100_MAP;
+
+    try {
+        const res = await fetch('./data/top100_prospects.json');
+        if (!res.ok) {
+            PAD_TOP100_MAP = {};
+            return PAD_TOP100_MAP;
+        }
+        const data = await res.json();
+        const map = {};
+        data.forEach(p => {
+            if (p.upid) {
+                map[String(p.upid)] = Number(p.rank) || null;
+            }
+        });
+        PAD_TOP100_MAP = map;
+        return PAD_TOP100_MAP;
+    } catch (e) {
+        console.error('Failed to load Top 100 prospects for PAD:', e);
+        PAD_TOP100_MAP = {};
+        return PAD_TOP100_MAP;
+    }
+}
+
+/**
  * Load PAD data for team
  */
 async function loadPADData() {
@@ -232,6 +263,18 @@ async function loadPADData() {
     PAD_STATE.freeBCUsed = PAD_STATE.myProspects?.some(
         p => p.free_bc_special && p.contract_type === 'BC' && !p.legacy_dc
     ) || false;
+
+    // Re-attach Top 100 rank from the latest pipeline data so that even
+    // prospects loaded from an old saved draft get current Pipeline rank.
+    try {
+        const top100Map = await loadTop100MapForPAD();
+        PAD_STATE.myProspects = PAD_STATE.myProspects.map(p => ({
+            ...p,
+            top_100_rank: top100Map[String(p.upid)] ?? p.top_100_rank ?? null
+        }));
+    } catch (e) {
+        console.error('Failed to enrich PAD prospects with Top 100 rank:', e);
+    }
 }
 
 /**
@@ -291,6 +334,12 @@ function goToStep(stepIndex) {
     document.querySelectorAll('.pad-step').forEach((step, i) => {
         step.classList.toggle('active', i === stepIndex);
     });
+    
+    // Show prospect status bar only on Step 0
+    const statusBar = document.getElementById('prospectStatusBar');
+    if (statusBar) {
+        statusBar.style.display = stepIndex === 0 ? 'grid' : 'none';
+    }
     
     // Update progress indicator
     document.querySelectorAll('.progress-step').forEach((step, i) => {
@@ -376,6 +425,28 @@ function updateWizBucksDisplay() {
 }
 
 /**
+ * Update the prospect status bar (Unassigned / DC / PC / BC counts)
+ */
+function updateProspectStatusBar() {
+    if (!PAD_STATE.myProspects || !PAD_STATE.myProspects.length) return;
+
+    const unassigned = PAD_STATE.myProspects.filter(p => !p.contract_type).length;
+    const dc = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC').length;
+    const pc = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC').length;
+    const bc = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC').length;
+
+    const unEl = document.getElementById('statusUnassigned');
+    const dcEl = document.getElementById('statusDC');
+    const pcEl = document.getElementById('statusPC');
+    const bcEl = document.getElementById('statusBC');
+
+    if (unEl) unEl.textContent = unassigned;
+    if (dcEl) dcEl.textContent = dc;
+    if (pcEl) pcEl.textContent = pc;
+    if (bcEl) bcEl.textContent = bc;
+}
+
+/**
  * Display prospects
  */
 function displayProspects() {
@@ -394,9 +465,13 @@ function displayProspects() {
                 <p>No prospects from 2025</p>
             </div>
         `;
+        updateProspectStatusBar();
         return;
     }
     
+    // Update status counts before rendering list
+    updateProspectStatusBar();
+
     container.innerHTML = PAD_STATE.myProspects.map(p => {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';

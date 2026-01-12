@@ -52,7 +52,7 @@
         <div id="padContent" style="display: none;">
             <div class="page-header">
                 <h2>PROSPECT ALLOCATION DAY</h2>
-                <p class="page-subtitle">Assign contracts and allocate draft slots for 2026</p>
+                <p class="page-subtitle">Assign contracts and allocate draft slots for 2026  Changes are saved as draft</p>
                 <p class="page-subtitle" style="margin-top: 0.5rem; color: var(--accent-yellow);">
                     2026 Special: Your first non-legacy BC contract is FREE.
                 </p>
@@ -98,12 +98,28 @@
                 </div>
             </div>
 
+            <!-- Prospect Contract Status Summary -->
+            <div class="prospect-status-bar" id="prospectStatusBar">
+                <div class="prospect-status-item">
+                    <span class="prospect-status-label">Unassigned</span>
+                    <span class="prospect-status-value" id="statusUnassigned">0</span>
+                </div>
+                <div class="prospect-status-item">
+                    <span class="prospect-status-label">DC</span>
+                    <span class="prospect-status-value" id="statusDC">0</span>
+                </div>
+                <div class="prospect-status-item">
+                    <span class="prospect-status-label">PC</span>
+                    <span class="prospect-status-value" id="statusPC">0</span>
+                </div>
+                <div class="prospect-status-item">
+                    <span class="prospect-status-label">BC</span>
+                    <span class="prospect-status-value" id="statusBC">0</span>
+                </div>
+            </div>
+
             <!-- Step 1: Prospects -->
             <div class="pad-step active" id="step-0">
-                <div class="step-header">
-                    <h3>Your Prospects from 2025</h3>
-                    <p>Assign contracts to carry over to 2026 • Changes are saved as draft</p>
-                </div>
                 <div class="nav-buttons-top">
                     <div></div>
                     <button class="btn-primary" onclick="nextStep()">

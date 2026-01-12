@@ -89,10 +89,44 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-md);
     padding: var(--space-lg);
     background-color: var(--bg-charcoal);
     border-radius: var(--radius-lg);
+}
+
+/* Prospect status bar under steps */
+.prospect-status-bar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--bg-charcoal);
+    border-radius: var(--radius-lg);
+}
+
+.prospect-status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.prospect-status-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-gray);
+    font-weight: 700;
+}
+
+.prospect-status-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-white);
 }
 
 .progress-step {
