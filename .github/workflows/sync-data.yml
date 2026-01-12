@@ -12,6 +12,10 @@ on:
   # Trigger 3: Manual trigger for testing
   workflow_dispatch:
 
+# Add write permissions for the workflow
+permissions:
+  contents: write  # Allow pushing commits
+
 jobs:
   sync:
     runs-on: ubuntu-latest
