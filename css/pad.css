@@ -129,6 +129,16 @@
     color: var(--text-white);
 }
 
+@media (min-width: 900px) {
+    .prospect-status-label {
+        font-size: var(--text-sm);
+    }
+
+    .wb-bar-label {
+        font-size: var(--text-sm);
+    }
+}
+
 .progress-step {
     display: flex;
     flex-direction: column;
@@ -181,6 +191,51 @@
     height: 3px;
     background-color: rgba(255, 255, 255, 0.2);
     margin: 0 var(--space-md);
+}
+
+/* Rollover add card */
+.rollover-add-card {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background-color: var(--bg-charcoal);
+    border-radius: var(--radius-lg);
+}
+
+.rollover-add-header h3 {
+    margin: 0 0 var(--space-xs) 0;
+    font-family: var(--font-title);
+    font-size: var(--text-lg);
+    letter-spacing: 1px;
+}
+
+.rollover-add-header p {
+    margin: 0 0 var(--space-md) 0;
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+}
+
+.rollover-add-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.rollover-add-controls input[type="number"] {
+    width: 120px;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #111111;
+    color: var(--text-white);
+    font-family: var(--font-mono);
+}
+
+.rollover-add-meta {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--text-gray);
 }
 
 /* PAD Steps */

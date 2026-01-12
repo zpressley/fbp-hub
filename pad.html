@@ -74,8 +74,8 @@
                         <span class="wb-bar-value rollover" id="barRolloverToKAP">$30</span>
                     </div>
                     <div class="wb-bar-item">
-                        <span class="wb-bar-label">Rollover Total</span>
-                        <span class="wb-bar-value total" id="barRolloverTotal">$75</span>
+                        <span class="wb-bar-label">Contracts</span>
+                        <span class="wb-bar-value total" id="barContractsCount">0</span>
                     </div>
                 </div>
             </div>
@@ -120,6 +120,19 @@
 
             <!-- Step 1: Prospects -->
             <div class="pad-step active" id="step-0">
+                <div class="rollover-add-card">
+                    <div class="rollover-add-header">
+                        <h3>Add Rollover (up to $25)</h3>
+                        <p>You may apply up to $25 of your carryover WizBucks to this PAD allotment.</p>
+                    </div>
+                    <div class="rollover-add-controls">
+                        <label for="rolloverInput" class="sr-only">Rollover amount</label>
+                        <input id="rolloverInput" type="number" min="0" step="1" placeholder="$0" />
+                        <button class="btn-secondary" onclick="applyRolloverAmount()">Add</button>
+                        <button class="btn-primary" onclick="applyRolloverMax()">Add Max</button>
+                    </div>
+                    <p class="rollover-add-meta" id="rolloverMeta"></p>
+                </div>
                 <div class="nav-buttons-top">
                     <div></div>
                     <button class="btn-primary" onclick="nextStep()">

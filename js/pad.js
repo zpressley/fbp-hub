@@ -16,7 +16,9 @@ let PAD_STATE = {
     rolloverCapPAD: 0,
     // Total rollover available across installments (capped at $75)
     rolloverTotal: 0,
-    // Total PAD spending capacity = installment + rolloverCapPAD
+    // Explicit rollover amount the manager has chosen to add to PAD
+    appliedRolloverPAD: 0,
+    // Total PAD spending capacity = installment + appliedRolloverPAD
     totalAvailable: 0,
     // 2026: one-time free BC for non-legacy prospects
     freeBCUsed: false,
@@ -131,7 +133,10 @@ function buildProspectsForTeam(teamAbbr) {
             top_100_rank: p.top_100_rank || null,
             // Has MLB service time (DC-ineligible). For now, accept either a
             // dedicated flag or a future service_time_days field.
-            has_mlb_service: p.has_mlb_service || (p.service_time_days || 0) > 0
+            has_mlb_service: p.has_mlb_service || (p.service_time_days || 0) > 0,
+            // Rookie eligibility flag from combined_players (default to true when
+            // missing so prospects without MLB stats are treated as rookies).
+            mlb_rookie: Object.prototype.hasOwnProperty.call(p, 'MLBRookie') ? !!p.MLBRookie : true
         }));
 }
 
@@ -231,8 +236,19 @@ async function loadPADData() {
     // PAD can use at most $25 of rollover
     PAD_STATE.rolloverCapPAD = Math.min(25, PAD_STATE.rolloverTotal);
 
-    // Total PAD capacity = installment + PAD rollover share
-    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.rolloverCapPAD;
+    // Total PAD capacity = installment + any rollover the manager explicitly applies
+    const savedDraft = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
+    let appliedFromDraft = 0;
+    if (savedDraft) {
+        try {
+            const draft = JSON.parse(savedDraft);
+            appliedFromDraft = typeof draft.appliedRolloverPAD === 'number' ? draft.appliedRolloverPAD : 0;
+        } catch (e) {
+            console.error('Failed to read applied rollover from draft:', e);
+        }
+    }
+    PAD_STATE.appliedRolloverPAD = Math.min(PAD_STATE.rolloverCapPAD, Math.max(0, appliedFromDraft));
+    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.appliedRolloverPAD;
 
     // Load team's prospects from combined_players.json
     PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
@@ -242,7 +258,7 @@ async function loadPADData() {
         PAD_STATE.myProspects = getMockProspects();
     }
     
-    // Check for saved draft
+    // Check for saved draft (prospects, slots are still loaded here for backwards-compat)
     const savedDraft = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
     if (savedDraft) {
         try {
@@ -253,11 +269,20 @@ async function loadPADData() {
                 : PAD_STATE.myProspects;
             PAD_STATE.dcSlots = draft.dcSlots || 0;
             PAD_STATE.bcSlots = draft.bcSlots || [];
+            if (typeof draft.appliedRolloverPAD === 'number') {
+                PAD_STATE.appliedRolloverPAD = Math.min(
+                    PAD_STATE.rolloverCapPAD,
+                    Math.max(0, draft.appliedRolloverPAD)
+                );
+            }
             console.log('✅ Loaded saved draft');
         } catch (e) {
             console.error('Failed to load draft:', e);
         }
     }
+
+    // Recompute totalAvailable now that applied rollover from draft is known
+    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.appliedRolloverPAD;
 
     // Restore free BC flag from draft (if present)
     PAD_STATE.freeBCUsed = PAD_STATE.myProspects?.some(
@@ -310,6 +335,12 @@ function setupStickyBar() {
     );
     
     observer.observe(stickyBar);
+
+    // Initialize rollover meta text once data is loaded
+    const metaEl = document.getElementById('rolloverMeta');
+    if (metaEl) {
+        updateRolloverMeta();
+    }
 }
 
 /**
@@ -390,16 +421,16 @@ function calculateTotalSpend() {
 }
 
 /**
+/**
  * Compute rollover amount that will be sent to KAP
- * - Based on remaining overall rollover (not installment)
+ * - Based on unused PAD pool (installment + applied rollover)
  * - Capped at $30
- * - Cannot exceed remaining PAD balance tracked in this page
  */
 function computeRolloverToKAP(spentOverride) {
     const spent = typeof spentOverride === 'number' ? spentOverride : calculateTotalSpend();
 
-    // Only unused PAD allotment (installment) can roll to KAP, capped at $30.
-    const padRemaining = Math.max(0, PAD_STATE.installment - spent);
+    const padPool = PAD_STATE.installment + (PAD_STATE.appliedRolloverPAD || 0);
+    const padRemaining = Math.max(0, padPool - spent);
     return Math.min(30, padRemaining);
 }
 
@@ -408,20 +439,46 @@ function computeRolloverToKAP(spentOverride) {
  */
 function updateWizBucksDisplay() {
     const spent = calculateTotalSpend();
-    const remaining = PAD_STATE.totalAvailable - spent;
+    const totalAvailable = PAD_STATE.installment + (PAD_STATE.appliedRolloverPAD || 0);
+    PAD_STATE.totalAvailable = totalAvailable;
+    const remaining = totalAvailable - spent;
 
     const rolloverToKAP = computeRolloverToKAP(spent);
-    const rolloverTotal = PAD_STATE.rolloverTotal || 0;
+
+    // Count DC/PC/BC contracts for Contracts display
+    const contractsCount = PAD_STATE.myProspects
+        ? PAD_STATE.myProspects.filter(p =>
+            p.contract_type === 'DC' ||
+            p.contract_type === 'PC' ||
+            p.contract_type === 'BC'
+        ).length
+        : 0;
 
     // Update sticky bar
     document.getElementById('barCurrentSpend').textContent = `$${spent}`;
     document.getElementById('barRemainingBalance').textContent = `$${remaining}`;
     document.getElementById('barRolloverToKAP').textContent = `$${rolloverToKAP}`;
-    const rolloverTotalEl = document.getElementById('barRolloverTotal');
-    if (rolloverTotalEl) {
-        // Show the full rollover pool available to the franchise (capped at $75).
-        rolloverTotalEl.textContent = `$${rolloverTotal}`;
+    const contractsEl = document.getElementById('barContractsCount');
+    if (contractsEl) {
+        contractsEl.textContent = contractsCount;
     }
+}
+
+/**
+ * Update rollover helper text under the Add Rollover controls
+ */
+function updateRolloverMeta() {
+    const metaEl = document.getElementById('rolloverMeta');
+    if (!metaEl) return;
+
+    const cap = PAD_STATE.rolloverCapPAD || 0;
+    const applied = PAD_STATE.appliedRolloverPAD || 0;
+    if (cap <= 0) {
+        metaEl.textContent = 'No rollover available to apply to PAD.';
+        return;
+    }
+    const remaining = Math.max(0, cap - applied);
+    metaEl.textContent = `Rollover applied to PAD: $${applied} of $${cap} (max $25). Remaining available to add: $${remaining}.`;
 }
 
 /**
@@ -444,6 +501,54 @@ function updateProspectStatusBar() {
     if (dcEl) dcEl.textContent = dc;
     if (pcEl) pcEl.textContent = pc;
     if (bcEl) bcEl.textContent = bc;
+}
+
+/**
+ * Apply a specific rollover amount typed into the input
+ */
+function applyRolloverAmount() {
+    const input = document.getElementById('rolloverInput');
+    if (!input) return;
+
+    const cap = PAD_STATE.rolloverCapPAD || 0;
+    const applied = PAD_STATE.appliedRolloverPAD || 0;
+    const remainingCap = Math.max(0, cap - applied);
+    if (remainingCap <= 0) {
+        showToast('You have already applied the maximum rollover to PAD.', 'info');
+        return;
+    }
+
+    let value = Number(input.value || 0);
+    if (!Number.isFinite(value) || value <= 0) {
+        showToast('Enter a positive rollover amount.', 'error');
+        return;
+    }
+
+    value = Math.min(value, remainingCap);
+    PAD_STATE.appliedRolloverPAD += value;
+
+    updateRolloverMeta();
+    updateWizBucksDisplay();
+    saveDraft();
+}
+
+/**
+ * Apply the maximum allowable rollover to PAD
+ */
+function applyRolloverMax() {
+    const cap = PAD_STATE.rolloverCapPAD || 0;
+    const applied = PAD_STATE.appliedRolloverPAD || 0;
+    const remainingCap = Math.max(0, cap - applied);
+    if (remainingCap <= 0) {
+        showToast('You have already applied the maximum rollover to PAD.', 'info');
+        return;
+    }
+
+    PAD_STATE.appliedRolloverPAD += remainingCap;
+
+    updateRolloverMeta();
+    updateWizBucksDisplay();
+    saveDraft();
 }
 
 /**
@@ -472,7 +577,12 @@ function displayProspects() {
     // Update status counts before rendering list
     updateProspectStatusBar();
 
-    container.innerHTML = PAD_STATE.myProspects.map(p => {
+    // Sort prospects alphabetically by name for display
+    const sortedProspects = [...PAD_STATE.myProspects].sort((a, b) => {
+        return (a.name || '').localeCompare(b.name || '');
+    });
+
+    container.innerHTML = sortedProspects.map(p => {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
@@ -798,6 +908,12 @@ function updateSummary() {
     // Plus the 2026 one-time free BC (prospect.free_bc_special)
     const bcFree = bcContracts.filter(p => p.legacy_dc || p.free_bc_special);
     const bcPaid = bcContracts.filter(p => !p.legacy_dc && !p.free_bc_special);
+
+    // Unassigned prospects (no PAD contract chosen)
+    const unassigned = PAD_STATE.myProspects.filter(p => !p.contract_type);
+    // Default missing mlb_rookie to true (no MLB stats => still rookie)
+    const droppedProspects = unassigned.filter(p => p.mlb_rookie !== false);
+    const tcRProspects = unassigned.filter(p => p.mlb_rookie === false);
     
     const prospectsHTML = [];
     
@@ -847,6 +963,34 @@ function updateSummary() {
                         }
                         return `${p.name} (2026 One-Time BC)`;
                     }).join(', ')}
+                </div>
+            </div>
+        `);
+    }
+
+    if (droppedProspects.length > 0) {
+        prospectsHTML.push(`
+            <div class="summary-item">
+                <strong>Dropped Prospects (${droppedProspects.length})</strong>
+                <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
+                    ${droppedProspects.map(p => p.name).join(', ')}
+                </div>
+                <div style=\"margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-xs); opacity: 0.8;\">
+                    Still MLB rookie-eligible; if left uncontracted, these players will be dropped from your roster.
+                </div>
+            </div>
+        `);
+    }
+
+    if (tcRProspects.length > 0) {
+        prospectsHTML.push(`
+            <div class="summary-item">
+                <strong>Converted to TC-R (${tcRProspects.length})</strong>
+                <div style="margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-sm);">
+                    ${tcRProspects.map(p => p.name).join(', ')}
+                </div>
+                <div style=\"margin-top: var(--space-xs); color: var(--text-gray); font-size: var(--text-xs); opacity: 0.8;\">
+                    No longer MLB rookie-eligible; if left uncontracted, these players will be retained as TC-R.
                 </div>
             </div>
         `);
@@ -1142,6 +1286,7 @@ function saveDraft() {
         prospects: PAD_STATE.myProspects,
         dcSlots: PAD_STATE.dcSlots,
         bcSlots: PAD_STATE.bcSlots,
+        appliedRolloverPAD: PAD_STATE.appliedRolloverPAD || 0,
         timestamp: new Date().toISOString()
     };
     
