@@ -348,17 +348,10 @@ function calculateTotalSpend() {
  */
 function computeRolloverToKAP(spentOverride) {
     const spent = typeof spentOverride === 'number' ? spentOverride : calculateTotalSpend();
-    const remaining = PAD_STATE.totalAvailable - spent;
 
-    const overInstallment = Math.max(0, spent - PAD_STATE.installment);
-    const rolloverUsedForPAD = Math.min(PAD_STATE.rolloverCapPAD, overInstallment);
-
-    const rolloverTotal = PAD_STATE.rolloverTotal || 0;
-    const remainingRolloverTotal = Math.max(0, rolloverTotal - rolloverUsedForPAD);
-
-    // KAP can only receive unused rollover, up to $30, and not more than
-    // the remaining PAD balance represented on this page.
-    return Math.max(0, Math.min(30, remainingRolloverTotal, remaining));
+    // Only unused PAD allotment (installment) can roll to KAP, capped at $30.
+    const padRemaining = Math.max(0, PAD_STATE.installment - spent);
+    return Math.min(30, padRemaining);
 }
 
 /**
@@ -366,20 +359,10 @@ function computeRolloverToKAP(spentOverride) {
  */
 function updateWizBucksDisplay() {
     const spent = calculateTotalSpend();
-
-    // Remaining capacity based on PAD installment + PAD rollover share
     const remaining = PAD_STATE.totalAvailable - spent;
 
-    // How much spend is above the pure installment (i.e., using rollover)
-    const overInstallment = Math.max(0, spent - PAD_STATE.installment);
-    const rolloverUsedForPAD = Math.min(PAD_STATE.rolloverCapPAD, overInstallment);
-
+    const rolloverToKAP = computeRolloverToKAP(spent);
     const rolloverTotal = PAD_STATE.rolloverTotal || 0;
-    const remainingRolloverTotal = Math.max(0, rolloverTotal - rolloverUsedForPAD);
-
-    // KAP rollover: based on unused rollover only, capped at $30 and
-    // never more than the remaining PAD balance.
-    const rolloverToKAP = Math.max(0, Math.min(30, remainingRolloverTotal, remaining));
 
     // Update sticky bar
     document.getElementById('barCurrentSpend').textContent = `$${spent}`;
@@ -387,8 +370,7 @@ function updateWizBucksDisplay() {
     document.getElementById('barRolloverToKAP').textContent = `$${rolloverToKAP}`;
     const rolloverTotalEl = document.getElementById('barRolloverTotal');
     if (rolloverTotalEl) {
-        // Show the full rollover pool available to the franchise (capped at $75),
-        // not the portion remaining after PAD usage.
+        // Show the full rollover pool available to the franchise (capped at $75).
         rolloverTotalEl.textContent = `$${rolloverTotal}`;
     }
 }
