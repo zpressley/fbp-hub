@@ -46,13 +46,59 @@ jobs:
         run: |
           echo "📥 Downloading data files from bot repo..."
           
-          # Your GitHub info
+          # Your GitHub info - TRY BOTH REPO NAME VARIATIONS
           GITHUB_USER="zpressley"
-          REPO="fbp-trade-bot"
+          REPO="FBPTradeBot"  # Try capital case first
           BRANCH="main"
           
           # Create data directory if it doesn't exist
           mkdir -p data
+          
+          echo "🔍 Diagnostics:"
+          echo "  User: ${GITHUB_USER}"
+          echo "  Repo: ${REPO}"
+          echo "  Branch: ${BRANCH}"
+          echo ""
+          
+          # First, check if repo exists and get default branch
+          echo "🔍 Checking repo and branch..."
+          REPO_INFO=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+                     "https://api.github.com/repos/${GITHUB_USER}/${REPO}")
+          
+          if echo "$REPO_INFO" | grep -q "Not Found"; then
+            echo "⚠️ Repo not found with name: ${REPO}"
+            echo "   Trying lowercase: fbp-trade-bot"
+            REPO="fbp-trade-bot"
+            REPO_INFO=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+                       "https://api.github.com/repos/${GITHUB_USER}/${REPO}")
+          fi
+          
+          # Get actual default branch
+          ACTUAL_BRANCH=$(echo "$REPO_INFO" | grep -o '"default_branch":"[^"]*"' | cut -d'"' -f4)
+          if [ -n "$ACTUAL_BRANCH" ]; then
+            echo "✓ Found repo: ${REPO}"
+            echo "✓ Default branch: ${ACTUAL_BRANCH}"
+            BRANCH="$ACTUAL_BRANCH"
+          else
+            echo "⚠️ Could not determine branch, trying both main and master..."
+          fi
+          
+          echo ""
+          echo "🔍 Checking data directory..."
+          DATA_DIR_URL="https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/data?ref=${BRANCH}"
+          DATA_CONTENTS=$(curl -s -H "Authorization: token ${GH_TOKEN}" "$DATA_DIR_URL")
+          
+          if echo "$DATA_CONTENTS" | grep -q "Not Found"; then
+            # Try master branch
+            echo "⚠️ 'data' directory not found on ${BRANCH}, trying master..."
+            BRANCH="master"
+            DATA_DIR_URL="https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/data?ref=${BRANCH}"
+            DATA_CONTENTS=$(curl -s -H "Authorization: token ${GH_TOKEN}" "$DATA_DIR_URL")
+          fi
+          
+          echo "Files found in data directory:"
+          echo "$DATA_CONTENTS" | grep -o '"name":"[^"]*"' | cut -d'"' -f4 | sed 's/^/  - /'
+          echo ""
           
           # Base URL for authenticated GitHub API raw file access
           BASE_URL="https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/data"
@@ -62,32 +108,49 @@ jobs:
             local filename=$1
             echo "  → ${filename}"
             
-            # Get file content from GitHub API (returns base64)
+            local file_url="${BASE_URL}/${filename}?ref=${BRANCH}"
+            
+            # Get file content from GitHub API
             local response=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
                             -H "Accept: application/vnd.github.v3.raw" \
-                            "${BASE_URL}/${filename}?ref=${BRANCH}")
+                            "$file_url")
             
             # Check if download was successful
             if [ -n "$response" ] && ! echo "$response" | grep -q "Not Found"; then
               echo "$response" > "data/${filename}"
-              echo "    ✓ Downloaded ${filename}"
+              local size=$(stat -f%z "data/${filename}" 2>/dev/null || stat -c%s "data/${filename}" 2>/dev/null)
+              echo "    ✓ Downloaded ${filename} (${size} bytes)"
+              return 0
             else
               echo "    ⚠️ Failed to download ${filename}"
+              echo "    URL tried: ${file_url}"
+              echo "    Response preview: $(echo "$response" | head -c 200)"
               return 1
             fi
           }
           
           # Download each data file
-          download_file "combined_players.json"
-          download_file "wizbucks.json"
-          download_file "standings.json"
-          download_file "yahoo_players.json"
-          download_file "service_stats.json"
+          echo "📥 Downloading files..."
+          FAILED=0
           
-          # Add more files if needed in the future:
-          # download_file "transactions.json"
+          download_file "combined_players.json" || FAILED=$((FAILED + 1))
+          download_file "wizbucks.json" || FAILED=$((FAILED + 1))
+          download_file "standings.json" || FAILED=$((FAILED + 1))
+          download_file "yahoo_players.json" || FAILED=$((FAILED + 1))
+          download_file "service_stats.json" || FAILED=$((FAILED + 1))
           
-          echo "✅ Download complete"
+          echo ""
+          if [ $FAILED -eq 0 ]; then
+            echo "✅ All files downloaded successfully!"
+          else
+            echo "⚠️ ${FAILED} file(s) failed to download"
+            echo ""
+            echo "💡 Troubleshooting tips:"
+            echo "  1. Check that files exist in: https://github.com/${GITHUB_USER}/${REPO}/tree/${BRANCH}/data"
+            echo "  2. Verify workflow has access to the repo"
+            echo "  3. Check file names match exactly (case-sensitive)"
+            exit 1
+          fi
       
       - name: Check for changes
         id: check_changes
