@@ -140,11 +140,16 @@ async function loadPADData() {
 
     // Read final 2025 rank from config/managers.json and derive bracket
     let finalRank = null;
+    let managerName = null;
     try {
         const res = await fetch('./config/managers.json');
         if (res.ok) {
             const cfg = await res.json();
-            finalRank = cfg?.teams?.[team]?.final_rank_2025 ?? null;
+            const teamCfg = cfg?.teams?.[team];
+            if (teamCfg) {
+                finalRank = teamCfg.final_rank_2025 ?? null;
+                managerName = teamCfg.name || null;
+            }
         }
     } catch (e) {
         console.error('Failed to load managers config for PAD:', e);
@@ -180,7 +185,16 @@ async function loadPADData() {
 
     // Determine rollover totals from WizBucks balance
     const wizbucksBalances = FBPHub.data?.wizbucks || {};
-    const currentWB = wizbucksBalances[team] || 0;
+    // WizBucks JSON is keyed by franchise name (e.g., "Weekend Warriors"),
+    // while PAD_STATE.team is the team abbreviation (e.g., "WAR"). Prefer
+    // the manager/franchise name from managers.json when available, but
+    // fall back to the abbreviation if the data ever changes.
+    let currentWB = 0;
+    if (wizbucksBalances[team] != null) {
+        currentWB = wizbucksBalances[team];
+    } else if (typeof managerName === 'string' && wizbucksBalances[managerName] != null) {
+        currentWB = wizbucksBalances[managerName];
+    }
     // League rule: max $75 total rollover
     PAD_STATE.rolloverTotal = Math.min(75, currentWB);
     // PAD can use at most $25 of rollover
@@ -373,7 +387,9 @@ function updateWizBucksDisplay() {
     document.getElementById('barRolloverToKAP').textContent = `$${rolloverToKAP}`;
     const rolloverTotalEl = document.getElementById('barRolloverTotal');
     if (rolloverTotalEl) {
-        rolloverTotalEl.textContent = `$${remainingRolloverTotal}`;
+        // Show the full rollover pool available to the franchise (capped at $75),
+        // not the portion remaining after PAD usage.
+        rolloverTotalEl.textContent = `$${rolloverTotal}`;
     }
 }
 
@@ -407,9 +423,21 @@ function displayProspects() {
         // 2026 transition: DC/PC/BC are FREE for legacy DC prospects
         const dcLabel = p.legacy_dc ? 'DC (FREE)' : 'DC ($5)';
         const pcLabel = p.legacy_dc ? 'PC (FREE)' : 'PC ($10)';
-        const isFreeBC = p.legacy_dc || p.free_bc_special;
+        const hasGlobalFreeBC = PAD_SEASON === 2026 && !PAD_STATE.freeBCUsed;
+        // BC is free if:
+        // - the prospect is a legacy DC (2026 transition), OR
+        // - this prospect already holds the special free BC, OR
+        // - the 2026 one-time free BC has not been used yet (first BC contract)
+        const isFreeBC = p.legacy_dc || p.free_bc_special || (!p.legacy_dc && hasGlobalFreeBC);
         const bcCost = isFreeBC ? 0 : 20;
-        const bcLabel = bcCost === 0 ? 'BC (FREE)' : 'BC ($20)';
+        let bcLabel;
+        if (bcCost === 0 && !p.legacy_dc && !p.free_bc_special && hasGlobalFreeBC) {
+            bcLabel = 'BC (FREE - 2026 First BC)';
+        } else if (bcCost === 0) {
+            bcLabel = 'BC (FREE)';
+        } else {
+            bcLabel = 'BC ($20)';
+        }
         
         return `
             <div class="prospect-card ${hasContract ? 'has-contract' : ''}">

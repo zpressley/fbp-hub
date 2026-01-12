@@ -41,35 +41,51 @@ jobs:
           echo "================================"
       
       - name: Download latest data from bot repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "📥 Downloading data files from bot repo..."
           
           # Your GitHub info
           GITHUB_USER="zpressley"
-          BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/fbp-trade-bot/main/data"
+          REPO="fbp-trade-bot"
+          BRANCH="main"
           
           # Create data directory if it doesn't exist
           mkdir -p data
           
+          # Base URL for authenticated GitHub API raw file access
+          BASE_URL="https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/data"
+          
+          # Function to download a file using GitHub API with authentication
+          download_file() {
+            local filename=$1
+            echo "  → ${filename}"
+            
+            # Get file content from GitHub API (returns base64)
+            local response=$(curl -s -H "Authorization: token ${GH_TOKEN}" \
+                            -H "Accept: application/vnd.github.v3.raw" \
+                            "${BASE_URL}/${filename}?ref=${BRANCH}")
+            
+            # Check if download was successful
+            if [ -n "$response" ] && ! echo "$response" | grep -q "Not Found"; then
+              echo "$response" > "data/${filename}"
+              echo "    ✓ Downloaded ${filename}"
+            else
+              echo "    ⚠️ Failed to download ${filename}"
+              return 1
+            fi
+          }
+          
           # Download each data file
-          echo "  → combined_players.json"
-          curl -f -s -o data/combined_players.json "$BASE_URL/combined_players.json" || echo "⚠️ Failed to download combined_players.json"
-          
-          echo "  → wizbucks.json"
-          curl -f -s -o data/wizbucks.json "$BASE_URL/wizbucks.json" || echo "⚠️ Failed to download wizbucks.json"
-          
-          echo "  → standings.json"
-          curl -f -s -o data/standings.json "$BASE_URL/standings.json" || echo "⚠️ Failed to download standings.json"
-          
-          echo "  → yahoo_players.json"
-          curl -f -s -o data/yahoo_players.json "$BASE_URL/yahoo_players.json" || echo "⚠️ Failed to download yahoo_players.json"
-          
-          echo "  → service_stats.json"
-          curl -f -s -o data/service_stats.json "$BASE_URL/service_stats.json" || echo "⚠️ Failed to download service_stats.json"
+          download_file "combined_players.json"
+          download_file "wizbucks.json"
+          download_file "standings.json"
+          download_file "yahoo_players.json"
+          download_file "service_stats.json"
           
           # Add more files if needed in the future:
-          # echo "  → transactions.json"
-          # curl -f -s -o data/transactions.json "$BASE_URL/transactions.json" || echo "⚠️ Failed"
+          # download_file "transactions.json"
           
           echo "✅ Download complete"
       
