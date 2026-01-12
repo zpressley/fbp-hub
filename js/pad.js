@@ -456,26 +456,36 @@ function displayProspects() {
                     <div class="contract-badge ${contractClass}">${contractLabel}</div>
                 </div>
                 <div class="prospect-actions">
-                    ${!hasContract && !p.has_mlb_service ? `
-                        <button class="btn-contract dc" onclick="assignContract('${p.upid}', 'DC')">
-                            <i class="fas fa-user-plus"></i> ${dcLabel}
-                        </button>
-                        <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
-                            <i class="fas fa-star"></i> ${pcLabel}
-                        </button>
-                        <button class="btn-contract bc" onclick="assignContract('${p.upid}', 'BC')">
-                            <i class="fas fa-crown"></i> ${bcLabel}
-                        </button>
-                    ` : ''}
+                    ${!hasContract ? (
+                        p.has_mlb_service
+                            ? `
+                                <div class="prospect-service-note">
+                                    <i class="fas fa-ban"></i>
+                                    <span>Has MLB service time  DC ineligible</span>
+                                </div>
+                                <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
+                                    <i class="fas fa-star"></i> ${pcLabel}
+                                </button>
+                                <button class="btn-contract bc" onclick="assignContract('${p.upid}', 'BC')">
+                                    <i class="fas fa-crown"></i> ${bcLabel}
+                                </button>
+                              `
+                            : `
+                                <button class="btn-contract dc" onclick="assignContract('${p.upid}', 'DC')">
+                                    <i class="fas fa-user-plus"></i> ${dcLabel}
+                                </button>
+                                <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
+                                    <i class="fas fa-star"></i> ${pcLabel}
+                                </button>
+                                <button class="btn-contract bc" onclick="assignContract('${p.upid}', 'BC')">
+                                    <i class="fas fa-crown"></i> ${bcLabel}
+                                </button>
+                              `
+                    ) : ''}
                     ${hasContract ? `
                         <button class="btn-remove-contract" onclick="removeContract('${p.upid}')">
                             <i class="fas fa-times"></i> Remove
                         </button>
-                    ` : ''}
-                    ${p.has_mlb_service ? `
-                        <div style="flex: 1; text-align: center; font-size: var(--text-xs); color: var(--text-gray); padding: var(--space-sm);">
-                            <i class="fas fa-ban"></i> Has MLB service time - DC ineligible
-                        </div>
                     ` : ''}
                     ${hasContract && p.top_100_rank ? `
                         <div style="flex: 1; text-align: center; color: var(--success); font-weight: 700; font-size: var(--text-sm); padding: var(--space-sm);">
