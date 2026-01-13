@@ -419,6 +419,10 @@ function addUserMenu() {
                 <i class="fas fa-receipt"></i>
                 PAD
             </a>
+            <a href="kap.html">
+                <i class="fas fa-trophy"></i>
+                KAP
+            </a>
             ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>

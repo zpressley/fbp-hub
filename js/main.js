@@ -356,6 +356,11 @@ function initializePage(pageName) {
                 initKAPPage();
             }
             break;
+        case 'player-profile':
+            if (typeof initPlayerProfile === 'function') {
+                initPlayerProfile();
+            }
+            break;
         default:
             console.log(`No specific initialization for ${pageName}`);
     }
