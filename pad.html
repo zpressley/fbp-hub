@@ -128,8 +128,18 @@
                     <div class="rollover-add-controls">
                         <label for="rolloverInput" class="sr-only">Rollover amount</label>
                         <input id="rolloverInput" type="number" min="0" step="1" placeholder="$0" />
-                        <button class="btn-secondary" onclick="applyRolloverAmount()">Add</button>
-                        <button class="btn-primary" onclick="applyRolloverMax()">Add Max</button>
+                        <button class="btn-secondary" onclick="applyRolloverAmount()">
+                            <i class="fas fa-plus-circle"></i>
+                            Add
+                        </button>
+                        <button class="btn-primary" onclick="applyRolloverMax()">
+                            <i class="fas fa-plus"></i>
+                            Add Max
+                        </button>
+                        <button class="btn-secondary" onclick="clearRollover()">
+                            <i class="fas fa-undo"></i>
+                            Remove
+                        </button>
                     </div>
                     <p class="rollover-add-meta" id="rolloverMeta"></p>
                 </div>

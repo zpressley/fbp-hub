@@ -552,6 +552,28 @@ function applyRolloverMax() {
 }
 
 /**
+ * Clear all rollover applied to PAD
+ */
+function clearRollover() {
+    const applied = PAD_STATE.appliedRolloverPAD || 0;
+    if (applied <= 0) {
+        showToast('No rollover applied to remove.', 'info');
+        return;
+    }
+
+    PAD_STATE.appliedRolloverPAD = 0;
+
+    const input = document.getElementById('rolloverInput');
+    if (input) {
+        input.value = '';
+    }
+
+    updateRolloverMeta();
+    updateWizBucksDisplay();
+    saveDraft();
+}
+
+/**
  * Display prospects
  */
 function displayProspects() {
