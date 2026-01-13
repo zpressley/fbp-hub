@@ -259,10 +259,10 @@ async function loadPADData() {
     }
     
     // Check for saved draft (prospects, slots are still loaded here for backwards-compat)
-    const savedDraft = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
-    if (savedDraft) {
+    const savedDraft2 = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
+    if (savedDraft2) {
         try {
-            const draft = JSON.parse(savedDraft);
+            const draft = JSON.parse(savedDraft2);
             // Only override prospects if the draft actually has some
             PAD_STATE.myProspects = (draft.prospects && draft.prospects.length)
                 ? draft.prospects
