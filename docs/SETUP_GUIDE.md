@@ -7,7 +7,7 @@ Before starting, ensure you have:
 - [ ] Git installed locally
 - [ ] Your fbp-trade-bot repository with data pipeline working
 - [ ] Modern web browser for testing
-- [ ] Terminal/command line access
+- [ ] Terminal/command
 
 ## 🚀 Step-by-Step Deployment
 
