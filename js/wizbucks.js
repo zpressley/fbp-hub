@@ -352,6 +352,15 @@ function displayLedger() {
         const creditDisplay = t.credit > 0 ? `$${t.credit}` : '—';
         const debitDisplay = t.debit > 0 ? `$${t.debit}` : '—';
         
+        let playerHTML = '';
+        if (t.related_player && window.createPlayerLink) {
+            const link = createPlayerLink(t.related_player);
+            const name = t.related_player.name || t.related_player.player_name || '';
+            if (name) {
+                playerHTML = `<div class="transaction-player">Player: <a href="${link}" class="player-link">${name}</a></div>`;
+            }
+        }
+
         return `
             <tr>
                 <td class="col-action">
@@ -359,6 +368,7 @@ function displayLedger() {
                 </td>
                 <td class="col-note">
                     <span class="transaction-note">${t.note}</span>
+                    ${playerHTML}
                 </td>
                 <td class="col-date">${formatDate(t.date)}</td>
                 <td class="col-credit ${t.credit > 0 ? 'credit-amount' : ''}">${creditDisplay}</td>

@@ -129,10 +129,12 @@ function displayGraduations() {
         return;
     }
     
-    container.innerHTML = eligibleGraduations.map(p => `
+    container.innerHTML = eligibleGraduations.map(p => {
+        const link = window.createPlayerLink ? createPlayerLink(p) : '#';
+        return `
         <div class="graduation-card">
             <div class="grad-player-info">
-                <h4>${p.name}</h4>
+                <h4><a href="${link}" class="player-link">${p.name}</a></h4>
                 <div class="grad-meta">
                     <span>${p.position} - ${p.team}</span>
                     <span class="grad-limit">${p.limitType} limits exceeded</span>
@@ -146,7 +148,7 @@ function displayGraduations() {
                 </button>
             </div>
         </div>
-    `).join('');
+    `; }).join('');
 }
 
 function displayDCSlots() {

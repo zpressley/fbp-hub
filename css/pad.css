@@ -84,6 +84,11 @@
     color: var(--accent-yellow);
 }
 
+/* Contracts count in sticky bar */
+#barContractsCount {
+    color: #1E88C7;
+}
+
 /* Progress Steps */
 .progress-steps {
     display: flex;
@@ -218,18 +223,29 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-sm);
-    align-items: center;
+    align-items: stretch;
     margin-bottom: var(--space-sm);
 }
 
 .rollover-add-controls input[type="number"] {
     width: 120px;
+    flex: 0 0 auto;
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
     border: 1px solid rgba(255, 255, 255, 0.2);
     background-color: #111111;
     color: var(--text-white);
     font-family: var(--font-mono);
+}
+
+/* Make rollover buttons behave like wide PAD action buttons */
+.rollover-add-controls button {
+    flex: 1 1 0;
+    justify-content: center;
+}
+
+.rollover-add-controls button i {
+    margin-right: var(--space-xs);
 }
 
 .rollover-add-meta {

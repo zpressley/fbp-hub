@@ -295,12 +295,15 @@ function getGroupIcon(groupName) {
  * Create keeper player HTML
  */
 function createKeeperPlayerHTML(player) {
+    const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
     return `
         <div class="roster-player">
             <div class="roster-player-info">
                 ${createPositionBadge(player.position)}
                 <div>
-                    <div class="roster-player-name">${player.name}</div>
+                    <div class="roster-player-name">
+                        <a href="${profileLink}" class="player-link">${player.name}</a>
+                    </div>
                     <div class="roster-player-team">${player.team || 'FA'}</div>
                 </div>
             </div>
@@ -315,12 +318,15 @@ function createKeeperPlayerHTML(player) {
  * Create prospect player HTML
  */
 function createProspectPlayerHTML(player) {
+    const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
     return `
         <div class="roster-player">
             <div class="roster-player-info">
                 ${createPositionBadge(player.position)}
                 <div>
-                    <div class="roster-player-name">${player.name}</div>
+                    <div class="roster-player-name">
+                        <a href="${profileLink}" class="player-link">${player.name}</a>
+                    </div>
                     <div class="roster-player-team">${player.team || 'Unassigned'}</div>
                 </div>
             </div>

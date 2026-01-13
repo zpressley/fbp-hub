@@ -384,6 +384,8 @@ function openPlayerDetail(playerId) {
     selectedPlayer = player;
     
     // Build detail panel content
+    const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
+
     panel.innerHTML = `
         <div class="player-detail-header">
             <button class="detail-close-btn" onclick="closePlayerDetail()">
@@ -391,9 +393,15 @@ function openPlayerDetail(playerId) {
             </button>
             <div class="player-detail-name">${player.name}</div>
             <div class="player-detail-title">${player.position} - ${player.team || 'Free Agent'}</div>
-                    <div class="player-detail-badges">
+            <div class="player-detail-badges">
                 ${player.years_simple ? createContractBadgeWithClass(player.years_simple) : ''}
                 ${player.FBP_Team ? `<span class="team-badge">${player.FBP_Team}</span>` : ''}
+            </div>
+            <div class="player-detail-actions">
+                <a href="${profileLink}" class="btn btn-primary">
+                    <i class="fas fa-user"></i>
+                    View Full Profile
+                </a>
             </div>
         </div>
         

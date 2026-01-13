@@ -603,11 +603,12 @@ function displayProspects() {
     const sortedProspects = [...PAD_STATE.myProspects].sort((a, b) => {
         return (a.name || '').localeCompare(b.name || '');
     });
-
-    container.innerHTML = sortedProspects.map(p => {
+    
+    container.innerHTML = PAD_STATE.myProspects.map(p => {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
+        const profileLink = window.createPlayerLink ? createPlayerLink(p) : '#';
         
         // 2026 transition: DC/PC/BC are FREE for legacy DC prospects
         const dcLabel = p.legacy_dc ? 'DC (FREE)' : 'DC ($5)';
@@ -633,7 +634,9 @@ function displayProspects() {
                 <div class="prospect-info">
                     <div class="prospect-details">
                         <h4 class="prospect-name-line">
-                            <span class="prospect-name">${p.name}</span>
+                            <span class="prospect-name">
+                                <a href="${profileLink}" class="player-link">${p.name}</a>
+                            </span>
                             <span class="prospect-inline-meta">
                                 <span>${p.position}</span>
                                 <span>${p.team}</span>
@@ -676,7 +679,7 @@ function displayProspects() {
                             <i class="fas fa-times"></i> Remove
                         </button>
                     ` : ''}
-                    ${hasContract && p.top_100_rank ? `
+                    ${hasContract && p.contract_type === 'BC' && p.top_100_rank ? `
                         <div style="flex: 1; text-align: center; color: var(--success); font-weight: 700; font-size: var(--text-sm); padding: var(--space-sm);">
                             <i class="fas fa-check-circle"></i> ${p.legacy_dc ? 'FREE BC UPGRADE' : 'BC ASSIGNED'} (Top 100 #${p.top_100_rank})
                         </div>
@@ -1095,18 +1098,30 @@ function showConfirmation() {
     
     const dcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'DC' && !p.was_upgraded);
     const pcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'PC');
-    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC' && !p.top_100_rank);
-    const bcRetained = PAD_STATE.myProspects.filter(p => p.top_100_rank);
+    const bcContracts = PAD_STATE.myProspects.filter(p => p.contract_type === 'BC');
+
+    const unassigned = PAD_STATE.myProspects.filter(p => !p.contract_type);
+    const droppedProspects = unassigned.filter(p => p.mlb_rookie !== false);
+    const tcRProspects = unassigned.filter(p => p.mlb_rookie === false);
     
     const summaryHTML = `
-        ${dcContracts.length > 0 || pcContracts.length > 0 || bcContracts.length > 0 || bcRetained.length > 0 ? `
+        ${dcContracts.length > 0 || pcContracts.length > 0 || bcContracts.length > 0 ? `
             <div class="confirmation-section">
                 <h4>Prospect Contracts</h4>
                 <ul>
                     ${dcContracts.length > 0 ? `<li><strong>${dcContracts.length} DC:</strong> ${dcContracts.map(p => p.name).join(', ')}</li>` : ''}
                     ${pcContracts.length > 0 ? `<li><strong>${pcContracts.length} PC:</strong> ${pcContracts.map(p => p.name).join(', ')}</li>` : ''}
                     ${bcContracts.length > 0 ? `<li><strong>${bcContracts.length} BC:</strong> ${bcContracts.map(p => p.name).join(', ')}</li>` : ''}
-                    ${bcRetained.length > 0 ? `<li style="color: var(--success);"><strong>${bcRetained.length} BC Auto-Retained:</strong> ${bcRetained.map(p => p.name).join(', ')}</li>` : ''}
+                </ul>
+            </div>
+        ` : ''}
+
+        ${droppedProspects.length > 0 || tcRProspects.length > 0 ? `
+            <div class="confirmation-section">
+                <h4>Unassigned Prospects</h4>
+                <ul>
+                    ${droppedProspects.length > 0 ? `<li><strong>Dropped (${droppedProspects.length}):</strong> ${droppedProspects.map(p => p.name).join(', ')}</li>` : ''}
+                    ${tcRProspects.length > 0 ? `<li><strong>Convert to TC-R (${tcRProspects.length}):</strong> ${tcRProspects.map(p => p.name).join(', ')}</li>` : ''}
                 </ul>
             </div>
         ` : ''}
@@ -1163,7 +1178,7 @@ async function confirmSubmit() {
     
     // Log all prospect contract assignments
     PAD_STATE.myProspects.forEach(prospect => {
-        if (!prospect.contract_type || prospect.top_100_rank) return;
+        if (!prospect.contract_type) return;
         
         let cost = 0;
         let txnType = '';

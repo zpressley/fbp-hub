@@ -163,6 +163,25 @@ a:hover {
     color: var(--accent-yellow);
 }
 
+/* Player profile links */
+.player-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.player-link {
+    color: var(--accent-yellow);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all var(--transition-fast);
+}
+
+.player-link:hover {
+    color: var(--primary-red);
+    text-decoration: underline;
+}
+
 /* Vintage accents - Pacifico for "Est." only */
 .established-year {
     font-family: var(--font-vintage);

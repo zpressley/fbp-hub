@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/player-profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu"></div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading player data...</p>
+        </div>
+
+        <!-- Player Not Found -->
+        <div class="player-not-found" id="playerNotFound" style="display: none;">
+            <i class="fas fa-user-slash"></i>
+            <h3>Player Not Found</h3>
+            <p>The requested player could not be found in the database.</p>
+            <a href="players.html" class="btn-primary">
+                <i class="fas fa-search"></i> Search Players
+            </a>
+        </div>
+
+        <!-- Player Profile -->
+        <div id="playerProfile" style="display: none;">
+            <!-- Player Header -->
+            <div class="player-header">
+                <div class="player-header-content">
+                    <div class="back-link">
+                        <a href="javascript:history.back()" class="btn-back">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                    <div class="player-title-section">
+                        <div class="player-photo-container">
+                            <img id="playerPhoto" src="" alt="Player Photo" class="player-photo">
+                            <div class="photo-placeholder" id="photoPlaceholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="player-title-info">
+                            <h1 id="playerName">Player Name</h1>
+                            <div class="player-subtitle">
+                                <span class="position-badge" id="playerPosition">SS</span>
+                                <span class="team-badge" id="playerTeam">ATL</span>
+                                <span class="age-info" id="playerAge">Age 24</span>
+                            </div>
+                            <div class="ownership-badge" id="ownershipBadge">
+                                <i class="fas fa-trophy"></i>
+                                <span id="playerOwner">WIZ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-file-contract"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Contract</div>
+                        <div class="stat-value" id="playerContract">VC-2</div>
+                        <div class="stat-sublabel" id="contractSublabel">$55 salary</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Years Status</div>
+                        <div class="stat-value" id="playerYears">VC-2</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-baseball-ball"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Type</div>
+                        <div class="stat-value" id="playerType">MLB</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="serviceTimeCard" style="display: none;">
+                    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Service Time</div>
+                        <div class="stat-value" id="serviceTime">0.000</div>
+                        <div class="stat-sublabel" id="serviceSublabel">Years</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-tab="overview">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Overview</span>
+                </button>
+                <button class="profile-tab" data-tab="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Stats</span>
+                </button>
+                <button class="profile-tab" data-tab="history">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </button>
+                <button class="profile-tab" data-tab="transactions">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div class="profile-tab-content active" id="overview-tab">
+                <div class="overview-grid">
+                    <!-- Current Season Stats -->
+                    <div class="overview-section">
+                        <h3><i class="fas fa-chart-line"></i> 2025 Season Stats</h3>
+                        <div id="currentSeasonStats"></div>
+                    </div>
+
+                    <!-- Contract Information -->
+                    <div class="overview-section">
+                        <h3><i class="fas fa-file-contract"></i> Contract Details</h3>
+                        <div id="contractDetails"></div>
+                    </div>
+
+                    <!-- Ownership Timeline -->
+                    <div class="overview-section full-width">
+                        <h3><i class="fas fa-timeline"></i> Ownership Timeline</h3>
+                        <div id="ownershipTimeline"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Stats -->
+            <div class="profile-tab-content" id="stats-tab">
+                <div class="stats-section">
+                    <h3><i class="fas fa-chart-bar"></i> Career Statistics</h3>
+                    <div id="careerStats"></div>
+                </div>
+
+                <div class="stats-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Season-by-Season</h3>
+                    <div id="seasonStats"></div>
+                </div>
+            </div>
+
+            <!-- Tab Content: History -->
+            <div class="profile-tab-content" id="history-tab">
+                <div class="history-section">
+                    <h3><i class="fas fa-clock"></i> Player History</h3>
+                    <div class="history-timeline" id="playerHistoryTimeline"></div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Transactions -->
+            <div class="profile-tab-content" id="transactions-tab">
+                <div class="transactions-section">
+                    <h3><i class="fas fa-exchange-alt"></i> Transaction Log</h3>
+                    <div id="transactionLog"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/player-profile.js"></script>
+</body>
+</html>
