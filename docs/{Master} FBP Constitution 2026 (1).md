@@ -175,8 +175,14 @@
 ## **Section 05: FBP Prospect Limits**
 
 1. Teams may choose to hold a prospect’s graduation to a Keeper Contract until they surpass FBP Prospect Limits \- defined below:  
-   1. 350 PA  
-   2. 100 IP \- or \- 30 Pitching Appearances  
+   Prospect Limits - 
+Age 25 & under (turn 26 you aren't a prospect anymore)
+
+Batter:
+350 PA -or- 80 GP
+
+Pitcher:
+100 IP -or- 30 Pitching Appearances
 2. Prospects are able to remain prospects in season until the prospect graduation deadline (MLB All-Star Break).  At this point if they exceed FBP Prospect Limits, they will cease to be eligible for prospect status and must be rostered on the 26-man Yahoo Roster.  (NA or IL are acceptable slots if applicable)  
    1. Contracted Prospects that do not graduate in-season at the deadline may remain a prospect through the remainder of the year.
 

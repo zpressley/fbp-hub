@@ -29,6 +29,12 @@ function initDashboard() {
     // Update quick action links
     updateQuickActions(team);
     
+    // Show admin link for admins only
+    const adminLink = document.getElementById('adminDashboardLink');
+    if (adminLink && typeof authManager !== 'undefined' && authManager.isAdmin && authManager.isAdmin()) {
+        adminLink.style.display = 'flex';
+    }
+    
     // Load roster preview
     loadRosterPreview(team);
 }

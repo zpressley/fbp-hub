@@ -55,7 +55,16 @@ const TEAM_NAMES = {
 
 // Commissioner Discord IDs
 const COMMISSIONER_IDS = [
-    '161967242118955008'  // Add commissioner Discord IDs here
+    '161967242118955008'  // League commissioner (Whiz Kids)
+];
+
+// Admin Discord IDs (full admin portal access)
+// Whiz Kids, not much of a donkey, Weekend Warriors, The Bluke Blokes
+const ADMIN_IDS = [
+    '161967242118955008', // Whiz Kids
+    '875750135005597728', // not much of a donkey
+    '664280448788201522', // Weekend Warriors
+    '161932197308137473'  // The Bluke Blokes
 ];
 
 /**
@@ -118,6 +127,14 @@ class AuthManager {
     isCommissioner() {
         if (!this.session?.user) return false;
         return COMMISSIONER_IDS.includes(this.session.user.id);
+    }
+    
+    /**
+     * Check if user is an admin (admin portal access)
+     */
+    isAdmin() {
+        if (!this.session?.user) return false;
+        return ADMIN_IDS.includes(this.session.user.id);
     }
     
     /**
@@ -333,6 +350,24 @@ const AuthUI = {
         }
         
         return true;
+    },
+    
+    /**
+     * Require admin role (for admin portal)
+     */
+    requireAdmin() {
+        if (!authManager.isAuthenticated()) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        
+        if (!authManager.isAdmin()) {
+            alert('This page is only accessible to admins.');
+            window.location.href = 'dashboard.html';
+            return false;
+        }
+        
+        return true;
     }
 };
 
@@ -384,7 +419,7 @@ function addUserMenu() {
                 <i class="fas fa-receipt"></i>
                 PAD
             </a>
-            ${authManager.isCommissioner() ? `
+            ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>
                     Admin

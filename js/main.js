@@ -141,7 +141,15 @@ function updateUserMenuForAuth() {
             <i class="fas fa-baseball-ball"></i>
             My Roster
         </a>
-        ${authManager.isCommissioner() ? `
+        <a href="pad.html">
+            <i class="fas fa-receipt"></i>
+            PAD
+        </a>
+        <a href="kap.html">
+            <i class="fas fa-trophy"></i>
+            KAP
+        </a>
+        ${authManager.isAdmin ? authManager.isAdmin() : authManager.isCommissioner && authManager.isCommissioner() ? `
             <a href="admin.html">
                 <i class="fas fa-shield-alt"></i>
                 Admin
@@ -341,6 +349,11 @@ function initializePage(pageName) {
         case 'pad':
             if (typeof initPADPage === 'function') {
                 initPADPage();
+            }
+            break;
+        case 'kap':
+            if (typeof initKAPPage === 'function') {
+                initKAPPage();
             }
             break;
         default:

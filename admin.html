@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Admin Portal</p>
+            </div>
+            <div class="user-menu" id="userMenu"></div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Check -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-shield-alt"></i>
+            <p>Admin access required</p>
+            <a href="index.html" class="btn-primary">Return Home</a>
+        </div>
+
+        <!-- Admin Portal -->
+        <div id="adminContent" style="display: none;">
+            <div class="page-header">
+                <h2>ADMIN PORTAL</h2>
+                <p class="page-subtitle">Player management and transaction logging</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Players</div>
+                        <div class="stat-value" id="totalPlayers">0</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon"><i class="fas fa-edit"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Pending Changes</div>
+                        <div class="stat-value" id="pendingChanges">0</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon"><i class="fas fa-history"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-label">Recent Logs</div>
+                        <div class="stat-value" id="recentLogs">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="search">
+                    <i class="fas fa-search"></i>
+                    <span>Player Search</span>
+                </button>
+                <button class="admin-tab" data-tab="edit">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit Player</span>
+                </button>
+                <button class="admin-tab" data-tab="bulk">
+                    <i class="fas fa-list"></i>
+                    <span>Bulk Update</span>
+                </button>
+                <button class="admin-tab" data-tab="wizbucks">
+                    <i class="fas fa-coins"></i>
+                    <span>WizBucks</span>
+                </button>
+                <button class="admin-tab" data-tab="logs">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Recent Logs</span>
+                </button>
+            </div>
+
+            <!-- Tab: Player Search -->
+            <div class="admin-tab-content active" id="search-tab">
+                <div class="search-section">
+                    <h3>Player Search & Quick Actions</h3>
+                    
+                    <div class="search-controls">
+                        <div class="search-bar-admin">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="adminPlayerSearch" placeholder="Search by name, UPID, team, or position...">
+                        </div>
+                        
+                        <div class="filter-row">
+                            <select id="searchOwnerFilter" class="filter-select">
+                                <option value="">All Owners</option>
+                                <option value="WIZ">WIZ</option>
+                                <option value="B2J">B2J</option>
+                                <option value="CFL">CFL</option>
+                                <option value="HAM">HAM</option>
+                                <option value="JEP">JEP</option>
+                                <option value="LFB">LFB</option>
+                                <option value="LAW">LAW</option>
+                                <option value="SAD">SAD</option>
+                                <option value="DRO">DRO</option>
+                                <option value="RV">RV</option>
+                                <option value="TBB">TBB</option>
+                                <option value="WAR">WAR</option>
+                            </select>
+                            
+                            <select id="searchTypeFilter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="MLB">MLB</option>
+                                <option value="Farm">Farm</option>
+                            </select>
+                            
+                            <select id="searchContractFilter" class="filter-select">
+                                <option value="">All Contracts</option>
+                                <option value="TC">TC (All)</option>
+                                <option value="VC">VC (All)</option>
+                                <option value="FC">FC (All)</option>
+                                <option value="DC">DC</option>
+                                <option value="PC">PC</option>
+                                <option value="BC">BC</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="search-results-meta">
+                        <span id="searchResultsCount">0 players found</span>
+                        <button class="btn-secondary btn-sm" onclick="clearSearch()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Edit Player -->
+            <div class="admin-tab-content" id="edit-tab">
+                <div class="edit-section">
+                    <div class="no-player-selected" id="noPlayerSelected">
+                        <i class="fas fa-hand-pointer"></i>
+                        <p>Search for a player to edit</p>
+                    </div>
+                    
+                    <div class="player-edit-form" id="playerEditForm" style="display: none;">
+                        <div class="edit-header">
+                            <h3><i class="fas fa-edit"></i> Edit Player</h3>
+                            <button class="btn-secondary" onclick="cancelEdit()">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                        
+                        <div class="current-player-info" id="currentPlayerInfo"></div>
+                        
+                        <form id="editPlayerForm" onsubmit="return false;">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Player Name</label>
+                                    <input type="text" id="editName" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>UPID</label>
+                                    <input type="text" id="editUPID" class="form-input" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Position</label>
+                                    <input type="text" id="editPosition" class="form-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>MLB Team</label>
+                                    <input type="text" id="editTeam" class="form-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Age</label>
+                                    <input type="number" id="editAge" class="form-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Level</label>
+                                    <select id="editLevel" class="form-input">
+                                        <option value="MLB">MLB</option>
+                                        <option value="AAA">AAA</option>
+                                        <option value="AA">AA</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A">A</option>
+                                        <option value="Rk">Rookie</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>FBP Owner</label>
+                                    <select id="editOwner" class="form-input">
+                                        <option value="">Unowned</option>
+                                        <option value="WIZ">WIZ</option>
+                                        <option value="B2J">B2J</option>
+                                        <option value="CFL">CFL</option>
+                                        <option value="HAM">HAM</option>
+                                        <option value="JEP">JEP</option>
+                                        <option value="LFB">LFB</option>
+                                        <option value="LAW">LAW</option>
+                                        <option value="SAD">SAD</option>
+                                        <option value="DRO">DRO</option>
+                                        <option value="RV">RV</option>
+                                        <option value="TBB">TBB</option>
+                                        <option value="WAR">WAR</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Player Type</label>
+                                    <select id="editPlayerType" class="form-input">
+                                        <option value="MLB">MLB</option>
+                                        <option value="Farm">Farm</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Contract Type</label>
+                                    <input type="text" id="editContract" class="form-input" placeholder="e.g., VC-2, DC, PC">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Years Status</label>
+                                    <input type="text" id="editYears" class="form-input" placeholder="e.g., VC-2, P, R-4">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>Admin Note (Required)</label>
+                                <textarea id="editAdminNote" class="form-textarea" placeholder="Explain why you're making this change..." required></textarea>
+                            </div>
+                            
+                            <div class="changes-preview" id="changesPreview"></div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" onclick="cancelEdit()">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                                <button type="submit" class="btn-primary" onclick="savePlayerChanges()">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Bulk Update -->
+            <div class="admin-tab-content" id="bulk-tab">
+                <div class="bulk-section">
+                    <h3>Bulk Player Updates</h3>
+                    <p class="section-subtitle">Apply changes to multiple players at once</p>
+                    
+                    <div class="bulk-operation-card">
+                        <h4><i class="fas fa-graduation-cap"></i> Bulk Graduation</h4>
+                        <p>Graduate multiple prospects to keeper system</p>
+                        <div id="bulkGraduationList"></div>
+                        <button class="btn-primary" onclick="showBulkGraduationModal()">
+                            <i class="fas fa-graduation-cap"></i> Process Graduations
+                        </button>
+                    </div>
+                    
+                    <div class="bulk-operation-card">
+                        <h4><i class="fas fa-exchange-alt"></i> Bulk Contract Update</h4>
+                        <p>Update contracts for multiple players</p>
+                        <button class="btn-primary" onclick="showBulkContractModal()">
+                            <i class="fas fa-edit"></i> Bulk Contract Update
+                        </button>
+                    </div>
+                    
+                    <div class="bulk-operation-card">
+                        <h4><i class="fas fa-user-slash"></i> Bulk Release</h4>
+                        <p>Release multiple players from rosters</p>
+                        <button class="btn-danger" onclick="showBulkReleaseModal()">
+                            <i class="fas fa-user-slash"></i> Bulk Release
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: WizBucks -->
+            <div class="admin-tab-content" id="wizbucks-tab">
+                <div class="wizbucks-admin-section">
+                    <h3>WizBucks Management</h3>
+                    
+                    <div class="wb-admin-grid">
+                        <div class="wb-balance-section">
+                            <h4>Team Balances</h4>
+                            <div id="teamBalances"></div>
+                        </div>
+                        
+                        <div class="wb-adjustment-section">
+                            <h4>Manual Adjustment</h4>
+                            <form id="wbAdjustmentForm" onsubmit="return false;">
+                                <div class="form-group">
+                                    <label>Team</label>
+                                    <select id="wbTeam" class="form-input" required>
+                                        <option value="">Select Team...</option>
+                                        <option value="WIZ">WIZ</option>
+                                        <option value="B2J">B2J</option>
+                                        <option value="CFL">CFL</option>
+                                        <option value="HAM">HAM</option>
+                                        <option value="JEP">JEP</option>
+                                        <option value="LFB">LFB</option>
+                                        <option value="LAW">LAW</option>
+                                        <option value="SAD">SAD</option>
+                                        <option value="DRO">DRO</option>
+                                        <option value="RV">RV</option>
+                                        <option value="TBB">TBB</option>
+                                        <option value="WAR">WAR</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Installment</label>
+                                    <select id="wbInstallment" class="form-input" required>
+                                        <option value="pad">PAD</option>
+                                        <option value="kap">KAP</option>
+                                        <option value="apa">APA</option>
+                                        <option value="ptda">PTDA</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Amount (use - for deduction)</label>
+                                    <input type="number" id="wbAmount" class="form-input" placeholder="e.g., 50 or -25" required>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label>Reason (Required)</label>
+                                    <textarea id="wbReason" class="form-textarea" placeholder="Explain why you're adjusting WizBucks..." required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary" onclick="applyWBAdjustment()">
+                                    <i class="fas fa-check"></i> Apply Adjustment
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Recent Logs -->
+            <div class="admin-tab-content" id="logs-tab">
+                <div class="logs-section">
+                    <div class="logs-header">
+                        <h3>Recent Activity</h3>
+                        <div class="log-filters">
+                            <select id="logTypeFilter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="admin_manual">Admin Manual</option>
+                                <option value="contract_assigned">Contract Assigned</option>
+                                <option value="prospect_graduated">Graduated</option>
+                                <option value="trade_acquired">Trade</option>
+                            </select>
+                            <select id="logLimitFilter" class="filter-select">
+                                <option value="50">Last 50</option>
+                                <option value="100">Last 100</option>
+                                <option value="250">Last 250</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-log" id="activityLog"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Confirmation Modal -->
+    <div class="confirmation-modal" id="editConfirmModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Confirm Player Update</h2>
+                <p>Review changes before saving</p>
+            </div>
+            
+            <div id="editConfirmSummary"></div>
+            
+            <div class="confirmation-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>This will be logged to Player Log</strong>
+                <p>All changes are recorded with your admin username and reason</p>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="cancelEditConfirm()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" onclick="confirmPlayerUpdate()">
+                    <i class="fas fa-check"></i> Confirm Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

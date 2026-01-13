@@ -63,8 +63,8 @@ let KAP_STATE = {
     
     // Budget
     kapAllotment: 375,
-    rolloverFromPAD: 30,
-    totalAvailable: 405,
+    rolloverFromPAD: 0,
+    totalAvailable: 375,
     
     // Players
     mlbPlayers: [],  // All MLB players on team
@@ -150,15 +150,30 @@ async function checkSubmissionStatus() {
  * Load KAP data
  */
 async function loadKAPData() {
-    // Load WizBucks from PAD rollover
-    // In production: fetch from wizbucks_ledger.json
-    KAP_STATE.rolloverFromPAD = 30; // Mock
+    // Load rollover from managers.json (kap_rollover_2026), capped at $30
+    try {
+        const res = await fetch('./config/managers.json');
+        if (res.ok) {
+            const cfg = await res.json();
+            const teamCfg = cfg?.teams?.[KAP_STATE.team];
+            if (teamCfg && typeof teamCfg.kap_rollover_2026 === 'number') {
+                KAP_STATE.rolloverFromPAD = Math.max(0, Math.min(30, teamCfg.kap_rollover_2026));
+            } else {
+                KAP_STATE.rolloverFromPAD = 0;
+            }
+        } else {
+            KAP_STATE.rolloverFromPAD = 0;
+        }
+    } catch (e) {
+        console.error('Failed to load KAP rollover from managers.json:', e);
+        KAP_STATE.rolloverFromPAD = 0;
+    }
     KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + KAP_STATE.rolloverFromPAD;
     
     // Load MLB players
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
         KAP_STATE.mlbPlayers = FBPHub.data.players.filter(p => 
-            p.manager === KAP_STATE.team && 
+            p.FBP_Team === KAP_STATE.team && 
             p.player_type === 'MLB'
         ).map(p => ({
             upid: p.upid || '',
@@ -357,12 +372,13 @@ function displayKeepers() {
         const finalCost = baseCost - ilDiscount;
         const nextContract = CONTRACT_ADVANCEMENT[p.contract] || p.contract;
         const contractTier = getContractTier(p.contract);
+        const profileLink = window.createPlayerLink ? createPlayerLink({ upid: p.upid, name: p.name }) : '#';
         
         return `
             <div class="keeper-card ${p.isKeeper ? 'selected' : ''}">
                 <div class="keeper-header">
                     <div class="keeper-info">
-                        <h4>${p.name}</h4>
+                        <h4><a href="${profileLink}" class="player-link">${p.name}</a></h4>
                         <div class="keeper-meta">
                             <span>${p.position}</span>
                             <span>${p.team}</span>
@@ -713,10 +729,11 @@ function updateSummary() {
         const baseCost = KEEPER_SALARIES[player.contract] || 0;
         const ilDiscount = player.hasILTag ? (IL_DISCOUNTS[getContractTier(player.contract)] || 0) : 0;
         const finalCost = baseCost - ilDiscount;
+        const profileLink = window.createPlayerLink ? createPlayerLink({ upid: player.upid, name: player.name }) : '#';
         
         return `
             <div class="summary-item">
-                <strong>${player.name}</strong> (${player.position} - ${player.team})
+                <strong><a href="${profileLink}" class="player-link">${player.name}</a></strong> (${player.position} - ${player.team})
                 <div style="margin-top: var(--space-xs); font-family: var(--font-mono); font-size: var(--text-sm);">
                     ${player.contract} → $${finalCost}
                     ${player.hasILTag ? ' <span style="color: var(--success);">(IL Tag)</span>' : ''}
