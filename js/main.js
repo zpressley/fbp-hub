@@ -190,6 +190,9 @@ function highlightActivePage() {
 
 /**
  * Shrink and hide the sticky header on scroll (mobile-first)
+ *
+ * Uses simple hysteresis so the nav doesn't "bounce" when the user
+ * hovers around the hide/show thresholds.
  */
 function setupHeaderScrollBehavior() {
     const nav = document.querySelector('.mobile-nav');
@@ -197,6 +200,7 @@ function setupHeaderScrollBehavior() {
 
     let lastScrollY = window.scrollY;
     let ticking = false;
+    let isHidden = false;
 
     function update() {
         const currentY = window.scrollY;
@@ -209,11 +213,30 @@ function setupHeaderScrollBehavior() {
             nav.classList.remove('nav-compact');
         }
 
-        // Hide when scrolling down, show when scrolling up
-        if (currentY > lastScrollY && currentY > 80 && diff > 5) {
+        // Top of page: always show
+        if (currentY < 40) {
+            if (isHidden) {
+                nav.classList.remove('nav-hidden');
+                isHidden = false;
+            }
+            lastScrollY = currentY;
+            ticking = false;
+            return;
+        }
+
+        const SCROLL_DOWN_THRESHOLD = 10; // pixels
+        const SCROLL_UP_THRESHOLD = 20;   // pixels
+        const HIDE_START_Y = 120;         // don't start hiding until below this
+
+        // Hide when scrolling down beyond threshold
+        if (!isHidden && currentY > HIDE_START_Y && diff > SCROLL_DOWN_THRESHOLD) {
             nav.classList.add('nav-hidden');
-        } else if (currentY < lastScrollY && diff < -5) {
+            isHidden = true;
+        }
+        // Show when scrolling up enough
+        else if (isHidden && diff < -SCROLL_UP_THRESHOLD) {
             nav.classList.remove('nav-hidden');
+            isHidden = false;
         }
 
         lastScrollY = currentY;

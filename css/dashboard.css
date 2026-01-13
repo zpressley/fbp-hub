@@ -1,8 +1,8 @@
 /* ============================================
-   Dashboard Page - Generous Spacing for Updates
+   Dashboard Page - Depth Chart Layout
    ============================================ */
 
-/* Dashboard Header - Generous spacing */
+/* Dashboard Header */
 .dashboard-header {
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
@@ -62,7 +62,7 @@
     font-size: var(--text-base);
 }
 
-/* Dashboard Stats Grid - Generous spacing */
+/* Dashboard Stats Grid */
 .dashboard-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -134,7 +134,7 @@
     color: var(--text-gray);
 }
 
-/* Quick Actions - Generous spacing */
+/* Quick Actions */
 .quick-actions-section {
     margin-bottom: var(--space-2xl);
 }
@@ -194,7 +194,7 @@
     font-size: var(--text-sm);
 }
 
-/* Team Overview - Generous spacing */
+/* Team Overview */
 .team-overview {
     margin-bottom: var(--space-2xl);
 }
@@ -221,11 +221,7 @@
     padding: var(--space-xl);
 }
 
-/* New compact depth-chart roster layout */
-.dashboard-roster-section {
-    margin-bottom: var(--space-xl);
-}
-
+/* Depth Chart Roster Layout (FanGraphs Style) */
 .dashboard-roster-section h4 {
     font-family: var(--font-subhead);
     font-weight: 600;
@@ -236,8 +232,14 @@
 
 .dash-roster-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-lg);
+}
+
+.dash-roster-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
 }
 
 .dash-roster-group {
@@ -247,59 +249,84 @@
 }
 
 .dash-roster-group-header {
-    background-color: rgba(239, 62, 66, 0.15);
-    padding: var(--space-sm) var(--space-md);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    text-transform: uppercase;
+    background-color: var(--primary-red);
+    padding: 8px 12px;
+    font-family: var(--font-title);
+    font-size: var(--text-sm);
     letter-spacing: 1px;
-    color: var(--accent-yellow);
+    color: white;
+    text-align: center;
 }
 
 .dash-roster-table {
     width: 100%;
     border-collapse: collapse;
     font-family: var(--font-body);
-    font-size: var(--text-xs);
 }
 
 .dash-roster-table th,
 .dash-roster-table td {
-    padding: 4px 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: var(--space-sm) var(--space-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: left;
 }
 
 .dash-roster-table th {
-    background-color: rgba(0, 0, 0, 0.25);
-    text-align: left;
+    background-color: rgba(0, 0, 0, 0.5);
     color: var(--text-gray);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .dash-roster-table tr:last-child td {
     border-bottom: none;
 }
 
+.dash-roster-status {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-sm);
+}
+
+.dash-roster-status.tc { color: #FFFFFF; }
+.dash-roster-status.vc { color: #FFB612; }
+.dash-roster-status.fc { color: #1E88C7; }
+
 .dash-roster-name {
     color: var(--text-white);
     font-weight: 600;
+    font-size: var(--text-sm);
 }
 
-.dash-roster-status {
-    font-family: var(--font-mono);
-    color: var(--text-gray);
+.dash-roster-name a {
+    color: var(--text-white);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.dash-roster-name a:hover {
+    color: var(--accent-yellow);
 }
 
 .dash-roster-team {
     color: var(--text-gray);
+    font-size: var(--text-sm);
 }
 
-.dash-roster-pos,
+.dash-roster-pos {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+    font-size: var(--text-xs);
+}
+
 .dash-roster-age {
     font-family: var(--font-mono);
     color: var(--text-gray);
+    font-size: var(--text-sm);
 }
-
+/* Preview Sections - OLD STYLES */
 .preview-section h4 {
     font-family: var(--font-subhead);
     font-weight: 600;
@@ -364,6 +391,10 @@
     color: var(--primary-red);
 }
 
+.recent-activity h3 i {
+    color: var(--primary-red);
+}
+
 .activity-list {
     display: flex;
     flex-direction: column;
@@ -384,7 +415,6 @@
         justify-content: center;
     }
     
-    /* Make stats tiles similar footprint to quick actions on mobile */
     .dashboard-stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-lg);
@@ -404,6 +434,10 @@
     .action-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .dash-roster-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (min-width: 768px) {
@@ -413,6 +447,10 @@
     
     .action-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .dash-roster-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 

@@ -6,9 +6,10 @@
 let PLAYER_DATA = {
     upid: null,
     player: null,
+    // stats: { seasons: [...], hasBatting: bool, hasPitching: bool }
     stats: null,
-    history: [],
-    transactions: []
+    // unified timeline of events from player_log.json + transactions_history.json
+    history: []
 };
 
 /**
@@ -40,7 +41,6 @@ async function initPlayerProfile() {
     displayOverview();
     displayStats();
     displayHistory();
-    displayTransactions();
     
     // Setup tabs
     setupTabs();
@@ -78,42 +78,71 @@ async function loadPlayerData(upid, playerName) {
     }
     
     if (!PLAYER_DATA.player) return;
-    
-    // Service-time based stats were removed in 2026; we currently don't load per-player stats here.
+
+    // Load per-season stats from player_stats.json (if available)
     PLAYER_DATA.stats = null;
-    
-    // Load player history from player_log.json
     try {
-        const logResponse = await fetch('./data/player_log.json');
-        if (logResponse.ok) {
-            const playerLog = await logResponse.json();
-            PLAYER_DATA.history = playerLog.filter(entry => 
-                entry.upid === PLAYER_DATA.upid || 
-                entry.player_name === PLAYER_DATA.player.name
-            ).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        const statsResponse = await fetch('./data/player_stats.json');
+        if (statsResponse.ok) {
+            const allStats = await statsResponse.json();
+            const playerStats = (Array.isArray(allStats) ? allStats : []).filter(row =>
+                row.upid === PLAYER_DATA.upid ||
+                row.player_name === PLAYER_DATA.player.name
+            );
+
+            if (playerStats.length > 0) {
+                const seasons = [...playerStats].sort((a, b) => (a.season || 0) - (b.season || 0));
+                const hasBatting = seasons.some(s => s.stat_type === 'batting');
+                const hasPitching = seasons.some(s => s.stat_type === 'pitching');
+
+                PLAYER_DATA.stats = { seasons, hasBatting, hasPitching };
+            }
         }
     } catch (e) {
-        console.log('No player log available');
+        console.log('No player_stats.json available for player profile');
     }
-    
-    // Load WizBucks transactions related to player
+
+    // Load unified player history from transactions_history.json + player_log.json
     try {
-        const wbResponse = await fetch('./data/wizbucks_ledger.json');
-        if (wbResponse.ok) {
-            const wbLedger = await wbResponse.json();
-            PLAYER_DATA.transactions = wbLedger.filter(txn => 
-                txn.related_player?.upid === PLAYER_DATA.upid ||
-                txn.related_player?.name === PLAYER_DATA.player.name
-            ).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        }
+        const [historyResp, logResp] = await Promise.all([
+            fetch('./data/transactions_history.json'),
+            fetch('./data/player_log.json')
+        ]);
+
+        const historyJson = historyResp.ok ? await historyResp.json() : [];
+        const logJson = logResp.ok ? await logResp.json() : [];
+
+        const normalize = (rec, source) => ({
+            id: rec.id || '',
+            season: rec.season ?? null,
+            source,
+            timestamp: rec.timestamp || '',
+            upid: rec.upid || '',
+            player_name: rec.player_name || rec.playerName || '',
+            team: rec.team || '',
+            pos: rec.pos || rec.position || '',
+            owner: rec.owner || '',
+            update_type: rec.update_type || rec.updateType || '',
+            event: rec.event || '',
+            contract: rec.contract || '',
+            status: rec.status || '',
+            years: rec.years || ''
+        });
+
+        const combined = [
+            ...(Array.isArray(historyJson) ? historyJson.map(r => normalize(r, 'history')) : []),
+            ...(Array.isArray(logJson) ? logJson.map(r => normalize(r, 'player_log')) : [])
+        ];
+
+        PLAYER_DATA.history = combined
+            .filter(entry =>
+                entry.upid === PLAYER_DATA.upid ||
+                entry.player_name === PLAYER_DATA.player.name
+            )
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     } catch (e) {
-        console.log('No WizBucks ledger available');
-        // Fallback to localStorage for testing
-        const ledger = JSON.parse(localStorage.getItem('wizbucks_ledger') || '[]');
-        PLAYER_DATA.transactions = ledger.filter(txn => 
-            txn.related_player?.upid === PLAYER_DATA.upid ||
-            txn.related_player?.name === PLAYER_DATA.player.name
-        );
+        console.log('No unified player history available');
+        PLAYER_DATA.history = [];
     }
 }
 
@@ -192,24 +221,67 @@ function displayPlayerHeader() {
  */
 function displayOverview() {
     const player = PLAYER_DATA.player;
-    
-    // Current season stats
-    if (PLAYER_DATA.stats) {
-        const stats = PLAYER_DATA.stats;
-        const statsHTML = `
-            <div class="info-card">
-                ${stats.at_bats ? `<div class="info-row"><span class="info-label">At Bats</span><span class="info-value">${stats.at_bats}</span></div>` : ''}
-                ${stats.innings_pitched ? `<div class="info-row"><span class="info-label">Innings Pitched</span><span class="info-value">${stats.innings_pitched}</span></div>` : ''}
-                ${stats.pitching_appearances ? `<div class="info-row"><span class="info-label">Appearances</span><span class="info-value">${stats.pitching_appearances}</span></div>` : ''}
-                ${stats.active_days ? `<div class="info-row"><span class="info-label">Active Days</span><span class="info-value">${stats.active_days}</span></div>` : ''}
-                <div class="info-row"><span class="info-label">Games Played</span><span class="info-value">${stats.games_played || 0}</span></div>
-            </div>
-        `;
-        document.getElementById('currentSeasonStats').innerHTML = statsHTML;
+
+    // Latest season stats snapshot (batting + pitching)
+    const currentStatsContainer = document.getElementById('currentSeasonStats');
+    if (PLAYER_DATA.stats && PLAYER_DATA.stats.seasons?.length) {
+        const seasons = PLAYER_DATA.stats.seasons;
+        const latestSeason = seasons[seasons.length - 1]?.season;
+        const latestBatting = seasons
+            .filter(s => s.stat_type === 'batting' && s.season === latestSeason)
+            .slice(-1)[0];
+        const latestPitching = seasons
+            .filter(s => s.stat_type === 'pitching' && s.season === latestSeason)
+            .slice(-1)[0];
+
+        let html = '';
+
+        if (latestBatting) {
+            html += `
+                <div class="info-card">
+                    <div class="info-row header-row">
+                        <span class="info-label">Batting (${latestSeason})</span>
+                    </div>
+                    <div class="info-row"><span class="info-label">R</span><span class="info-value">${latestBatting.runs ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">H</span><span class="info-value">${latestBatting.hits ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">HR</span><span class="info-value">${latestBatting.homeRuns ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">RBI</span><span class="info-value">${latestBatting.rbi ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">SB</span><span class="info-value">${latestBatting.stolenBases ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">BB</span><span class="info-value">${latestBatting.baseOnBalls ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">K</span><span class="info-value">${latestBatting.strikeOuts ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">TB</span><span class="info-value">${latestBatting.totalBases ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">AVG</span><span class="info-value">${formatRate(latestBatting.avg)}</span></div>
+                    <div class="info-row"><span class="info-label">OPS</span><span class="info-value">${formatRate(latestBatting.ops)}</span></div>
+                </div>
+            `;
+        }
+
+        if (latestPitching) {
+            const p = latestPitching;
+            html += `
+                <div class="info-card">
+                    <div class="info-row header-row">
+                        <span class="info-label">Pitching (${latestSeason})</span>
+                    </div>
+                    <div class="info-row"><span class="info-label">PAPP</span><span class="info-value">${p.papp ?? p.games ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">ER</span><span class="info-value">${p.er ?? p.earnedRuns ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">HR</span><span class="info-value">${p.hrAllowed ?? p.homeRuns ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">K</span><span class="info-value">${p.strikeOuts ?? p.k ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">TB</span><span class="info-value">${p.totalBases ?? '-'}</span></div>
+                    <div class="info-row"><span class="info-label">ERA</span><span class="info-value">${formatRate(p.era)}</span></div>
+                    <div class="info-row"><span class="info-label">H/9</span><span class="info-value">${formatRate(p.h9 || p.hitsPer9)}</span></div>
+                    <div class="info-row"><span class="info-label">BB/9</span><span class="info-value">${formatRate(p.bb9 || p.walksPer9)}</span></div>
+                    <div class="info-row"><span class="info-label">K/9</span><span class="info-value">${formatRate(p.k9 || p.strikeoutsPer9)}</span></div>
+                    <div class="info-row"><span class="info-label">QS</span><span class="info-value">${p.qs ?? p.qualityStarts ?? '-'}</span></div>
+                </div>
+            `;
+        }
+
+        currentStatsContainer.innerHTML = html || '<div class="empty-state"><i class="fas fa-chart-line"></i><p>No stats available</p></div>';
     } else {
-        document.getElementById('currentSeasonStats').innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>No stats available</p></div>';
+        currentStatsContainer.innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>No stats available</p></div>';
     }
-    
+
     // Contract details
     const contractHTML = `
         <div class="info-card">
@@ -240,47 +312,47 @@ function displayOverview() {
 }
 
 /**
- * Display ownership timeline
+ * Display ownership timeline based on unified history
  */
 function displayOwnershipTimeline() {
-    const history = PLAYER_DATA.history.filter(h => 
-        h.update_type === 'trade_acquired' || 
-        h.update_type === 'trade_sent' ||
-        h.update_type === 'contract_assigned' ||
-        h.owner
-    );
-    
-    if (history.length === 0) {
-        document.getElementById('ownershipTimeline').innerHTML = '<div class="empty-state"><i class="fas fa-timeline"></i><p>No ownership history</p></div>';
+    const container = document.getElementById('ownershipTimeline');
+    if (!container) return;
+
+    const entries = [...(PLAYER_DATA.history || [])]
+        .filter(e => e.owner && e.timestamp)
+        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    if (!entries.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-timeline"></i><p>No ownership history</p></div>';
         return;
     }
-    
-    // Group by owner
+
     const periods = [];
-    let currentOwner = PLAYER_DATA.player.manager;
-    let currentStart = new Date().toISOString();
-    
+    let currentOwner = entries[0].owner;
+    let currentStart = entries[0].timestamp;
+
+    for (let i = 1; i < entries.length; i++) {
+        const entry = entries[i];
+        if (entry.owner !== currentOwner) {
+            periods.push({
+                owner: currentOwner,
+                start: currentStart,
+                end: entry.timestamp,
+                isCurrent: false
+            });
+            currentOwner = entry.owner;
+            currentStart = entry.timestamp;
+        }
+    }
+
+    // Final/current owner period
     periods.push({
         owner: currentOwner,
         start: currentStart,
         end: null,
-        isCurrent: true
+        isCurrent: !PLAYER_DATA.player.manager || PLAYER_DATA.player.manager === currentOwner
     });
-    
-    // Build periods from history
-    history.forEach(entry => {
-        if (entry.update_type === 'trade_sent') {
-            periods.push({
-                owner: entry.owner,
-                start: entry.timestamp,
-                end: currentStart,
-                isCurrent: false,
-                event: 'Traded away'
-            });
-            currentStart = entry.timestamp;
-        }
-    });
-    
+
     const timelineHTML = periods.map(period => `
         <div class="ownership-period ${period.isCurrent ? 'current' : ''}">
             <div class="ownership-period-header">
@@ -292,45 +364,126 @@ function displayOwnershipTimeline() {
                     ${formatDate(period.start)}${period.end ? ` - ${formatDate(period.end)}` : ' - Present'}
                 </div>
             </div>
-            ${period.event ? `<div class="ownership-details">${period.event}</div>` : ''}
         </div>
     `).join('');
-    
-    document.getElementById('ownershipTimeline').innerHTML = timelineHTML;
+
+    container.innerHTML = timelineHTML;
 }
 
 /**
  * Display stats tab
  */
 function displayStats() {
-    // Career stats
-    if (PLAYER_DATA.stats && PLAYER_DATA.stats.career_stats) {
-        const career = PLAYER_DATA.stats.career_stats;
-        const statsHTML = `
+    const seasons = PLAYER_DATA.stats?.seasons || [];
+
+    if (!seasons.length) {
+        document.getElementById('careerStats').innerHTML = '<div class="empty-state"><i class="fas fa-chart-bar"></i><p>No stats available</p></div>';
+        document.getElementById('seasonStats').innerHTML = '<div class="empty-state"><i class="fas fa-calendar-alt"></i><p>No season stats available</p></div>';
+        return;
+    }
+
+    const battingSeasons = seasons.filter(s => s.stat_type === 'batting').sort((a, b) => (a.season || 0) - (b.season || 0));
+    const pitchingSeasons = seasons.filter(s => s.stat_type === 'pitching').sort((a, b) => (a.season || 0) - (b.season || 0));
+
+    // Batting season-by-season table
+    if (battingSeasons.length) {
+        const battingRows = battingSeasons.map(row => `
+            <tr>
+                <td>${row.season || ''}</td>
+                <td>${row.level || ''}</td>
+                <td>${row.games ?? ''}</td>
+                <td>${row.atBats ?? ''}</td>
+                <td>${row.runs ?? ''}</td>
+                <td>${row.hits ?? ''}</td>
+                <td>${row.homeRuns ?? ''}</td>
+                <td>${row.rbi ?? ''}</td>
+                <td>${row.stolenBases ?? ''}</td>
+                <td>${row.baseOnBalls ?? ''}</td>
+                <td>${row.strikeOuts ?? ''}</td>
+                <td>${row.totalBases ?? ''}</td>
+                <td>${formatRate(row.avg)}</td>
+                <td>${formatRate(row.obp)}</td>
+                <td>${formatRate(row.slg)}</td>
+                <td>${formatRate(row.ops)}</td>
+            </tr>
+        `).join('');
+
+        document.getElementById('careerStats').innerHTML = `
             <table class="stats-table">
                 <thead>
                     <tr>
-                        <th>Stat</th>
-                        <th>Value</th>
+                        <th>Year</th>
+                        <th>Lvl</th>
+                        <th>G</th>
+                        <th>AB</th>
+                        <th>R</th>
+                        <th>H</th>
+                        <th>HR</th>
+                        <th>RBI</th>
+                        <th>SB</th>
+                        <th>BB</th>
+                        <th>K</th>
+                        <th>TB</th>
+                        <th>AVG</th>
+                        <th>OBP</th>
+                        <th>SLG</th>
+                        <th>OPS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${career.career_games ? `<tr><td>Games</td><td>${career.career_games}</td></tr>` : ''}
-                    ${career.career_at_bats ? `<tr><td>At Bats</td><td>${career.career_at_bats}</td></tr>` : ''}
-                    ${career.career_innings ? `<tr><td>Innings Pitched</td><td>${career.career_innings}</td></tr>` : ''}
-                    ${career.career_appearances ? `<tr><td>Appearances</td><td>${career.career_appearances}</td></tr>` : ''}
-                    ${career.seasons_played ? `<tr><td>MLB Seasons</td><td>${career.seasons_played}</td></tr>` : ''}
-                    ${career.debut_year ? `<tr><td>Debut Year</td><td>${career.debut_year}</td></tr>` : ''}
+                    ${battingRows}
                 </tbody>
             </table>
         `;
-        document.getElementById('careerStats').innerHTML = statsHTML;
     } else {
-        document.getElementById('careerStats').innerHTML = '<div class="empty-state"><i class="fas fa-chart-bar"></i><p>No career stats available</p></div>';
+        document.getElementById('careerStats').innerHTML = '<div class="empty-state"><i class="fas fa-chart-bar"></i><p>No batting stats available</p></div>';
     }
-    
-    // Season-by-season would go here
-    document.getElementById('seasonStats').innerHTML = '<div class="empty-state"><i class="fas fa-calendar-alt"></i><p>Season stats coming soon</p></div>';
+
+    // Pitching season-by-season table
+    if (pitchingSeasons.length) {
+        const pitchingRows = pitchingSeasons.map(p => `
+            <tr>
+                <td>${p.season || ''}</td>
+                <td>${p.level || ''}</td>
+                <td>${p.papp ?? p.games ?? ''}</td>
+                <td>${p.er ?? p.earnedRuns ?? ''}</td>
+                <td>${p.hrAllowed ?? p.homeRuns ?? ''}</td>
+                <td>${p.strikeOuts ?? p.k ?? ''}</td>
+                <td>${p.totalBases ?? ''}</td>
+                <td>${formatRate(p.era)}</td>
+                <td>${formatRate(p.h9 || p.hitsPer9)}</td>
+                <td>${formatRate(p.bb9 || p.walksPer9)}</td>
+                <td>${formatRate(p.k9 || p.strikeoutsPer9)}</td>
+                <td>${p.qs ?? p.qualityStarts ?? ''}</td>
+            </tr>
+        `).join('');
+
+        document.getElementById('seasonStats').innerHTML = `
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Lvl</th>
+                        <th>PAPP</th>
+                        <th>ER</th>
+                        <th>HR</th>
+                        <th>K</th>
+                        <th>TB</th>
+                        <th>ERA</th>
+                        <th>H/9</th>
+                        <th>BB/9</th>
+                        <th>K/9</th>
+                        <th>QS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${pitchingRows}
+                </tbody>
+            </table>
+        `;
+    } else {
+        document.getElementById('seasonStats').innerHTML = '<div class="empty-state"><i class="fas fa-calendar-alt"></i><p>No pitching stats available</p></div>';
+    }
 }
 
 /**
@@ -375,35 +528,6 @@ function displayHistory() {
     document.getElementById('playerHistoryTimeline').innerHTML = timelineHTML;
 }
 
-/**
- * Display transactions tab
- */
-function displayTransactions() {
-    if (PLAYER_DATA.transactions.length === 0) {
-        document.getElementById('transactionLog').innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No WizBucks transactions</p></div>';
-        return;
-    }
-    
-    const transactionsHTML = PLAYER_DATA.transactions.map(txn => `
-        <div class="transaction-item">
-            <div class="transaction-header">
-                <div class="transaction-type">${txn.transaction_type}</div>
-                <div class="transaction-date">${formatDateTime(txn.timestamp)}</div>
-            </div>
-            <div class="transaction-description">${txn.description}</div>
-            <div class="transaction-meta">
-                <span><i class="fas fa-user"></i> ${txn.team}</span>
-                <span><i class="fas fa-tag"></i> ${txn.installment.toUpperCase()}</span>
-                <span class="wb-badge ${txn.amount >= 0 ? 'credit' : 'debit'}">
-                    ${txn.amount >= 0 ? '+' : ''}$${txn.amount}
-                </span>
-                <span><i class="fas fa-coins"></i> Balance: $${txn.balance_after}</span>
-            </div>
-        </div>
-    `).join('');
-    
-    document.getElementById('transactionLog').innerHTML = transactionsHTML;
-}
 
 /**
  * Setup tabs
@@ -461,6 +585,16 @@ function formatDateTime(dateString) {
         hour: 'numeric',
         minute: '2-digit'
     });
+}
+
+// Helper to print decimals cleanly (e.g. AVG/OPS/ERA)
+function formatRate(value) {
+    if (value === null || value === undefined || value === '') return '-';
+    const num = Number(value);
+    if (Number.isNaN(num)) return String(value);
+    // Show 3 decimals for AVG/ERA-style stats, 3 for OPS by default
+    if (num === 0) return '0.000';
+    return num.toFixed(3);
 }
 
 /**

@@ -192,39 +192,77 @@ function createTeamRosterCard(teamAbbr, detailed = false) {
         `;
     }
     
-    // Group by position
-    const groups = groupPlayersByPosition(rosterPlayers);
+    // Group by position into batters vs pitchers
+    const { batters, pitchers } = groupPlayersByPosition(rosterPlayers);
     
-    // Create position groups HTML
-    const groupsHTML = Object.entries(groups).map(([groupName, players]) => {
-        const playersHTML = players.map(player => {
-            if (currentRosterType === 'keepers') {
-                return createKeeperPlayerHTML(player);
-            } else {
-                return createProspectPlayerHTML(player);
-            }
+    // Create batters column HTML
+    const batterGroupsHTML = Object.entries(batters)
+        .filter(([, players]) => players.length > 0)
+        .map(([groupName, players]) => {
+            const playersHTML = players.map(player => createDepthTableRow(player)).join('');
+            
+            return `
+                <div class="position-group">
+                    <div class="position-group-header">${groupName}</div>
+                    <table class="roster-depth-table">
+                        <thead>
+                            <tr>
+                                <th>STATUS</th>
+                                <th>PLAYER</th>
+                                <th>TEAM</th>
+                                <th>POS</th>
+                                <th>AGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${playersHTML}
+                        </tbody>
+                    </table>
+                </div>
+            `;
         }).join('');
-        
-        return `
-            <div class="position-group">
-                <div class="position-group-header">
-                    <div class="position-group-title">
-                        ${getGroupIcon(groupName)}
-                        <span>${groupName}</span>
-                    </div>
-                    <div class="position-group-count">${players.length}</div>
+    
+    // Create pitchers column HTML
+    const pitcherGroupsHTML = Object.entries(pitchers)
+        .filter(([, players]) => players.length > 0)
+        .map(([groupName, players]) => {
+            const playersHTML = players.map(player => createDepthTableRow(player)).join('');
+            
+            return `
+                <div class="position-group">
+                    <div class="position-group-header">${groupName}</div>
+                    <table class="roster-depth-table">
+                        <thead>
+                            <tr>
+                                <th>STATUS</th>
+                                <th>PLAYER</th>
+                                <th>TEAM</th>
+                                <th>POS</th>
+                                <th>AGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${playersHTML}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="position-group-list">
-                    ${playersHTML}
-                </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    
+    // Create position groups HTML with 2-column layout
+    const groupsHTML = `
+        <div class="position-groups-column">
+            ${batterGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No batters</div>'}
+        </div>
+        <div class="position-groups-column">
+            ${pitcherGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
+        </div>
+    `;
     
     // Create summary if detailed view
     let summaryHTML = '';
     if (detailed) {
-        summaryHTML = createRosterSummary(rosterPlayers, groups);
+        summaryHTML = createRosterSummary(rosterPlayers);
     }
     
     return `
@@ -242,108 +280,84 @@ function createTeamRosterCard(teamAbbr, detailed = false) {
 }
 
 /**
- * Group players by position category
+ * Group players by position category (batters vs pitchers)
  */
 function groupPlayersByPosition(players) {
-    const groups = {
-        'Catchers': [],
-        'Infielders': [],
-        'Outfielders': [],
-        'Starting Pitchers': [],
-        'Relief Pitchers': []
+    const batters = {
+        'Catcher': [],
+        'Infield': [],
+        'Outfield': [],
+        'DH': []
+    };
+    
+    const pitchers = {
+        'Starting Pitcher': [],
+        'Relief Pitcher': [],
+        'Pitcher': []
     };
     
     players.forEach(player => {
         const posStr = player.position || '';
         const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
         
+        // DH can coexist with other positions (e.g., DH/SP like Ohtani)
+        if (tokens.includes('DH')) {
+            batters['DH'].push(player);
+        }
+
+        // Batters (mutually exclusive buckets besides DH)
         if (tokens.includes('C')) {
-            groups['Catchers'].push(player);
+            batters['Catcher'].push(player);
         } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
-            groups['Infielders'].push(player);
+            batters['Infield'].push(player);
         } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
-            groups['Outfielders'].push(player);
-        } else if (tokens.includes('SP')) {
-            groups['Starting Pitchers'].push(player);
-        } else if (tokens.some(p => ['RP', 'P'].includes(p))) {
-            groups['Relief Pitchers'].push(player);
+            batters['Outfield'].push(player);
+        }
+        
+        // Pitchers
+        if (tokens.includes('SP')) {
+            pitchers['Starting Pitcher'].push(player);
+        } else if (tokens.includes('RP')) {
+            pitchers['Relief Pitcher'].push(player);
+        } else if (tokens.some(p => ['P'].includes(p))) {
+            pitchers['Pitcher'].push(player);
         }
     });
     
-    // Remove empty groups
-    return Object.fromEntries(
-        Object.entries(groups).filter(([_, players]) => players.length > 0)
-    );
+    return { batters, pitchers };
 }
 
 /**
- * Get icon for position group
+ * Create depth table row for player
  */
-function getGroupIcon(groupName) {
-    const icons = {
-        'Catchers': '<i class="fas fa-baseball-ball"></i>',
-        'Infielders': '<i class="fas fa-users"></i>',
-        'Outfielders': '<i class="fas fa-running"></i>',
-        'Starting Pitchers': '<i class="fas fa-hand-holding"></i>',
-        'Relief Pitchers': '<i class="fas fa-fire"></i>'
-    };
+function createDepthTableRow(player) {
+    const status = player.years_simple || player.status || '';
+    const team = player.team || 'FA';
+    const pos = player.position || '';
+    const age = player.age || '--';
     
-    return icons[groupName] || '<i class="fas fa-user"></i>';
-}
-
-/**
- * Create keeper player HTML
- */
-function createKeeperPlayerHTML(player) {
+    // Determine contract tier for color coding
+    let statusClass = 'tc';
+    if (status.includes('VC')) statusClass = 'vc';
+    else if (status.includes('FC')) statusClass = 'fc';
+    
     const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
+    
     return `
-        <div class="roster-player">
-            <div class="roster-player-info">
-                ${createPositionBadge(player.position)}
-                <div>
-                    <div class="roster-player-name">
-                        <a href="${profileLink}" class="player-link">${player.name}</a>
-                    </div>
-                    <div class="roster-player-team">${player.team || 'FA'}</div>
-                </div>
-            </div>
-            <div class="roster-player-badges">
-                ${player.years_simple ? createContractBadge(player.years_simple) : ''}
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Create prospect player HTML
- */
-function createProspectPlayerHTML(player) {
-    const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
-    return `
-        <div class="roster-player">
-            <div class="roster-player-info">
-                ${createPositionBadge(player.position)}
-                <div>
-                    <div class="roster-player-name">
-                        <a href="${profileLink}" class="player-link">${player.name}</a>
-                    </div>
-                    <div class="roster-player-team">${player.team || 'Unassigned'}</div>
-                </div>
-            </div>
-            <div class="prospect-status">
-                ${player.years_simple ? createContractBadge(player.years_simple) : ''}
-                <div class="prospect-contract-info">
-                    ${player.contract_type || 'Farm'}
-                </div>
-            </div>
-        </div>
+        <tr>
+            <td><span class="roster-status ${statusClass}">${status}</span></td>
+            <td class="roster-name"><a href="${profileLink}">${player.name}</a></td>
+            <td class="roster-team">${team}</td>
+            <td class="roster-pos">${pos}</td>
+            <td class="roster-age">${age}</td>
+        </tr>
     `;
 }
 
 /**
  * Create roster summary
  */
-function createRosterSummary(players, groups) {
+function createRosterSummary(players) {
     const batters = players.filter(p => !['SP', 'RP', 'P'].includes(p.position));
     const pitchers = players.filter(p => ['SP', 'RP', 'P'].includes(p.position));
     

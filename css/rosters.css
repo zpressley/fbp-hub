@@ -128,52 +128,107 @@
 /* Position Groups (Depth Chart Style) */
 .position-groups {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+.position-groups-column {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-md);
 }
 
 .position-group {
-    background-color: var(--bg-charcoal);
+    background-color: rgba(0, 0, 0, 0.3);
     border: var(--border-width) solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-md);
-    padding: var(--space-md);
+    overflow: hidden;
 }
 
 .position-group-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-sm);
-    border-bottom: var(--border-width-thin) solid var(--primary-red);
-}
-
-.position-group-title {
-    font-family: var(--font-subhead);
-    font-weight: 600;
-    color: var(--text-white);
-    font-size: var(--text-lg);
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    letter-spacing: 1px;
-}
-
-.position-group-title i {
-    color: var(--primary-red);
-}
-
-.position-group-count {
-    font-family: var(--font-mono);
+    background-color: var(--primary-red);
+    padding: 8px 12px;
+    font-family: var(--font-title);
     font-size: var(--text-sm);
-    color: var(--text-gray);
-    font-weight: 700;
+    letter-spacing: 1px;
+    color: white;
+    text-align: center;
 }
 
 .position-group-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+    /* Table will go here */
+}
+
+.roster-depth-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.roster-depth-table th,
+.roster-depth-table td {
+    padding: var(--space-sm) var(--space-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: left;
+}
+
+.roster-depth-table th {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-gray);
+    font-weight: 700;
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.roster-depth-table tr:last-child td {
+    border-bottom: none;
+}
+
+.roster-depth-table tr:hover {
+    background-color: rgba(239, 62, 66, 0.08);
+}
+
+.roster-status {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-sm);
+}
+
+.roster-status.tc { color: #FFFFFF; }
+.roster-status.vc { color: #FFB612; }
+.roster-status.fc { color: #1E88C7; }
+
+.roster-name {
+    color: var(--text-white);
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+.roster-name a {
+    color: var(--text-white);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.roster-name a:hover {
+    color: var(--accent-yellow);
+}
+
+.roster-team {
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+}
+
+.roster-pos {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+    font-size: var(--text-xs);
+}
+
+.roster-age {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+    font-size: var(--text-sm);
 }
 
 /* Roster Player Item */
@@ -294,9 +349,19 @@
 /* ============================================
    RESPONSIVE - Tablet & Desktop
    ============================================ */
+@media (max-width: 767px) {
+    .position-groups {
+        grid-template-columns: 1fr;
+    }
+    
+    .roster-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (min-width: 768px) {
     .position-groups {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
     }
     
     .roster-summary-grid {
@@ -306,6 +371,6 @@
 
 @media (min-width: 1200px) {
     .position-groups {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr 1fr;
     }
 }

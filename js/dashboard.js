@@ -194,13 +194,17 @@ function loadRosterPreview(team) {
 }
 
 /**
- * Group players into dashboard roster buckets
+ * Group players into dashboard roster buckets (batters vs pitchers)
  */
 function groupPlayersForDashboard(players) {
-    const groups = {
+    const batters = {
         'Catcher': [],
         'Infield': [],
         'Outfield': [],
+        'DH': []
+    };
+    
+    const pitchers = {
         'Starting Pitcher': [],
         'Relief Pitcher': [],
         'Pitcher': []
@@ -210,79 +214,113 @@ function groupPlayersForDashboard(players) {
         const posStr = player.position || '';
         const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
 
+        // DH can coexist with other positions (e.g., DH/SP like Ohtani)
+        if (tokens.includes('DH')) {
+            batters['DH'].push(player);
+        }
+
+        // Batters (mutually exclusive buckets besides DH)
         if (tokens.includes('C')) {
-            groups['Catcher'].push(player);
+            batters['Catcher'].push(player);
         } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
-            groups['Infield'].push(player);
+            batters['Infield'].push(player);
         } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
-            groups['Outfield'].push(player);
-        } else if (tokens.includes('SP')) {
-            groups['Starting Pitcher'].push(player);
+            batters['Outfield'].push(player);
+        }
+        
+        // Pitchers
+        if (tokens.includes('SP')) {
+            pitchers['Starting Pitcher'].push(player);
         } else if (tokens.includes('RP')) {
-            groups['Relief Pitcher'].push(player);
+            pitchers['Relief Pitcher'].push(player);
         } else if (tokens.includes('P')) {
-            groups['Pitcher'].push(player);
+            pitchers['Pitcher'].push(player);
         }
     });
 
-    return Object.fromEntries(
-        Object.entries(groups).filter(([, list]) => list.length > 0)
-    );
+    return { batters, pitchers };
 }
 
 /**
- * Render a full roster section (keepers or prospects) in compact depth-chart style
+ * Render a full roster section in depth-chart style (batters left, pitchers right)
  */
 function renderDashboardRosterSection(players, title) {
     if (!players || players.length === 0) return '';
 
-    const groups = groupPlayersForDashboard(players);
-
-    const groupHtml = Object.entries(groups).map(([groupName, list]) => {
-        const rows = list.map(p => {
-            const status = p.years_simple || p.status || '';
-            const team = p.team || 'FA';
-            const pos = p.position || '';
-            const age = p.age || '--'; // Age not yet wired; placeholder
-
-            return `
-                <tr>
-                    <td class="dash-roster-status">${status}</td>
-                    <td class="dash-roster-name">${p.name}</td>
-                    <td class="dash-roster-team">${team}</td>
-                    <td class="dash-roster-pos">${pos}</td>
-                    <td class="dash-roster-age">${age}</td>
-                </tr>
-            `;
-        }).join('');
-
-        return `
-            <div class="dash-roster-group">
-                <div class="dash-roster-group-header">${groupName}</div>
-                <table class="dash-roster-table">
-                    <thead>
-                        <tr>
-                            <th>Status</th>
-                            <th>Player</th>
-                            <th>Team</th>
-                            <th>POS</th>
-                            <th>Age</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows}
-                    </tbody>
-                </table>
-            </div>
-        `;
-    }).join('');
+    const { batters, pitchers } = groupPlayersForDashboard(players);
+    
+    // Render batters column (left)
+    const batterGroups = Object.entries(batters)
+        .filter(([, list]) => list.length > 0)
+        .map(([groupName, list]) => renderPositionGroup(groupName, list))
+        .join('');
+    
+    // Render pitchers column (right)
+    const pitcherGroups = Object.entries(pitchers)
+        .filter(([, list]) => list.length > 0)
+        .map(([groupName, list]) => renderPositionGroup(groupName, list))
+        .join('');
 
     return `
         <div class="dashboard-roster-section">
             <h4>${title}</h4>
             <div class="dash-roster-grid">
-                ${groupHtml}
+                <div class="dash-roster-column">
+                    ${batterGroups || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No batters</div>'}
+                </div>
+                <div class="dash-roster-column">
+                    ${pitcherGroups || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
+                </div>
             </div>
+        </div>
+    `;
+}
+
+/**
+ * Render a single position group
+ */
+function renderPositionGroup(groupName, players) {
+    const rows = players.map(p => {
+        const status = p.years_simple || p.status || '';
+        const team = p.team || 'FA';
+        const pos = p.position || '';
+        const age = p.age || '--';
+        
+        // Determine contract tier for color coding
+        let statusClass = 'tc';
+        if (status.includes('VC')) statusClass = 'vc';
+        else if (status.includes('FC')) statusClass = 'fc';
+        
+        const profileLink = window.createPlayerLink ? createPlayerLink(p) : '#';
+
+        return `
+            <tr>
+                <td><span class="dash-roster-status ${statusClass}">${status}</span></td>
+                <td class="dash-roster-name"><a href="${profileLink}">${p.name}</a></td>
+                <td class="dash-roster-team">${team}</td>
+                <td class="dash-roster-pos">${pos}</td>
+                <td class="dash-roster-age">${age}</td>
+            </tr>
+        `;
+    }).join('');
+
+    return `
+        <div class="dash-roster-group">
+            <div class="dash-roster-group-header">${groupName}</div>
+            <table class="dash-roster-table">
+                <thead>
+                    <tr>
+                        <th>STATUS</th>
+                        <th>PLAYER</th>
+                        <th>TEAM</th>
+                        <th>POS</th>
+                        <th>AGE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
         </div>
     `;
 }
