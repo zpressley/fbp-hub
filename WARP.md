@@ -60,7 +60,8 @@ All user-visible league state comes from JSON under `data/`. The core files (doc
 - `combined_players.json` – master list of all players and prospects (names, positions, team, manager, contract info, etc.)
 - `standings.json` – current standings and this week’s matchups
 - `wizbucks.json` – WizBucks balances keyed by FBP manager abbreviation
-- `service_stats.json` – service-time related stats (used in planned future phases)
+- `player_log.json` – append-only log of player transactions/events (critical for Player Log page)
+- `service_stats.json` – deprecated service-time stats (no longer synced or required)
 - `wizbucks_transactions.json` – optional WizBucks transaction ledger; if absent, the WizBucks UI falls back to sample/demo data
 
 The loader in `js/main.js` uses:

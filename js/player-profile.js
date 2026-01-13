@@ -79,16 +79,8 @@ async function loadPlayerData(upid, playerName) {
     
     if (!PLAYER_DATA.player) return;
     
-    // Load service time stats if available
-    try {
-        const statsResponse = await fetch('./data/service_stats.json');
-        if (statsResponse.ok) {
-            const allStats = await statsResponse.json();
-            PLAYER_DATA.stats = allStats[PLAYER_DATA.player.name];
-        }
-    } catch (e) {
-        console.log('No service stats available');
-    }
+    // Service-time based stats were removed in 2026; we currently don't load per-player stats here.
+    PLAYER_DATA.stats = null;
     
     // Load player history from player_log.json
     try {
@@ -191,24 +183,8 @@ function displayPlayerHeader() {
             document.getElementById('contractSublabel').textContent = `$${salary} salary`;
         }
     }
-    
-    // Show service time if prospect
-    if (PLAYER_DATA.stats && player.player_type === 'Farm') {
-        document.getElementById('serviceTimeCard').style.display = 'flex';
-        
-        const serviceYears = calculateServiceYears(PLAYER_DATA.stats);
-        document.getElementById('serviceTime').textContent = serviceYears.toFixed(3);
-        
-        // Show progress toward limits
-        const mlbLimits = PLAYER_DATA.stats.mlb_limits_status;
-        const maxProgress = Math.max(
-            mlbLimits.at_bats?.percentage || 0,
-            mlbLimits.innings_pitched?.percentage || 0,
-            mlbLimits.active_days?.percentage || 0
-        );
-        
-        document.getElementById('serviceSublabel').textContent = `${maxProgress.toFixed(0)}% to MLB limits`;
-    }
+
+    // Service-time based progress has been deprecated; keep the service card hidden for now.
 }
 
 /**
@@ -467,11 +443,6 @@ function getKeeperSalary(contract) {
         'FC-1': 85, 'FC-2': 125, 'FC-2+': 125
     };
     return salaries[contract] || null;
-}
-
-function calculateServiceYears(stats) {
-    const activeDays = stats.active_days || 0;
-    return activeDays / 172; // Approximate MLB season days
 }
 
 function formatDate(dateString) {

@@ -11,7 +11,7 @@ FBP Hub is a free, mobile-optimized web interface for Fantasy Baseball Pantheon 
 - View keeper and prospect rosters by team
 - Track standings and current matchups
 - Monitor WizBucks balances
-- Access player stats and service time data
+- Access player stats and prospect graduation data (age + MLB usage)
 
 Built with vanilla JavaScript and hosted on GitHub Pages for zero-cost hosting with automatic updates.
 
@@ -76,7 +76,7 @@ data/
 ├── combined_players.json  # All player data
 ├── standings.json         # Current standings & matchups
 ├── wizbucks.json         # WizBucks balances
-└── service_stats.json    # Service time data (Phase 2)
+├── player_log.json       # Append-only log of player transactions/events
 ```
 
 **Data Structure Examples:**

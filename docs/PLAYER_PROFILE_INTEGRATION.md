@@ -3,7 +3,7 @@
 ## 🎯 Overview
 
 The player profile page (`player-profile.html`) provides a comprehensive view of any player with:
-- Complete stats and service time
+- Contract and roster status
 - Full ownership history
 - Transaction log (all WizBucks transactions)
 - Timeline of all changes
@@ -155,12 +155,12 @@ The profile page is fully mobile-responsive:
 ## 🎯 What Gets Displayed
 
 ### Overview Tab:
-- Current season stats (from service_stats.json)
 - Contract details with salary
 - Ownership timeline with dates
+- Basic player metadata (position, team, age)
 
 ### Stats Tab:
-- Career statistics (from service_stats.json)
+- Career statistics (planned for future MLB stats integration)
 - Season-by-season breakdown (coming soon)
 
 ### History Tab:
