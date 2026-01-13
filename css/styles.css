@@ -899,9 +899,6 @@ input::placeholder {
         display: none;
     }
 }
-    font-size: var(--text-sm);
-    font-family: var(--font-body);
-}
 
 /* ============================================
    TOAST NOTIFICATIONS
