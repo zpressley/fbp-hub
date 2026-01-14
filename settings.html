@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Settings</p>
+            </div>
+            <div class="user-menu" id="userMenu"></div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="settings.html" class="nav-link active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access settings</p>
+            <a href="login.html" class="btn-primary">Login</a>
+        </div>
+
+        <!-- Settings Content -->
+        <div id="settingsContent" style="display: none;">
+            <div class="page-header">
+                <h2>TEAM SETTINGS</h2>
+                <p class="page-subtitle">Customize your team appearance</p>
+            </div>
+
+            <!-- Preview Card -->
+            <div class="preview-card" id="previewCard">
+                <h3>Live Preview</h3>
+                <div class="preview-team-banner" id="previewBanner">
+                    <div class="preview-team-name" id="previewTeamName">WIZ</div>
+                    <div class="preview-team-full" id="previewTeamFull">Whiz Kids</div>
+                </div>
+                <div class="preview-elements">
+                    <div class="preview-badge" id="previewBadge1">Primary Badge</div>
+                    <div class="preview-badge" id="previewBadge2">Secondary Badge</div>
+                    <div class="preview-accent" id="previewAccent1">Accent 1</div>
+                    <div class="preview-accent" id="previewAccent2">Accent 2</div>
+                    <div class="preview-accent" id="previewAccent3">Accent 3</div>
+                </div>
+            </div>
+
+            <!-- Team Colors Form -->
+            <div class="settings-section">
+                <h3><i class="fas fa-palette"></i> Team Colors</h3>
+                <p class="section-description">Choose your team's signature colors. These will appear on player badges, team flags, and your dashboard.</p>
+
+                <form id="teamColorsForm" onsubmit="return false;">
+                    <div class="color-input-grid">
+                        <!-- Primary Color -->
+                        <div class="color-input-group">
+                            <label class="color-label">
+                                <span class="label-text">Primary Color</span>
+                                <span class="label-required">Required</span>
+                            </label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="primaryColor" class="color-picker" value="#EF3E42">
+                                <input type="text" id="primaryColorHex" class="color-hex-input" value="#EF3E42" placeholder="#000000" pattern="^#[0-9A-Fa-f]{6}$">
+                                <button type="button" class="btn-reset-color" onclick="resetColor('primary')" title="Reset to default">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </div>
+                            <p class="color-hint">Main team color (used for borders, headers, badges)</p>
+                        </div>
+
+                        <!-- Secondary Color -->
+                        <div class="color-input-group">
+                            <label class="color-label">
+                                <span class="label-text">Secondary Color</span>
+                                <span class="label-required">Required</span>
+                            </label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="secondaryColor" class="color-picker" value="#FFB612">
+                                <input type="text" id="secondaryColorHex" class="color-hex-input" value="#FFB612" placeholder="#000000" pattern="^#[0-9A-Fa-f]{6}$">
+                                <button type="button" class="btn-reset-color" onclick="resetColor('secondary')">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </div>
+                            <p class="color-hint">Secondary team color (used for accents, highlights)</p>
+                        </div>
+
+                        <!-- Accent 1 -->
+                        <div class="color-input-group">
+                            <label class="color-label">
+                                <span class="label-text">Accent Color 1</span>
+                                <span class="label-optional">Optional</span>
+                            </label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accent1Color" class="color-picker" value="#1E88C7">
+                                <input type="text" id="accent1ColorHex" class="color-hex-input" value="#1E88C7" placeholder="#000000 (optional)">
+                                <button type="button" class="btn-clear-color" onclick="clearColor('accent1')" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <p class="color-hint">Additional accent (charts, graphs, tertiary elements)</p>
+                        </div>
+
+                        <!-- Accent 2 -->
+                        <div class="color-input-group">
+                            <label class="color-label">
+                                <span class="label-text">Accent Color 2</span>
+                                <span class="label-optional">Optional</span>
+                            </label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accent2Color" class="color-picker" value="#4CAF50">
+                                <input type="text" id="accent2ColorHex" class="color-hex-input" value="#4CAF50" placeholder="#000000 (optional)">
+                                <button type="button" class="btn-clear-color" onclick="clearColor('accent2')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <p class="color-hint">Additional accent</p>
+                        </div>
+
+                        <!-- Accent 3 -->
+                        <div class="color-input-group">
+                            <label class="color-label">
+                                <span class="label-text">Accent Color 3</span>
+                                <span class="label-optional">Optional</span>
+                            </label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accent3Color" class="color-picker" value="#9C27B0">
+                                <input type="text" id="accent3ColorHex" class="color-hex-input" value="#9C27B0" placeholder="#000000 (optional)">
+                                <button type="button" class="btn-clear-color" onclick="clearColor('accent3')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <p class="color-hint">Additional accent</p>
+                        </div>
+                    </div>
+
+                    <!-- Preset Colors -->
+                    <div class="preset-colors">
+                        <h4>Quick Presets</h4>
+                        <div class="preset-buttons">
+                            <button type="button" class="btn-preset" onclick="applyPreset('rangers')">
+                                <span class="preset-swatch" style="background: linear-gradient(to right, #003278, #C0111F);"></span>
+                                Texas Rangers
+                            </button>
+                            <button type="button" class="btn-preset" onclick="applyPreset('dodgers')">
+                                <span class="preset-swatch" style="background: linear-gradient(to right, #005A9C, #EF3E42);"></span>
+                                LA Dodgers
+                            </button>
+                            <button type="button" class="btn-preset" onclick="applyPreset('yankees')">
+                                <span class="preset-swatch" style="background: linear-gradient(to right, #0C2340, #C4CED4);"></span>
+                                NY Yankees
+                            </button>
+                            <button type="button" class="btn-preset" onclick="applyPreset('braves')">
+                                <span class="preset-swatch" style="background: linear-gradient(to right, #CE1141, #13274F);"></span>
+                                Atlanta Braves
+                            </button>
+                            <button type="button" class="btn-preset" onclick="applyPreset('default')">
+                                <span class="preset-swatch" style="background: linear-gradient(to right, #EF3E42, #FFB612);"></span>
+                                FBP Default
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="resetToDefaults()">
+                            <i class="fas fa-undo"></i> Reset to Defaults
+                        </button>
+                        <button type="submit" class="btn-primary" onclick="saveTeamColors()">
+                            <i class="fas fa-save"></i> Save Team Colors
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Future Settings Placeholder -->
+            <div class="settings-section">
+                <h3><i class="fas fa-sliders-h"></i> Additional Settings</h3>
+                <p class="section-description">More customization options coming soon</p>
+                
+                <div class="future-settings">
+                    <div class="future-setting-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notification Preferences</span>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                    <div class="future-setting-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Stats Display Options</span>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                    <div class="future-setting-item">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark Mode Variants</span>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item active">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/settings.js"></script>
+    <script>
+        if (typeof FBPHub !== 'undefined') {
+            FBPHub.on('ready', () => {
+                if (typeof initSettings === 'function') {
+                    initSettings();
+                }
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof initSettings === 'function') {
+                    initSettings();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
