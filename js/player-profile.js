@@ -186,6 +186,9 @@ function displayPlayerHeader() {
     document.getElementById('playerTeam').textContent = player.team || 'FA';
     document.getElementById('playerAge').textContent = player.age ? `Age ${player.age}` : 'Age N/A';
     document.getElementById('playerOwner').textContent = player.manager || 'Unowned';
+
+    // Apply owner-based theming for this profile
+    applyOwnerThemeForPlayer(player);
     
     // Set page title
     document.title = `${player.name} - FBP Hub`;
@@ -587,6 +590,51 @@ function formatDateTime(dateString) {
     });
 }
 
+// Apply team color scheme based on player owner
+function applyOwnerThemeForPlayer(player) {
+    const ownerAbbr = player.manager || player.FBP_Team || null;
+    const root = document.documentElement;
+
+    // If there is a clear owner and we have team colors, use them
+    if (ownerAbbr && typeof FBPHub !== 'undefined') {
+        const colors = FBPHub.data?.teamColors?.[ownerAbbr];
+        if (colors && colors.primary) {
+            const secondary = colors.secondary || '#FFB612';
+
+            // Drive page-wide CSS variables so the whole layout picks up the theme
+            root.style.setProperty('--team-primary', colors.primary);
+            root.style.setProperty('--team-secondary', secondary);
+            if (colors.accent1) root.style.setProperty('--team-accent-1', colors.accent1);
+            if (colors.accent2) root.style.setProperty('--team-accent-2', colors.accent2);
+            if (colors.accent3) root.style.setProperty('--team-accent-3', colors.accent3);
+
+            // Ownership badge (a bit more opinionated than the base CSS)
+            const ownershipBadge = document.getElementById('ownershipBadge');
+            if (ownershipBadge) {
+                ownershipBadge.style.backgroundColor = `rgba(${hexToRgb(colors.primary)}, 0.15)`;
+                ownershipBadge.style.borderColor = colors.primary;
+                ownershipBadge.style.color = colors.primary;
+            }
+
+            return; // themed successfully via CSS variables
+        }
+    }
+
+    // If unowned or no colors, fall back to base CSS (clear overrides & vars)
+    root.style.removeProperty('--team-primary');
+    root.style.removeProperty('--team-secondary');
+    root.style.removeProperty('--team-accent-1');
+    root.style.removeProperty('--team-accent-2');
+    root.style.removeProperty('--team-accent-3');
+
+    const ownershipBadge = document.getElementById('ownershipBadge');
+    if (ownershipBadge) {
+        ownershipBadge.style.backgroundColor = '';
+        ownershipBadge.style.borderColor = '';
+        ownershipBadge.style.color = '';
+    }
+}
+
 // Helper to print decimals cleanly (e.g. AVG/OPS/ERA)
 function formatRate(value) {
     if (value === null || value === undefined || value === '') return '-';
@@ -595,6 +643,26 @@ function formatRate(value) {
     // Show 3 decimals for AVG/ERA-style stats, 3 for OPS by default
     if (num === 0) return '0.000';
     return num.toFixed(3);
+}
+
+// Helper function to convert hex color to RGB string
+function hexToRgb(hex) {
+    if (!hex || hex[0] !== '#' || (hex.length !== 7 && hex.length !== 4)) {
+        return '239, 62, 66'; // fallback to primary red
+    }
+
+    // Handle short form like #F00
+    if (hex.length === 4) {
+        const r = parseInt(hex[1] + hex[1], 16);
+        const g = parseInt(hex[2] + hex[2], 16);
+        const b = parseInt(hex[3] + hex[3], 16);
+        return `${r}, ${g}, ${b}`;
+    }
+
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    return `${r}, ${g}, ${b}`;
 }
 
 /**

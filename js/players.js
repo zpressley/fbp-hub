@@ -343,7 +343,7 @@ function displayPlayersList(players, container) {
                 </div>
                 <div class="player-list-badges">
                     ${contractBadgeHTML}
-                    ${player.FBP_Team ? `<span class="team-badge">${player.FBP_Team}</span>` : ''}
+                    ${player.FBP_Team ? createTeamBadge(player.FBP_Team) : ''}
                 </div>
             </div>
         `;
@@ -395,7 +395,7 @@ function openPlayerDetail(playerId) {
             <div class="player-detail-title">${player.position} - ${player.team || 'Free Agent'}</div>
             <div class="player-detail-badges">
                 ${player.years_simple ? createContractBadgeWithClass(player.years_simple) : ''}
-                ${player.FBP_Team ? `<span class="team-badge">${player.FBP_Team}</span>` : ''}
+                ${player.FBP_Team ? createTeamBadge(player.FBP_Team) : ''}
             </div>
             <div class="player-detail-actions">
                 <a href="${profileLink}" class="btn btn-primary">

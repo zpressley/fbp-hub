@@ -8,7 +8,8 @@ const FBPHub = {
     data: {
         players: [],
         standings: null,
-        wizbucks: null
+        wizbucks: null,
+        teamColors: {}
     },
     config: {
         dataPath: './data/',
@@ -16,7 +17,27 @@ const FBPHub = {
     },
     cache: {
         lastUpdate: null
+    },
+    _events: {}
+};
+
+// Simple event system so pages can wait for core data load
+FBPHub.on = function(eventName, handler) {
+    if (!FBPHub._events[eventName]) {
+        FBPHub._events[eventName] = [];
     }
+    FBPHub._events[eventName].push(handler);
+};
+
+FBPHub.emit = function(eventName, payload) {
+    const listeners = FBPHub._events[eventName] || [];
+    listeners.forEach(fn => {
+        try {
+            fn(payload);
+        } catch (err) {
+            console.error(`Error in FBPHub listener for ${eventName}:`, err);
+        }
+    });
 };
 
 /**
@@ -131,7 +152,7 @@ function updateUserMenuForAuth() {
         <i class="fas fa-chevron-down"></i>
     `;
     
-    // Update dropdown menu
+    // Update dropdown menu (only visible when logged in)
     userMenuDropdown.innerHTML = `
         <a href="dashboard.html">
             <i class="fas fa-tachometer-alt"></i>
@@ -148,6 +169,10 @@ function updateUserMenuForAuth() {
         <a href="kap.html">
             <i class="fas fa-trophy"></i>
             KAP
+        </a>
+        <a href="settings.html">
+            <i class="fas fa-cog"></i>
+            Settings
         </a>
         ${authManager.isAdmin ? authManager.isAdmin() : authManager.isCommissioner && authManager.isCommissioner() ? `
             <a href="admin.html">
@@ -258,7 +283,7 @@ async function loadAllData() {
     console.log('📥 Loading data...');
     
     try {
-        // Load in parallel
+        // Load core JSON in parallel
         const [playersData, standingsData, wizbucksData] = await Promise.all([
             loadJSON('combined_players.json'),
             loadJSON('standings.json'),
@@ -269,14 +294,22 @@ async function loadAllData() {
         FBPHub.data.standings = standingsData;
         FBPHub.data.wizbucks = wizbucksData;
         
+        // Load team color configuration (defaults + any local overrides)
+        await FBPHub.loadTeamColors();
+        
         FBPHub.cache.lastUpdate = new Date();
         
         console.log(`✅ Loaded ${FBPHub.data.players.length} players`);
-        console.log('✅ Loaded standings and WizBucks data');
+        console.log('✅ Loaded standings, WizBucks, and team colors');
         
     } catch (error) {
         console.error('❌ Error loading data:', error);
         showErrorMessage('Failed to load data. Please try refreshing the page.');
+    } finally {
+        // Notify any listeners that core data load has completed (success or fail)
+        if (typeof FBPHub.emit === 'function') {
+            FBPHub.emit('ready');
+        }
     }
 }
 
@@ -441,7 +474,36 @@ function formatRelativeTime(dateString) {
 }
 
 /**
- * Get team color (for future customization)
+ * Load team colors from data/team_colors.json + localStorage overrides
+ */
+FBPHub.loadTeamColors = async function() {
+    let jsonColors = {};
+    try {
+        const response = await fetch(`${FBPHub.config.dataPath}team_colors.json`);
+        if (response.ok) {
+            jsonColors = await response.json();
+        }
+    } catch (e) {
+        console.warn('No team_colors.json found, continuing with local overrides only');
+    }
+
+    let localOverrides = {};
+    try {
+        localOverrides = JSON.parse(localStorage.getItem('team_colors') || '{}');
+    } catch (e) {
+        localOverrides = {};
+    }
+
+    const merged = { ...jsonColors };
+    for (const [team, colors] of Object.entries(localOverrides)) {
+        merged[team] = { ...(merged[team] || {}), ...colors };
+    }
+
+    FBPHub.data.teamColors = merged;
+};
+
+/**
+ * Get fallback team color when no custom colors are configured
  */
 function getTeamColor(teamAbbr) {
     const teamColors = {
@@ -463,11 +525,21 @@ function getTeamColor(teamAbbr) {
 }
 
 /**
- * Create team badge HTML
+ * Create team badge HTML (uses team_colors when available)
  */
 function createTeamBadge(teamAbbr) {
-    const color = getTeamColor(teamAbbr);
-    return `<span class="team-badge" style="background-color: ${color}">${teamAbbr}</span>`;
+    if (!teamAbbr) return '';
+
+    const colors = FBPHub.data.teamColors?.[teamAbbr];
+    if (colors && colors.primary) {
+        const borderColor = colors.secondary || colors.primary;
+        const style = `background-color: ${colors.primary}; color: white; border: 2px solid ${borderColor};`;
+        return `<span class="team-badge" style="${style}">${teamAbbr}</span>`;
+    }
+
+    // Fallback to static color map and base CSS styling
+    const fallback = getTeamColor(teamAbbr);
+    return `<span class="team-badge" style="background-color: ${fallback}; color: white;">${teamAbbr}</span>`;
 }
 
 /**

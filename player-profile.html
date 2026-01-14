@@ -18,7 +18,24 @@
                 <h1>FBP HUB 3.0</h1>
                 <p class="season-year">Est. 2012</p>
             </div>
-            <div class="user-menu" id="userMenu"></div>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="nav-menu" id="navMenu">
             <a href="index.html" class="nav-link">
@@ -36,6 +53,18 @@
             <a href="dashboard.html" class="nav-link">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
+            </a>
+            <a href="player-log.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Player Log</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="auction.html" class="nav-link">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
             </a>
         </div>
     </nav>

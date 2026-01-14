@@ -12,13 +12,31 @@
     <!-- Navigation -->
     <nav class="mobile-nav">
         <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="nav-brand">
                 <h1>FBP HUB 3.0</h1>
                 <p class="season-year">Est. 2012</p>
             </div>
-            <button class="nav-toggle" id="navToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="nav-menu" id="navMenu">
             <a href="index.html" class="nav-link">
@@ -102,6 +120,10 @@
                 <a href="kap.html" class="action-card">
                     <i class="fas fa-trophy"></i>
                     <span>KAP</span>
+                </a>
+                <a href="settings.html" class="action-card">
+                    <i class="fas fa-cog"></i>
+                    <span>SETTINGS</span>
                 </a>
                 <a href="transactions.html" class="action-card">
                     <i class="fas fa-exchange-alt"></i>
