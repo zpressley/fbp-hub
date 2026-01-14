@@ -8,18 +8,11 @@ const PAD_SEASON = 2026;
 let PAD_STATE = {
     team: null,
     currentStep: 0,
-    // Final regular-season rank for 2025 (used to derive PAD bracket)
-    final_rank_2025: null,
-    // PAD installment based on prior-season bracket (100/120/140)
-    installment: 0,
-    // Max rollover that can be applied to PAD (capped at $25 and <= rolloverTotal)
-    rolloverCapPAD: 0,
-    // Total rollover available across installments (capped at $75)
-    rolloverTotal: 0,
-    // Explicit rollover amount the manager has chosen to add to PAD
-    appliedRolloverPAD: 0,
-    // Total PAD spending capacity = installment + appliedRolloverPAD
+    // Total PAD spending capacity for this season (from config/managers.json wizbucks[season].allotments.PAD.total)
     totalAvailable: 0,
+    // Season dates / submission window
+    seasonDates: null,
+    padOpenDate: null,
     // 2026: one-time free BC for non-legacy prospects
     freeBCUsed: false,
     
@@ -35,6 +28,20 @@ let PAD_STATE = {
 
 // Cached map of Top 100 ranks by UPID for quick lookup in PAD.
 let PAD_TOP100_MAP = null;
+
+/**
+ * Load season_dates.json from local data/ for PAD submission window control.
+ */
+async function loadSeasonDates() {
+    try {
+        const res = await fetch('./data/season_dates.json', { cache: 'no-store' });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (e) {
+        console.warn('Failed to load season_dates.json for PAD:', e);
+        return null;
+    }
+}
 
 /**
  * Initialize PAD page
@@ -55,6 +62,12 @@ async function initPADPage() {
         return;
     }
     
+    // Load season dates (for PAD submission window)
+    PAD_STATE.seasonDates = await loadSeasonDates();
+    if (PAD_STATE.seasonDates?.pad_open_date) {
+        PAD_STATE.padOpenDate = new Date(PAD_STATE.seasonDates.pad_open_date + 'T00:00:00');
+    }
+
     // Check if already submitted
     await checkSubmissionStatus();
     
@@ -174,81 +187,37 @@ async function loadTop100MapForPAD() {
 async function loadPADData() {
     const team = PAD_STATE.team;
 
-    // Read final 2025 rank from config/managers.json and derive bracket
-    let finalRank = null;
-    let managerName = null;
+    // Read PAD total from config/managers.json wizbucks[season].allotments.PAD.total
+    let padTotal = 0;
     try {
         const res = await fetch('./config/managers.json');
         if (res.ok) {
             const cfg = await res.json();
             const teamCfg = cfg?.teams?.[team];
-            if (teamCfg) {
-                finalRank = teamCfg.final_rank_2025 ?? null;
-                managerName = teamCfg.name || null;
+            const wiz = teamCfg?.wizbucks?.[String(PAD_SEASON)];
+            const padCfg = wiz?.allotments?.PAD;
+
+            if (padCfg && typeof padCfg.total === 'number') {
+                padTotal = padCfg.total;
+            } else if (padCfg) {
+                const base = Number(padCfg.base || 0);
+                const bonus = Number(padCfg.bonus || 0);
+                const optional = Number(padCfg.optional || 0);
+                const leftoverIn = Number(padCfg.leftoverIn || 0);
+                const fines = Number(padCfg.finesOrAwards || 0);
+                padTotal = base + bonus + optional + leftoverIn + fines;
             }
         }
     } catch (e) {
         console.error('Failed to load managers config for PAD:', e);
     }
 
-    if (typeof finalRank === 'number') {
-        PAD_STATE.final_rank_2025 = finalRank;
+    if (!Number.isFinite(padTotal) || padTotal <= 0) {
+        console.warn('PAD total not found in managers.json; defaulting to $140.');
+        padTotal = 140;
     }
 
-    let bracket;
-    if (typeof finalRank === 'number') {
-        if (finalRank >= 1 && finalRank <= 4) {
-            bracket = 'championship';
-        } else if (finalRank >= 5 && finalRank <= 8) {
-            bracket = 'consolation';
-        } else {
-            bracket = 'elimination';
-        }
-    } else {
-        // Fallback if rank is missing: treat as elimination bracket
-        bracket = 'elimination';
-    }
-
-    let installment;
-    if (bracket === 'championship') {
-        installment = 100;
-    } else if (bracket === 'consolation') {
-        installment = 120;
-    } else {
-        installment = 140;
-    }
-    PAD_STATE.installment = installment;
-
-    // Determine rollover totals from WizBucks balance
-    const wizbucksBalances = FBPHub.data?.wizbucks || {};
-    // WizBucks JSON is keyed by franchise name (e.g., "Weekend Warriors"),
-    // while PAD_STATE.team is the team abbreviation (e.g., "WAR"). Prefer
-    // the manager/franchise name from managers.json when available, but
-    // fall back to the abbreviation if the data ever changes.
-    let currentWB = 0;
-    if (wizbucksBalances[team] != null) {
-        currentWB = wizbucksBalances[team];
-    } else if (typeof managerName === 'string' && wizbucksBalances[managerName] != null) {
-        currentWB = wizbucksBalances[managerName];
-    }
-    // League rule: max $75 total rollover
-    PAD_STATE.rolloverTotal = Math.min(75, currentWB);
-    // PAD can use at most $25 of rollover
-    PAD_STATE.rolloverCapPAD = Math.min(25, PAD_STATE.rolloverTotal);
-
-    // Total PAD capacity = installment + any rollover the manager explicitly applies
-    const savedDraft = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
-    let appliedFromDraft = 0;
-    if (savedDraft) {
-        try {
-            const draft = JSON.parse(savedDraft);
-            appliedFromDraft = typeof draft.appliedRolloverPAD === 'number' ? draft.appliedRolloverPAD : 0;
-        } catch (e) {
-            console.error('Failed to read applied rollover from draft:', e);
-        }
-    }
-    PAD_STATE.appliedRolloverPAD = Math.min(PAD_STATE.rolloverCapPAD, Math.max(0, appliedFromDraft));
-    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.appliedRolloverPAD;
+    PAD_STATE.totalAvailable = padTotal;
 
     // Load team's prospects from combined_players.json
     PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
@@ -269,20 +238,11 @@ async function loadPADData() {
                 : PAD_STATE.myProspects;
             PAD_STATE.dcSlots = draft.dcSlots || 0;
             PAD_STATE.bcSlots = draft.bcSlots || [];
-            if (typeof draft.appliedRolloverPAD === 'number') {
-                PAD_STATE.appliedRolloverPAD = Math.min(
-                    PAD_STATE.rolloverCapPAD,
-                    Math.max(0, draft.appliedRolloverPAD)
-                );
-            }
             console.log('✅ Loaded saved draft');
         } catch (e) {
             console.error('Failed to load draft:', e);
         }
     }
-
-    // Recompute totalAvailable now that applied rollover from draft is known
-    PAD_STATE.totalAvailable = PAD_STATE.installment + PAD_STATE.appliedRolloverPAD;
 
     // Restore free BC flag from draft (if present)
     PAD_STATE.freeBCUsed = PAD_STATE.myProspects?.some(
@@ -335,12 +295,6 @@ function setupStickyBar() {
     );
     
     observer.observe(stickyBar);
-
-    // Initialize rollover meta text once data is loaded
-    const metaEl = document.getElementById('rolloverMeta');
-    if (metaEl) {
-        updateRolloverMeta();
-    }
 }
 
 /**
@@ -429,7 +383,7 @@ function calculateTotalSpend() {
 function computeRolloverToKAP(spentOverride) {
     const spent = typeof spentOverride === 'number' ? spentOverride : calculateTotalSpend();
 
-    const padPool = PAD_STATE.installment + (PAD_STATE.appliedRolloverPAD || 0);
+    const padPool = PAD_STATE.totalAvailable || 0;
     const padRemaining = Math.max(0, padPool - spent);
     return Math.min(30, padRemaining);
 }
@@ -439,8 +393,7 @@ function computeRolloverToKAP(spentOverride) {
  */
 function updateWizBucksDisplay() {
     const spent = calculateTotalSpend();
-    const totalAvailable = PAD_STATE.installment + (PAD_STATE.appliedRolloverPAD || 0);
-    PAD_STATE.totalAvailable = totalAvailable;
+    const totalAvailable = PAD_STATE.totalAvailable || 0;
     const remaining = totalAvailable - spent;
 
     const rolloverToKAP = computeRolloverToKAP(spent);
@@ -465,23 +418,6 @@ function updateWizBucksDisplay() {
 }
 
 /**
- * Update rollover helper text under the Add Rollover controls
- */
-function updateRolloverMeta() {
-    const metaEl = document.getElementById('rolloverMeta');
-    if (!metaEl) return;
-
-    const cap = PAD_STATE.rolloverCapPAD || 0;
-    const applied = PAD_STATE.appliedRolloverPAD || 0;
-    if (cap <= 0) {
-        metaEl.textContent = 'No rollover available to apply to PAD.';
-        return;
-    }
-    const remaining = Math.max(0, cap - applied);
-    metaEl.textContent = `Rollover applied to PAD: $${applied} of $${cap} (max $25). Remaining available to add: $${remaining}.`;
-}
-
-/**
  * Update the prospect status bar (Unassigned / DC / PC / BC counts)
  */
 function updateProspectStatusBar() {
@@ -501,76 +437,6 @@ function updateProspectStatusBar() {
     if (dcEl) dcEl.textContent = dc;
     if (pcEl) pcEl.textContent = pc;
     if (bcEl) bcEl.textContent = bc;
-}
-
-/**
- * Apply a specific rollover amount typed into the input
- */
-function applyRolloverAmount() {
-    const input = document.getElementById('rolloverInput');
-    if (!input) return;
-
-    const cap = PAD_STATE.rolloverCapPAD || 0;
-    const applied = PAD_STATE.appliedRolloverPAD || 0;
-    const remainingCap = Math.max(0, cap - applied);
-    if (remainingCap <= 0) {
-        showToast('You have already applied the maximum rollover to PAD.', 'info');
-        return;
-    }
-
-    let value = Number(input.value || 0);
-    if (!Number.isFinite(value) || value <= 0) {
-        showToast('Enter a positive rollover amount.', 'error');
-        return;
-    }
-
-    value = Math.min(value, remainingCap);
-    PAD_STATE.appliedRolloverPAD += value;
-
-    updateRolloverMeta();
-    updateWizBucksDisplay();
-    saveDraft();
-}
-
-/**
- * Apply the maximum allowable rollover to PAD
- */
-function applyRolloverMax() {
-    const cap = PAD_STATE.rolloverCapPAD || 0;
-    const applied = PAD_STATE.appliedRolloverPAD || 0;
-    const remainingCap = Math.max(0, cap - applied);
-    if (remainingCap <= 0) {
-        showToast('You have already applied the maximum rollover to PAD.', 'info');
-        return;
-    }
-
-    PAD_STATE.appliedRolloverPAD += remainingCap;
-
-    updateRolloverMeta();
-    updateWizBucksDisplay();
-    saveDraft();
-}
-
-/**
- * Clear all rollover applied to PAD
- */
-function clearRollover() {
-    const applied = PAD_STATE.appliedRolloverPAD || 0;
-    if (applied <= 0) {
-        showToast('No rollover applied to remove.', 'info');
-        return;
-    }
-
-    PAD_STATE.appliedRolloverPAD = 0;
-
-    const input = document.getElementById('rolloverInput');
-    if (input) {
-        input.value = '';
-    }
-
-    updateRolloverMeta();
-    updateWizBucksDisplay();
-    saveDraft();
 }
 
 /**
@@ -1092,6 +958,18 @@ function updateSummary() {
  * Show confirmation modal
  */
 function showConfirmation() {
+    // Enforce PAD open date: managers can mock PAD anytime but cannot submit before pad_open_date.
+    const padOpenIso = PAD_STATE.seasonDates?.pad_open_date;
+    if (padOpenIso) {
+        const openDate = PAD_STATE.padOpenDate || new Date(padOpenIso + 'T00:00:00');
+        const now = new Date();
+        if (now < openDate) {
+            const formatted = typeof formatDate === 'function' ? formatDate(openDate) : openDate.toISOString().slice(0, 10);
+            showToast(`PAD submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
+            return;
+        }
+    }
+
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
     const rollover = computeRolloverToKAP(total);
@@ -1168,6 +1046,19 @@ function cancelSubmit() {
  */
 async function confirmSubmit() {
     console.log('🚀 Submitting PAD - Logging all transactions atomically...');
+
+    // Double-check PAD open date in case the window changed while the page was open.
+    const padOpenIso = PAD_STATE.seasonDates?.pad_open_date;
+    if (padOpenIso) {
+        const openDate = PAD_STATE.padOpenDate || new Date(padOpenIso + 'T00:00:00');
+        const now = new Date();
+        if (now < openDate) {
+            const formatted = typeof formatDate === 'function' ? formatDate(openDate) : openDate.toISOString().slice(0, 10);
+            showToast(`PAD submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
+            cancelSubmit();
+            return;
+        }
+    }
     
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
@@ -1323,7 +1214,6 @@ function saveDraft() {
         prospects: PAD_STATE.myProspects,
         dcSlots: PAD_STATE.dcSlots,
         bcSlots: PAD_STATE.bcSlots,
-        appliedRolloverPAD: PAD_STATE.appliedRolloverPAD || 0,
         timestamp: new Date().toISOString()
     };
     

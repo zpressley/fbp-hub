@@ -142,6 +142,20 @@ jobs:
           download_file "standings.json" || FAILED=$((FAILED + 1))
           download_file "yahoo_players.json" || FAILED=$((FAILED + 1))
           download_file "player_log.json" || FAILED=$((FAILED + 1))
+
+          echo ""
+          echo "📥 Downloading season_dates.json from config/..."
+          CONFIG_URL="https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/${BRANCH}/config/season_dates.json"
+          CONFIG_OUT="data/season_dates.json"
+          CONFIG_RESPONSE=$(curl -s -H "Authorization: token ${GH_TOKEN}" "$CONFIG_URL")
+          if [ -n "$CONFIG_RESPONSE" ] && ! echo "$CONFIG_RESPONSE" | grep -q "Not Found"; then
+            echo "$CONFIG_RESPONSE" > "$CONFIG_OUT"
+            CONFIG_SIZE=$(stat -f%z "$CONFIG_OUT" 2>/dev/null || stat -c%s "$CONFIG_OUT" 2>/dev/null)
+            echo "    ✓ Downloaded season_dates.json (${CONFIG_SIZE} bytes)"
+          else
+            echo "    ⚠️ Failed to download season_dates.json from ${CONFIG_URL}"
+            FAILED=$((FAILED + 1))
+          fi
           
           echo ""
           if [ $FAILED -eq 0 ]; then

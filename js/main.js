@@ -392,6 +392,11 @@ function initializePage(pageName) {
                 initTransactionsPage();
             }
             break; 
+        case 'season-dates':
+            if (typeof initSeasonDatesPage === 'function') {
+                initSeasonDatesPage();
+            }
+            break;
         case 'player-log':
             if (typeof initPlayerLogPage === 'function') {
                 initPlayerLogPage();
@@ -402,6 +407,11 @@ function initializePage(pageName) {
                 initAuctionPage();
             }
             break;     
+        case 'admin':
+            if (typeof initAdminPortal === 'function') {
+                initAdminPortal();
+            }
+            break;
         case 'pad':
             if (typeof initPADPage === 'function') {
                 initPADPage();

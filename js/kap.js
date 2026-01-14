@@ -66,6 +66,11 @@ let KAP_STATE = {
     rolloverFromPAD: 0,
     totalAvailable: 375,
     
+    // Season dates / submission window
+    seasonDates: null,
+    kapOpenDate: null,
+    kapEndDate: null,
+    
     // Players
     mlbPlayers: [],  // All MLB players on team
     selectedKeepers: [],  // Players marked as keepers
@@ -81,6 +86,20 @@ let KAP_STATE = {
     submitted: false,
     submittedAt: null
 };
+
+/**
+ * Load season_dates.json from local data/ for KAP submission window control.
+ */
+async function loadSeasonDates() {
+    try {
+        const res = await fetch('./data/season_dates.json', { cache: 'no-store' });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch (e) {
+        console.warn('Failed to load season_dates.json for KAP:', e);
+        return null;
+    }
+}
 
 /**
  * Initialize KAP page
@@ -99,6 +118,15 @@ async function initKAPPage() {
     if (!KAP_STATE.team) {
         showToast('Could not determine your team', 'error');
         return;
+    }
+
+    // Load season dates (for KAP submission window)
+    KAP_STATE.seasonDates = await loadSeasonDates();
+    if (KAP_STATE.seasonDates?.kap_open_date) {
+        KAP_STATE.kapOpenDate = new Date(KAP_STATE.seasonDates.kap_open_date + 'T00:00:00');
+    }
+    if (KAP_STATE.seasonDates?.kap_end_date) {
+        KAP_STATE.kapEndDate = new Date(KAP_STATE.seasonDates.kap_end_date + 'T23:59:59');
     }
     
     // Check if already submitted
@@ -828,12 +856,23 @@ function validateKAP() {
     if (totalSpend > KAP_STATE.totalAvailable) {
         warnings.push(`Total spend ($${totalSpend}) exceeds available budget ($${KAP_STATE.totalAvailable})`);
     }
-    
-    if (warnings.length > 0) {
+
+    // Enforce KAP submission window
+    const windowMessages = [];
+    const now = new Date();
+    if (KAP_STATE.kapOpenDate && now < KAP_STATE.kapOpenDate) {
+        const formatted = typeof formatDate === 'function' ? formatDate(KAP_STATE.kapOpenDate) : KAP_STATE.kapOpenDate.toISOString().slice(0, 10);
+        windowMessages.push(`KAP submissions open on ${formatted}. You can continue editing your draft until then.`);
+    } else if (KAP_STATE.kapEndDate && now > KAP_STATE.kapEndDate) {
+        windowMessages.push('The KAP submission window has closed. You can no longer submit changes.');
+    }
+
+    const allMessages = warnings.concat(windowMessages);
+    if (allMessages.length > 0) {
         warningsEl.classList.add('has-warnings');
         warningsEl.innerHTML = `
             <h4><i class="fas fa-exclamation-triangle"></i> Validation Errors</h4>
-            <ul>${warnings.map(w => `<li>• ${w}</li>`).join('')}</ul>
+            <ul>${allMessages.map(w => `<li>• ${w}</li>`).join('')}</ul>
         `;
         submitBtn.disabled = true;
     } else {
@@ -847,6 +886,18 @@ function validateKAP() {
  * Show confirmation modal
  */
 function showConfirmation() {
+    // Enforce KAP submission window before showing confirmation
+    const now = new Date();
+    if (KAP_STATE.kapOpenDate && now < KAP_STATE.kapOpenDate) {
+        const formatted = typeof formatDate === 'function' ? formatDate(KAP_STATE.kapOpenDate) : KAP_STATE.kapOpenDate.toISOString().slice(0, 10);
+        showToast(`KAP submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
+        return;
+    }
+    if (KAP_STATE.kapEndDate && now > KAP_STATE.kapEndDate) {
+        showToast('The KAP submission window has closed. You can no longer submit changes.', 'error');
+        return;
+    }
+
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
     const totalSpend = taxableSpend + taxFreeSpend;
@@ -905,6 +956,20 @@ function cancelSubmit() {
  */
 async function confirmSubmit() {
     console.log('🚀 Submitting KAP - Logging all transactions...');
+
+    // Double-check submission window in case dates changed while page was open
+    const now = new Date();
+    if (KAP_STATE.kapOpenDate && now < KAP_STATE.kapOpenDate) {
+        const formatted = typeof formatDate === 'function' ? formatDate(KAP_STATE.kapOpenDate) : KAP_STATE.kapOpenDate.toISOString().slice(0, 10);
+        showToast(`KAP submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
+        cancelSubmit();
+        return;
+    }
+    if (KAP_STATE.kapEndDate && now > KAP_STATE.kapEndDate) {
+        showToast('The KAP submission window has closed. You can no longer submit changes.', 'error');
+        cancelSubmit();
+        return;
+    }
     
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
