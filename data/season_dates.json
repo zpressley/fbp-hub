@@ -1,0 +1,28 @@
+{
+  "season_year": 2026,
+  "publish": true,
+  "pad_open_date": "2026-02-01",
+  "pad_date": "2026-02-09",
+  "ppd_date": "2026-02-15",
+  "kap_open_date": "2026-02-18",
+  "preseason-trade deadline": "2026-03-02",  
+  "kap_end_date": "2026-03-04",
+  "keeper_draft": "2026-03-08",
+  "division_draft": "2026-03-10",
+  "week_1_start": "2026-03-25",
+  "regular_season_end": "2026-08-31",
+  "playoffs_end": "2026-09-14",
+  
+  "auction": {
+    "start": "2026-03-16",
+    "all_star_break_start": "2026-07-13",
+    "restart": "2026-07-20",
+    "playoffs_start": "2026-09-07"
+  },
+  
+  "notes": {
+    "update_annually": "Update these dates each offseason",
+    "timezone": "All dates assume Eastern Time",
+    "automation": "GitHub Actions uses these dates for conditional updates"
+  }
+}
