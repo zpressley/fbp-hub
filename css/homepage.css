@@ -2,6 +2,31 @@
    Homepage Specific Styles
    ============================================ */
 
+/* Season dates layout shared with homepage card styles */
+.season-date-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.season-date-row:last-child {
+    border-bottom: none;
+}
+
+.season-date-name {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--text-white);
+}
+
+.season-date-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+}
+
 /* Quick Navigation Tiles Section (Stats Integrated) */
 .tiles-section {
     background-color: var(--bg-charcoal);

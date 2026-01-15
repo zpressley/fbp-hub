@@ -96,6 +96,15 @@ function generateSampleTransactions() {
     return sample;
 }
 
+/** Helper: map full team name from wizbucks.json → FBP abbreviation */
+function getTeamAbbreviationFromName(name) {
+    if (typeof TEAM_NAMES === 'undefined') return name;
+    for (const [abbr, fullName] of Object.entries(TEAM_NAMES)) {
+        if (fullName === name) return abbr;
+    }
+    return name;
+}
+
 /**
  * Display current balances
  */
@@ -111,21 +120,26 @@ function displayBalances() {
     const total = Object.values(balances).reduce((sum, val) => sum + val, 0);
     if (totalEl) totalEl.textContent = `$${total.toLocaleString()}`;
     
-    // Sort by balance (highest first)
-    const sorted = Object.entries(balances).sort((a, b) => b[1] - a[1]);
+    // Build list with abbreviations and sort by balance (highest first)
+    const sorted = Object.entries(balances)
+        .map(([name, balance]) => {
+            const abbr = getTeamAbbreviationFromName(name);
+            return { name, abbr, balance };
+        })
+        .sort((a, b) => b.balance - a.balance);
     
     // Create balance cards
-    const cards = sorted.map(([team, balance]) => {
-        // Count PCs for this team
+    const cards = sorted.map(({ name, abbr, balance }) => {
+        // Count PCs for this team using abbreviation
         const pcCount = FBPHub.data.players.filter(p => 
-            p.FBP_Team === team && 
+            p.FBP_Team === abbr && 
             p.player_type === 'Farm' && 
             (p.years_simple?.includes('PC') || p.contract_type?.includes('Purchased'))
         ).length;
         
         return `
-            <div class="balance-card" data-team="${team}">
-                <div class="balance-team">${team}</div>
+            <div class="balance-card" data-team="${abbr}">
+                <div class="balance-team">${abbr}</div>
                 <div class="balance-amount">$${balance}</div>
                 <div class="balance-pc-count">${pcCount} PCs</div>
             </div>
@@ -134,7 +148,7 @@ function displayBalances() {
     
     grid.innerHTML = cards;
     
-    // Add click handlers to filter by team
+    // Add click handlers to filter by team (using abbreviation)
     document.querySelectorAll('.balance-card').forEach(card => {
         card.addEventListener('click', () => {
             const team = card.dataset.team;
@@ -164,12 +178,14 @@ function setupFilters() {
     const managerFilter = document.getElementById('managerFilter');
     
     if (managerFilter) {
-        // Populate manager options
-        const teams = Object.keys(FBPHub.data.wizbucks || {}).sort();
-        teams.forEach(team => {
+        // Populate manager options using abbreviations for compact display
+        const teams = Object.keys(FBPHub.data.wizbucks || {})
+            .map(name => getTeamAbbreviationFromName(name))
+            .sort();
+        teams.forEach(teamAbbr => {
             const option = document.createElement('option');
-            option.value = team;
-            option.textContent = team;
+            option.value = teamAbbr;
+            option.textContent = teamAbbr;
             managerFilter.appendChild(option);
         });
         

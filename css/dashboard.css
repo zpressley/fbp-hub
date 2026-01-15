@@ -486,6 +486,23 @@
     
     .action-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+
+    /* Make quick action tiles closer to WizBucks card size on mobile */
+    .action-card {
+        padding: var(--space-md);
+        border-width: var(--border-width);
+        gap: var(--space-sm);
+    }
+
+    .action-card i {
+        font-size: var(--text-xl);
+    }
+
+    .action-card span {
+        font-size: var(--text-xs);
+        letter-spacing: 0.5px;
     }
     
     .dash-roster-grid {

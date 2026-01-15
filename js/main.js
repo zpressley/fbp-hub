@@ -228,8 +228,8 @@ function setupHeaderScrollBehavior() {
     const nav = document.querySelector('.mobile-nav');
     if (!nav) return;
 
-    // Keep behavior mobile-first; on desktop the header stays fixed
-    if (window.innerWidth >= 768) return;
+    // Apply behavior on all viewports (mobile + desktop) so the header
+    // can cleanly hide on scroll. Jitter is handled via thresholds below.
 
     let lastScrollY = window.scrollY;
     let ticking = false;

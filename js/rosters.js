@@ -339,7 +339,23 @@ function groupPlayersByPosition(players) {
  * Create depth table row for player
  */
 function createDepthTableRow(player) {
-    const status = player.years_simple || player.status || '';
+    // For prospects, display their prospect contract code (PC / DC / BC)
+    let status;
+    if (player.player_type === 'Farm') {
+        const ct = (player.contract_type || '').toLowerCase();
+        if (ct.includes('purchased')) {
+            status = 'PC';
+        } else if (ct.includes('development')) {
+            status = 'DC';
+        } else if (ct.includes('farm')) {
+            status = 'BC';
+        } else {
+            status = player.years_simple || player.status || '';
+        }
+    } else {
+        status = player.years_simple || player.status || '';
+    }
+
     const team = player.team || 'FA';
     const pos = player.position || '';
     const age = player.age || '--';
@@ -381,14 +397,14 @@ function createRosterSummary(players) {
     const batterCount = Object.values(batters).reduce((sum, list) => sum + list.length, 0);
     const pitcherCount = Object.values(pitchers).reduce((sum, list) => sum + list.length, 0);
     
-    // Count contract types for prospects
-    let contractCounts = { FC: 0, PC: 0, DC: 0 };
+    // Count prospect contract types (BC / PC / DC)
+    let contractCounts = { BC: 0, PC: 0, DC: 0 };
     if (currentRosterType === 'prospects') {
         players.forEach(p => {
-            const contract = (p.years_simple || '').toUpperCase();
-            if (contract.includes('FC')) contractCounts.FC++;
-            else if (contract.includes('PC')) contractCounts.PC++;
-            else if (contract.includes('DC')) contractCounts.DC++;
+            const ct = (p.contract_type || '').toLowerCase();
+            if (ct.includes('purchased')) contractCounts.PC++;
+            else if (ct.includes('development')) contractCounts.DC++;
+            else if (ct.includes('farm')) contractCounts.BC++;
         });
     }
     
@@ -410,8 +426,8 @@ function createRosterSummary(players) {
                 </div>
                 ${currentRosterType === 'prospects' ? `
                     <div class="summary-stat">
-                        <span class="summary-stat-label">Farm (FC)</span>
-                        <span class="summary-stat-value">${contractCounts.FC}</span>
+                        <span class="summary-stat-label">Base (BC)</span>
+                        <span class="summary-stat-value">${contractCounts.BC}</span>
                     </div>
                     <div class="summary-stat">
                         <span class="summary-stat-label">Purchased (PC)</span>

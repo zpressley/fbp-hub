@@ -205,7 +205,8 @@ a:hover {
     border-bottom: var(--border-width-thick) solid var(--primary-red);
     position: sticky;
     top: 0;
-    z-index: 100;
+    /* Raised above page banners so the user dropdown always renders on top */
+    z-index: 180;
     box-shadow: var(--shadow-lg);
     padding-bottom: var(--space-sm);
     transition: transform var(--transition-fast), padding var(--transition-fast);
@@ -303,7 +304,8 @@ a:hover {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     min-width: 200px;
-    z-index: 1000;
+    /* Keep well above any in-page sticky elements */
+    z-index: 250;
     overflow: hidden;
 }
 

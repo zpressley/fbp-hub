@@ -357,7 +357,23 @@ function setupRosterFilters(team) {
  */
 function renderPositionGroup(groupName, players) {
     const rows = players.map(p => {
-        const status = p.years_simple || p.status || '';
+        // For prospects, display their prospect contract code (PC / DC / BC)
+        let status;
+        if (p.player_type === 'Farm') {
+            const ct = (p.contract_type || '').toLowerCase();
+            if (ct.includes('purchased')) {
+                status = 'PC';
+            } else if (ct.includes('development')) {
+                status = 'DC';
+            } else if (ct.includes('farm')) {
+                status = 'BC';
+            } else {
+                status = p.years_simple || p.status || '';
+            }
+        } else {
+            status = p.years_simple || p.status || '';
+        }
+
         const team = p.team || 'FA';
         const pos = p.position || '';
         const age = p.age || '--';

@@ -24,8 +24,9 @@
 /* Sticky WizBucks Bar */
 .wizbucks-sticky-bar {
     position: sticky;
+    /* Sit just below the main nav so dropdown can overlay it */
     top: 0;
-    z-index: 100;
+    z-index: 120;
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
