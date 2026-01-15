@@ -23,17 +23,17 @@ async function initDraft() {
         DRAFT_STATE.userTeam = authManager.getTeam();
     }
     
-    // Load draft data for current mo    if (!DRAFT_STATE.draftData) {
+    // Load draft data for current mode
+    await loadDraftData(DRAFT_STATE.mode);
+
+    // If no data, show inactive state
+    if (!DRAFT_STATE.draftData) {
         if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
         if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
         const inactiveEl = document.getElementById('draftInactive');
         const contentEl = document.getElementById('draftContent');
         if (inactiveEl) inactiveEl.style.display = 'flex';
         if (contentEl) contentEl.style.display = 'none';
-        return;
-    }
-ve').style.display = 'flex';
-        document.getElementById('draftContent').style.display = 'none';
         return;
     }
     
