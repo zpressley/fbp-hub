@@ -218,7 +218,7 @@ function updatePreview() {
     } else {
         accent1.style.opacity = '0.3';
         accent1.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        accent1.style.color = var(--text-gray);
+        accent1.style.color = 'var(--text-gray)';
     }
     
     const accent2 = document.getElementById('previewAccent2');
@@ -229,7 +229,7 @@ function updatePreview() {
     } else {
         accent2.style.opacity = '0.3';
         accent2.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        accent2.style.color = var(--text-gray);
+        accent2.style.color = 'var(--text-gray)';
     }
     
     const accent3 = document.getElementById('previewAccent3');
@@ -240,7 +240,7 @@ function updatePreview() {
     } else {
         accent3.style.opacity = '0.3';
         accent3.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        accent3.style.color = var(--text-gray);
+        accent3.style.color = 'var(--text-gray)';
     }
 }
 
