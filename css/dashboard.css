@@ -214,6 +214,51 @@
     color: var(--primary-red);
 }
 
+/* Roster filters */
+.roster-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.roster-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.roster-filter-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: var(--space-xs);
+}
+
+.roster-filter-chip {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: var(--border-width-thin) solid rgba(255, 255, 255, 0.4);
+    background-color: transparent;
+    color: var(--text-white);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.roster-filter-chip:hover {
+    border-color: var(--accent-yellow);
+}
+
+.roster-filter-chip.active {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+}
+
 .roster-preview {
     background-color: var(--bg-charcoal);
     border: var(--border-width) solid var(--primary-red);

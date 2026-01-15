@@ -143,6 +143,22 @@
         <!-- Your Team Overview -->
         <section class="team-overview" id="teamOverview">
             <h3><i class="fas fa-users"></i> YOUR ROSTER</h3>
+            <div class="roster-filter-bar" id="rosterFilterBar">
+                <div class="roster-filter-group">
+                    <span class="roster-filter-label">Section</span>
+                    <button type="button" class="roster-filter-chip active" data-section-filter="all">All</button>
+                    <button type="button" class="roster-filter-chip" data-section-filter="infield">Infield</button>
+                    <button type="button" class="roster-filter-chip" data-section-filter="outfield">Outfield</button>
+                    <button type="button" class="roster-filter-chip" data-section-filter="sp">SP</button>
+                    <button type="button" class="roster-filter-chip" data-section-filter="rp">RP</button>
+                </div>
+                <div class="roster-filter-group">
+                    <span class="roster-filter-label">Roster</span>
+                    <button type="button" class="roster-filter-chip active" data-roster-filter="all">All</button>
+                    <button type="button" class="roster-filter-chip" data-roster-filter="keepers">Keepers</button>
+                    <button type="button" class="roster-filter-chip" data-roster-filter="prospects">Prospects</button>
+                </div>
+            </div>
             <div class="roster-preview" id="rosterPreview">
                 <!-- Populated by JS -->
             </div>

@@ -3,6 +3,12 @@
  * Displays personalized manager dashboard
  */
 
+// Dashboard roster filter state
+let dashboardRosterFilters = {
+    section: 'all',      // all | infield | outfield | sp | rp
+    rosterType: 'all'    // all | keepers | prospects
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Require authentication
     if (!AuthUI.requireAuth()) {
@@ -35,7 +41,8 @@ function initDashboard() {
         adminLink.style.display = 'flex';
     }
     
-    // Load roster preview
+    // Setup roster filters + load roster preview
+    setupRosterFilters(team);
     loadRosterPreview(team);
 }
 
@@ -86,14 +93,23 @@ function loadTeamStats(team) {
     const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
-    // Get WizBucks balance
-    const wizbucks = FBPHub.data.wizbucks?.[team.abbreviation] || 0;
+    // Get WizBucks balance (wizbucks.json is keyed by full team name)
+    let wizbucks = 0;
+    const wizData = FBPHub.data.wizbucks || {};
+    if (team.name && Object.prototype.hasOwnProperty.call(wizData, team.name)) {
+        wizbucks = wizData[team.name];
+    } else if (Object.prototype.hasOwnProperty.call(wizData, team.abbreviation)) {
+        wizbucks = wizData[team.abbreviation];
+    }
     
     // Get team standing
     const standings = FBPHub.data.standings?.standings || [];
     const teamStanding = standings.find(s => s.team === team.abbreviation);
     const rank = teamStanding?.rank || '--';
     const record = teamStanding?.record || '--';
+
+    // Prospect contract breakdown
+    const purchasedProspects = prospects.filter(p => (p.contract_type || '').includes('Purchased')).length;
     
     statsGrid.innerHTML = `
         <div class="stat-card-large">
@@ -125,7 +141,7 @@ function loadTeamStats(team) {
             <div class="stat-content">
                 <div class="stat-label">Prospects</div>
                 <div class="stat-value-large">${prospects.length}</div>
-                <div class="stat-meta">${prospects.filter(p => p.years_simple?.includes('PC')).length} purchased</div>
+                <div class="stat-meta">${purchasedProspects} purchased</div>
             </div>
         </div>
         
@@ -172,12 +188,15 @@ function loadRosterPreview(team) {
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
     let html = '';
+
+    const wantKeepers = dashboardRosterFilters.rosterType === 'all' || dashboardRosterFilters.rosterType === 'keepers';
+    const wantProspects = dashboardRosterFilters.rosterType === 'all' || dashboardRosterFilters.rosterType === 'prospects';
     
-    if (keepers.length > 0) {
+    if (wantKeepers && keepers.length > 0) {
         html += renderDashboardRosterSection(keepers, 'Keepers');
     }
     
-    if (prospects.length > 0) {
+    if (wantProspects && prospects.length > 0) {
         html += renderDashboardRosterSection(prospects, 'Prospects');
     }
     
@@ -213,27 +232,33 @@ function groupPlayersForDashboard(players) {
     players.forEach(player => {
         const posStr = player.position || '';
         const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
+        const normalizedTokens = tokens.map(t => t.toUpperCase());
 
         // DH can coexist with other positions (e.g., DH/SP like Ohtani)
-        if (tokens.includes('DH')) {
+        if (normalizedTokens.includes('DH')) {
             batters['DH'].push(player);
         }
 
         // Batters (mutually exclusive buckets besides DH)
-        if (tokens.includes('C')) {
+        if (normalizedTokens.includes('C')) {
             batters['Catcher'].push(player);
-        } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
+        } else if (normalizedTokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
             batters['Infield'].push(player);
-        } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
+        } else if (normalizedTokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
             batters['Outfield'].push(player);
         }
         
-        // Pitchers
-        if (tokens.includes('SP')) {
+        // Pitchers (handle SP/RP/P plus RHP/LHP styles)
+        const isGenericPitcher = normalizedTokens.includes('P');
+        const isStarter = normalizedTokens.includes('SP');
+        const isReliever = normalizedTokens.includes('RP');
+        const isHandedPitcher = normalizedTokens.includes('RHP') || normalizedTokens.includes('LHP');
+
+        if (isStarter) {
             pitchers['Starting Pitcher'].push(player);
-        } else if (tokens.includes('RP')) {
+        } else if (isReliever) {
             pitchers['Relief Pitcher'].push(player);
-        } else if (tokens.includes('P')) {
+        } else if (isGenericPitcher || isHandedPitcher) {
             pitchers['Pitcher'].push(player);
         }
     });
@@ -248,16 +273,33 @@ function renderDashboardRosterSection(players, title) {
     if (!players || players.length === 0) return '';
 
     const { batters, pitchers } = groupPlayersForDashboard(players);
+
+    // Apply section-level filters (Infield/Outfield/SP/RP)
+    const section = dashboardRosterFilters.section || 'all';
+
+    const filteredBattersEntries = Object.entries(batters).filter(([groupName, list]) => {
+        if (!list.length) return false;
+        if (section === 'infield') return groupName === 'Infield';
+        if (section === 'outfield') return groupName === 'Outfield';
+        if (section === 'sp' || section === 'rp') return false; // pitching-only filter
+        return true; // 'all'
+    });
+
+    const filteredPitchersEntries = Object.entries(pitchers).filter(([groupName, list]) => {
+        if (!list.length) return false;
+        if (section === 'sp') return groupName === 'Starting Pitcher';
+        if (section === 'rp') return groupName === 'Relief Pitcher';
+        if (section === 'infield' || section === 'outfield') return false; // hitting-only filter
+        return true; // 'all'
+    });
     
     // Render batters column (left)
-    const batterGroups = Object.entries(batters)
-        .filter(([, list]) => list.length > 0)
+    const batterGroups = filteredBattersEntries
         .map(([groupName, list]) => renderPositionGroup(groupName, list))
         .join('');
     
     // Render pitchers column (right)
-    const pitcherGroups = Object.entries(pitchers)
-        .filter(([, list]) => list.length > 0)
+    const pitcherGroups = filteredPitchersEntries
         .map(([groupName, list]) => renderPositionGroup(groupName, list))
         .join('');
 
@@ -274,6 +316,40 @@ function renderDashboardRosterSection(players, title) {
             </div>
         </div>
     `;
+}
+
+/**
+ * Attach click handlers for roster filters
+ */
+function setupRosterFilters(team) {
+    const filterBar = document.getElementById('rosterFilterBar');
+    if (!filterBar || !team) return;
+
+    filterBar.addEventListener('click', (event) => {
+        const chip = event.target.closest('.roster-filter-chip');
+        if (!chip) return;
+
+        const sectionFilter = chip.getAttribute('data-section-filter');
+        const rosterFilter = chip.getAttribute('data-roster-filter');
+
+        if (sectionFilter) {
+            dashboardRosterFilters.section = sectionFilter;
+            const sectionChips = filterBar.querySelectorAll('[data-section-filter]');
+            sectionChips.forEach(el => {
+                el.classList.toggle('active', el === chip);
+            });
+        }
+
+        if (rosterFilter) {
+            dashboardRosterFilters.rosterType = rosterFilter;
+            const rosterChips = filterBar.querySelectorAll('[data-roster-filter]');
+            rosterChips.forEach(el => {
+                el.classList.toggle('active', el === chip);
+            });
+        }
+
+        loadRosterPreview(team);
+    });
 }
 
 /**

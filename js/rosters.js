@@ -299,27 +299,35 @@ function groupPlayersByPosition(players) {
     players.forEach(player => {
         const posStr = player.position || '';
         const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
-        
+
+        // Normalize tokens for pitcher detection (handle RHP/LHP style tags for prospects)
+        const normalizedTokens = tokens.map(t => t.toUpperCase());
+
         // DH can coexist with other positions (e.g., DH/SP like Ohtani)
-        if (tokens.includes('DH')) {
+        if (normalizedTokens.includes('DH')) {
             batters['DH'].push(player);
         }
 
         // Batters (mutually exclusive buckets besides DH)
-        if (tokens.includes('C')) {
+        if (normalizedTokens.includes('C')) {
             batters['Catcher'].push(player);
-        } else if (tokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
+        } else if (normalizedTokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
             batters['Infield'].push(player);
-        } else if (tokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
+        } else if (normalizedTokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
             batters['Outfield'].push(player);
         }
         
         // Pitchers
-        if (tokens.includes('SP')) {
+        const isGenericPitcher = normalizedTokens.includes('P');
+        const isStarter = normalizedTokens.includes('SP');
+        const isReliever = normalizedTokens.includes('RP');
+        const isHandedPitcher = normalizedTokens.includes('RHP') || normalizedTokens.includes('LHP');
+
+        if (isStarter) {
             pitchers['Starting Pitcher'].push(player);
-        } else if (tokens.includes('RP')) {
+        } else if (isReliever) {
             pitchers['Relief Pitcher'].push(player);
-        } else if (tokens.some(p => ['P'].includes(p))) {
+        } else if (isGenericPitcher || isHandedPitcher) {
             pitchers['Pitcher'].push(player);
         }
     });

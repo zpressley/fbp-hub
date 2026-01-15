@@ -52,22 +52,28 @@ async function loadDraftData() {
     try {
         // Load from configured data path
         const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath) ? FBPHub.config.dataPath : './data/';
-        const response = await fetch(`${basePath}draft_active.json`);
+        const response = await fetch(`${basePath}draft_active.json`, { cache: 'no-store' });
         if (response.ok) {
-            DRAFT_STATE.draftData = await response.json();
+            const data = await response.json();
+            // Treat anything not explicitly in_progress as "no active draft".
+            if (data && data.status === 'in_progress') {
+                DRAFT_STATE.draftData = data;
+            } else {
+                DRAFT_STATE.draftData = null;
+            }
         } else {
-            // Mock data for testing
-            DRAFT_STATE.draftData = getMockDraftData();
+            console.warn('draft_active.json not found or not OK; assuming no active draft');
+            DRAFT_STATE.draftData = null;
         }
     } catch (e) {
-        console.log('Using mock draft data');
-        DRAFT_STATE.draftData = getMockDraftData();
+        console.error('Error loading draft_active.json', e);
+        DRAFT_STATE.draftData = null;
     }
     
     // Load draft pool (optional, kept for future use)
     try {
         const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath) ? FBPHub.config.dataPath : './data/';
-        const poolResponse = await fetch(`${basePath}draft_pool.json`);
+        const poolResponse = await fetch(`${basePath}draft_pool.json`, { cache: 'no-store' });
         if (poolResponse.ok) {
             DRAFT_STATE.draftPool = await poolResponse.json();
         }
@@ -77,38 +83,23 @@ async function loadDraftData() {
 }
 
 /**
- * Mock draft data for testing
- */
-function getMockDraftData() {
-    return {
-        draft_id: 'fbp_keeper_draft_2026',
-        draft_type: 'keeper',
-        season: 2026,
-        status: 'in_progress',
-        current_round: 5,
-        current_pick: 51,
-        current_team: 'HAM',
-        total_rounds: 26,
-        pick_clock_seconds: 120,
-        clock_started_at: new Date(Date.now() - 45000).toISOString(),
-        
-        draft_order: ['JEP', 'WAR', 'HAM', 'CFL', 'LAW', 'LFB', 'RV', 'DRO', 'TBB', 'B2J', 'SAD', 'WIZ'],
-        
-        picks: [
-            { pick_number: 48, round: 4, team: 'WIZ', player_name: 'Kyle Schwarber', position: 'OF', mlb_team: 'PHI', picked_at: new Date(Date.now() - 300000).toISOString() },
-            { pick_number: 49, round: 5, team: 'JEP', player_name: 'Bobby Witt Jr.', position: 'SS', mlb_team: 'KC', picked_at: new Date(Date.now() - 180000).toISOString() },
-            { pick_number: 50, round: 5, team: 'WAR', player_name: 'Gunnar Henderson', position: 'SS', mlb_team: 'BAL', picked_at: new Date(Date.now() - 90000).toISOString() }
-        ]
-    };
-}
-
-/**
  * Refresh draft data
  */
 async function refreshDraftData() {
     const oldPick = DRAFT_STATE.draftData?.current_pick;
     
     await loadDraftData();
+    
+    // If draft ended or no longer active, flip UI and stop timers.
+    if (!DRAFT_STATE.draftData) {
+        if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
+        if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
+        const inactiveEl = document.getElementById('draftInactive');
+        const contentEl = document.getElementById('draftContent');
+        if (inactiveEl) inactiveEl.style.display = 'flex';
+        if (contentEl) contentEl.style.display = 'none';
+        return;
+    }
     
     const newPick = DRAFT_STATE.draftData?.current_pick;
     
