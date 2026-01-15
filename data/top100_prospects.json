@@ -39,10 +39,10 @@
     "age": "19",
     "bats": "S",
     "throws": "R",
-    "mlb_id": null,
-    "upid": null,
+    "mlb_id": 815888,
+    "upid": "7173",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": "WIZ"
   },
   {
     "rank": 4,
@@ -54,10 +54,10 @@
     "age": "18",
     "bats": "S",
     "throws": "R",
-    "mlb_id": null,
-    "upid": null,
+    "mlb_id": 815908,
+    "upid": "7607",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": "WAR"
   },
   {
     "rank": 5,
@@ -220,9 +220,9 @@
     "bats": "S",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7944",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 16,
@@ -264,10 +264,10 @@
     "age": "19",
     "bats": "R",
     "throws": "R",
-    "mlb_id": null,
-    "upid": null,
+    "mlb_id": 821270,
+    "upid": "7608",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": "WAR"
   },
   {
     "rank": 19,
@@ -280,9 +280,9 @@
     "bats": "L",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7940",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 20,
@@ -340,9 +340,9 @@
     "bats": "L",
     "throws": "L",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7941",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 24,
@@ -400,9 +400,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7942",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 28,
@@ -535,9 +535,9 @@
     "bats": "R",
     "throws": "L",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7947",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 37,
@@ -565,9 +565,9 @@
     "bats": "L",
     "throws": "L",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7943",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 39,
@@ -610,9 +610,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7945",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 42,
@@ -640,9 +640,9 @@
     "bats": "L",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7948",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 44,
@@ -789,10 +789,10 @@
     "age": "22",
     "bats": "L",
     "throws": "R",
-    "mlb_id": null,
-    "upid": null,
+    "mlb_id": 694208,
+    "upid": "3790",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": "B2J"
   },
   {
     "rank": 54,
@@ -1060,9 +1060,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7946",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 72,
@@ -1180,9 +1180,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7951",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 80,
@@ -1330,9 +1330,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7949",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 90,
@@ -1360,9 +1360,9 @@
     "bats": "R",
     "throws": "R",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7957",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 92,
@@ -1420,9 +1420,9 @@
     "bats": "L",
     "throws": "L",
     "mlb_id": null,
-    "upid": null,
+    "upid": "7958",
     "yahoo_id": null,
-    "FBP_Team": null
+    "FBP_Team": ""
   },
   {
     "rank": 96,

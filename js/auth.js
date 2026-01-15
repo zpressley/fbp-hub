@@ -423,6 +423,14 @@ function addUserMenu() {
                 <i class="fas fa-trophy"></i>
                 KAP
             </a>
+            <a href="draft-board.html">
+                <i class="fas fa-clipboard-list"></i>
+                Draft Board
+            </a>
+            <a href="settings.html">
+                <i class="fas fa-sliders-h"></i>
+                Settings
+            </a>
             ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>

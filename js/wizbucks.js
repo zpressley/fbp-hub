@@ -109,7 +109,7 @@ function displayBalances() {
     
     // Calculate total
     const total = Object.values(balances).reduce((sum, val) => sum + val, 0);
-    if (totalEl) totalEl.textContent = total;
+    if (totalEl) totalEl.textContent = `$${total.toLocaleString()}`;
     
     // Sort by balance (highest first)
     const sorted = Object.entries(balances).sort((a, b) => b[1] - a[1]);

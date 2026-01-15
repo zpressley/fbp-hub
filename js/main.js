@@ -170,6 +170,10 @@ function updateUserMenuForAuth() {
             <i class="fas fa-trophy"></i>
             KAP
         </a>
+        <a href="draft-board.html">
+            <i class="fas fa-clipboard-list"></i>
+            Draft Board
+        </a>
         <a href="settings.html">
             <i class="fas fa-cog"></i>
             Settings
@@ -201,13 +205,14 @@ function updateUserMenuForAuth() {
 function highlightActivePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link');
+    const effectiveCurrent = currentPage === 'draft-board.html' ? 'draft.html' : currentPage;
     
     navLinks.forEach(link => {
         const linkPage = link.getAttribute('href').split('?')[0];
         link.classList.remove('active');
         
-        if (linkPage === currentPage || 
-            (currentPage === '' && linkPage === 'index.html')) {
+        if (linkPage === effectiveCurrent || 
+            (effectiveCurrent === '' && linkPage === 'index.html')) {
             link.classList.add('active');
         }
     });
@@ -223,6 +228,9 @@ function setupHeaderScrollBehavior() {
     const nav = document.querySelector('.mobile-nav');
     if (!nav) return;
 
+    // Keep behavior mobile-first; on desktop the header stays fixed
+    if (window.innerWidth >= 768) return;
+
     let lastScrollY = window.scrollY;
     let ticking = false;
     let isHidden = false;
@@ -230,6 +238,13 @@ function setupHeaderScrollBehavior() {
     function update() {
         const currentY = window.scrollY;
         const diff = currentY - lastScrollY;
+
+        // Ignore very small jitter to reduce "bounce" around thresholds
+        if (Math.abs(diff) < 4) {
+            lastScrollY = currentY;
+            ticking = false;
+            return;
+        }
 
         // Compact once user scrolls a bit
         if (currentY > 40) {
@@ -249,9 +264,9 @@ function setupHeaderScrollBehavior() {
             return;
         }
 
-        const SCROLL_DOWN_THRESHOLD = 10; // pixels
-        const SCROLL_UP_THRESHOLD = 20;   // pixels
-        const HIDE_START_Y = 120;         // don't start hiding until below this
+        const SCROLL_DOWN_THRESHOLD = 40; // pixels
+        const SCROLL_UP_THRESHOLD = 60;   // pixels
+        const HIDE_START_Y = 200;         // don't start hiding until below this
 
         // Hide when scrolling down beyond threshold
         if (!isHidden && currentY > HIDE_START_Y && diff > SCROLL_DOWN_THRESHOLD) {
@@ -412,6 +427,11 @@ function initializePage(pageName) {
                 initAdminPortal();
             }
             break;
+        case 'settings':
+            if (typeof initSettings === 'function') {
+                initSettings();
+            }
+            break;
         case 'pad':
             if (typeof initPADPage === 'function') {
                 initPADPage();
@@ -425,6 +445,16 @@ function initializePage(pageName) {
         case 'player-profile':
             if (typeof initPlayerProfile === 'function') {
                 initPlayerProfile();
+            }
+            break;
+        case 'draft':
+            if (typeof initDraft === 'function') {
+                initDraft();
+            }
+            break;
+        case 'draft-board':
+            if (typeof initDraftBoard === 'function') {
+                initDraftBoard();
             }
             break;
         default:

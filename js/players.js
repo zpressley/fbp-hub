@@ -318,15 +318,30 @@ function displayPlayersList(players, container) {
         // Determine contract badge class
         let contractBadgeHTML = '';
         if (player.years_simple) {
-            const contract = player.years_simple.toUpperCase();
+            const raw = player.years_simple;
+            const contract = raw.toUpperCase();
             let badgeClass = 'tc';
+
+            const isRookie = contract === 'R' || contract.includes('R-') || contract.startsWith('TC-R');
             
-            if (contract.includes('VC')) badgeClass = 'vc';
-            else if (contract.includes('FC') || contract.includes('F')) badgeClass = 'fc';
-            else if (contract.includes('PC')) badgeClass = 'pc';
-            else if (contract.includes('DC')) badgeClass = 'dc';
+            if (contract.includes('VC')) {
+                badgeClass = 'vc';
+            } else if (contract.includes('FC') || contract.includes('F2') || contract.includes('F3')) {
+                // Franchise contracts (FC-1/2/3) use primary red styling
+                badgeClass = 'fc';
+            } else if (contract.includes('PC')) {
+                badgeClass = 'pc';
+            } else if (contract.includes('DC')) {
+                badgeClass = 'dc';
+            }
+
+            // TC rookies (R / R-*, TC-R) should use the legacy blue styling.
+            // We reuse the PC colorway, which is already mapped to legacy blue.
+            if (isRookie) {
+                badgeClass = 'pc';
+            }
             
-            contractBadgeHTML = `<span class="contract-badge ${badgeClass}">${player.years_simple}</span>`;
+            contractBadgeHTML = `<span class="contract-badge ${badgeClass}">${raw}</span>`;
         }
         
         return `

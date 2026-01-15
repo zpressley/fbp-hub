@@ -13,6 +13,11 @@ The app provides:
 - WizBucks balances and an optional transaction ledger UI
 - (Phase 2) Discord OAuth login + manager dashboard backed by a Cloudflare Worker
 
+Rules: 
+For fbp-trade-bot and fbp-hub repos make sure to always run player data through UPID first to ensure that there is a unique ID for players that connects it with all other players in the system. 
+
+
+
 The primary documentation for the project lives in `data/README.md` and Phase 2 auth setup details in `PHASE2_SETUP.md`.
 
 ## Commands & Local Development

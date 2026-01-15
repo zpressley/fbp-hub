@@ -287,9 +287,17 @@ function renderPositionGroup(groupName, players) {
         const age = p.age || '--';
         
         // Determine contract tier for color coding
+        const normalized = (status || '').toUpperCase().replace(/\s+/g, '');
         let statusClass = 'tc';
-        if (status.includes('VC')) statusClass = 'vc';
-        else if (status.includes('FC')) statusClass = 'fc';
+
+        const isRookie = normalized === 'R' || normalized.startsWith('R-') || normalized.startsWith('TC-R');
+        if (normalized.includes('VC')) {
+            statusClass = 'vc';
+        } else if (normalized.startsWith('FC') || normalized.startsWith('F')) {
+            statusClass = 'fc';
+        } else if (isRookie) {
+            statusClass = 'rookie';
+        }
         
         const profileLink = window.createPlayerLink ? createPlayerLink(p) : '#';
 

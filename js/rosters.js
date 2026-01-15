@@ -337,9 +337,18 @@ function createDepthTableRow(player) {
     const age = player.age || '--';
     
     // Determine contract tier for color coding
+    const normalized = (status || '').toUpperCase().replace(/\s+/g, '');
     let statusClass = 'tc';
-    if (status.includes('VC')) statusClass = 'vc';
-    else if (status.includes('FC')) statusClass = 'fc';
+
+    // Rookie TC (R, R-*, TC-R) should use legacy blue
+    const isRookie = normalized === 'R' || normalized.startsWith('R-') || normalized.startsWith('TC-R');
+    if (normalized.includes('VC')) {
+        statusClass = 'vc';
+    } else if (normalized.startsWith('FC') || normalized.startsWith('F')) {
+        statusClass = 'fc';
+    } else if (isRookie) {
+        statusClass = 'rookie';
+    }
     
     const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
     
@@ -358,14 +367,17 @@ function createDepthTableRow(player) {
  * Create roster summary
  */
 function createRosterSummary(players) {
-    const batters = players.filter(p => !['SP', 'RP', 'P'].includes(p.position));
-    const pitchers = players.filter(p => ['SP', 'RP', 'P'].includes(p.position));
+    // Reuse the same grouping logic used for the depth tables so
+    // batters/pitchers counts stay in sync with what is rendered.
+    const { batters, pitchers } = groupPlayersByPosition(players);
+    const batterCount = Object.values(batters).reduce((sum, list) => sum + list.length, 0);
+    const pitcherCount = Object.values(pitchers).reduce((sum, list) => sum + list.length, 0);
     
     // Count contract types for prospects
     let contractCounts = { FC: 0, PC: 0, DC: 0 };
     if (currentRosterType === 'prospects') {
         players.forEach(p => {
-            const contract = p.years_simple || '';
+            const contract = (p.years_simple || '').toUpperCase();
             if (contract.includes('FC')) contractCounts.FC++;
             else if (contract.includes('PC')) contractCounts.PC++;
             else if (contract.includes('DC')) contractCounts.DC++;
@@ -382,11 +394,11 @@ function createRosterSummary(players) {
                 </div>
                 <div class="summary-stat">
                     <span class="summary-stat-label">Batters</span>
-                    <span class="summary-stat-value">${batters.length}</span>
+                    <span class="summary-stat-value">${batterCount}</span>
                 </div>
                 <div class="summary-stat">
                     <span class="summary-stat-label">Pitchers</span>
-                    <span class="summary-stat-value">${pitchers.length}</span>
+                    <span class="summary-stat-value">${pitcherCount}</span>
                 </div>
                 ${currentRosterType === 'prospects' ? `
                     <div class="summary-stat">

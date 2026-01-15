@@ -258,9 +258,9 @@ async function displayUpcomingDeadline() {
 
     const now = new Date();
 
-    // Try dynamic config first
+    // Try dynamic config first (season_dates.json)
     const config = await loadSeasonDatesConfig();
-    if (config && config.publish) {
+    if (config) {
         const auction = config.auction || {};
 
         // Map config keys to human-readable event names
@@ -314,7 +314,7 @@ async function displayUpcomingDeadline() {
                 else if (daysUntil === 1) rel = 'Tomorrow';
                 else if (daysUntil > 1 && daysUntil < 7) rel = `In ${daysUntil} days`;
 
-                const dateLabel = rel ? `${formatDate(d.date)} • ${rel}` : formatDate(d.date);
+                const dateLabel = rel ? `${formatDate(d.date)}  b7 ${rel}` : formatDate(d.date);
                 return `<li><span class="deadline-list-name">${d.name}</span><span class="deadline-list-date">${dateLabel}</span></li>`;
             }).join('');
 
@@ -329,7 +329,7 @@ async function displayUpcomingDeadline() {
             return;
         }
 
-        // If publish=true but nothing upcoming, treat as off-season
+        // Config present but nothing upcoming: treat as completed season
         deadlineName.textContent = 'Off-Season';
         deadlineDate.textContent = `Season ${config.season_year || ''} complete`;
         const listEl = document.getElementById('deadlineList');
@@ -340,7 +340,7 @@ async function displayUpcomingDeadline() {
         return;
     }
     
-    // Fallback: legacy 2025 hard-coded dates
+    // Fallback: legacy 2025 hard-coded dates (used only if season_dates.json unavailable)
     const deadlines = [
         { name: 'Prospect Assignment Day', date: new Date('2025-02-10') },
         { name: 'Prospect Draft', date: new Date('2025-02-17') },
@@ -382,7 +382,7 @@ async function displayUpcomingDeadline() {
     } else {
         // Off-season
         deadlineName.textContent = 'Off-Season';
-        deadlineDate.textContent = 'Check back for 2026 dates';
+        deadlineDate.textContent = 'Check back for upcoming season dates';
         
         if (deadlineBanner) {
             deadlineBanner.style.background = 'linear-gradient(135deg, #666, #888)';

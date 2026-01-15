@@ -194,9 +194,17 @@
     font-size: var(--text-sm);
 }
 
+/*
+ * Contract color coding (rosters)
+ * - TC: white (default)
+ * - VC: accent yellow
+ * - FC (Franchise): primary red
+ * - Rookie TC (R / R-*, TC-R): legacy blue
+ */
 .roster-status.tc { color: #FFFFFF; }
 .roster-status.vc { color: #FFB612; }
-.roster-status.fc { color: #1E88C7; }
+.roster-status.fc { color: var(--primary-red); }
+.roster-status.rookie { color: var(--legacy-blue); }
 
 .roster-name {
     color: var(--text-white);

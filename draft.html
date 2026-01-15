@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Draft - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/draft.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="player-log.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Player Log</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="auction.html" class="nav-link">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container-draft">
+        <!-- Draft Not Active -->
+        <div class="draft-inactive" id="draftInactive" style="display: none;">
+            <i class="fas fa-calendar-times"></i>
+            <h3>No Active Draft</h3>
+            <p>The draft has not started yet or has concluded.</p>
+            <a href="dashboard.html" class="btn-primary">Return to Dashboard</a>
+        </div>
+
+        <!-- Draft Active -->
+        <div id="draftContent" style="display: none;">
+            <!-- Draft Header -->
+            <div class="draft-header">
+                <div class="draft-title-section">
+                    <h2 id="draftTitle">FBP KEEPER DRAFT 2026</h2>
+                    <div class="draft-status-badge" id="draftStatus">
+                        <i class="fas fa-circle"></i>
+                        <span>LIVE</span>
+                    </div>
+                </div>
+                <div class="draft-round-info">
+                    <div class="round-display">
+                        <span class="round-label">ROUND</span>
+                        <span class="round-number" id="currentRound">5</span>
+                    </div>
+                    <div class="pick-display">
+                        <span class="pick-label">PICK</span>
+                        <span class="pick-number" id="currentPickOverall">51</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- On The Clock Section -->
+            <div class="on-clock-section">
+                <div class="clock-banner" id="clockBanner">
+                    <div class="clock-info">
+                        <div class="clock-label">ON THE CLOCK</div>
+                        <div class="clock-team" id="clockTeam">HAM</div>
+                        <div class="clock-team-name" id="clockTeamName">Hammers</div>
+                    </div>
+                    <div class="clock-timer">
+                        <div class="timer-display" id="timerDisplay">1:45</div>
+                        <div class="timer-bar-container">
+                            <div class="timer-bar" id="timerBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Pick (if your turn) -->
+                <div class="quick-pick-section" id="quickPickSection" style="display: none;">
+                    <h4>YOUR PICK</h4>
+                    <div class="quick-pick-controls">
+                        <input type="text" id="quickPickSearch" class="quick-pick-input" placeholder="Search player name...">
+                        <button class="btn-draft-pick" onclick="submitQuickPick()">
+                            <i class="fas fa-check"></i> DRAFT PLAYER
+                        </button>
+                    </div>
+                    <div class="quick-pick-suggestions" id="quickPickSuggestions"></div>
+                    <a href="draft-board.html" class="btn-secondary">
+                        <i class="fas fa-clipboard-list"></i> View My Draft Board
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Draft View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="recent">
+                    <i class="fas fa-history"></i> Recent Picks
+                </button>
+                <button class="view-btn" data-view="grid">
+                    <i class="fas fa-th"></i> Full Grid
+                </button>
+                <button class="view-btn" data-view="order">
+                    <i class="fas fa-list-ol"></i> Draft Order
+                </button>
+            </div>
+
+            <!-- Recent Picks View -->
+            <div class="draft-view active" id="recent-view">
+                <div class="recent-picks-header">
+                    <h3>Recent Picks</h3>
+                    <span class="picks-count" id="picksCount">50 / 312</span>
+                </div>
+                <div class="recent-picks-list" id="recentPicksList"></div>
+            </div>
+
+            <!-- Full Grid View -->
+            <div class="draft-view" id="grid-view">
+                <div class="grid-controls">
+                    <button class="btn-grid-control" onclick="scrollToRound('current')">
+                        <i class="fas fa-crosshairs"></i> Current Round
+                    </button>
+                    <select id="roundSelector" class="round-selector">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="draft-grid" id="draftGrid"></div>
+            </div>
+
+            <!-- Draft Order View -->
+            <div class="draft-view" id="order-view">
+                <div class="draft-order-list" id="draftOrderList"></div>
+            </div>
+
+            <!-- Upcoming Picks Sidebar (Desktop) -->
+            <div class="upcoming-picks-sidebar">
+                <h4>Upcoming Picks</h4>
+                <div class="upcoming-list" id="upcomingList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (mobile) -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/draft.js"></script>
+</body>
+</html>

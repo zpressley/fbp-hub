@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Board - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/draft.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="player-log.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Player Log</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="auction.html" class="nav-link">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access your draft board</p>
+            <a href="login.html" class="btn-primary">Login</a>
+        </div>
+
+        <!-- Draft Board Content -->
+        <div id="boardContent" style="display: none;">
+            <div class="page-header">
+                <h2>MY DRAFT BOARD</h2>
+                <p class="page-subtitle">Plan your picks and track targets</p>
+            </div>
+
+            <!-- Board Controls -->
+            <div class="board-controls">
+                <div class="control-group">
+                    <button class="btn-primary" onclick="addPlayerToBoard()">
+                        <i class="fas fa-plus"></i> Add Player
+                    </button>
+                    <button class="btn-secondary" onclick="clearBoard()">
+                        <i class="fas fa-trash"></i> Clear Board
+                    </button>
+                    <button class="btn-secondary" onclick="saveBoard()">
+                        <i class="fas fa-save"></i> Save Board
+                    </button>
+                </div>
+                
+                <div class="filter-group">
+                    <select id="positionFilter" class="filter-select">
+                        <option value="">All Positions</option>
+                        <option value="C">C</option>
+                        <option value="1B">1B</option>
+                        <option value="2B">2B</option>
+                        <option value="3B">3B</option>
+                        <option value="SS">SS</option>
+                        <option value="OF">OF</option>
+                        <option value="SP">SP</option>
+                        <option value="RP">RP</option>
+                    </select>
+                    
+                    <div class="toggle-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hidePickedToggle" checked>
+                            <span>Hide Picked</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-meta">
+                <div class="draft-type-toggle">
+                    <button class="draft-type-btn" data-type="keeper">Keeper Draft</button>
+                    <button class="draft-type-btn" data-type="prospect">Prospect Draft</button>
+                </div>
+                <div class="draft-phase-status" id="draftPhaseStatus">Pre-Draft</div>
+            </div>
+
+            <!-- Draft Board Grid -->
+            <div class="board-grid">
+                <!-- Left: Your Rankings -->
+                <div class="board-section">
+                    <div class="board-section-header">
+                        <h3><i class="fas fa-star"></i> MY TARGETS</h3>
+                        <span class="target-count" id="targetCount">0 players</span>
+                    </div>
+                    
+                    <div class="board-list" id="targetsList">
+                        <div class="empty-board">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>Add players to your draft board</p>
+                            <button class="btn-primary" onclick="addPlayerToBoard()">
+                                <i class="fas fa-plus"></i> Add Player
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Available Players -->
+                <div class="board-section">
+                    <div class="board-section-header">
+                        <h3><i class="fas fa-users"></i> AVAILABLE PLAYERS</h3>
+                        <div class="search-bar-small">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="availableSearch" placeholder="Search available players...">
+                        </div>
+                    </div>
+                    
+                    <div class="available-list" id="availableList"></div>
+                </div>
+            </div>
+
+            <!-- Watch List -->
+            <div class="watch-list-section">
+                <h3><i class="fas fa-eye"></i> WATCH LIST</h3>
+                <p class="section-subtitle">Players you're monitoring but haven't ranked yet</p>
+                <div class="watch-list" id="watchList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Player Modal -->
+    <div class="modal" id="addPlayerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Player to Draft Board</h3>
+                <button class="modal-close" onclick="closeAddPlayerModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="search-player-section">
+                    <input type="text" id="modalPlayerSearch" class="modal-search-input" placeholder="Search by name..." autofocus>
+                    <div class="player-search-results" id="modalSearchResults"></div>
+                </div>
+                
+                <div class="selected-player-preview" id="selectedPlayerPreview" style="display: none;">
+                    <h4>Selected Player</h4>
+                    <div id="selectedPlayerInfo"></div>
+                    
+                    <div class="form-group">
+                        <label>Target Round (Optional)</label>
+                        <input type="number" id="targetRound" class="form-input" min="1" max="26" placeholder="e.g., 5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea id="playerNotes" class="form-textarea" placeholder="Why you want this player..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeAddPlayerModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmAddPlayer()" id="confirmAddBtn" disabled>
+                    <i class="fas fa-plus"></i> Add to Board
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation (mobile) -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/draft-board.js"></script>
+</body>
+</html>
