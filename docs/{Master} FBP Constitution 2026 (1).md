@@ -523,7 +523,7 @@ Pitcher:
 
 ---
 
-## **Section 01: Member Dues**
+## **Section 01: Member Dues*
 
 1. All Managers are required to pay their member dues to the FBP Treasurer by Mar 1 every year for the new season  
 2. Current Member Dues are $85/season
