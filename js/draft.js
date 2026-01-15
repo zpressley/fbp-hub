@@ -22,6 +22,9 @@ async function initDraft() {
     if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
         DRAFT_STATE.userTeam = authManager.getTeam();
     }
+
+    // Load schedule/config if API is available (for labels under toggle)
+    await loadDraftConfig();
     
     // Load draft data for current mode
     await loadDraftData(DRAFT_STATE.mode);
@@ -51,6 +54,37 @@ async function initDraft() {
     
     // Start timer countdown
     startPickTimer();
+}
+
+/**
+ * Load draft configuration (scheduled dates) from /api/draft/config.
+ * This populates the helper text under the Keeper/Prospect toggle.
+ */
+async function loadDraftConfig() {
+    const apiBase = FBPHub.config?.apiBase || null;
+    if (!apiBase) return; // nothing to do without API
+
+    try {
+        const url = new URL('/api/draft/config', apiBase);
+        const response = await fetch(url.toString(), { cache: 'no-store' });
+        if (!response.ok) return;
+        const cfg = await response.json();
+
+        const el = document.getElementById('draftSchedule');
+        if (!el) return;
+
+        const keeperDate = cfg?.keeper?.scheduled_date ? new Date(cfg.keeper.scheduled_date) : null;
+        const prospectDate = cfg?.prospect?.scheduled_date ? new Date(cfg.prospect.scheduled_date) : null;
+
+        function fmt(d) {
+            if (!d) return 'TBD';
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        el.textContent = `Keeper Draft: ${fmt(keeperDate)}  •  Prospect Draft: ${fmt(prospectDate)}`;
+    } catch (e) {
+        console.error('Error loading draft config', e);
+    }
 }
 
 /**
