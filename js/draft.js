@@ -8,28 +8,36 @@ let DRAFT_STATE = {
     draftPool: null,
     userTeam: null,
     updateInterval: null,
-    timerInterval: null
+    timerInterval: null,
+    mode: 'keeper', // 'keeper' or 'prospect'
 };
 
 /**
  * Initialize draft page
  */
 async function initDraft() {
-    console.log('🎯 Initializing draft tracker...');
+    console.log('🎯 Initializing draft tracker...', DRAFT_STATE.mode);
     
     // Get user team (optional - can view draft without auth)
     if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
         DRAFT_STATE.userTeam = authManager.getTeam();
     }
     
-    // Load draft data
-    await loadDraftData();
-    
-    if (!DRAFT_STATE.draftData) {
-        document.getElementById('draftInactive').style.display = 'flex';
+    // Load draft data for current mo    if (!DRAFT_STATE.draftData) {
+        if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
+        if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
+        const inactiveEl = document.getElementById('draftInactive');
+        const contentEl = document.getElementById('draftContent');
+        if (inactiveEl) inactiveEl.style.display = 'flex';
+        if (contentEl) contentEl.style.display = 'none';
+        return;
+    }
+ve').style.display = 'flex';
+        document.getElementById('draftContent').style.display = 'none';
         return;
     }
     
+    document.getElementById('draftInactive').style.display = 'none';
     document.getElementById('draftContent').style.display = 'block';
     
     // Initialize display
@@ -46,27 +54,41 @@ async function initDraft() {
 }
 
 /**
- * Load draft data
+ * Load draft data for the given draft type ('keeper' or 'prospect').
  */
-async function loadDraftData() {
+async function loadDraftData(draftType) {
+    const apiBase = FBPHub.config?.apiBase || null;
+
     try {
-        // Load from configured data path
-        const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath) ? FBPHub.config.dataPath : './data/';
-        const response = await fetch(`${basePath}draft_active.json`, { cache: 'no-store' });
-        if (response.ok) {
-            const data = await response.json();
-            // Treat anything not explicitly in_progress as "no active draft".
-            if (data && data.status === 'in_progress') {
-                DRAFT_STATE.draftData = data;
+        if (apiBase) {
+            // Prefer live API via Cloudflare Worker → Render → health.py
+            const url = new URL('/api/draft/active', apiBase);
+            url.searchParams.set('draft_type', draftType || 'keeper');
+
+            const response = await fetch(url.toString(), { cache: 'no-store' });
+            if (response.ok) {
+                const data = await response.json();
+                DRAFT_STATE.draftData = data || null;
             } else {
+                console.warn('API /api/draft/active returned', response.status);
                 DRAFT_STATE.draftData = null;
             }
         } else {
-            console.warn('draft_active.json not found or not OK; assuming no active draft');
-            DRAFT_STATE.draftData = null;
+            // Fallback: static JSON for local testing
+            const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath)
+                ? FBPHub.config.dataPath
+                : './data/';
+            const response = await fetch(`${basePath}draft_active.json`, { cache: 'no-store' });
+            if (response.ok) {
+                const data = await response.json();
+                DRAFT_STATE.draftData = data || null;
+            } else {
+                console.warn('draft_active.json not found or not OK; assuming no active draft');
+                DRAFT_STATE.draftData = null;
+            }
         }
     } catch (e) {
-        console.error('Error loading draft_active.json', e);
+        console.error('Error loading draft data', e);
         DRAFT_STATE.draftData = null;
     }
     
@@ -88,7 +110,7 @@ async function loadDraftData() {
 async function refreshDraftData() {
     const oldPick = DRAFT_STATE.draftData?.current_pick;
     
-    await loadDraftData();
+    await loadDraftData(DRAFT_STATE.mode);
     
     // If draft ended or no longer active, flip UI and stop timers.
     if (!DRAFT_STATE.draftData) {
@@ -120,9 +142,10 @@ async function refreshDraftData() {
  */
 function updateDraftHeader() {
     const draft = DRAFT_STATE.draftData;
-    
-    document.getElementById('currentRound').textContent = draft.current_round;
-    document.getElementById('currentPickOverall').textContent = draft.current_pick;
+    if (!draft) return;
+
+    document.getElementById('currentRound').textContent = draft.current_round ?? '-';
+    document.getElementById('currentPickOverall').textContent = draft.current_pick ?? '-';
     
     // Update title
     const draftTypeText = draft.draft_type === 'keeper' ? 'KEEPER' : 'PROSPECT';
@@ -133,10 +156,19 @@ function updateDraftHeader() {
     if (statusEl) {
         const statusSpan = statusEl.querySelector('span');
         let label = 'PRE-DRAFT';
-        if (draft.status === 'in_progress') {
-            label = 'ACTIVE DRAFT';
-        } else if (draft.status === 'completed') {
-            label = 'POST-DRAFT';
+        switch (draft.status) {
+            case 'active_draft':
+                label = 'ACTIVE DRAFT';
+                break;
+            case 'draft_day':
+                label = 'DRAFT DAY';
+                break;
+            case 'post_draft':
+                label = 'POST-DRAFT';
+                break;
+            case 'pre_draft':
+            default:
+                label = 'PRE-DRAFT';
         }
         if (statusSpan) {
             statusSpan.textContent = label;
@@ -149,6 +181,7 @@ function updateDraftHeader() {
  */
 function updateOnTheClock() {
     const draft = DRAFT_STATE.draftData;
+    if (!draft) return;
     const clockTeam = draft.current_team;
     const teamName = TEAM_NAMES[clockTeam] || clockTeam;
     
@@ -176,6 +209,9 @@ function startPickTimer() {
     }
     
     const draft = DRAFT_STATE.draftData;
+    if (!draft || !draft.clock_started_at || draft.status !== 'active_draft') {
+        return; // Only run timer while draft is active and we have a clock start
+    }
     const clockStarted = new Date(draft.clock_started_at);
     const timeLimit = draft.pick_clock_seconds || 120;
     
@@ -461,10 +497,28 @@ function formatTimeAgo(isoString) {
     return `${Math.floor(seconds / 86400)}d ago`;
 }
 
+function setDraftMode(mode) {
+    if (mode !== 'keeper' && mode !== 'prospect') return;
+    DRAFT_STATE.mode = mode;
+
+    // Update button UI
+    const buttons = document.querySelectorAll('.mode-btn');
+    buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    // Reset timers and reload state
+    if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
+    if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
+
+    initDraft();
+}
+
 // Expose functions
 window.initDraft = initDraft;
 window.scrollToRound = scrollToRound;
 window.submitQuickPick = submitQuickPick;
+window.setDraftMode = setDraftMode;
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {

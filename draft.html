@@ -80,6 +80,16 @@
 
         <!-- Draft Active -->
         <div id="draftContent" style="display: none;">
+            <!-- Draft Mode Toggle -->
+            <div class="draft-mode-toggle">
+                <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
+                    Keeper Draft
+                </button>
+                <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
+                    Prospect Draft
+                </button>
+            </div>
+
             <!-- Draft Header -->
             <div class="draft-header">
                 <div class="draft-title-section">

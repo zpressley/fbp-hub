@@ -26,6 +26,9 @@ function initDashboard() {
     const user = authManager.getUser();
     const team = authManager.getTeam();
     
+    // Apply team color theme (if configured)
+    applyDashboardTeamTheme(team);
+    
     // Update welcome message
     updateWelcomeMessage(user, team);
     
@@ -355,6 +358,40 @@ function setupRosterFilters(team) {
 /**
  * Render a single position group
  */
+/**
+ * Apply team color scheme to dashboard using CSS variables
+ */
+function applyDashboardTeamTheme(team) {
+    const root = document.documentElement;
+
+    if (!team || typeof FBPHub === 'undefined') {
+        // Clear any previous overrides and fall back to global theme
+        root.style.removeProperty('--team-primary');
+        root.style.removeProperty('--team-secondary');
+        root.style.removeProperty('--team-accent-1');
+        root.style.removeProperty('--team-accent-2');
+        root.style.removeProperty('--team-accent-3');
+        return;
+    }
+
+    const colors = FBPHub.data?.teamColors?.[team.abbreviation];
+    if (colors && colors.primary) {
+        const secondary = colors.secondary || '#FFB612';
+        root.style.setProperty('--team-primary', colors.primary);
+        root.style.setProperty('--team-secondary', secondary);
+        if (colors.accent1) root.style.setProperty('--team-accent-1', colors.accent1);
+        if (colors.accent2) root.style.setProperty('--team-accent-2', colors.accent2);
+        if (colors.accent3) root.style.setProperty('--team-accent-3', colors.accent3);
+    } else {
+        // No custom colors for this team; clear overrides
+        root.style.removeProperty('--team-primary');
+        root.style.removeProperty('--team-secondary');
+        root.style.removeProperty('--team-accent-1');
+        root.style.removeProperty('--team-accent-2');
+        root.style.removeProperty('--team-accent-3');
+    }
+}
+
 function renderPositionGroup(groupName, players) {
     const rows = players.map(p => {
         // For prospects, display their prospect contract code (PC / DC / BC)

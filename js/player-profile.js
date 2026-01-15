@@ -592,7 +592,8 @@ function formatDateTime(dateString) {
 
 // Apply team color scheme based on player owner
 function applyOwnerThemeForPlayer(player) {
-    const ownerAbbr = player.manager || player.FBP_Team || null;
+    // Prefer canonical FBP_Team abbreviation when available; fall back to manager
+    const ownerAbbr = player.FBP_Team || player.manager || null;
     const root = document.documentElement;
 
     // If there is a clear owner and we have team colors, use them

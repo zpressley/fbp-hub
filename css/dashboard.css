@@ -5,7 +5,7 @@
 /* Dashboard Header */
 .dashboard-header {
     background-color: var(--bg-charcoal);
-    border: var(--border-width-thick) solid var(--primary-red);
+    border: var(--border-width-thick) solid var(--team-primary, var(--primary-red));
     border-radius: var(--radius-lg);
     padding: var(--space-2xl);
     margin-bottom: var(--space-2xl);
@@ -72,7 +72,7 @@
 
 .stat-card-large {
     background-color: var(--bg-charcoal);
-    border: var(--border-width-thick) solid var(--primary-red);
+    border: var(--border-width-thick) solid var(--team-primary, var(--primary-red));
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
     display: flex;
@@ -90,7 +90,7 @@
 .stat-card-large .stat-icon {
     width: 64px;
     height: 64px;
-    background-color: var(--primary-red);
+    background-color: var(--team-primary, var(--primary-red));
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -123,7 +123,7 @@
     font-family: var(--font-mono);
     font-size: var(--text-3xl);
     font-weight: 700;
-    color: var(--accent-yellow);
+    color: var(--team-secondary, var(--accent-yellow));
     line-height: 1;
     margin-bottom: var(--space-xs);
 }
