@@ -69,6 +69,67 @@
         </div>
     </nav>
 
+    <script>
+        // Redirect to draft-preview.html when there is no active draft.
+        (function () {
+            var ACTIVE_STATUS = 'active_draft';
+
+            function getApiUrl(draftType) {
+                try {
+                    if (window.FBPHub && FBPHub.config && FBPHub.config.apiBase) {
+                        var u = new URL('/api/draft/active', FBPHub.config.apiBase);
+                        u.searchParams.set('draft_type', draftType || 'keeper');
+                        return u.toString();
+                    }
+                } catch (e) {
+                    console.warn('Error reading FBPHub.config.apiBase', e);
+                }
+                return null;
+            }
+
+            function redirectToPreview() {
+                window.location.href = 'draft-preview.html';
+            }
+
+            // 1) Prefer live API if configured via FBPHub.config.apiBase
+            var apiUrl = getApiUrl('keeper');
+            if (apiUrl) {
+                fetch(apiUrl, { cache: 'no-store' })
+                    .then(function (resp) {
+                        if (!resp.ok) throw new Error('non-200');
+                        return resp.json();
+                    })
+                    .then(function (data) {
+                        if (!data || data.status !== ACTIVE_STATUS) {
+                            redirectToPreview();
+                        }
+                        // else: stay here and let draft.js boot the live view
+                    })
+                    .catch(function (err) {
+                        console.warn('Draft API status check failed; using preview.', err);
+                        redirectToPreview();
+                    });
+                return;
+            }
+
+            // 2) Fallback: static JSON (GitHub Pages / no worker) – same as draft.js fallback
+            fetch('./data/draft_active.json', { cache: 'no-store' })
+                .then(function (resp) {
+                    if (!resp.ok) throw new Error('missing draft_active.json');
+                    return resp.json();
+                })
+                .then(function (data) {
+                    if (!data || data.status !== ACTIVE_STATUS) {
+                        redirectToPreview();
+                    }
+                })
+                .catch(function (err) {
+                    console.warn('Static draft_active.json check failed; using preview.', err);
+                    redirectToPreview();
+                });
+        })();
+    </script>
+
     <main class="container-draft">
         <!-- Draft Not Active -->
         <div class="draft-inactive" id="draftInactive" style="display: none;">

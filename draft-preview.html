@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Preview | FBP Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #2a2a2a;
+            border-bottom: 3px solid #C8102E;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #C8102E;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .status-banner {
+            background: #2a2a2a;
+            border: 2px solid #C8102E;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .status-banner.pre-draft {
+            border-color: #FFA500;
+        }
+
+        .status-banner.draft-day {
+            border-color: #C8102E;
+            background: #3a1a1a;
+        }
+
+        .status-banner.post-draft {
+            border-color: #666;
+            opacity: 0.7;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 20px 20px 0 20px;
+            border-bottom: 2px solid #444;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-bottom: none;
+            cursor: pointer;
+            color: #888;
+            font-weight: 600;
+            font-size: 1.1em;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #333;
+            color: #C8102E;
+        }
+
+        .tab.active {
+            background: #1a1a1a;
+            border-color: #C8102E;
+            border-bottom-color: #1a1a1a;
+            color: #C8102E;
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 15px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #C8102E;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid #444;
+            transition: all 0.3s;
+        }
+
+        .toggle:hover {
+            border-color: #C8102E;
+        }
+
+        .toggle.active {
+            border-color: #60a5fa;
+            background: #1a2a4d;
+        }
+
+        .toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .toggle label {
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+        }
+
+        .draft-info {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .info-stat {
+            text-align: center;
+        }
+
+        .info-stat .label {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .info-stat .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #C8102E;
+        }
+
+        .rounds-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .round {
+            margin-bottom: 30px;
+        }
+
+        .round-header {
+            background: #C8102E;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .round-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .pick-slot {
+            background: #1a1a1a;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0.5;
+        }
+
+        .pick-number {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .pick-team {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #C8102E;
+            margin-bottom: 10px;
+        }
+
+        .pick-status {
+            margin-top: auto;
+            padding: 8px;
+            background: #2a2a2a;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .player-list-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .player-card {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .player-card:hover {
+            border-color: #C8102E;
+            transform: translateY(-2px);
+        }
+
+        .player-rank {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #C8102E;
+            margin-bottom: 5px;
+        }
+
+        .player-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .player-details {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .player-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .player-status.available {
+            background: #1a4d1a;
+            color: #4ade80;
+        }
+
+        .player-status.fypd {
+            background: #1a2a4d;
+            color: #60a5fa;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .view-btn {
+            padding: 10px 20px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            color: #888;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            border-color: #C8102E;
+            color: #C8102E;
+        }
+
+        .view-btn.active {
+            background: #C8102E;
+            border-color: #C8102E;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.2em;
+            color: #C8102E;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+
+            .round-grid,
+            .player-list-view {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏟️ FBP HUB 3.0</h1>
+        <p id="season-year" style="font-size: 1.2em; margin-top: 5px;">Draft Preview</p>
+    </div>
+
+    <!-- Status Banner -->
+    <div id="status-banner" class="status-banner">
+        <h2 id="status-title">Loading Draft Status...</h2>
+        <p id="status-message" style="margin-top: 5px;"></p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="keeper">
+            ⚾ Keeper Draft
+        </div>
+        <div class="tab" data-tab="prospect">
+            🌱 Prospect Draft
+        </div>
+    </div>
+
+    <!-- Keeper Draft Tab -->
+    <div id="keeper-tab" class="tab-content active">
+        <div class="draft-info">
+            <div class="info-stat">
+                <div class="label">Available Players</div>
+                <div class="value" id="keeper-count">-</div>
+            </div>
+            <div class="info-stat">
+                <div class="label">Total Rounds</div>
+                <div class="value">26</div>
+            </div>
+            <div class="info-stat">
+                <div class="label">Draft Date</div>
+                <div class="value" id="keeper-date">TBD</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="keeper-search" placeholder="🔍 Search players by name, position, or team...">
+            </div>
+        </div>
+
+        <div id="keeper-content">
+            <div class="loading">Loading available players...</div>
+        </div>
+    </div>
+
+    <!-- Prospect Draft Tab -->
+    <div id="prospect-tab" class="tab-content">
+        <div class="draft-info">
+            <div class="info-stat">
+                <div class="label">Available Prospects</div>
+                <div class="value" id="prospect-count">-</div>
+            </div>
+            <div class="info-stat">
+                <div class="label">FYPD Players</div>
+                <div class="value" id="fypd-count">-</div>
+            </div>
+            <div class="info-stat">
+                <div class="label">Draft Date</div>
+                <div class="value" id="prospect-date">TBD</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="toggle" id="fypd-toggle">
+                <input type="checkbox" id="fypd-only" />
+                <label for="fypd-only">🔵 FYPD Only (Rounds 1-2)</label>
+            </div>
+            <div class="search-box">
+                <input type="text" id="prospect-search" placeholder="🔍 Search prospects by name, position, or team...">
+            </div>
+        </div>
+
+        <div id="prospect-content">
+            <div class="loading">Loading available prospects...</div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            dataUrl: './data/combined_players.json',
+            seasonDatesUrl: './config/season_dates.json',
+            fypdUrl: './data/fypd_2026_rankings.json',
+            teamsPerRound: 12,
+            keeperRounds: 26,
+            prospectRounds: 15
+        };
+
+        // State
+        let allPlayers = [];
+        let fypdPlayers = [];
+        let seasonDates = null;
+        let currentTab = 'keeper';
+        let fypdOnly = false;
+        let draftStatus = 'pre-draft';
+
+        // Initialize
+        async function init() {
+            await loadSeasonDates();
+            await loadPlayers();
+            await loadFYPD();
+            updateDraftStatus();
+            renderKeeperDraft();
+            renderProspectDraft();
+            setupEventListeners();
+            
+            // Update FYPD toggle appearance
+            updateToggleAppearance();
+        }
+
+        async function loadSeasonDates() {
+            try {
+                const response = await fetch(CONFIG.seasonDatesUrl);
+                seasonDates = await response.json();
+                document.getElementById('season-year').textContent = 
+                    `${seasonDates.season_year} Draft Preview`;
+            } catch (error) {
+                console.error('Error loading season dates:', error);
+            }
+        }
+
+        async function loadPlayers() {
+            try {
+                const response = await fetch(CONFIG.dataUrl);
+                allPlayers = await response.json();
+                console.log(`✅ Loaded ${allPlayers.length} players`);
+            } catch (error) {
+                console.error('Error loading players:', error);
+                document.getElementById('keeper-content').innerHTML = 
+                    '<div class="no-results">❌ Error loading player data</div>';
+                document.getElementById('prospect-content').innerHTML = 
+                    '<div class="no-results">❌ Error loading player data</div>';
+            }
+        }
+
+        async function loadFYPD() {
+            try {
+                const response = await fetch(CONFIG.fypdUrl);
+                const data = await response.json();
+                fypdPlayers = data.players || [];
+                console.log(`✅ Loaded ${fypdPlayers.length} FYPD prospects`);
+            } catch (error) {
+                console.error('Error loading FYPD:', error);
+                fypdPlayers = [];
+            }
+        }
+
+        function updateDraftStatus() {
+            const today = new Date().toISOString().split('T')[0];
+            const banner = document.getElementById('status-banner');
+            const title = document.getElementById('status-title');
+            const message = document.getElementById('status-message');
+
+            if (!seasonDates) {
+                title.textContent = '⚠️ Status Unknown';
+                message.textContent = 'Could not load season dates';
+                return;
+            }
+
+            const keeperDraftDate = seasonDates.keeper_draft;
+            const prospectDraftDate = seasonDates.prospect_draft;
+
+            // Update date displays
+            document.getElementById('keeper-date').textContent = formatDate(keeperDraftDate);
+            document.getElementById('prospect-date').textContent = formatDate(prospectDraftDate);
+
+            // Determine status
+            if (today < prospectDraftDate) {
+                draftStatus = 'pre-draft';
+                title.textContent = '📅 Pre-Draft Period';
+                message.textContent = `Next: Prospect Draft on ${formatDate(prospectDraftDate)}`;
+            } else if (today === prospectDraftDate) {
+                draftStatus = 'draft-day';
+                title.textContent = '🎯 Prospect Draft Day!';
+                message.textContent = 'Draft is scheduled for today';
+            } else if (today === keeperDraftDate) {
+                draftStatus = 'draft-day';
+                title.textContent = '🎯 Keeper Draft Day!';
+                message.textContent = 'Draft is scheduled for today';
+            } else if (today > prospectDraftDate && today < keeperDraftDate) {
+                draftStatus = 'pre-draft';
+                title.textContent = '📅 Between Drafts';
+                message.textContent = `Keeper Draft: ${formatDate(keeperDraftDate)}`;
+            } else {
+                draftStatus = 'post-draft';
+                title.textContent = '✅ Drafts Complete';
+                message.textContent = 'See active rosters for draft results';
+            }
+
+            banner.className = `status-banner ${draftStatus}`;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short',
+                month: 'short', 
+                day: 'numeric'
+            });
+        }
+
+        function renderKeeperDraft() {
+            const searchTerm = document.getElementById('keeper-search')?.value.toLowerCase() || '';
+            
+            // Filter: MLB players, not owned
+            let available = allPlayers.filter(p => 
+                p.player_type === 'MLB' &&
+                !p.manager &&
+                !p.FBP_Team
+            );
+
+            // Apply search
+            if (searchTerm) {
+                available = available.filter(p =>
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    p.position.toLowerCase().includes(searchTerm) ||
+                    (p.team || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Sort by name
+            available.sort((a, b) => a.name.localeCompare(b.name));
+
+            // Update count
+            document.getElementById('keeper-count').textContent = available.length;
+
+            const container = document.getElementById('keeper-content');
+            
+            if (available.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        ${searchTerm ? 
+                            `No players found matching "${searchTerm}"` : 
+                            'No available players for keeper draft'}
+                    </div>
+                `;
+                return;
+            }
+
+            // Render as grid
+            container.innerHTML = `
+                <div class="player-list-view">
+                    ${available.map((player, index) => renderPlayerCard(player, index + 1, false)).join('')}
+                </div>
+            `;
+
+            console.log(`📊 Rendered ${available.length} keeper draft players`);
+        }
+
+        function renderProspectDraft() {
+            const searchTerm = document.getElementById('prospect-search')?.value.toLowerCase() || '';
+            
+            // Filter: Farm players, not owned, no existing contract
+            let available = allPlayers.filter(p => 
+                p.player_type === 'Farm' &&
+                !p.manager &&
+                !p.FBP_Team &&
+                !isContracted(p)
+            );
+
+            // Apply FYPD filter
+            if (fypdOnly) {
+                const fypdUPIDs = new Set(fypdPlayers.map(f => String(f.upid)));
+                available = available.filter(p => 
+                    fypdUPIDs.has(String(p.upid)) || p.fypd === true
+                );
+            }
+
+            // Apply search
+            if (searchTerm) {
+                available = available.filter(p =>
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    p.position.toLowerCase().includes(searchTerm) ||
+                    (p.team || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Sort by FYPD rank if available, then name
+            available.sort((a, b) => {
+                const aFYPD = fypdPlayers.find(f => String(f.upid) === String(a.upid));
+                const bFYPD = fypdPlayers.find(f => String(f.upid) === String(b.upid));
+                
+                if (aFYPD && bFYPD) {
+                    return aFYPD.rank - bFYPD.rank;
+                }
+                if (aFYPD) return -1;
+                if (bFYPD) return 1;
+                
+                return a.name.localeCompare(b.name);
+            });
+
+            // Count FYPD players
+            const fypdCount = available.filter(p => {
+                const fypdUPIDs = new Set(fypdPlayers.map(f => String(f.upid)));
+                return fypdUPIDs.has(String(p.upid)) || p.fypd === true;
+            }).length;
+
+            // Update counts
+            document.getElementById('prospect-count').textContent = available.length;
+            document.getElementById('fypd-count').textContent = fypdCount;
+
+            const container = document.getElementById('prospect-content');
+            
+            if (available.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        ${searchTerm ? 
+                            `No prospects found matching "${searchTerm}"` : 
+                            fypdOnly ?
+                                'No FYPD prospects available' :
+                                'No available prospects'}
+                    </div>
+                `;
+                return;
+            }
+
+            // Render as grid
+            container.innerHTML = `
+                <div class="player-list-view">
+                    ${available.map((player, index) => renderPlayerCard(player, index + 1, true)).join('')}
+                </div>
+            `;
+
+            console.log(`📊 Rendered ${available.length} prospect draft players`);
+        }
+
+        function renderPlayerCard(player, rank, isProspect) {
+            const fypdInfo = fypdPlayers.find(f => String(f.upid) === String(player.upid));
+            const isFYPD = !!fypdInfo || player.fypd === true;
+            
+            return `
+                <div class="player-card">
+                    <div class="player-rank">#${rank}</div>
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-details">
+                        📍 ${player.position || '?'} | ${player.team || 'FA'}
+                    </div>
+                    <div class="player-details">
+                        🎂 Age: ${player.age || '?'} | ${player.bats || '?'}/${player.throws || '?'}
+                    </div>
+                    ${fypdInfo?.rank ? `
+                        <div class="player-details">
+                            🔵 FYPD Rank: #${fypdInfo.rank}
+                        </div>
+                    ` : ''}
+                    ${fypdInfo?.school ? `
+                        <div class="player-details">
+                            🏫 ${fypdInfo.school}
+                        </div>
+                    ` : ''}
+                    ${fypdInfo?.eta ? `
+                        <div class="player-details">
+                            📅 ETA: ${fypdInfo.eta}
+                        </div>
+                    ` : ''}
+                    ${player.years_simple && !isProspect ? `
+                        <div class="player-details">
+                            💼 Last: ${player.years_simple}
+                        </div>
+                    ` : ''}
+                    <div class="player-status ${isFYPD && isProspect ? 'fypd' : 'available'}">
+                        ${isFYPD && isProspect ? '🔵 FYPD' : '✅ AVAILABLE'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function isContracted(player) {
+            const contractType = (player.contract_type || '').toLowerCase();
+            const yearsSimple = (player.years_simple || '').toLowerCase();
+            
+            // Check for BC, DC, PC contracts
+            const contractIndicators = ['bc', 'dc', 'pc', 'blue', 'development', 'purchased'];
+            
+            return contractIndicators.some(indicator => 
+                contractType.includes(indicator) || yearsSimple.includes(indicator)
+            );
+        }
+
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                });
+            });
+
+            // FYPD toggle
+            const toggle = document.getElementById('fypd-toggle');
+            const checkbox = document.getElementById('fypd-only');
+            
+            toggle.addEventListener('click', () => {
+                checkbox.checked = !checkbox.checked;
+                fypdOnly = checkbox.checked;
+                updateToggleAppearance();
+                renderProspectDraft();
+            });
+
+            checkbox.addEventListener('change', (e) => {
+                fypdOnly = e.target.checked;
+                updateToggleAppearance();
+                renderProspectDraft();
+            });
+
+            // Search boxes
+            document.getElementById('keeper-search').addEventListener('input', () => {
+                renderKeeperDraft();
+            });
+
+            document.getElementById('prospect-search').addEventListener('input', () => {
+                renderProspectDraft();
+            });
+        }
+
+        function updateToggleAppearance() {
+            const toggle = document.getElementById('fypd-toggle');
+            if (fypdOnly) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `${tabName}-tab`);
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
