@@ -7,6 +7,7 @@ let PREVIEW_STATE = {
     allPlayers: [],
     fypdPlayers: [],
     seasonDates: null,
+    statsByUpid: {},
     currentTab: 'keeper',
     fypdOnly: false
 };
@@ -53,14 +54,32 @@ async function loadPreviewData() {
         console.log('No FYPD rankings available');
     }
     
-    // Load season dates
+    // Load season dates (now from data/season_dates.json)
     try {
-        const response = await fetch('config/season_dates.json');
+        const response = await fetch('data/season_dates.json');
         if (response.ok) {
             PREVIEW_STATE.seasonDates = await response.json();
         }
     } catch (e) {
         console.log('No season dates available');
+    }
+
+    // Load 2025 player stats database (player_stats.json or fallback file)
+    PREVIEW_STATE.statsByUpid = {};
+    try {
+        let resp = await fetch('data/player_stats.json');
+        if (!resp.ok) {
+            // Fallback to the 2025-specific file created by build_player_stats_database.py
+            resp = await fetch('data/player_stats_2025.json');
+        }
+        if (resp.ok) {
+            const db = await resp.json();
+            if (db && db.stats_by_upid) {
+                PREVIEW_STATE.statsByUpid = db.stats_by_upid;
+            }
+        }
+    } catch (e) {
+        console.log('No player stats database available for draft preview');
     }
 }
 
@@ -209,11 +228,13 @@ function displayKeeperPreview() {
     const container = document.getElementById('keeperGrid');
     
     if (available.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="fas fa-baseball-ball"></i><p>No available keeper players</p></div>';
+        container.innerHTML = '<div class="empty-state">No available keeper players</div>';
         return;
     }
     
-    container.innerHTML = available.map(player => renderPlayerCard(player, false)).join('');
+    container.innerHTML = available
+        .map((player, index) => renderPlayerRow(player, false, index + 1))
+        .join('');
 }
 
 /**
@@ -266,50 +287,76 @@ function displayProspectPreview() {
     const container = document.getElementById('prospectGrid');
     
     if (available.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="fas fa-seedling"></i><p>No available prospects</p></div>';
+        container.innerHTML = '<div class="empty-state">No available prospects</div>';
         return;
     }
     
-    container.innerHTML = available.map(player => renderPlayerCard(player, true)).join('');
+    container.innerHTML = available
+        .map((player, index) => renderPlayerRow(player, true, index + 1))
+        .join('');
 }
 
 /**
- * Render player card
+ * Render a single-line player row for preview lists
+ * Rank - Name Team Pos  StatsSummary
  */
-function renderPlayerCard(player, isProspect) {
+function renderPlayerRow(player, isProspect, rank) {
     const fypdInfo = PREVIEW_STATE.fypdPlayers.find(f => String(f.upid) === String(player.upid));
     const isFypd = !!fypdInfo || player.fypd === true;
-    
+    const statsSummary = getPlayerStatsSummary(player);
+
     return `
-        <div class="preview-player-card ${isFypd && isProspect ? 'fypd' : ''}">
-            <div class="preview-card-header">
-                <div class="preview-player-name">${player.name}</div>
-                ${isFypd && isProspect ? '<div class="preview-fypd-badge">FYPD</div>' : ''}
+        <div class="preview-player-row${isFypd && isProspect ? ' preview-player-row-fypd' : ''}">
+            <div class="preview-row-main">
+                <span class="preview-rank">#${rank}</span>
+                <span class="preview-name">${player.name}</span>
+                <span class="preview-team">${player.team || 'FA'}</span>
+                <span class="preview-pos">${player.position || ''}</span>
+                ${isFypd && isProspect ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
             </div>
-            <div class="preview-player-meta">
-                <div class="preview-meta-row">
-                    <span><i class="fas fa-map-marker-alt"></i> ${player.team || 'FA'}</span>
-                    <span><i class="fas fa-baseball-ball"></i> ${player.position || 'N/A'}</span>
-                </div>
-                ${player.age ? `
-                    <div class="preview-meta-row">
-                        <span><i class="fas fa-birthday-cake"></i> Age ${player.age}</span>
-                        ${player.bats && player.throws ? `<span>${player.bats}/${player.throws}</span>` : ''}
-                    </div>
-                ` : ''}
-                ${fypdInfo?.rank ? `
-                    <div class="preview-meta-row">
-                        <span><i class="fas fa-trophy"></i> FYPD Rank: #${fypdInfo.rank}</span>
-                    </div>
-                ` : ''}
-                ${fypdInfo?.school ? `
-                    <div class="preview-meta-row">
-                        <span><i class="fas fa-school"></i> ${fypdInfo.school}</span>
-                    </div>
-                ` : ''}
-            </div>
+            ${statsSummary ? `<div class="preview-row-stats">${statsSummary}</div>` : ''}
         </div>
     `;
+}
+
+/**
+ * Build a compact 2025 stat line from player_stats data (if available)
+ */
+function getPlayerStatsSummary(player) {
+    const upid = player.upid ? String(player.upid) : null;
+    if (!upid || !PREVIEW_STATE.statsByUpid || !PREVIEW_STATE.statsByUpid[upid]) {
+        return '';
+    }
+
+    const record = PREVIEW_STATE.statsByUpid[upid];
+    const stats = record.stats || {};
+
+    if (record.player_type === 'pitcher') {
+        const era = typeof stats.era === 'number' ? stats.era.toFixed(2) : null;
+        const whip = typeof stats.whip === 'number' ? stats.whip.toFixed(2) : null;
+        const k = stats.strikeOuts;
+        const ip = stats.inningsPitched;
+        const parts = [];
+        if (era) parts.push(`${era} ERA`);
+        if (whip) parts.push(`${whip} WHIP`);
+        if (typeof k === 'number') parts.push(`${k} K`);
+        if (typeof ip === 'number') parts.push(`${ip} IP`);
+        return parts.length ? `2025: ${parts.join(', ')}` : '';
+    }
+
+    // Default to batter-style line
+    const hr = stats.homeRuns;
+    const sb = stats.stolenBases;
+    const avg = typeof stats.avg === 'number' ? stats.avg.toFixed(3).replace(/^0/, '') : null;
+    const obp = typeof stats.obp === 'number' ? stats.obp.toFixed(3).replace(/^0/, '') : null;
+    const slg = typeof stats.slg === 'number' ? stats.slg.toFixed(3).replace(/^0/, '') : null;
+
+    const pieces = [];
+    if (typeof hr === 'number') pieces.push(`${hr} HR`);
+    if (typeof sb === 'number') pieces.push(`${sb} SB`);
+    if (avg && obp && slg) pieces.push(`${avg}/${obp}/${slg}`);
+
+    return pieces.length ? `2025: ${pieces.join(', ')}` : '';
 }
 
 /**

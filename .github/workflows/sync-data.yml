@@ -142,6 +142,8 @@ jobs:
           download_file "standings.json" || FAILED=$((FAILED + 1))
           download_file "yahoo_players.json" || FAILED=$((FAILED + 1))
           download_file "player_log.json" || FAILED=$((FAILED + 1))
+          # Per-player season stats used by player-profile page
+          download_file "player_stats.json" || FAILED=$((FAILED + 1))
 
           echo ""
           echo "📥 Downloading season_dates.json from config/..."

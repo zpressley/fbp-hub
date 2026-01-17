@@ -501,6 +501,91 @@
     margin-top: var(--space-xs);
 }
 
+/* Inline search bar used on draft preview */
+.search-bar-inline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background-color: var(--bg-charcoal);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-sm);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+}
+
+.search-bar-inline i {
+    font-size: var(--text-lg);
+    color: var(--text-gray);
+}
+
+.search-bar-inline input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-white);
+    padding: var(--space-sm) var(--space-xs);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+}
+
+.search-bar-inline input::placeholder {
+    color: var(--text-gray);
+}
+
+.search-bar-inline input:focus {
+    outline: none;
+}
+
+/* Draft Preview list rows */
+.preview-player-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: var(--border-width) solid rgba(255, 255, 255, 0.1);
+    font-size: var(--text-sm);
+}
+
+.preview-player-row:last-child {
+    border-bottom: none;
+}
+
+.preview-row-main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: baseline;
+}
+
+.preview-rank {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+}
+
+.preview-name {
+    font-weight: 700;
+}
+
+.preview-team,
+.preview-pos,
+.preview-fypd-tag {
+    font-family: var(--font-mono);
+    color: var(--text-gray);
+}
+
+.preview-fypd-tag {
+    padding: 0 6px;
+    border-radius: 999px;
+    border: 1px solid var(--accent-yellow);
+}
+
+.preview-row-stats {
+    color: var(--text-gray);
+}
+
+.preview-player-row-fypd .preview-row-stats {
+    color: var(--accent-yellow);
+}
+
 /* Draft Order */
 .draft-order-list {
     background-color: var(--bg-charcoal);
