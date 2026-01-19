@@ -33,8 +33,9 @@
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    padding: var(--space-2xl);
-    margin-bottom: var(--space-xl);
+    /* Shorter, more compact header */
+    padding: var(--space-xl) var(--space-xl);
+    margin-bottom: var(--space-lg);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,7 +53,8 @@
     font-family: var(--font-title);
     font-weight: 900;
     color: var(--accent-yellow);
-    font-size: var(--text-3xl);
+    /* Slightly smaller to tighten header */
+    font-size: var(--text-2xl);
     letter-spacing: 2px;
 }
 
@@ -112,19 +114,21 @@
 
 /* On The Clock */
 .on-clock-section {
-    margin-bottom: var(--space-xl);
+    /* Much smaller overall footprint under the header */
+    margin-bottom: var(--space-lg);
 }
 
 .clock-banner {
+    /* Background + border colors are dynamically overridden per team in draft.js */
     background: linear-gradient(135deg, var(--primary-red) 0%, rgba(239, 62, 66, 0.5) 100%);
-    border: 3px solid var(--primary-red);
+    border: 2px solid var(--primary-red);
     border-radius: var(--radius-lg);
-    padding: var(--space-2xl);
+    padding: var(--space-lg) var(--space-xl);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-xl);
-    margin-bottom: var(--space-lg);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 .clock-info {
@@ -143,17 +147,17 @@
 
 .clock-team {
     font-family: var(--font-title);
-    font-size: var(--text-4xl);
+    font-size: var(--text-3xl);
     font-weight: 900;
     color: white;
     letter-spacing: 3px;
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-2xs);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .clock-team-name {
     font-family: var(--font-body);
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
 }
@@ -167,7 +171,7 @@
 
 .timer-display {
     font-family: var(--font-mono);
-    font-size: var(--text-4xl);
+    font-size: var(--text-3xl);
     font-weight: 900;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -260,7 +264,7 @@
     border: none;
     color: var(--text-white);
     padding: var(--space-md);
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
     cursor: pointer;
     transition: all var(--transition-fast);
     font-family: var(--font-body);
@@ -586,6 +590,28 @@
     color: var(--accent-yellow);
 }
 
+/* Draft Pool (live draft) */
+.draft-pool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.draft-pool-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+}
+
+.draft-pool-list {
+    background-color: var(--bg-charcoal);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-lg);
+    max-height: 520px;
+    overflow-y: auto;
+}
+
 /* Draft Order */
 .draft-order-list {
     background-color: var(--bg-charcoal);
@@ -669,6 +695,34 @@
 .upcoming-pick.on-clock {
     border-left-color: var(--accent-yellow);
     background-color: rgba(255, 182, 18, 0.1);
+}
+
+/* Draft Mode toggle (keeper vs prospect) */
+.draft-mode-toggle {
+    display: inline-flex;
+    background-color: var(--bg-charcoal);
+    border-radius: 999px;
+    border: var(--border-width) solid var(--primary-red);
+    padding: 3px;
+    margin-bottom: var(--space-md);
+}
+
+.mode-btn {
+    background: transparent;
+    border: none;
+    padding: var(--space-sm) var(--space-xl);
+    color: var(--text-white);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.mode-btn.active {
+    background-color: var(--primary-red);
+    transform: translateY(-1px);
 }
 
 /* Draft Board */

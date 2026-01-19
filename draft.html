@@ -227,7 +227,10 @@
 
             <!-- Main Draft View Toggle -->
             <div class="view-toggle">
-                <button class="view-btn active" data-view="recent">
+                <button class="view-btn active" data-view="pool">
+                    <i class="fas fa-database"></i> Draft Pool
+                </button>
+                <button class="view-btn" data-view="recent">
                     <i class="fas fa-history"></i> Recent Picks
                 </button>
                 <button class="view-btn" data-view="grid">
@@ -238,8 +241,21 @@
                 </button>
             </div>
 
+            <!-- Draft Pool View -->
+            <div class="draft-view active" id="pool-view">
+                <div class="draft-pool-header">
+                    <h3>Draft Pool</h3>
+                    <span class="draft-pool-count" id="draftPoolCount"></span>
+                </div>
+                <div class="search-bar-inline">
+                    <i class="fas fa-search"></i>
+                    <input id="draftPoolSearch" type="text" placeholder="Search player, team, or position...">
+                </div>
+                <div class="draft-pool-list" id="draftPoolList"></div>
+            </div>
+
             <!-- Recent Picks View -->
-            <div class="draft-view active" id="recent-view">
+            <div class="draft-view" id="recent-view">
                 <div class="recent-picks-header">
                     <h3>Recent Picks</h3>
                     <span class="picks-count" id="picksCount">50 / 312</span>

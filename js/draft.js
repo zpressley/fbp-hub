@@ -37,6 +37,9 @@ async function initDraft() {
     // Load draft data for current mode
     await loadDraftData(DRAFT_STATE.mode);
 
+    // Populate initial draft pool list
+    displayDraftPool();
+
     // If no data, show inactive state
     if (!DRAFT_STATE.draftData) {
         if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
@@ -223,6 +226,16 @@ function updateOnTheClock() {
     
     document.getElementById('clockTeam').textContent = clockTeam;
     document.getElementById('clockTeamName').textContent = teamName;
+
+    // Apply solid team colors to the on-the-clock banner
+    const banner = document.getElementById('clockBanner');
+    if (banner && FBPHub && FBPHub.data) {
+        const tc = (FBPHub.data.teamColors && FBPHub.data.teamColors[clockTeam]) || null;
+        const background = tc && tc.primary ? tc.primary : getTeamColor(clockTeam);
+        const border = tc && tc.secondary ? tc.secondary : background;
+        banner.style.background = background;
+        banner.style.borderColor = border;
+    }
     
     // Show quick pick if it's user's turn
     const quickPickSection = document.getElementById('quickPickSection');
@@ -344,7 +357,9 @@ function setupViewToggle() {
             document.getElementById(`${targetView}-view`).classList.add('active');
             
             // Load view-specific content
-            if (targetView === 'grid') {
+            if (targetView === 'pool') {
+                displayDraftPool();
+            } else if (targetView === 'grid') {
                 displayDraftGrid();
             } else if (targetView === 'order') {
                 displayDraftOrder();
@@ -370,6 +385,19 @@ function displayDraftGrid() {
         if (i === draft.current_round) option.selected = true;
         selector.appendChild(option);
     }
+
+    // Wire selector to scroll the grid
+    selector.onchange = (e) => {
+        const value = e.target.value;
+        if (value === 'current') {
+            scrollToRound('current');
+        } else {
+            const roundNum = parseInt(value, 10);
+            if (!Number.isNaN(roundNum)) {
+                scrollToRound(roundNum);
+            }
+        }
+    };
     
     // Display all rounds
     let gridHTML = '';
@@ -456,6 +484,82 @@ function scrollToRound(roundNum) {
     if (roundEl) {
         roundEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+/**
+ * Display draft pool (live view)
+ */
+function displayDraftPool() {
+    const draft = DRAFT_STATE.draftData;
+    if (!draft || !FBPHub || !FBPHub.data || !Array.isArray(FBPHub.data.players)) {
+        return;
+    }
+
+    const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
+    const poolList = document.getElementById('draftPoolList');
+    const countEl = document.getElementById('draftPoolCount');
+    if (!poolList || !countEl) return;
+
+    const currentRound = draft.current_round || 1;
+    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only in 2026 rules
+
+    // Base filter: Farm prospects, unowned, no prospect contract
+    let available = FBPHub.data.players.filter(p =>
+        p.player_type === 'Farm' &&
+        !p.manager &&
+        !p.FBP_Team &&
+        !(p.contract_type || '').trim()
+    );
+
+    // Rounds 1–2: FYPD pool only
+    if (isFypdRound) {
+        available = available.filter(p => p.fypd === true);
+    }
+
+    // Apply search
+    if (searchTerm) {
+        available = available.filter(p =>
+            p.name.toLowerCase().includes(searchTerm) ||
+            (p.position || '').toLowerCase().includes(searchTerm) ||
+            (p.team || '').toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Sort: FYPD rounds → fypd_rank, otherwise global rank; fallback name
+    available.sort((a, b) => {
+        const field = isFypdRound ? 'fypd_rank' : 'rank';
+        const av = typeof a[field] === 'number' ? a[field] : 99999;
+        const bv = typeof b[field] === 'number' ? b[field] : 99999;
+        if (av !== bv) return av - bv;
+        return a.name.localeCompare(b.name);
+    });
+
+    countEl.textContent = `${available.length} players`;
+
+    if (!available.length) {
+        poolList.innerHTML = '<div class="empty-state">No eligible players available</div>';
+        return;
+    }
+
+    // Reuse preview list styling
+    poolList.innerHTML = available.map((player, idx) => {
+        const isFypd = !!player.fypd;
+        const rank = isFypdRound && typeof player.fypd_rank === 'number'
+            ? player.fypd_rank
+            : (typeof player.rank === 'number' ? player.rank : idx + 1);
+
+        return `
+            <div class="preview-player-row${isFypd ? ' preview-player-row-fypd' : ''}">
+                <div class="preview-row-main">
+                    <span class="preview-rank">#${rank}</span>
+                    <span class="preview-name">${player.name}</span>
+                    <span class="preview-team">${player.team || 'FA'}</span>
+                    <span class="preview-pos">${player.position || ''}</span>
+                    ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 /**
