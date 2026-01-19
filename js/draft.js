@@ -9,7 +9,10 @@ let DRAFT_STATE = {
     userTeam: null,
     updateInterval: null,
     timerInterval: null,
-    mode: 'keeper', // 'keeper' or 'prospect'
+    // Default to prospect draft; /draft start currently runs the prospect
+    // draft, and draft.html will switch to keeper if FBPHub.draftInitialMode
+    // is set to 'keeper' by the preflight script.
+    mode: 'prospect', // 'keeper' or 'prospect'
 };
 
 /**
