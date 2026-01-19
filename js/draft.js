@@ -16,6 +16,11 @@ let DRAFT_STATE = {
  * Initialize draft page
  */
 async function initDraft() {
+    // If backend pre-detected an active draft type, honor it.
+    if (window.FBPHub && FBPHub.draftInitialMode && (FBPHub.draftInitialMode === 'keeper' || FBPHub.draftInitialMode === 'prospect')) {
+        DRAFT_STATE.mode = FBPHub.draftInitialMode;
+    }
+
     console.log('🎯 Initializing draft tracker...', DRAFT_STATE.mode);
     
     // Get user team (optional - can view draft without auth)

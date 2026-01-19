@@ -71,6 +71,9 @@
 
     <script>
         // Redirect to draft-preview.html when there is no active draft.
+        // Treat EITHER keeper or prospect draft as enough to use the live
+        // draft view. If only one is active, we set an initial mode hint
+        // that draft.js can read on boot.
         (function () {
             var ACTIVE_STATUS = 'active_draft';
 
@@ -88,22 +91,55 @@
             }
 
             function redirectToPreview() {
+                // Allow manual debugging: when visiting draft.html?debug=1,
+                // skip the auto-redirect to draft-preview.html so you can
+                // see the live draft UI even if the status checks fail.
+                try {
+                    var params = new URLSearchParams(window.location.search);
+                    if (params.get('debug') === '1') {
+                        return;
+                    }
+                } catch (e) {
+                    // If URLSearchParams fails for any reason, fall back to redirect.
+                }
                 window.location.href = 'draft-preview.html';
             }
 
             // 1) Prefer live API if configured via FBPHub.config.apiBase
-            var apiUrl = getApiUrl('keeper');
-            if (apiUrl) {
-                fetch(apiUrl, { cache: 'no-store' })
-                    .then(function (resp) {
-                        if (!resp.ok) throw new Error('non-200');
-                        return resp.json();
-                    })
-                    .then(function (data) {
-                        if (!data || data.status !== ACTIVE_STATUS) {
-                            redirectToPreview();
+            var keeperUrl = getApiUrl('keeper');
+            var prospectUrl = getApiUrl('prospect');
+            if (keeperUrl) {
+                Promise.all([
+                    fetch(keeperUrl, { cache: 'no-store' }).catch(function () { return null; }),
+                    prospectUrl ? fetch(prospectUrl, { cache: 'no-store' }).catch(function () { return null; }) : Promise.resolve(null)
+                ])
+                    .then(function (results) {
+                        function toJson(resp) {
+                            if (!resp || !resp.ok) return null;
+                            return resp.json();
                         }
-                        // else: stay here and let draft.js boot the live view
+                        return Promise.all(results.map(toJson));
+                    })
+                    .then(function (payloads) {
+                        var keeperData = payloads[0];
+                        var prospectData = payloads[1];
+
+                        var keeperActive = keeperData && keeperData.status === ACTIVE_STATUS;
+                        var prospectActive = prospectData && prospectData.status === ACTIVE_STATUS;
+
+                        if (!keeperActive && !prospectActive) {
+                            redirectToPreview();
+                            return;
+                        }
+
+                        // Expose initial mode hint for draft.js
+                        window.FBPHub = window.FBPHub || {};
+                        if (keeperActive) {
+                            window.FBPHub.draftInitialMode = 'keeper';
+                        } else if (prospectActive) {
+                            window.FBPHub.draftInitialMode = 'prospect';
+                        }
+                        // Stay on this page; draft.js will initialize the view.
                     })
                     .catch(function (err) {
                         console.warn('Draft API status check failed; using preview.', err);

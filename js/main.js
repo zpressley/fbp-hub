@@ -12,8 +12,13 @@ const FBPHub = {
         teamColors: {}
     },
     config: {
+        // Local/static JSON path (used for most data files)
         dataPath: './data/',
-        githubRaw: 'https://raw.githubusercontent.com/yourusername/fbp-hub/main/data/'
+        // GitHub raw fallback for data when running on GitHub Pages
+        githubRaw: 'https://raw.githubusercontent.com/zpressley/fbp-hub/main/data/',
+        // Base URL for dynamic APIs (Cloudflare Worker → bot FastAPI)
+        // Used by draft.html and js/draft.js for /api/draft/* endpoints.
+        apiBase: 'https://fbp-auth.zpressley.workers.dev'
     },
     cache: {
         lastUpdate: null
