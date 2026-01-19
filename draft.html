@@ -106,49 +106,33 @@
             }
 
             // 1) Prefer live API if configured via FBPHub.config.apiBase
-            var keeperUrl = getApiUrl('keeper');
+            // For now we only care about the prospect draft; the keeper
+            // draft will be wired up later.
             var prospectUrl = getApiUrl('prospect');
-            if (keeperUrl) {
-                Promise.all([
-                    fetch(keeperUrl, { cache: 'no-store' }).catch(function () { return null; }),
-                    prospectUrl ? fetch(prospectUrl, { cache: 'no-store' }).catch(function () { return null; }) : Promise.resolve(null)
-                ])
-                    .then(function (results) {
-                        function toJson(resp) {
-                            if (!resp || !resp.ok) return null;
-                            return resp.json();
-                        }
-                        return Promise.all(results.map(toJson));
+            if (prospectUrl) {
+                fetch(prospectUrl, { cache: 'no-store' })
+                    .then(function (resp) {
+                        if (!resp.ok) return null;
+                        return resp.json();
                     })
-                    .then(function (payloads) {
-                        var keeperData = payloads[0];
-                        var prospectData = payloads[1];
-
-                        var keeperActive = keeperData && keeperData.status === ACTIVE_STATUS;
+                    .then(function (prospectData) {
                         var prospectActive = prospectData && prospectData.status === ACTIVE_STATUS;
-
-                        if (!keeperActive && !prospectActive) {
+                        if (!prospectActive) {
                             redirectToPreview();
                             return;
                         }
-
-                        // Expose initial mode hint for draft.js
+                        // Hint to draft.js that the prospect draft is active
                         window.FBPHub = window.FBPHub || {};
-                        if (keeperActive) {
-                            window.FBPHub.draftInitialMode = 'keeper';
-                        } else if (prospectActive) {
-                            window.FBPHub.draftInitialMode = 'prospect';
-                        }
-                        // Stay on this page; draft.js will initialize the view.
+                        window.FBPHub.draftInitialMode = 'prospect';
+                        // Stay on this page; main.js + draft.js will render the UI.
                     })
                     .catch(function (err) {
-                        console.warn('Draft API status check failed; using preview.', err);
+                        console.warn('Draft API (prospect) lookup failed, falling back to static preview check.', err);
                         redirectToPreview();
                     });
                 return;
             }
-
-            // 2) Fallback: static JSON (GitHub Pages / no worker) – same as draft.js fallback
+            // 2) Fallback: static file on GitHub Pages
             fetch('./data/draft_active.json', { cache: 'no-store' })
                 .then(function (resp) {
                     if (!resp.ok) throw new Error('missing draft_active.json');
