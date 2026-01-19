@@ -134,16 +134,10 @@ async function loadDraftData(draftType) {
         DRAFT_STATE.draftData = null;
     }
     
-    // Load draft pool (optional, kept for future use)
-    try {
-        const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath) ? FBPHub.config.dataPath : './data/';
-        const poolResponse = await fetch(`${basePath}draft_pool.json`, { cache: 'no-store' });
-        if (poolResponse.ok) {
-            DRAFT_STATE.draftPool = await poolResponse.json();
-        }
-    } catch (e) {
-        console.log('No draft pool data');
-    }
+    // Note: we no longer fetch draft_pool.json. The live draft UI is driven
+    // entirely by the /api/draft/active payload from the bot API. If we
+    // ever want a local "pool" view, we can derive it from combined_players
+    // (FBPHub.data.players) instead of a separate JSON file.
 }
 
 /**
