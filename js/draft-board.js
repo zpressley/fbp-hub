@@ -494,27 +494,47 @@ function setupDraftTypeToggle() {
 }
 
 /**
- * Update draft phase status (pre/active/post)
+ * Update draft phase status (pre/active/post).
+ *
+ * Live status now comes exclusively from the bot API via /api/draft/active;
+ * the old data/draft_active.json file is no longer consulted for this view.
  */
 async function updateDraftPhaseStatus() {
     const statusEl = document.getElementById('draftPhaseStatus');
     if (!statusEl) return;
 
+    const apiBase = (typeof FBPHub !== 'undefined' && FBPHub.config?.apiBase)
+        ? FBPHub.config.apiBase
+        : null;
+
+    // Without an API base (e.g., pure file view), default to pre-draft so we
+    // never show "active" based on stale static files.
+    if (!apiBase) {
+        statusEl.textContent = 'Pre-Draft';
+        return;
+    }
+
     try {
-        const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath)
-            ? FBPHub.config.dataPath
-            : './data/';
-        const resp = await fetch(`${basePath}draft_active.json`);
+        const url = new URL('/api/draft/active', apiBase);
+        url.searchParams.set('draft_type', 'prospect');
+        const resp = await fetch(url.toString(), { cache: 'no-store' });
         if (!resp.ok) {
             statusEl.textContent = 'Pre-Draft';
             return;
         }
         const data = await resp.json();
         let label = 'Pre-Draft';
-        if (data.status === 'in_progress') {
-            label = 'Active Draft';
-        } else if (data.status === 'completed') {
-            label = 'Post-Draft';
+        switch (data.status) {
+            case 'active_draft':
+            case 'draft_day':
+                label = 'Active Draft';
+                break;
+            case 'post_draft':
+                label = 'Post-Draft';
+                break;
+            case 'pre_draft':
+            default:
+                label = 'Pre-Draft';
         }
         statusEl.textContent = label;
     } catch (e) {

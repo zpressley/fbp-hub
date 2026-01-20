@@ -70,43 +70,44 @@
     </nav>
 
     <script>
-        // Redirect to draft-preview.html when there is no active draft.
-        // Treat EITHER keeper or prospect draft as enough to use the live
-        // draft view. If only one is active, we set an initial mode hint
-        // that draft.js can read on boot.
+        // Redirect to draft-preview.html only when we are reasonably sure
+        // there is NO active draft. If anything fails (API down, CORS,
+        // missing JSON), we stay on draft.html and let the client show its
+        // inactive state instead of forcing preview.
         (function () {
             var ACTIVE_STATUS = 'active_draft';
-            var API_BASE = 'https://fbp-auth.zpressley.workers.dev';
 
             function getApiUrl(draftType) {
                 try {
-                    var u = new URL('/api/draft/active', API_BASE);
-                    u.searchParams.set('draft_type', draftType || 'keeper');
-                    return u.toString();
+                    if (window.FBPHub && FBPHub.config && FBPHub.config.apiBase) {
+                        var u = new URL('/api/draft/active', FBPHub.config.apiBase);
+                        u.searchParams.set('draft_type', draftType || 'keeper');
+                        return u.toString();
+                    }
                 } catch (e) {
-                    console.warn('Error building draft API URL', e);
-                    return null;
+                    console.warn('Error reading FBPHub.config.apiBase', e);
+                }
+                return null;
+            }
+
+            function debugSkipRedirect() {
+                try {
+                    var params = new URLSearchParams(window.location.search);
+                    return params.get('debug') === '1';
+                } catch (e) {
+                    return false;
                 }
             }
 
             function redirectToPreview() {
-                // Allow manual debugging: when visiting draft.html?debug=1,
-                // skip the auto-redirect to draft-preview.html so you can
-                // see the live draft UI even if the status checks fail.
-                try {
-                    var params = new URLSearchParams(window.location.search);
-                    if (params.get('debug') === '1') {
-                        return;
-                    }
-                } catch (e) {
-                    // If URLSearchParams fails for any reason, fall back to redirect.
-                }
+                if (debugSkipRedirect()) return;
                 window.location.href = 'draft-preview.html';
             }
 
-            // 1) Prefer live API if configured via FBPHub.config.apiBase
-            // For now we only care about the prospect draft; the keeper
-            // draft will be wired up later.
+            // 1) Live API is the single source of truth for whether a
+            // draft is active. If this lookup fails or does not report an
+            // active prospect draft, we send users to draft-preview.html
+            // (unless debug=1 is set in the query string).
             var prospectUrl = getApiUrl('prospect');
             if (prospectUrl) {
                 fetch(prospectUrl, { cache: 'no-store' })
@@ -115,40 +116,28 @@
                         return resp.json();
                     })
                     .then(function (prospectData) {
-                        var prospectActive = prospectData && prospectData.status === ACTIVE_STATUS;
-                        if (!prospectActive) {
-                            redirectToPreview();
+                        if (prospectData && prospectData.status === ACTIVE_STATUS) {
+                            // Hint to draft.js that the prospect draft is active
+                            window.FBPHub = window.FBPHub || {};
+                            window.FBPHub.draftInitialMode = 'prospect';
+                            // Stay on this page; main.js + draft.js will render the UI.
                             return;
                         }
-                        // Hint to draft.js that the prospect draft is active
-                        window.FBPHub = window.FBPHub || {};
-                        window.FBPHub.draftInitialMode = 'prospect';
-                        // Stay on this page; main.js + draft.js will render the UI.
+                        // API responded but says "no active draft" → redirect
+                        redirectToPreview();
                     })
                     .catch(function (err) {
-                        console.warn('Draft API (prospect) lookup failed, falling back to static preview check.', err);
+                        console.warn('Draft API (prospect) lookup failed; using preview.', err);
                         redirectToPreview();
                     });
                 return;
             }
-            // 2) Fallback: static file on GitHub Pages
-            fetch('./data/draft_active.json', { cache: 'no-store' })
-                .then(function (resp) {
-                    if (!resp.ok) throw new Error('missing draft_active.json');
-                    return resp.json();
-                })
-                .then(function (data) {
-                    if (!data || data.status !== ACTIVE_STATUS) {
-                        redirectToPreview();
-                    }
-                })
-                .catch(function (err) {
-                    console.warn('Static draft_active.json check failed; using preview.', err);
-                    redirectToPreview();
-                });
+
+            // If we cannot build the API URL at all (should be rare in
+            // production), just fall back to the preview page.
+            redirectToPreview();
         })();
     </script>
-
     <main class="container-draft">
         <!-- Draft Not Active -->
         <div class="draft-inactive" id="draftInactive" style="display: none;">
@@ -284,12 +273,6 @@
             <!-- Draft Order View -->
             <div class="draft-view" id="order-view">
                 <div class="draft-order-list" id="draftOrderList"></div>
-            </div>
-
-            <!-- Upcoming Picks Sidebar (Desktop) -->
-            <div class="upcoming-picks-sidebar">
-                <h4>Upcoming Picks</h4>
-                <div class="upcoming-list" id="upcomingList"></div>
             </div>
         </div>
     </main>
