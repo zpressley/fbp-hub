@@ -33,14 +33,14 @@
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    /* Shorter, more compact header */
-    padding: var(--space-xl) var(--space-xl);
-    margin-bottom: var(--space-lg);
+    /* Even shorter header to bring tabs higher */
+    padding: var(--space-lg) var(--space-lg);
+    margin-bottom: var(--space-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--space-lg);
+    gap: var(--space-md);
 }
 
 .draft-title-section {
@@ -115,20 +115,20 @@
 /* On The Clock */
 .on-clock-section {
     /* Much smaller overall footprint under the header */
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 .clock-banner {
     /* Background + border colors are dynamically overridden per team in draft.js */
-    background: linear-gradient(135deg, var(--primary-red) 0%, rgba(239, 62, 66, 0.5) 100%);
+    background: var(--primary-red);
     border: 2px solid var(--primary-red);
     border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-lg);
-    margin-bottom: var(--space-md);
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
 }
 
 .clock-info {
@@ -147,7 +147,7 @@
 
 .clock-team {
     font-family: var(--font-title);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 900;
     color: white;
     letter-spacing: 3px;
@@ -171,7 +171,7 @@
 
 .timer-display {
     font-family: var(--font-mono);
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     font-weight: 900;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -699,19 +699,41 @@
 
 /* Draft Mode toggle (keeper vs prospect) */
 .draft-mode-toggle {
+    position: relative;
     display: inline-flex;
     background-color: var(--bg-charcoal);
     border-radius: 999px;
     border: var(--border-width) solid var(--primary-red);
     padding: 3px;
     margin-bottom: var(--space-md);
+    overflow: hidden;
+}
+
+/* Sliding thumb behind the active button */
+.draft-mode-toggle::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: 50%;
+    border-radius: 999px;
+    background-color: var(--primary-red);
+    transition: transform var(--transition-fast);
+    z-index: 0;
+}
+
+.draft-mode-toggle[data-mode="prospect"]::before {
+    transform: translateX(100%);
 }
 
 .mode-btn {
+    position: relative;
+    z-index: 1;
     background: transparent;
     border: none;
     padding: var(--space-sm) var(--space-xl);
-    color: var(--text-white);
+    color: var(--text-gray);
     font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: 700;
@@ -721,7 +743,7 @@
 }
 
 .mode-btn.active {
-    background-color: var(--primary-red);
+    color: var(--text-white);
     transform: translateY(-1px);
 }
 

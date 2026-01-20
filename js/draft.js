@@ -24,6 +24,10 @@ async function initDraft() {
         DRAFT_STATE.mode = FBPHub.draftInitialMode;
     }
 
+    // Sync toggle UI with current mode (ensures Prospect is visibly active
+    // when the prospect draft is live)
+    updateDraftModeUI();
+
     console.log('🎯 Initializing draft tracker...', DRAFT_STATE.mode);
     
     // Get user team (optional - can view draft without auth)
@@ -501,20 +505,17 @@ function displayDraftPool() {
     if (!poolList || !countEl) return;
 
     const currentRound = draft.current_round || 1;
-    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only in 2026 rules
+    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only rules-wise
 
-    // Base filter: Farm prospects, unowned, no prospect contract
+    // Base filter: entire eligible draft pool = Farm prospects, unowned,
+    // no prospect contract. We always show the full pool; FYPD players
+    // are highlighted and sorted to the top in early rounds.
     let available = FBPHub.data.players.filter(p =>
         p.player_type === 'Farm' &&
         !p.manager &&
         !p.FBP_Team &&
         !(p.contract_type || '').trim()
     );
-
-    // Rounds 1–2: FYPD pool only
-    if (isFypdRound) {
-        available = available.filter(p => p.fypd === true);
-    }
 
     // Apply search
     if (searchTerm) {
@@ -525,12 +526,23 @@ function displayDraftPool() {
         );
     }
 
-    // Sort: FYPD rounds → fypd_rank, otherwise global rank; fallback name
+    // Sort:
+    // - In FYPD rounds, FYPD players first ordered by fypd_rank,
+    //   then remaining prospects by global rank.
+    // - In later rounds, sort purely by global rank.
     available.sort((a, b) => {
-        const field = isFypdRound ? 'fypd_rank' : 'rank';
-        const av = typeof a[field] === 'number' ? a[field] : 99999;
-        const bv = typeof b[field] === 'number' ? b[field] : 99999;
-        if (av !== bv) return av - bv;
+        if (isFypdRound) {
+            const aIsF = !!a.fypd;
+            const bIsF = !!b.fypd;
+            if (aIsF !== bIsF) return aIsF ? -1 : 1; // FYPD first
+            const ar = typeof a.fypd_rank === 'number' ? a.fypd_rank : (typeof a.rank === 'number' ? a.rank : 99999);
+            const br = typeof b.fypd_rank === 'number' ? b.fypd_rank : (typeof b.rank === 'number' ? b.rank : 99999);
+            if (ar !== br) return ar - br;
+            return a.name.localeCompare(b.name);
+        }
+        const ar = typeof a.rank === 'number' ? a.rank : 99999;
+        const br = typeof b.rank === 'number' ? b.rank : 99999;
+        if (ar !== br) return ar - br;
         return a.name.localeCompare(b.name);
     });
 
@@ -544,9 +556,18 @@ function displayDraftPool() {
     // Reuse preview list styling
     poolList.innerHTML = available.map((player, idx) => {
         const isFypd = !!player.fypd;
-        const rank = isFypdRound && typeof player.fypd_rank === 'number'
-            ? player.fypd_rank
-            : (typeof player.rank === 'number' ? player.rank : idx + 1);
+        let rank;
+        if (isFypdRound) {
+            if (typeof player.fypd_rank === 'number') {
+                rank = player.fypd_rank;
+            } else if (typeof player.rank === 'number') {
+                rank = player.rank;
+            } else {
+                rank = idx + 1;
+            }
+        } else {
+            rank = typeof player.rank === 'number' ? player.rank : idx + 1;
+        }
 
         return `
             <div class="preview-player-row${isFypd ? ' preview-player-row-fypd' : ''}">
@@ -641,17 +662,25 @@ function setDraftMode(mode) {
     if (mode !== 'keeper' && mode !== 'prospect') return;
     DRAFT_STATE.mode = mode;
 
-    // Update button UI
-    const buttons = document.querySelectorAll('.mode-btn');
-    buttons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
-    });
+    // Update button UI + sliding thumb
+    updateDraftModeUI();
 
     // Reset timers and reload state
     if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
     if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
 
     initDraft();
+}
+
+function updateDraftModeUI() {
+    const toggle = document.querySelector('.draft-mode-toggle');
+    if (toggle) {
+        toggle.dataset.mode = DRAFT_STATE.mode;
+    }
+    const buttons = document.querySelectorAll('.mode-btn');
+    buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === DRAFT_STATE.mode);
+    });
 }
 
 // Expose functions
