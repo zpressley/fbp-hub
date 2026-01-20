@@ -119,6 +119,24 @@
                 });
         })();
     </script>
+    <main class="container-draft">
+        <!-- Draft Not Active -->
+        <div class="draft-inactive" id="draftInactive" style="display: none;">
+            <i class="fas fa-calendar-times"></i>
+            <h3>No Active Draft</h3>
+            <p>The draft has not started yet or has concluded.</p>
+            <a href="dashboard.html" class="btn-primary">Return to Dashboard</a>
+        </div>
+
+        <!-- Draft Active -->
+        <div id="draftContent" style="display: none;">
+            <div class="draft-top-row">
+                <!-- Draft Mode Toggle -->
+                <div class="draft-mode-toggle">
+                    <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
+                        Keeper
+                    </button>
+                    <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
                         Prospect
                     </button>
                 </div>

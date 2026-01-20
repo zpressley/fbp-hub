@@ -58,8 +58,11 @@ async function initDraft() {
         return;
     }
     
-    document.getElementById('draftInactive').style.display = 'none';
-    document.getElementById('draftContent').style.display = 'block';
+    // Show active draft container and hide inactive banner (if present)
+    const inactiveEl = document.getElementById('draftInactive');
+    const contentEl = document.getElementById('draftContent');
+    if (inactiveEl) inactiveEl.style.display = 'none';
+    if (contentEl) contentEl.style.display = 'block';
     
     // Initialize display
     updateDraftHeader();
