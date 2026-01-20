@@ -15,7 +15,7 @@ FBP Hub is a free, mobile-optimized web interface for Fantasy Baseball Pantheon 
 
 Built with vanilla JavaScript and hosted on GitHub Pages for zero-cost hosting with automatic updates
 
-## 📱 Features (Phase 1 - COMPLETE)
+## 📱 Features (Phase 1 - COMPLETE
 
 ### ✅ Homepage
 - Current standings display
