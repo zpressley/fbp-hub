@@ -8,6 +8,8 @@ let PREVIEW_STATE = {
     fypdPlayers: [],
     seasonDates: null,
     statsByUpid: {},
+    fypdByUpid: {},
+    top100Upids: new Set(),
     currentTab: 'keeper',
     fypdOnly: false
 };
@@ -49,6 +51,12 @@ async function loadPreviewData() {
         if (response.ok) {
             const data = await response.json();
             PREVIEW_STATE.fypdPlayers = data.players || [];
+            PREVIEW_STATE.fypdByUpid = {};
+            PREVIEW_STATE.fypdPlayers.forEach(p => {
+                if (p.upid != null) {
+                    PREVIEW_STATE.fypdByUpid[String(p.upid)] = p;
+                }
+            });
         }
     } catch (e) {
         console.log('No FYPD rankings available');
@@ -62,6 +70,22 @@ async function loadPreviewData() {
         }
     } catch (e) {
         console.log('No season dates available');
+    }
+
+    // Load Top 100 prospects list for badge + rank awareness
+    PREVIEW_STATE.top100Upids = new Set();
+    try {
+        const response = await fetch('data/top100_prospects.json');
+        if (response.ok) {
+            const list = await response.json();
+            list.forEach(p => {
+                if (p.upid != null) {
+                    PREVIEW_STATE.top100Upids.add(String(p.upid));
+                }
+            });
+        }
+    } catch (e) {
+        console.log('No top100_prospects.json available');
     }
 
     // Load 2025 player stats database (player_stats.json or fallback file)
@@ -218,8 +242,13 @@ function displayKeeperPreview() {
         );
     }
     
-    // Sort by name
-    available.sort((a, b) => a.name.localeCompare(b.name));
+    // Sort by draft rank when available, then name
+    available.sort((a, b) => {
+        const aRank = typeof a.rank === 'number' ? a.rank : Infinity;
+        const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
+        if (aRank !== bRank) return aRank - bRank;
+        return a.name.localeCompare(b.name);
+    });
     
     // Update count
     document.getElementById('keeperCount').textContent = `${available.length} players`;
@@ -268,15 +297,18 @@ function displayProspectPreview() {
         );
     }
     
-    // Sort by FYPD rank if available, then name
+    // Sort by global prospect rank when available, then FYPD rank, then name
     available.sort((a, b) => {
-        const aFypd = PREVIEW_STATE.fypdPlayers.find(f => String(f.upid) === String(a.upid));
-        const bFypd = PREVIEW_STATE.fypdPlayers.find(f => String(f.upid) === String(b.upid));
-        
+        const aRank = typeof a.rank === 'number' ? a.rank : Infinity;
+        const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
+        if (aRank !== bRank) return aRank - bRank;
+
+        const aFypd = PREVIEW_STATE.fypdByUpid ? PREVIEW_STATE.fypdByUpid[String(a.upid)] : null;
+        const bFypd = PREVIEW_STATE.fypdByUpid ? PREVIEW_STATE.fypdByUpid[String(b.upid)] : null;
         if (aFypd && bFypd) return aFypd.rank - bFypd.rank;
         if (aFypd) return -1;
         if (bFypd) return 1;
-        
+
         return a.name.localeCompare(b.name);
     });
     
@@ -303,7 +335,16 @@ function displayProspectPreview() {
 function renderPlayerRow(player, isProspect, rank) {
     const fypdInfo = PREVIEW_STATE.fypdPlayers.find(f => String(f.upid) === String(player.upid));
     const isFypd = !!fypdInfo || player.fypd === true;
+    const isTop100 = PREVIEW_STATE.top100Upids && PREVIEW_STATE.top100Upids.has(String(player.upid));
     const statsSummary = getPlayerStatsSummary(player);
+
+    const tags = [];
+    if (isFypd && isProspect) {
+        tags.push('<span class="preview-fypd-tag">FYPD</span>');
+    }
+    if (isTop100) {
+        tags.push('<span class="preview-top100-tag">Top 100</span>');
+    }
 
     return `
         <div class="preview-player-row${isFypd && isProspect ? ' preview-player-row-fypd' : ''}">
@@ -312,7 +353,7 @@ function renderPlayerRow(player, isProspect, rank) {
                 <span class="preview-name">${player.name}</span>
                 <span class="preview-team">${player.team || 'FA'}</span>
                 <span class="preview-pos">${player.position || ''}</span>
-                ${isFypd && isProspect ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
+                ${tags.join(' ')}
             </div>
             ${statsSummary ? `<div class="preview-row-stats">${statsSummary}</div>` : ''}
         </div>

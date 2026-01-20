@@ -33,7 +33,6 @@
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    /* Even shorter header to bring tabs higher */
     padding: var(--space-lg) var(--space-lg);
     margin-bottom: var(--space-md);
     display: flex;
@@ -41,6 +40,21 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-md);
+}
+
+/* Draft Preview-only: shorter tile and smaller dates so lists sit higher */
+body.draft-preview-page .draft-header {
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+body.draft-preview-page .draft-header h2 {
+    font-size: var(--text-xl);
+}
+
+body.draft-preview-page .round-number,
+body.draft-preview-page .pick-number {
+    font-size: var(--text-xl);
 }
 
 .draft-title-section {
@@ -571,7 +585,8 @@
 
 .preview-team,
 .preview-pos,
-.preview-fypd-tag {
+.preview-fypd-tag,
+.preview-top100-tag {
     font-family: var(--font-mono);
     color: var(--text-gray);
 }
@@ -580,6 +595,13 @@
     padding: 0 6px;
     border-radius: 999px;
     border: 1px solid var(--accent-yellow);
+}
+
+.preview-top100-tag {
+    padding: 0 6px;
+    border-radius: 999px;
+    border: 1px solid var(--legacy-blue);
+    color: var(--legacy-blue);
 }
 
 .preview-row-stats {

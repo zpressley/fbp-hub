@@ -263,9 +263,42 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+/* Historical Links */
+.historical-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+}
+
+.historical-link {
+    display: block;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-gray);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    transition: color var(--transition-fast);
+}
+
+.historical-link:last-child {
+    border-bottom: none;
+}
+
+.historical-link-title {
+    color: var(--text-white);
+}
+
+.historical-link:hover .historical-link-title {
+    color: var(--accent-yellow);
+}
+
 @media (max-width: 767px) {
     .tiles-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .historical-links-grid {
+        grid-template-columns: 1fr;
     }
 }
 

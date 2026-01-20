@@ -416,7 +416,7 @@ async function displayRecentLeagueActivity() {
                 return !Number.isNaN(t.getTime()) && t >= cutoff;
             })
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-            .slice(0, 50);
+            .slice(0, 10);
 
         if (!recent.length) {
             feed.innerHTML = '<div class="empty-state"><p>No league activity in the last two weeks.</p></div>';
