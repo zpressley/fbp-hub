@@ -76,18 +76,17 @@
         // that draft.js can read on boot.
         (function () {
             var ACTIVE_STATUS = 'active_draft';
+            var API_BASE = 'https://fbp-auth.zpressley.workers.dev';
 
             function getApiUrl(draftType) {
                 try {
-                    if (window.FBPHub && FBPHub.config && FBPHub.config.apiBase) {
-                        var u = new URL('/api/draft/active', FBPHub.config.apiBase);
-                        u.searchParams.set('draft_type', draftType || 'keeper');
-                        return u.toString();
-                    }
+                    var u = new URL('/api/draft/active', API_BASE);
+                    u.searchParams.set('draft_type', draftType || 'keeper');
+                    return u.toString();
                 } catch (e) {
-                    console.warn('Error reading FBPHub.config.apiBase', e);
+                    console.warn('Error building draft API URL', e);
+                    return null;
                 }
-                return null;
             }
 
             function redirectToPreview() {
@@ -164,10 +163,10 @@
             <!-- Draft Mode Toggle -->
             <div class="draft-mode-toggle">
                 <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
-                    Keeper Draft
+                    Keeper
                 </button>
                 <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
-                    Prospect Draft
+                    Prospect
                 </button>
             </div>
             <div class="draft-schedule" id="draftSchedule"></div>
@@ -319,6 +318,7 @@
 
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/player-profile.js"></script>
     <script src="js/draft.js"></script>
 </body>
 </html>

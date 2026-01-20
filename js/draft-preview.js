@@ -337,6 +337,7 @@ function renderPlayerRow(player, isProspect, rank) {
     const isFypd = !!fypdInfo || player.fypd === true;
     const isTop100 = PREVIEW_STATE.top100Upids && PREVIEW_STATE.top100Upids.has(String(player.upid));
     const statsSummary = getPlayerStatsSummary(player);
+    const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(player) : '#';
 
     const tags = [];
     if (isFypd && isProspect) {
@@ -350,7 +351,7 @@ function renderPlayerRow(player, isProspect, rank) {
         <div class="preview-player-row${isFypd && isProspect ? ' preview-player-row-fypd' : ''}">
             <div class="preview-row-main">
                 <span class="preview-rank">#${rank}</span>
-                <span class="preview-name">${player.name}</span>
+                <a href="${profileLink}" class="preview-name-link">${player.name}</a>
                 <span class="preview-team">${player.team || 'FA'}</span>
                 <span class="preview-pos">${player.position || ''}</span>
                 ${tags.join(' ')}

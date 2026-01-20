@@ -314,8 +314,8 @@ async function displayUpcomingDeadline() {
                 else if (daysUntil === 1) rel = 'Tomorrow';
                 else if (daysUntil > 1 && daysUntil < 7) rel = `In ${daysUntil} days`;
 
-                const dateLabel = rel ? `${formatDate(d.date)}  b7 ${rel}` : formatDate(d.date);
-                return `<li><span class="deadline-list-name">${d.name}</span><span class="deadline-list-date">${dateLabel}</span></li>`;
+                const dateLabel = rel ? `${formatDate(d.date)} \u0000b7 ${rel}` : formatDate(d.date);
+                return `<li><span class=\"deadline-list-name\">${d.name}</span> <span class=\"deadline-list-date\">${dateLabel}</span></li>`;
             }).join('');
 
             if (listEl) {
@@ -391,7 +391,7 @@ async function displayUpcomingDeadline() {
 }
 
 /**
- * Display recent league activity on homepage (last 14 days, max 50 records)
+ * Display recent league activity on homepage (last 14 days, max 10 records)
  * using data/player_log.json.
  */
 async function displayRecentLeagueActivity() {

@@ -586,6 +586,7 @@ function displayDraftPool() {
     // Reuse preview list styling
     poolList.innerHTML = available.map((player, idx) => {
         const isFypd = !!player.fypd;
+        const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(player) : '#';
         let rank;
         if (isFypdRound) {
             if (typeof player.fypd_rank === 'number') {
@@ -603,7 +604,7 @@ function displayDraftPool() {
             <div class="preview-player-row${isFypd ? ' preview-player-row-fypd' : ''}">
                 <div class="preview-row-main">
                     <span class="preview-rank">#${rank}</span>
-                    <span class="preview-name">${player.name}</span>
+                    <a href="${profileLink}" class="preview-name-link">${player.name}</a>
                     <span class="preview-team">${player.team || 'FA'}</span>
                     <span class="preview-pos">${player.position || ''}</span>
                     ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
