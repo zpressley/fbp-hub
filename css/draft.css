@@ -137,27 +137,20 @@ body.draft-preview-page .pick-number {
     border: 2px solid var(--primary-red);
     border-radius: var(--radius-lg);
     padding: var(--space-md) var(--space-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
     margin-bottom: var(--space-sm);
 }
 
-.clock-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.clock-main-row {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 1.4fr;
     gap: var(--space-lg);
+    align-items: center;
 }
 
-.clock-round-group {
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-    column-gap: var(--space-sm);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    text-transform: uppercase;
+.clock-left {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
 }
 
 .clock-label {
@@ -167,22 +160,6 @@ body.draft-preview-page .pick-number {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-}
-
-.clock-round-value,
-.clock-pick-value,
-.clock-time-value {
-    font-family: var(--font-mono);
-    font-size: var(--text-base);
-    font-weight: 900;
-    color: #FFFFFF;
-}
-
-.clock-team-block {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-lg);
 }
 
 .clock-team-name {
@@ -200,13 +177,51 @@ body.draft-preview-page .pick-number {
     letter-spacing: 3px;
 }
 
-.timer-display,
+.clock-center {
+    text-align: center;
+}
+
+.clock-center-labels {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    gap: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.clock-center-values {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    gap: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    font-weight: 900;
+    color: #FFFFFF;
+}
+
+.clock-right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: flex-end;
+}
+
 .clock-time-value {
     font-family: var(--font-mono);
     font-size: var(--text-base);
     font-weight: 900;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.clock-next {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-white);
 }
 
 .timer-bar-container {
@@ -709,7 +724,7 @@ body.draft-preview-page .pick-number {
 .upcoming-picks-sidebar {
     position: fixed;
     right: var(--space-lg);
-    top: 150px;
+    top: 210px;
     width: 300px;
     background-color: var(--bg-charcoal);
     border: var(--border-width) solid var(--primary-red);

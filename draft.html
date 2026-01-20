@@ -188,23 +188,29 @@
             <!-- On The Clock Section -->
             <div class="on-clock-section">
                 <div class="clock-banner" id="clockBanner">
-                    <div class="clock-header-row">
-                        <div class="clock-label">ON THE CLOCK</div>
-                        <div class="clock-round-group">
-                            <span class="clock-round-label">ROUND</span>
-                            <span class="clock-round-value" id="clockRound">-</span>
-                            <span class="clock-pick-label">PICK</span>
-                            <span class="clock-pick-value" id="clockPickOverall">-</span>
-                            <span class="clock-time-label">TIME</span>
-                            <span class="clock-time-value" id="timerDisplay">1:45</span>
+                    <div class="clock-main-row">
+                        <div class="clock-left">
+                            <div class="clock-label">ON THE CLOCK</div>
+                            <div class="clock-team-name" id="clockTeamName">Hammers</div>
+                            <div class="clock-team" id="clockTeam">HAM</div>
                         </div>
-                    </div>
-                    <div class="clock-team-block">
-                        <div class="clock-team-name" id="clockTeamName">Hammers</div>
-                        <div class="clock-team" id="clockTeam">HAM</div>
-                    </div>
-                    <div class="timer-bar-container">
-                        <div class="timer-bar" id="timerBar"></div>
+                        <div class="clock-center">
+                            <div class="clock-center-labels">
+                                <span>ROUND</span>
+                                <span>PICK</span>
+                            </div>
+                            <div class="clock-center-values">
+                                <span id="clockRound">-</span>
+                                <span id="clockPickOverall">-</span>
+                            </div>
+                        </div>
+                        <div class="clock-right">
+                            <div class="clock-time-value" id="timerDisplay">1:45</div>
+                            <div class="timer-bar-container">
+                                <div class="timer-bar" id="timerBar"></div>
+                            </div>
+                            <div class="clock-next" id="clockNext">Next Pick: —</div>
+                        </div>
                     </div>
                 </div>
 

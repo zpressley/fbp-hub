@@ -194,9 +194,6 @@ async function refreshDraftData() {
 function updateDraftHeader() {
     const draft = DRAFT_STATE.draftData;
     if (!draft) return;
-
-    document.getElementById('currentRound').textContent = draft.current_round ?? '-';
-    document.getElementById('currentPickOverall').textContent = draft.current_pick ?? '-';
     
     // Update title
     const draftTypeText = draft.draft_type === 'keeper' ? 'KEEPER' : 'PROSPECT';
@@ -239,6 +236,7 @@ function updateOnTheClock() {
     const timerBar = document.getElementById('timerBar');
     const clockRoundEl = document.getElementById('clockRound');
     const clockPickEl = document.getElementById('clockPickOverall');
+    const clockNextEl = document.getElementById('clockNext');
 
     if (!draft || draft.status !== 'active_draft' || !draft.current_team) {
         // No active draft or no current team: clear clock state
@@ -253,6 +251,7 @@ function updateOnTheClock() {
         if (timerBar) timerBar.style.width = '0%';
         if (clockRoundEl) clockRoundEl.textContent = '-';
         if (clockPickEl) clockPickEl.textContent = '-';
+        if (clockNextEl) clockNextEl.textContent = 'Next Pick: —';
         return;
     }
 
@@ -263,6 +262,22 @@ function updateOnTheClock() {
     if (nameEl) nameEl.textContent = teamName;
     if (clockRoundEl) clockRoundEl.textContent = draft.current_round ?? '-';
     if (clockPickEl) clockPickEl.textContent = draft.current_pick ?? '-';
+
+    // Compute next pick for on-tile summary
+    if (clockNextEl && Array.isArray(draft.draft_order) && draft.total_rounds) {
+        const perRound = draft.draft_order.length;
+        const totalPicks = draft.total_rounds * perRound;
+        const nextPickNum = (draft.current_pick || 0) + 1;
+        if (nextPickNum <= totalPicks) {
+            const nextRound = Math.floor((nextPickNum - 1) / perRound) + 1;
+            const idxInRound = (nextPickNum - 1) % perRound;
+            const nextTeam = draft.draft_order[idxInRound];
+            const nextName = TEAM_NAMES[nextTeam] || nextTeam;
+            clockNextEl.textContent = `Next Pick: ${nextName} (RD ${nextRound} / PK ${nextPickNum})`;
+        } else {
+            clockNextEl.textContent = 'Next Pick: —';
+        }
+    }
 
     // Apply solid team colors to the on-the-clock banner
     const banner = document.getElementById('clockBanner');
