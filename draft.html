@@ -160,51 +160,51 @@
 
         <!-- Draft Active -->
         <div id="draftContent" style="display: none;">
-            <!-- Draft Mode Toggle -->
-            <div class="draft-mode-toggle">
-                <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
-                    Keeper
-                </button>
-                <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
-                    Prospect
-                </button>
-            </div>
-            <div class="draft-schedule" id="draftSchedule"></div>
+            <div class="draft-top-row">
+                <!-- Draft Mode Toggle -->
+                <div class="draft-mode-toggle">
+                    <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
+                        Keeper
+                    </button>
+                    <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
+                        Prospect
+                    </button>
+                </div>
 
-            <!-- Draft Header -->
-            <div class="draft-header">
-                <div class="draft-title-section">
-                    <h2 id="draftTitle">FBP KEEPER DRAFT 2026</h2>
-                    <div class="draft-status-badge" id="draftStatus">
-                        <i class="fas fa-circle"></i>
-                        <span>LIVE</span>
-                    </div>
-                </div>
-                <div class="draft-round-info">
-                    <div class="round-display">
-                        <span class="round-label">ROUND</span>
-                        <span class="round-number" id="currentRound">5</span>
-                    </div>
-                    <div class="pick-display">
-                        <span class="pick-label">PICK</span>
-                        <span class="pick-number" id="currentPickOverall">51</span>
+                <!-- Draft Header -->
+                <div class="draft-header">
+                    <div class="draft-title-section">
+                        <h2 id="draftTitle">FBP KEEPER DRAFT 2026</h2>
+                        <div class="draft-status-badge" id="draftStatus">
+                            <i class="fas fa-circle"></i>
+                            <span>LIVE</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="draft-schedule" id="draftSchedule"></div>
 
             <!-- On The Clock Section -->
             <div class="on-clock-section">
                 <div class="clock-banner" id="clockBanner">
-                    <div class="clock-info">
+                    <div class="clock-header-row">
                         <div class="clock-label">ON THE CLOCK</div>
-                        <div class="clock-team" id="clockTeam">HAM</div>
-                        <div class="clock-team-name" id="clockTeamName">Hammers</div>
-                    </div>
-                    <div class="clock-timer">
-                        <div class="timer-display" id="timerDisplay">1:45</div>
-                        <div class="timer-bar-container">
-                            <div class="timer-bar" id="timerBar"></div>
+                        <div class="clock-round-group">
+                            <span class="clock-round-label">ROUND</span>
+                            <span class="clock-round-value" id="clockRound">-</span>
+                            <span class="clock-pick-label">PICK</span>
+                            <span class="clock-pick-value" id="clockPickOverall">-</span>
+                            <span class="clock-time-label">TIME</span>
+                            <span class="clock-time-value" id="timerDisplay">1:45</span>
                         </div>
+                    </div>
+                    <div class="clock-team-block">
+                        <div class="clock-team-name" id="clockTeamName">Hammers</div>
+                        <div class="clock-team" id="clockTeam">HAM</div>
+                    </div>
+                    <div class="timer-bar-container">
+                        <div class="timer-bar" id="timerBar"></div>
                     </div>
                 </div>
 

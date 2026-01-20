@@ -128,7 +128,6 @@ body.draft-preview-page .pick-number {
 
 /* On The Clock */
 .on-clock-section {
-    /* Much smaller overall footprint under the header */
     margin-bottom: var(--space-md);
 }
 
@@ -139,14 +138,26 @@ body.draft-preview-page .pick-number {
     border-radius: var(--radius-lg);
     padding: var(--space-md) var(--space-lg);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--space-md);
+    flex-direction: column;
+    gap: var(--space-sm);
     margin-bottom: var(--space-sm);
 }
 
-.clock-info {
-    flex: 1;
+.clock-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.clock-round-group {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    column-gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
 }
 
 .clock-label {
@@ -156,36 +167,43 @@ body.draft-preview-page .pick-number {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: var(--space-xs);
 }
 
-.clock-team {
-    font-family: var(--font-title);
-    font-size: var(--text-2xl);
+.clock-round-value,
+.clock-pick-value,
+.clock-time-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
     font-weight: 900;
-    color: white;
-    letter-spacing: 3px;
-    margin-bottom: var(--space-2xs);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+}
+
+.clock-team-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-lg);
 }
 
 .clock-team-name {
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-}
-
-.clock-timer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-md);
-}
-
-.timer-display {
-    font-family: var(--font-mono);
+    font-family: var(--font-title);
     font-size: var(--text-2xl);
+    font-weight: 900;
+    color: #FFFFFF;
+}
+
+.clock-team {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 3px;
+}
+
+.timer-display,
+.clock-time-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
     font-weight: 900;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -265,20 +283,16 @@ body.draft-preview-page .pick-number {
 .view-toggle {
     display: flex;
     gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
-    background-color: var(--bg-charcoal);
-    padding: var(--space-xs);
-    border: var(--border-width) solid var(--primary-red);
-    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
 }
 
 .view-btn {
     flex: 1;
     background: transparent;
-    border: none;
+    border-radius: var(--radius-lg);
+    border: var(--border-width) solid var(--primary-red);
     color: var(--text-white);
-    padding: var(--space-md);
-    border-radius: 999px;
+    padding: var(--space-sm) var(--space-lg);
     cursor: pointer;
     transition: all var(--transition-fast);
     font-family: var(--font-body);
@@ -292,7 +306,7 @@ body.draft-preview-page .pick-number {
 }
 
 .view-btn:hover {
-    background-color: rgba(239, 62, 66, 0.15);
+    background-color: rgba(239, 62, 66, 0.08);
 }
 
 .view-btn.active {
@@ -730,6 +744,15 @@ body.draft-preview-page .pick-number {
     background-color: rgba(255, 182, 18, 0.1);
 }
 
+/* Top row: mode toggle + header inline */
+.draft-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
 /* Draft Mode toggle (keeper vs prospect) */
 .draft-mode-toggle {
     position: relative;
@@ -739,7 +762,7 @@ body.draft-preview-page .pick-number {
     border: var(--border-width) solid var(--primary-red);
     padding: 3px;
     margin-top: var(--space-sm);
-    margin-bottom: var(--space-md);
+    margin-bottom: 0;
     overflow: hidden;
 }
 

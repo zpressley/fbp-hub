@@ -13,15 +13,18 @@ let DRAFT_STATE = {
     // draft, and draft.html will switch to keeper if FBPHub.draftInitialMode
     // is set to 'keeper' by the preflight script.
     mode: 'prospect', // 'keeper' or 'prospect'
+    initializedFromHint: false
 };
 
 /**
  * Initialize draft page
  */
 async function initDraft() {
-    // If backend pre-detected an active draft type, honor it.
-    if (window.FBPHub && FBPHub.draftInitialMode && (FBPHub.draftInitialMode === 'keeper' || FBPHub.draftInitialMode === 'prospect')) {
+    // If backend pre-detected an active draft type, honor it on first load
+    // only. After that, allow managers to switch views locally.
+    if (!DRAFT_STATE.initializedFromHint && window.FBPHub && FBPHub.draftInitialMode && (FBPHub.draftInitialMode === 'keeper' || FBPHub.draftInitialMode === 'prospect')) {
         DRAFT_STATE.mode = FBPHub.draftInitialMode;
+        DRAFT_STATE.initializedFromHint = true;
     }
 
     // Sync toggle UI with current mode (ensures Prospect is visibly active
@@ -62,6 +65,7 @@ async function initDraft() {
     updateDraftHeader();
     updateOnTheClock();
     displayRecentPicks();
+    displayUpcomingPicks();
     setupViewToggle();
     
     // Start auto-refresh (every 5 seconds)
@@ -169,15 +173,19 @@ async function refreshDraftData() {
     const newPick = DRAFT_STATE.draftData?.current_pick;
     
     // Check if pick changed
-    if (oldPick !== newPick) {
-        console.log('📢 New pick detected!');
-        updateDraftHeader();
-        updateOnTheClock();
-        displayRecentPicks();
-        
-        // Show notification
-        showPickNotification();
-    }
+        if (oldPick !== newPick) {
+            console.log('📢 New pick detected!');
+            updateDraftHeader();
+            updateOnTheClock();
+            displayRecentPicks();
+            displayUpcomingPicks();
+            
+            // Show notification
+            showPickNotification();
+        } else {
+            // Even if pick didn't change, keep upcoming list fresh
+            displayUpcomingPicks();
+        }
 }
 
 /**
@@ -229,6 +237,8 @@ function updateOnTheClock() {
     const quickPickSection = document.getElementById('quickPickSection');
     const timerDisplay = document.getElementById('timerDisplay');
     const timerBar = document.getElementById('timerBar');
+    const clockRoundEl = document.getElementById('clockRound');
+    const clockPickEl = document.getElementById('clockPickOverall');
 
     if (!draft || draft.status !== 'active_draft' || !draft.current_team) {
         // No active draft or no current team: clear clock state
@@ -241,6 +251,8 @@ function updateOnTheClock() {
         }
         if (timerDisplay) timerDisplay.textContent = '--:--';
         if (timerBar) timerBar.style.width = '0%';
+        if (clockRoundEl) clockRoundEl.textContent = '-';
+        if (clockPickEl) clockPickEl.textContent = '-';
         return;
     }
 
@@ -249,6 +261,8 @@ function updateOnTheClock() {
 
     if (teamEl) teamEl.textContent = clockTeam;
     if (nameEl) nameEl.textContent = teamName;
+    if (clockRoundEl) clockRoundEl.textContent = draft.current_round ?? '-';
+    if (clockPickEl) clockPickEl.textContent = draft.current_pick ?? '-';
 
     // Apply solid team colors to the on-the-clock banner
     const banner = document.getElementById('clockBanner');
@@ -608,6 +622,50 @@ function displayDraftPool() {
                     <span class="preview-team">${player.team || 'FA'}</span>
                     <span class="preview-pos">${player.position || ''}</span>
                     ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * Display upcoming picks (sidebar card)
+ */
+function displayUpcomingPicks() {
+    const draft = DRAFT_STATE.draftData;
+    const listEl = document.getElementById('upcomingList');
+    if (!draft || !listEl) return;
+
+    const totalPerRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
+    const totalPicks = (draft.total_rounds || 0) * totalPerRound;
+    const currentPick = draft.current_pick || 0;
+
+    if (!totalPerRound || !totalPicks || currentPick >= totalPicks) {
+        listEl.innerHTML = '<div class="upcoming-pick">No upcoming picks.</div>';
+        return;
+    }
+
+    const maxUpcoming = 6;
+    const items = [];
+    for (let pk = currentPick + 1; pk <= Math.min(currentPick + maxUpcoming, totalPicks); pk++) {
+        const round = Math.floor((pk - 1) / totalPerRound) + 1;
+        const indexInRound = (pk - 1) % totalPerRound;
+        const team = draft.draft_order[indexInRound];
+        items.push({ round, pick: pk, team });
+    }
+
+    listEl.innerHTML = items.map(item => {
+        const teamName = TEAM_NAMES[item.team] || item.team;
+        return `
+            <div class="upcoming-pick">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-family: var(--font-title); font-weight:700;">${teamName}</div>
+                        <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-gray);">${item.team}</div>
+                    </div>
+                    <div style="text-align:right; font-family: var(--font-mono); font-size: var(--text-sm);">
+                        RD ${item.round}<br>PK ${item.pick}
+                    </div>
                 </div>
             </div>
         `;
