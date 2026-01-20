@@ -70,92 +70,55 @@
     </nav>
 
     <script>
-        // Redirect to draft-preview.html only when we are reasonably sure
-        // there is NO active draft. If anything fails (API down, CORS,
-        // missing JSON), we stay on draft.html and let the client show its
-        // inactive state instead of forcing preview.
+        // Preflight: ask the bot API (via Cloudflare Worker) if the
+        // prospect draft is active. We NO LONGER redirect away from
+        // this page; instead we log what we see and let draft.js
+        // render either the active view or the "No Active Draft" box.
         (function () {
             var ACTIVE_STATUS = 'active_draft';
+            var API_BASE = 'https://fbp-auth.zpressley.workers.dev';
 
-            function getApiUrl(draftType) {
+            function getProspectUrl() {
                 try {
-                    if (window.FBPHub && FBPHub.config && FBPHub.config.apiBase) {
-                        var u = new URL('/api/draft/active', FBPHub.config.apiBase);
-                        u.searchParams.set('draft_type', draftType || 'keeper');
-                        return u.toString();
-                    }
+                    var u = new URL('/api/draft/active', API_BASE);
+                    u.searchParams.set('draft_type', 'prospect');
+                    return u.toString();
                 } catch (e) {
-                    console.warn('Error reading FBPHub.config.apiBase', e);
-                }
-                return null;
-            }
-
-            function debugSkipRedirect() {
-                try {
-                    var params = new URLSearchParams(window.location.search);
-                    return params.get('debug') === '1';
-                } catch (e) {
-                    return false;
+                    console.warn('[draft preflight] Error building draft API URL', e);
+                    return null;
                 }
             }
 
-            function redirectToPreview() {
-                if (debugSkipRedirect()) return;
-                window.location.href = 'draft-preview.html';
-            }
-
-            // 1) Live API is the single source of truth for whether a
-            // draft is active. If this lookup fails or does not report an
-            // active prospect draft, we send users to draft-preview.html
-            // (unless debug=1 is set in the query string).
-            var prospectUrl = getApiUrl('prospect');
-            if (prospectUrl) {
-                fetch(prospectUrl, { cache: 'no-store' })
-                    .then(function (resp) {
-                        if (!resp.ok) return null;
-                        return resp.json();
-                    })
-                    .then(function (prospectData) {
-                        if (prospectData && prospectData.status === ACTIVE_STATUS) {
-                            // Hint to draft.js that the prospect draft is active
-                            window.FBPHub = window.FBPHub || {};
-                            window.FBPHub.draftInitialMode = 'prospect';
-                            // Stay on this page; main.js + draft.js will render the UI.
-                            return;
-                        }
-                        // API responded but says "no active draft" → redirect
-                        redirectToPreview();
-                    })
-                    .catch(function (err) {
-                        console.warn('Draft API (prospect) lookup failed; using preview.', err);
-                        redirectToPreview();
-                    });
+            var prospectUrl = getProspectUrl();
+            if (!prospectUrl) {
+                console.warn('[draft preflight] No API URL; staying on draft.html');
                 return;
             }
 
-            // If we cannot build the API URL at all (should be rare in
-            // production), just fall back to the preview page.
-            redirectToPreview();
+            fetch(prospectUrl, { cache: 'no-store' })
+                .then(function (resp) {
+                    if (!resp.ok) {
+                        console.warn('[draft preflight] API HTTP status', resp.status, '- staying on draft.html');
+                        return null;
+                    }
+                    return resp.json();
+                })
+                .then(function (data) {
+                    if (!data) return;
+                    var isActive = data.status === ACTIVE_STATUS;
+                    console.log('[draft preflight] status =', data.status, 'active?', isActive);
+                    if (isActive) {
+                        // Mark that the prospect draft is active so draft.js
+                        // defaults to that mode when rendering.
+                        window.FBPHub = window.FBPHub || {};
+                        window.FBPHub.draftInitialMode = 'prospect';
+                    }
+                })
+                .catch(function (err) {
+                    console.warn('[draft preflight] API check threw error; staying on draft.html', err);
+                });
         })();
     </script>
-    <main class="container-draft">
-        <!-- Draft Not Active -->
-        <div class="draft-inactive" id="draftInactive" style="display: none;">
-            <i class="fas fa-calendar-times"></i>
-            <h3>No Active Draft</h3>
-            <p>The draft has not started yet or has concluded.</p>
-            <a href="dashboard.html" class="btn-primary">Return to Dashboard</a>
-        </div>
-
-        <!-- Draft Active -->
-        <div id="draftContent" style="display: none;">
-            <div class="draft-top-row">
-                <!-- Draft Mode Toggle -->
-                <div class="draft-mode-toggle">
-                    <button class="mode-btn active" data-mode="keeper" onclick="setDraftMode('keeper')">
-                        Keeper
-                    </button>
-                    <button class="mode-btn" data-mode="prospect" onclick="setDraftMode('prospect')">
                         Prospect
                     </button>
                 </div>
