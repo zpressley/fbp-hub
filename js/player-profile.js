@@ -356,7 +356,10 @@ function displayOwnershipTimeline() {
         isCurrent: !PLAYER_DATA.player.manager || PLAYER_DATA.player.manager === currentOwner
     });
 
-    const timelineHTML = periods.map(period => `
+    // Show most recent ownership periods first in the UI
+    const displayPeriods = [...periods].reverse();
+
+    const timelineHTML = displayPeriods.map(period => `
         <div class="ownership-period ${period.isCurrent ? 'current' : ''}">
             <div class="ownership-period-header">
                 <div class="ownership-team">
@@ -385,8 +388,8 @@ function displayStats() {
         return;
     }
 
-    const battingSeasons = seasons.filter(s => s.stat_type === 'batting').sort((a, b) => (a.season || 0) - (b.season || 0));
-    const pitchingSeasons = seasons.filter(s => s.stat_type === 'pitching').sort((a, b) => (a.season || 0) - (b.season || 0));
+    const battingSeasons = seasons.filter(s => s.stat_type === 'batting').sort((a, b) => (b.season || 0) - (a.season || 0));
+    const pitchingSeasons = seasons.filter(s => s.stat_type === 'pitching').sort((a, b) => (b.season || 0) - (a.season || 0));
 
     // Batting season-by-season table
     if (battingSeasons.length) {

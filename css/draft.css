@@ -705,6 +705,7 @@
     border-radius: 999px;
     border: var(--border-width) solid var(--primary-red);
     padding: 3px;
+    margin-top: var(--space-sm);
     margin-bottom: var(--space-md);
     overflow: hidden;
 }
@@ -730,6 +731,10 @@
 .mode-btn {
     position: relative;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0;
     background: transparent;
     border: none;
     padding: var(--space-sm) var(--space-xl);

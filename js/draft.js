@@ -224,12 +224,31 @@ function updateDraftHeader() {
  */
 function updateOnTheClock() {
     const draft = DRAFT_STATE.draftData;
-    if (!draft) return;
+    const teamEl = document.getElementById('clockTeam');
+    const nameEl = document.getElementById('clockTeamName');
+    const quickPickSection = document.getElementById('quickPickSection');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerBar = document.getElementById('timerBar');
+
+    if (!draft || draft.status !== 'active_draft' || !draft.current_team) {
+        // No active draft or no current team: clear clock state
+        if (teamEl) teamEl.textContent = '--';
+        if (nameEl) nameEl.textContent = 'No team on the clock';
+        if (quickPickSection) quickPickSection.style.display = 'none';
+        if (DRAFT_STATE.timerInterval) {
+            clearInterval(DRAFT_STATE.timerInterval);
+            DRAFT_STATE.timerInterval = null;
+        }
+        if (timerDisplay) timerDisplay.textContent = '--:--';
+        if (timerBar) timerBar.style.width = '0%';
+        return;
+    }
+
     const clockTeam = draft.current_team;
     const teamName = TEAM_NAMES[clockTeam] || clockTeam;
-    
-    document.getElementById('clockTeam').textContent = clockTeam;
-    document.getElementById('clockTeamName').textContent = teamName;
+
+    if (teamEl) teamEl.textContent = clockTeam;
+    if (nameEl) nameEl.textContent = teamName;
 
     // Apply solid team colors to the on-the-clock banner
     const banner = document.getElementById('clockBanner');
@@ -240,16 +259,17 @@ function updateOnTheClock() {
         banner.style.background = background;
         banner.style.borderColor = border;
     }
-    
+
     // Show quick pick if it's user's turn
-    const quickPickSection = document.getElementById('quickPickSection');
-    if (DRAFT_STATE.userTeam && DRAFT_STATE.userTeam.abbreviation === clockTeam) {
-        quickPickSection.style.display = 'block';
-    } else {
-        quickPickSection.style.display = 'none';
+    if (quickPickSection) {
+        if (DRAFT_STATE.userTeam && DRAFT_STATE.userTeam.abbreviation === clockTeam) {
+            quickPickSection.style.display = 'block';
+        } else {
+            quickPickSection.style.display = 'none';
+        }
     }
-    
-    // Restart timer
+
+    // Restart timer only when active
     startPickTimer();
 }
 
@@ -495,14 +515,24 @@ function scrollToRound(roundNum) {
  */
 function displayDraftPool() {
     const draft = DRAFT_STATE.draftData;
+    const poolList = document.getElementById('draftPoolList');
+    const countEl = document.getElementById('draftPoolCount');
+
+    if (!poolList || !countEl) return;
+
+    // Keeper mode: we don't yet have a keeper draft pool wired up; avoid
+    // showing prospect pool when Keeper is selected.
+    if (DRAFT_STATE.mode === 'keeper') {
+        countEl.textContent = '0 players';
+        poolList.innerHTML = '<div class="empty-state">Keeper draft pool view is not available yet.</div>';
+        return;
+    }
+
     if (!draft || !FBPHub || !FBPHub.data || !Array.isArray(FBPHub.data.players)) {
         return;
     }
 
     const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
-    const poolList = document.getElementById('draftPoolList');
-    const countEl = document.getElementById('draftPoolCount');
-    if (!poolList || !countEl) return;
 
     const currentRound = draft.current_round || 1;
     const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only rules-wise
