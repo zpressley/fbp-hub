@@ -103,24 +103,29 @@ async function initPADPage() {
 
 /**
  * Check if team already submitted PAD
+ *
+ * Primary source is localStorage (client remembers successful submissions).
+ * We keep the function async so we can later add a remote status check if
+ * needed without changing callers.
  */
 async function checkSubmissionStatus() {
+    // Fast path: local submission cache
     try {
-        // In production: fetch from data/pad_submissions.json via API
-        const response = await fetch('./data/pad_submissions.json');
-        if (response.ok) {
-            const submissions = await response.json();
-            const teamSubmission = submissions[PAD_STATE.team];
-            
-            if (teamSubmission) {
-                PAD_STATE.submitted = true;
-                PAD_STATE.submittedAt = teamSubmission.timestamp;
-                return;
-            }
+        const cached = JSON.parse(localStorage.getItem('pad_submissions_2026') || '{}');
+        const teamSubmission = cached[PAD_STATE.team];
+        if (teamSubmission) {
+            PAD_STATE.submitted = true;
+            PAD_STATE.submittedAt = teamSubmission.timestamp;
+            return;
         }
     } catch (e) {
-        console.log('No submission data found, continuing with form');
+        console.warn('Failed to read local PAD submission cache:', e);
     }
+
+    // Fallback: no remote status check yet. The backend also enforces
+    // one-and-done semantics, so a second submit will be rejected with
+    // HTTP 409 even if localStorage was cleared or a different browser
+    // is used. For now we just let the form load in that case.
 }
 
 /**
@@ -1042,10 +1047,41 @@ function cancelSubmit() {
 }
 
 /**
- * Confirm and submit PAD - LOG ALL TRANSACTIONS ATOMICALLY
+ * Build the payload expected by the bot's /api/pad/submit endpoint.
+ */
+function buildPadSubmissionPayload() {
+    const total = calculateTotalSpend();
+
+    function mapProspects(contractType) {
+        return PAD_STATE.myProspects
+            .filter(p => p.contract_type === contractType)
+            .map(p => {
+                const ref = { name: p.name };
+                if (p.upid) {
+                    ref.upid = String(p.upid);
+                }
+                return ref;
+            });
+    }
+
+    return {
+        season: PAD_SEASON,
+        team: PAD_STATE.team,
+        dc_players: mapProspects('DC'),
+        pc_players: mapProspects('PC'),
+        bc_players: mapProspects('BC'),
+        dc_slots: PAD_STATE.dcSlots,
+        bc_slots: PAD_STATE.bcSlots.length,
+        total_spend: total,
+        total_available: PAD_STATE.totalAvailable
+    };
+}
+
+/**
+ * Confirm and submit PAD via the bot API.
  */
 async function confirmSubmit() {
-    console.log('🚀 Submitting PAD - Logging all transactions atomically...');
+    console.log('🚀 Submitting PAD to backend...');
 
     // Double-check PAD open date in case the window changed while the page was open.
     const padOpenIso = PAD_STATE.seasonDates?.pad_open_date;
@@ -1059,151 +1095,95 @@ async function confirmSubmit() {
             return;
         }
     }
-    
+
     const total = calculateTotalSpend();
     const remaining = PAD_STATE.totalAvailable - total;
     const rollover = computeRolloverToKAP(total);
-    
-    // Track balance through all transactions
-    let currentBalance = PAD_STATE.totalAvailable;
-    
-    // Log all prospect contract assignments
-    PAD_STATE.myProspects.forEach(prospect => {
-        if (!prospect.contract_type) return;
-        
-        let cost = 0;
-        let txnType = '';
-        
-        // 2026 transition: no WizBucks charged for legacy DC prospects
-        if (!prospect.legacy_dc) {
-            if (prospect.contract_type === 'DC' && !prospect.was_upgraded) {
-                cost = 5;
-                txnType = 'dc_purchase';
-            } else if (prospect.contract_type === 'PC' && !prospect.was_bc) {
-                cost = 10;
-                txnType = 'pc_purchase';
-            } else if (prospect.contract_type === 'BC') {
-                cost = 20;
-                txnType = 'bc_purchase';
-            }
-        }
-        
-        if (cost > 0) {
-            const wbTxnId = logWizBucksTransaction({
-                amount: -cost,
-                transaction_type: txnType,
-                description: `${prospect.contract_type} contract assigned to ${prospect.name}`,
-                related_player: { upid: prospect.upid, name: prospect.name },
-                balance_before: currentBalance,
-                balance_after: currentBalance - cost
-            });
-            
-            currentBalance -= cost;
-            
-            logPlayerChange({
-                upid: prospect.upid,
-                player_name: prospect.name,
-                update_type: 'contract_assigned',
-                changes: {
-                    contract_type: { from: null, to: prospect.contract_type },
-                    manager: { from: null, to: PAD_STATE.team },
-                    player_type: { from: null, to: 'Farm' }
+
+    if (total > PAD_STATE.totalAvailable) {
+        showToast('PAD spend exceeds available balance. Please adjust your allocations.', 'error');
+        return;
+    }
+
+    const apiBase = window.FBPHub?.config?.apiBase || null;
+    const payload = buildPadSubmissionPayload();
+
+    if (!apiBase) {
+        console.warn('No API base configured; PAD submit will be stored locally only.');
+    }
+
+    try {
+        if (apiBase) {
+            const url = new URL('/api/pad/submit', apiBase);
+            const response = await fetch(url.toString(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // BOT_API_KEY is injected by the Cloudflare Worker; the
+                    // browser never sees it.
                 },
-                event: `Assigned ${prospect.contract_type} contract`,
-                player_data: prospect,
-                wizbucks_txn_id: wbTxnId
+                body: JSON.stringify(payload)
             });
+
+            if (response.status === 409) {
+                showToast('PAD has already been submitted for this team. Please contact the commissioner for changes.', 'error');
+                PAD_STATE.submitted = true;
+                PAD_STATE.submittedAt = null;
+                document.getElementById('confirmationModal').classList.remove('active');
+                showSubmittedView();
+                return;
+            }
+
+            if (!response.ok) {
+                console.error('PAD submit failed with status', response.status);
+                showToast('Failed to submit PAD. Please try again or contact the commissioner.', 'error');
+                return;
+            }
+
+            const data = await response.json().catch(() => ({}));
+            const timestamp = data.timestamp || new Date().toISOString();
+
+            // Cache a human-readable summary locally for the submitted view.
+            const submission = {
+                team: PAD_STATE.team,
+                timestamp,
+                allocations: {
+                    prospects: PAD_STATE.myProspects
+                        .filter(p => p.contract_type)
+                        .map(p => ({
+                            upid: p.upid,
+                            name: p.name,
+                            contract_type: p.contract_type
+                        })),
+                    dcSlots: PAD_STATE.dcSlots,
+                    bcSlots: PAD_STATE.bcSlots.length
+                },
+                spending: {
+                    total,
+                    remaining,
+                    rollover
+                }
+            };
+
+            const submissions = JSON.parse(localStorage.getItem('pad_submissions_2026') || '{}');
+            submissions[PAD_STATE.team] = submission;
+            localStorage.setItem('pad_submissions_2026', JSON.stringify(submissions));
+
+            // Clear draft cache now that PAD is locked in.
+            localStorage.removeItem(`pad_draft_${PAD_STATE.team}_2026`);
+
+            PAD_STATE.submitted = true;
+            PAD_STATE.submittedAt = timestamp;
         }
-    });
-    
-    // Log BC auto-retentions (no cost)
-    PAD_STATE.myProspects.filter(p => p.top_100_rank).forEach(prospect => {
-        logPlayerChange({
-            upid: prospect.upid,
-            player_name: prospect.name,
-            update_type: 'bc_retention',
-            changes: {
-                contract_type: { from: 'BC', to: 'BC' }
-            },
-            event: `BC auto-retained (Top 100 #${prospect.top_100_rank})`,
-            player_data: prospect,
-            wizbucks_txn_id: null
-        });
-    });
-    
-    // Log DC slot purchases
-    for (let i = 0; i < PAD_STATE.dcSlots; i++) {
-        logWizBucksTransaction({
-            amount: -5,
-            transaction_type: 'dc_slot_purchase',
-            description: `DC draft slot #${i + 1}`,
-            balance_before: currentBalance,
-            balance_after: currentBalance - 5
-        });
-        currentBalance -= 5;
+
+        // Close modal and flip UI into submitted state.
+        document.getElementById('confirmationModal').classList.remove('active');
+        showSubmittedView();
+        showToast('✅ PAD submitted! Changes will be reflected in the bot shortly.', 'success');
+    } catch (e) {
+        console.error('Error submitting PAD:', e);
+        showToast('Unexpected error while submitting PAD. Please try again.', 'error');
     }
-    
-    // Log BC slot purchases
-    PAD_STATE.bcSlots.forEach((slot, index) => {
-        logWizBucksTransaction({
-            amount: -20,
-            transaction_type: 'bc_slot_purchase',
-            description: `BC draft slot #${index + 1}`,
-            balance_before: currentBalance,
-            balance_after: currentBalance - 20
-        });
-        currentBalance -= 20;
-    });
-    
-    // Log rollover to KAP
-    if (rollover > 0) {
-        logWizBucksTransaction({
-            amount: -rollover,
-            transaction_type: 'rollover_to_kap',
-            description: `Rollover $${rollover} from PAD to KAP`,
-            balance_before: currentBalance,
-            balance_after: currentBalance - rollover
-        });
-    }
-    
-    // Mark as submitted
-    const submission = {
-        team: PAD_STATE.team,
-        timestamp: new Date().toISOString(),
-        allocations: {
-            prospects: PAD_STATE.myProspects.filter(p => p.contract_type).map(p => ({
-                upid: p.upid,
-                name: p.name,
-                contract_type: p.contract_type
-            })),
-            dcSlots: PAD_STATE.dcSlots,
-            bcSlots: PAD_STATE.bcSlots.length
-        },
-        spending: {
-            total,
-            remaining,
-            rollover
-        }
-    };
-    
-    // In production: POST to /api/pad/submit
-    // For now: save to localStorage
-    const submissions = JSON.parse(localStorage.getItem('pad_submissions_2026') || '{}');
-    submissions[PAD_STATE.team] = submission;
-    localStorage.setItem('pad_submissions_2026', JSON.stringify(submissions));
-    
-    // Clear draft
-    localStorage.removeItem(`pad_draft_${PAD_STATE.team}_2026`);
-    
-    // Close modal
-    document.getElementById('confirmationModal').classList.remove('active');
-    
-    showToast('✅ PAD Submitted Successfully! Redirecting...', 'success');
-    
-    // Redirect to home after 2 seconds
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 2000);
 }
 
 /**

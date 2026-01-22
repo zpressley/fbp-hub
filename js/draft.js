@@ -430,11 +430,26 @@ function setupViewToggle() {
 function displayDraftGrid() {
     const draft = DRAFT_STATE.draftData;
     const container = document.getElementById('draftGrid');
-    
-    // Build round selector
+    if (!draft || !container) return;
+
     const selector = document.getElementById('roundSelector');
+    if (!selector) return;
+
+    // Group picks that have actually been made by round so the grid
+    // reflects real draft history rather than a theoretical order.
+    const picksByRound = new Map();
+    (draft.picks || []).forEach(p => {
+        const r = p.round || 0;
+        if (!r) return;
+        if (!picksByRound.has(r)) picksByRound.set(r, []);
+        picksByRound.get(r).push(p);
+    });
+
+    // Build round selector options based on rounds that have at least
+    // one pick, falling back to total_rounds if we have no picks yet.
     selector.innerHTML = '';
-    for (let i = 1; i <= draft.total_rounds; i++) {
+    const maxRound = draft.total_rounds || Math.max(...Array.from(picksByRound.keys(), Number), 0) || 1;
+    for (let i = 1; i <= maxRound; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = `Round ${i}`;
@@ -442,46 +457,38 @@ function displayDraftGrid() {
         selector.appendChild(option);
     }
 
-    // Wire selector to scroll the grid
     selector.onchange = (e) => {
         const value = e.target.value;
-        if (value === 'current') {
-            scrollToRound('current');
-        } else {
-            const roundNum = parseInt(value, 10);
-            if (!Number.isNaN(roundNum)) {
-                scrollToRound(roundNum);
-            }
-        }
+        const roundNum = value === 'current' ? 'current' : parseInt(value, 10);
+        scrollToRound(roundNum);
     };
-    
-    // Display all rounds
+
     let gridHTML = '';
-    for (let round = 1; round <= draft.total_rounds; round++) {
-        const roundPicks = draft.picks.filter(p => p.round === round);
-        const picksHTML = draft.draft_order.map((team, idx) => {
-            const pickNum = (round - 1) * 12 + idx + 1;
-            const pick = roundPicks.find(p => p.team === team);
-            const isCurrent = pickNum === draft.current_pick;
-            
-            if (pick) {
-                return `
-                    <div class="grid-pick ${isCurrent ? 'current' : ''}">
-                        <div class="grid-pick-team">${team}</div>
-                        <div class="grid-pick-player">${pick.player_name}</div>
-                        <div class="grid-pick-meta">${pick.position} • ${pick.mlb_team}</div>
-                    </div>
-                `;
-            } else {
-                return `
-                    <div class="grid-pick ${isCurrent ? 'current' : ''}">
-                        <div class="grid-pick-team">${team}</div>
-                        ${isCurrent ? '<div class="grid-pick-player">ON THE CLOCK</div>' : ''}
-                    </div>
-                `;
-            }
-        }).join('');
-        
+    for (let round = 1; round <= maxRound; round++) {
+        const roundPicks = (picksByRound.get(round) || []).slice().sort((a, b) => {
+            return (a.pick_number || 0) - (b.pick_number || 0);
+        });
+
+        if (!roundPicks.length && round > (draft.current_round || 1)) {
+            continue; // skip completely empty future rounds
+        }
+
+        const picksHTML = roundPicks.map(pick => {
+            const isCurrent = pick.pick_number === draft.current_pick;
+            const team = pick.team;
+            return `
+                <div class="grid-pick ${isCurrent ? 'current' : ''}">
+                    <div class="grid-pick-team">${team}</div>
+                    <div class="grid-pick-player">${pick.player_name}</div>
+                    <div class="grid-pick-meta">${pick.position}  b7 ${pick.mlb_team}</div>
+                </div>
+            `;
+        }).join('') || `
+            <div class="grid-pick">
+                <div class="grid-pick-player">No picks yet</div>
+            </div>
+        `;
+
         gridHTML += `
             <div class="draft-round" id="round-${round}">
                 <div class="draft-round-header">
@@ -493,7 +500,7 @@ function displayDraftGrid() {
             </div>
         `;
     }
-    
+
     container.innerHTML = gridHTML;
 }
 
@@ -503,14 +510,68 @@ function displayDraftGrid() {
 function displayDraftOrder() {
     const draft = DRAFT_STATE.draftData;
     const container = document.getElementById('draftOrderList');
-    
-    container.innerHTML = draft.draft_order.map((team, idx) => {
-        const teamPicks = draft.picks.filter(p => p.team === team);
-        const pickPositions = draft.draft_order.reduce((acc, t, i) => {
-            if (t === team) acc.push(i + 1);
-            return acc;
-        }, []);
-        
+    if (!draft || !container) return;
+
+    // If the payload includes team_slots (BC/DC slots per team), use that
+    // as the primary source so we can present a consolidated summary.
+    const teamSlots = draft.team_slots && typeof draft.team_slots === 'object'
+        ? draft.team_slots
+        : null;
+
+    if (teamSlots) {
+        const orderList = Array.isArray(draft.draft_order) ? draft.draft_order : [];
+        const firstIndex = {};
+        orderList.forEach((team, idx) => {
+            if (firstIndex[team] === undefined) firstIndex[team] = idx;
+        });
+
+        const teams = Object.keys(teamSlots).sort((a, b) => {
+            const ia = firstIndex[a] ?? 9999;
+            const ib = firstIndex[b] ?? 9999;
+            if (ia !== ib) return ia - ib;
+            return a.localeCompare(b);
+        });
+
+        container.innerHTML = teams.map(team => {
+            const slot = teamSlots[team] || {};
+            const bcSlots = slot.bc_slots ?? 0;
+            const dcSlots = slot.dc_slots ?? 0;
+            const bcUsed = slot.bc_used ?? 0;
+            const dcUsed = slot.dc_used ?? 0;
+
+            return `
+                <div class="order-team-card">
+                    <div class="order-team-info">
+                        <div class="order-position">${team}</div>
+                        <div>
+                            <div class="order-team-name">${TEAM_NAMES[team] || team}</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-gray); margin-top: 4px;">
+                                BC: ${bcUsed}/${bcSlots}  b7 DC: ${dcUsed}/${dcSlots}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        return;
+    }
+
+    // Fallback: simple view based on how many total picks each team owns.
+    const countsByTeam = {};
+    (draft.draft_order || []).forEach(team => {
+        countsByTeam[team] = (countsByTeam[team] || 0) + 1;
+    });
+
+    const teamsInOrder = Object.keys(countsByTeam).sort((a, b) => {
+        const ia = (draft.draft_order || []).indexOf(a);
+        const ib = (draft.draft_order || []).indexOf(b);
+        return ia - ib;
+    });
+
+    container.innerHTML = teamsInOrder.map((team, idx) => {
+        const totalPicks = countsByTeam[team] || 0;
+        const teamPicks = (draft.picks || []).filter(p => p.team === team);
+
         return `
             <div class="order-team-card">
                 <div class="order-team-info">
@@ -518,7 +579,7 @@ function displayDraftOrder() {
                     <div>
                         <div class="order-team-name">${team} - ${TEAM_NAMES[team] || team}</div>
                         <div style="font-size: var(--text-xs); color: var(--text-gray); margin-top: 4px;">
-                            Picks: ${pickPositions.join(', ')}
+                            Total slots: ${totalPicks}
                         </div>
                     </div>
                 </div>
@@ -569,6 +630,16 @@ function displayDraftPool() {
     const currentRound = draft.current_round || 1;
     const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only rules-wise
 
+    // Build a set of drafted player names (case-insensitive) so we can
+    // hide anyone already taken during this draft.
+    const draftedNames = new Set(
+        Array.isArray(draft.picks)
+            ? draft.picks
+                  .map(p => (p.player_name || '').toLowerCase())
+                  .filter(Boolean)
+            : []
+    );
+
     // Base filter: entire eligible draft pool = Farm prospects, unowned,
     // no prospect contract. We always show the full pool; FYPD players
     // are highlighted and sorted to the top in early rounds.
@@ -576,7 +647,8 @@ function displayDraftPool() {
         p.player_type === 'Farm' &&
         !p.manager &&
         !p.FBP_Team &&
-        !(p.contract_type || '').trim()
+        !(p.contract_type || '').trim() &&
+        !draftedNames.has((p.name || '').toLowerCase())
     );
 
     // Apply search
@@ -615,10 +687,12 @@ function displayDraftPool() {
         return;
     }
 
-    // Reuse preview list styling
+    // Reuse preview list styling but surface richer prospect info: Name,
+    // MLB team, position, Age, Level, org Team Rank.
     poolList.innerHTML = available.map((player, idx) => {
         const isFypd = !!player.fypd;
         const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(player) : '#';
+
         let rank;
         if (isFypdRound) {
             if (typeof player.fypd_rank === 'number') {
@@ -632,6 +706,13 @@ function displayDraftPool() {
             rank = typeof player.rank === 'number' ? player.rank : idx + 1;
         }
 
+        const age = typeof player.age === 'number' ? player.age : '—';
+        const level = player.level || player.mlb_level || '—';
+        const teamRank =
+            typeof player.team_rank === 'number'
+                ? player.team_rank
+                : (typeof player.org_rank === 'number' ? player.org_rank : '—');
+
         return `
             <div class="preview-player-row${isFypd ? ' preview-player-row-fypd' : ''}">
                 <div class="preview-row-main">
@@ -640,6 +721,9 @@ function displayDraftPool() {
                     <span class="preview-team">${player.team || 'FA'}</span>
                     <span class="preview-pos">${player.position || ''}</span>
                     ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
+                </div>
+                <div class="preview-row-stats">
+                    Age ${age}  b7 Level ${level}  b7 Team Rank ${teamRank}
                 </div>
             </div>
         `;
