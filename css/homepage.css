@@ -167,20 +167,22 @@
 .activity-feed {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    /* Tighter gap so more items fit on screen */
+    gap: var(--space-xs);
 }
 
 .activity-item {
     background-color: var(--bg-charcoal);
-    padding: var(--space-lg);
+    /* Reduce vertical padding to make each row more compact */
+    padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);
-    border-left: 4px solid var(--primary-red);
+    border-left: 3px solid var(--primary-red);
     transition: all var(--transition-fast);
 }
 
 .activity-item:hover {
     background-color: rgba(239, 62, 66, 0.08);
-    border-left-width: 6px;
+    border-left-width: 4px;
     transform: translateX(4px);
 }
 
@@ -188,7 +190,8 @@
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--text-gray);
-    margin-bottom: var(--space-sm);
+    /* Smaller margin so timestamp and body sit closer together */
+    margin-bottom: var(--space-xs);
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -201,9 +204,10 @@
 .activity-description {
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: var(--text-base);
+    /* Slightly smaller type and tighter line height to save vertical space */
+    font-size: var(--text-sm);
     color: var(--text-white);
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 .activity-description strong {
@@ -270,26 +274,33 @@
     gap: var(--space-sm);
 }
 
+/* Pill-style buttons inspired by PAD nav buttons */
 .historical-link {
-    display: block;
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--text-gray);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 999px;
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.35);
+    color: var(--text-white);
     font-family: var(--font-body);
     font-size: var(--text-sm);
-    transition: color var(--transition-fast);
-}
-
-.historical-link:last-child {
-    border-bottom: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-decoration: none;
+    transition: all var(--transition-fast);
 }
 
 .historical-link-title {
-    color: var(--text-white);
+    color: inherit;
 }
 
-.historical-link:hover .historical-link-title {
-    color: var(--accent-yellow);
+.historical-link:hover {
+    border-color: var(--accent-yellow);
+    background-color: rgba(239, 62, 66, 0.18);
+    transform: translateY(-1px);
 }
 
 @media (max-width: 767px) {

@@ -968,7 +968,12 @@ function showConfirmation() {
     if (padOpenIso) {
         const openDate = PAD_STATE.padOpenDate || new Date(padOpenIso + 'T00:00:00');
         const now = new Date();
-        if (now < openDate) {
+        const isPrivileged =
+            typeof authManager !== 'undefined' &&
+            ((typeof authManager.isCommissioner === 'function' && authManager.isCommissioner()) ||
+             (typeof authManager.isAdmin === 'function' && authManager.isAdmin()));
+
+        if (now < openDate && !isPrivileged) {
             const formatted = typeof formatDate === 'function' ? formatDate(openDate) : openDate.toISOString().slice(0, 10);
             showToast(`PAD submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
             return;
@@ -1088,7 +1093,12 @@ async function confirmSubmit() {
     if (padOpenIso) {
         const openDate = PAD_STATE.padOpenDate || new Date(padOpenIso + 'T00:00:00');
         const now = new Date();
-        if (now < openDate) {
+        const isPrivileged =
+            typeof authManager !== 'undefined' &&
+            ((typeof authManager.isCommissioner === 'function' && authManager.isCommissioner()) ||
+             (typeof authManager.isAdmin === 'function' && authManager.isAdmin()));
+
+        if (now < openDate && !isPrivileged) {
             const formatted = typeof formatDate === 'function' ? formatDate(openDate) : openDate.toISOString().slice(0, 10);
             showToast(`PAD submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
             cancelSubmit();
@@ -1344,8 +1354,20 @@ function showSubmittedView() {
 
 /**
  * Toast notifications
+ *
+ * For PAD we want:
+ * - Toast pinned to the right on desktop (handled in pad.css)
+ * - No auto-timeout; message stays until the next toast or user click
  */
+let PAD_ACTIVE_TOAST = null;
+
 function showToast(message, type = 'success') {
+    // Remove any existing PAD toast so we only ever show one
+    if (PAD_ACTIVE_TOAST) {
+        PAD_ACTIVE_TOAST.remove();
+        PAD_ACTIVE_TOAST = null;
+    }
+
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     
@@ -1356,11 +1378,16 @@ function showToast(message, type = 'success') {
         <span>${message}</span>
     `;
     
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
+    // Allow user to dismiss by clicking on the toast
+    toast.addEventListener('click', () => {
         toast.remove();
-    }, 5000);
+        if (PAD_ACTIVE_TOAST === toast) {
+            PAD_ACTIVE_TOAST = null;
+        }
+    });
+
+    document.body.appendChild(toast);
+    PAD_ACTIVE_TOAST = toast;
 }
 
 // Initialize on page load

@@ -24,8 +24,10 @@
 /* Sticky WizBucks Bar */
 .wizbucks-sticky-bar {
     position: sticky;
-    /* Sit just below the main nav so dropdown can overlay it */
-    top: 0;
+    /* Sit just below the main nav so the bar follows the user but never
+       covers the navigation or user dropdown. This value matches the
+       approximate height of the sticky nav on desktop and mobile. */
+    top: 80px;
     z-index: 120;
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
@@ -1013,6 +1015,9 @@
     position: fixed;
     bottom: 100px;
     right: var(--space-lg);
+    /* Override global toast centering so PAD toasts stay pinned right */
+    left: auto;
+    transform: none;
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid;
     border-radius: var(--radius-lg);
