@@ -283,10 +283,31 @@ function getMockProspects() {
 
 /**
  * Setup sticky bar scroll behavior
+ * - Keeps the bar pinned just below the main nav on all viewports
+ * - Adds a stronger shadow when it "sticks" while scrolling
  */
 function setupStickyBar() {
     const stickyBar = document.getElementById('wizBucksStickyBar');
     if (!stickyBar) return;
+
+    const nav = document.querySelector('.mobile-nav');
+
+    // Dynamically match the nav height so the bar never hides underneath it.
+    const updateOffset = () => {
+        if (!nav) return;
+        const navRect = nav.getBoundingClientRect();
+        const navHeight = navRect.height || 0;
+        // Small gap so the red nav border and bar border don't visually merge
+        const offset = navHeight + 8;
+        stickyBar.style.top = `${offset}px`;
+    };
+
+    updateOffset();
+
+    // Recalculate offset on resize/orientation change
+    window.addEventListener('resize',
+        typeof debounce === 'function' ? debounce(updateOffset, 150) : updateOffset
+    );
     
     const observer = new IntersectionObserver(
         ([entry]) => {
@@ -1145,8 +1166,32 @@ async function confirmSubmit() {
             }
 
             if (!response.ok) {
-                console.error('PAD submit failed with status', response.status);
-                showToast('Failed to submit PAD. Please try again or contact the commissioner.', 'error');
+                let errorText = '';
+                try {
+                    errorText = await response.text();
+                } catch (e) {
+                    errorText = '';
+                }
+
+                console.error('PAD submit failed', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: errorText,
+                });
+
+                let detail = '';
+                try {
+                    const parsed = JSON.parse(errorText);
+                    if (parsed && parsed.detail) {
+                        detail = String(parsed.detail);
+                    }
+                } catch (_) {
+                    // non-JSON error body; ignore
+                }
+
+                const baseMsg = `Failed to submit PAD (status ${response.status})`;
+                const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+                showToast(fullMsg, 'error');
                 return;
             }
 

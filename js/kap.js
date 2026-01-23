@@ -261,10 +261,28 @@ function getMockMLBPlayers() {
 
 /**
  * Setup sticky bar
+ * - Keeps the KAP bar pinned just below the main nav
+ * - Adds a stronger shadow when it "sticks" while scrolling
  */
 function setupStickyBar() {
     const stickyBar = document.getElementById('kapStickyBar');
     if (!stickyBar) return;
+
+    const nav = document.querySelector('.mobile-nav');
+
+    const updateOffset = () => {
+        if (!nav) return;
+        const navRect = nav.getBoundingClientRect();
+        const navHeight = navRect.height || 0;
+        const offset = navHeight + 8;
+        stickyBar.style.top = `${offset}px`;
+    };
+
+    updateOffset();
+
+    window.addEventListener('resize',
+        typeof debounce === 'function' ? debounce(updateOffset, 150) : updateOffset
+    );
     
     const observer = new IntersectionObserver(
         ([entry]) => {

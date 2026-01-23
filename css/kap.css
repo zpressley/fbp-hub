@@ -24,8 +24,8 @@
 /* Sticky KAP Bar */
 .kap-sticky-bar {
     position: sticky;
-    /* Sit just below the main nav so dropdown can overlay it */
-    top: 0;
+    /* JS will set an exact offset based on nav height; this is a safe fallback */
+    top: 80px;
     z-index: 120;
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
