@@ -227,26 +227,49 @@ async function loadPADData() {
     // Load team's prospects from combined_players.json
     PAD_STATE.myProspects = buildProspectsForTeam(PAD_STATE.team);
 
-    // If no data loaded for some reason, fall back to mock data (dev only)
-    if (!PAD_STATE.myProspects || PAD_STATE.myProspects.length === 0) {
-        PAD_STATE.myProspects = getMockProspects();
-    }
-    
-    // Check for saved draft (prospects, slots are still loaded here for backwards-compat)
-    const savedDraft2 = localStorage.getItem(`pad_draft_${PAD_STATE.team}_2026`);
-    if (savedDraft2) {
-        try {
-            const draft = JSON.parse(savedDraft2);
-            // Only override prospects if the draft actually has some
-            PAD_STATE.myProspects = (draft.prospects && draft.prospects.length)
-                ? draft.prospects
-                : PAD_STATE.myProspects;
-            PAD_STATE.dcSlots = draft.dcSlots || 0;
-            PAD_STATE.bcSlots = draft.bcSlots || [];
-            console.log('✅ Loaded saved draft');
-        } catch (e) {
-            console.error('Failed to load draft:', e);
+    // IMPORTANT: Do NOT fall back to mock prospects in production. If a team
+    // truly has no Farm players, show the "no prospects" message instead of
+    // injecting sample data.
+
+    // Attempt to restore a saved draft from localStorage and merge it into
+    // the canonical prospect list. This lets managers resume where they left off.
+    try {
+        const draftKey = `pad_draft_${team}_2026`;
+        const rawDraft = localStorage.getItem(draftKey);
+        if (rawDraft) {
+            const draft = JSON.parse(rawDraft);
+
+            const draftPros = Array.isArray(draft.prospects) ? draft.prospects : [];
+
+            // Build a quick lookup map for canonical prospects by UPID.
+            const byUpid = new Map();
+            PAD_STATE.myProspects.forEach(p => {
+                if (p.upid) {
+                    byUpid.set(String(p.upid), p);
+                }
+            });
+
+            draftPros.forEach(dp => {
+                const upidKey = dp.upid ? String(dp.upid) : null;
+                let target = upidKey ? byUpid.get(upidKey) : null;
+                if (!target) {
+                    const nameLower = (dp.name || '').toLowerCase();
+                    target = PAD_STATE.myProspects.find(p => (p.name || '').toLowerCase() === nameLower);
+                }
+                if (!target) return;
+                // Only carry over contract choice flags; keep all canonical fields
+                if (dp.contract_type) target.contract_type = dp.contract_type;
+                if (dp.was_upgraded) target.was_upgraded = dp.was_upgraded;
+                if (dp.was_bc) target.was_bc = dp.was_bc;
+                if (dp.free_bc_special) target.free_bc_special = dp.free_bc_special;
+            });
+
+            PAD_STATE.dcSlots = typeof draft.dcSlots === 'number' ? draft.dcSlots : PAD_STATE.dcSlots;
+            PAD_STATE.bcSlots = Array.isArray(draft.bcSlots) ? draft.bcSlots : PAD_STATE.bcSlots;
+            console.log('✅ Loaded saved draft (merged into canonical prospects)');
         }
+    } catch (e) {
+        console.error('Failed to load draft:', e);
     }
 
     // Restore free BC flag from draft (if present)
@@ -496,7 +519,7 @@ function displayProspects() {
         return (a.name || '').localeCompare(b.name || '');
     });
     
-    container.innerHTML = PAD_STATE.myProspects.map(p => {
+    container.innerHTML = sortedProspects.map(p => {
         const hasContract = p.contract_type !== null;
         const contractClass = p.contract_type ? p.contract_type.toLowerCase() : 'unassigned';
         const contractLabel = p.contract_type || 'Unassigned';
