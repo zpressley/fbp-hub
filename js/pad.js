@@ -319,7 +319,11 @@ function setupStickyBar() {
     const updateOffset = () => {
         if (!nav) return;
         const navRect = nav.getBoundingClientRect();
-        const navHeight = navRect.height || 0;
+        // When the nav is hidden (scrolled away), treat its height as 0 so
+        // the PAD sticky bar can slide all the way up to the top of the
+        // viewport. Otherwise, keep it parked just below the visible nav.
+        const isNavHidden = nav.classList.contains('nav-hidden');
+        const navHeight = isNavHidden ? 0 : (navRect.height || 0);
         // Small gap so the red nav border and bar border don't visually merge
         const offset = navHeight + 8;
         stickyBar.style.top = `${offset}px`;
@@ -327,10 +331,11 @@ function setupStickyBar() {
 
     updateOffset();
 
-    // Recalculate offset on resize/orientation change
-    window.addEventListener('resize',
-        typeof debounce === 'function' ? debounce(updateOffset, 150) : updateOffset
-    );
+    // Recalculate offset on resize/orientation change and while scrolling,
+    // so changes in nav-hidden state are reflected immediately.
+    const debouncedUpdate = typeof debounce === 'function' ? debounce(updateOffset, 75) : updateOffset;
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('scroll', debouncedUpdate);
     
     const observer = new IntersectionObserver(
         ([entry]) => {
