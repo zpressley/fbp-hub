@@ -314,7 +314,8 @@ async function displayUpcomingDeadline() {
                 else if (daysUntil === 1) rel = 'Tomorrow';
                 else if (daysUntil > 1 && daysUntil < 7) rel = `In ${daysUntil} days`;
 
-                const dateLabel = rel ? `${formatDate(d.date)} \u0000b7 ${rel}` : formatDate(d.date);
+                // Use a proper middle dot separator (·) between date and relative label.
+                const dateLabel = rel ? `${formatDate(d.date)} \u00B7 ${rel}` : formatDate(d.date);
                 return `<li><span class=\"deadline-list-name\">${d.name}</span> <span class=\"deadline-list-date\">${dateLabel}</span></li>`;
             }).join('');
 
@@ -323,10 +324,10 @@ async function displayUpcomingDeadline() {
             }
 
             const daysUntilNext = Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24));
-            if (daysUntilNext <= 3 && deadlineBanner) {
-                deadlineBanner.style.background = 'linear-gradient(135deg, #F44336, #E53935)';
-            }
-            return;
+        
+        if (daysUntilNext <= 3 && deadlineBanner) {
+            deadlineBanner.style.background = 'var(--bg-charcoal)';
+        }
         }
 
         // Config present but nothing upcoming: treat as completed season
@@ -335,7 +336,8 @@ async function displayUpcomingDeadline() {
         const listEl = document.getElementById('deadlineList');
         if (listEl) listEl.innerHTML = '';
         if (deadlineBanner) {
-            deadlineBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+            // Use the standard charcoal background for consistency.
+            deadlineBanner.style.background = 'var(--bg-charcoal)';
         }
         return;
     }
@@ -385,7 +387,7 @@ async function displayUpcomingDeadline() {
         deadlineDate.textContent = 'Check back for upcoming season dates';
         
         if (deadlineBanner) {
-            deadlineBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+            deadlineBanner.style.background = 'var(--bg-charcoal)';
         }
     }
 }
