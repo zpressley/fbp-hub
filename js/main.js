@@ -233,6 +233,12 @@ function setupHeaderScrollBehavior() {
     const nav = document.querySelector('.mobile-nav');
     if (!nav) return;
 
+    // Only allow full hide-on-scroll on high-utilization pages (PAD, KAP).
+    // Everywhere else, desktop/tablet keeps the header visible while still
+    // compacting it a bit after a small scroll.
+    const pageName = typeof getPageName === 'function' ? getPageName() : '';
+    const allowDesktopHide = pageName === 'pad' || pageName === 'kap';
+
     let lastScrollY = window.scrollY;
     let ticking = false;
     let isHidden = false;
@@ -240,16 +246,16 @@ function setupHeaderScrollBehavior() {
     function update() {
         const currentY = window.scrollY;
         const diff = currentY - lastScrollY;
+        const isDesktopOrTablet = window.innerWidth >= 768;
 
-        // Desktop / tablet: keep header always visible, only toggle compact
-        if (window.innerWidth >= 768) {
+        // Desktop / tablet behavior on most pages: never fully hide the header.
+        if (isDesktopOrTablet && !allowDesktopHide) {
             if (currentY > 40) {
                 nav.classList.add('nav-compact');
             } else {
                 nav.classList.remove('nav-compact');
             }
 
-            // Ensure we never apply the hidden state on larger viewports
             if (isHidden) {
                 nav.classList.remove('nav-hidden');
                 isHidden = false;
@@ -260,7 +266,7 @@ function setupHeaderScrollBehavior() {
             return;
         }
 
-        // Mobile-only behavior below
+        // Full hide/show behavior (mobile on all pages, and desktop on PAD/KAP).
 
         // Ignore very small jitter to reduce "bounce" around thresholds
         if (Math.abs(diff) < 4) {

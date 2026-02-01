@@ -623,6 +623,9 @@
     border: none;
     border-radius: var(--radius-md);
     font-weight: 700;
+    /* Make the button feel more substantial for this high-impact action */
+    padding: var(--space-lg) var(--space-2xl);
+    font-size: var(--text-base);
 }
 
 .btn-add-slot:hover {
@@ -792,10 +795,26 @@
 }
 
 .nav-buttons .btn-primary,
-.nav-buttons .btn-secondary,
 .nav-buttons-top .btn-primary,
+.nav-buttons .btn-secondary,
 .nav-buttons-top .btn-secondary {
     min-width: 150px;
+}
+
+/* PAD-specific: make Next (btn-primary) look/animate like Back (btn-secondary),
+   but in the league red instead of yellow. */
+.nav-buttons .btn-primary,
+.nav-buttons-top .btn-primary {
+    background-color: var(--primary-red);
+    color: var(--text-white);
+    border: none;
+}
+
+.nav-buttons .btn-primary:hover,
+.nav-buttons-top .btn-primary:hover {
+    background-color: #D63034;
+    transform: scale(1.06);
+    box-shadow: 0 6px 16px rgba(239, 62, 66, 0.4);
 }
 
 .btn-submit {
