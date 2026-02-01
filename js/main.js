@@ -233,9 +233,6 @@ function setupHeaderScrollBehavior() {
     const nav = document.querySelector('.mobile-nav');
     if (!nav) return;
 
-    // Apply behavior on all viewports (mobile + desktop) so the header
-    // can cleanly hide on scroll. Jitter is handled via thresholds below.
-
     let lastScrollY = window.scrollY;
     let ticking = false;
     let isHidden = false;
@@ -243,6 +240,27 @@ function setupHeaderScrollBehavior() {
     function update() {
         const currentY = window.scrollY;
         const diff = currentY - lastScrollY;
+
+        // Desktop / tablet: keep header always visible, only toggle compact
+        if (window.innerWidth >= 768) {
+            if (currentY > 40) {
+                nav.classList.add('nav-compact');
+            } else {
+                nav.classList.remove('nav-compact');
+            }
+
+            // Ensure we never apply the hidden state on larger viewports
+            if (isHidden) {
+                nav.classList.remove('nav-hidden');
+                isHidden = false;
+            }
+
+            lastScrollY = currentY;
+            ticking = false;
+            return;
+        }
+
+        // Mobile-only behavior below
 
         // Ignore very small jitter to reduce "bounce" around thresholds
         if (Math.abs(diff) < 4) {
