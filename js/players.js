@@ -397,6 +397,10 @@ function openPlayerDetail(playerId) {
     }
     
     selectedPlayer = player;
+
+    // Apply owner-based theming for the slide-out panel so it always
+    // matches the current player's team colors.
+    applyOwnerThemeForPlayerDetail(player);
     
     // Build detail panel content
     const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
@@ -413,7 +417,7 @@ function openPlayerDetail(playerId) {
                 ${player.FBP_Team ? createTeamBadge(player.FBP_Team) : ''}
             </div>
             <div class="player-detail-actions">
-                <a href="${profileLink}" class="btn btn-primary">
+                <a href="${profileLink}" class="btn btn-profile-accent">
                     <i class="fas fa-user"></i>
                     View Full Profile
                 </a>
@@ -469,6 +473,10 @@ function closePlayerDetail() {
         panel.classList.remove('active');
     }
     
+    // Optionally clear team-specific overrides when closing the panel.
+    // We leave them in place for now so the rest of the page stays themed
+    // to the last player viewed.
+    
     // Remove selection highlight
     document.querySelectorAll('.player-list-item').forEach(item => {
         item.classList.remove('selected');
@@ -490,6 +498,32 @@ function createContractBadgeWithClass(contractStr) {
     else if (contract.includes('DC')) badgeClass = 'dc';
     
     return `<span class="contract-badge ${badgeClass}">${contractStr}</span>`;
+}
+
+// Helper: apply owner-based theme for the players slide-out panel
+function applyOwnerThemeForPlayerDetail(player) {
+    const ownerAbbr = player.FBP_Team || player.manager || null;
+    const root = document.documentElement;
+
+    if (ownerAbbr && typeof FBPHub !== 'undefined') {
+        const colors = FBPHub.data?.teamColors?.[ownerAbbr];
+        if (colors && colors.primary) {
+            const secondary = colors.secondary || '#FFB612';
+            root.style.setProperty('--team-primary', colors.primary);
+            root.style.setProperty('--team-secondary', secondary);
+            if (colors.accent1) root.style.setProperty('--team-accent-1', colors.accent1);
+            if (colors.accent2) root.style.setProperty('--team-accent-2', colors.accent2);
+            if (colors.accent3) root.style.setProperty('--team-accent-3', colors.accent3);
+            return;
+        }
+    }
+
+    // Fallback: clear overrides so global theme is used.
+    root.style.removeProperty('--team-primary');
+    root.style.removeProperty('--team-secondary');
+    root.style.removeProperty('--team-accent-1');
+    root.style.removeProperty('--team-accent-2');
+    root.style.removeProperty('--team-accent-3');
 }
 
 // Expose functions globally

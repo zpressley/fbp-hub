@@ -336,6 +336,21 @@
     flex-wrap: wrap;
 }
 
+.player-detail-actions {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.btn-profile-accent {
+    background-color: var(--team-accent-1, var(--accent-yellow));
+    color: var(--bg-charcoal);
+}
+
+.btn-profile-accent:hover {
+    background-color: var(--team-primary, var(--primary-red));
+    color: var(--text-white);
+}
+
 /* Player Photo */
 .player-photo {
     width: 120px;

@@ -59,25 +59,23 @@
             <div class="kap-sticky-bar" id="kapStickyBar">
                 <div class="kap-bar-grid">
                     <div class="kap-bar-item">
-                        <span class="kap-bar-label">Available</span>
-                        <span class="kap-bar-value total" id="barTotalKAP">$405</span>
+                        <span class="kap-bar-label">Remaining</span>
+                        <span class="kap-bar-value remaining" id="barRemaining">$375</span>
+                    </div>
+                    <div class="kap-bar-divider"></div>
+                    <div class="kap-bar-item">
+                        <span class="kap-bar-label">Salary Cost</span>
+                        <span class="kap-bar-value salary" id="barSalaryCost">$0</span>
                     </div>
                     <div class="kap-bar-divider"></div>
                     <div class="kap-bar-item">
                         <span class="kap-bar-label">Taxable</span>
                         <span class="kap-bar-value taxable" id="barTaxableSpend">$0</span>
-                        <span class="kap-bar-sublabel" id="barTaxLimit">/ $435 max</span>
                     </div>
                     <div class="kap-bar-divider"></div>
                     <div class="kap-bar-item">
-                        <span class="kap-bar-label">Tax-Free</span>
-                        <span class="kap-bar-value taxfree" id="barTaxFreeSpend">$0</span>
-                        <span class="kap-bar-sublabel">RaT only</span>
-                    </div>
-                    <div class="kap-bar-divider"></div>
-                    <div class="kap-bar-item">
-                        <span class="kap-bar-label">Remaining</span>
-                        <span class="kap-bar-value remaining" id="barRemaining">$405</span>
+                        <span class="kap-bar-label">Keepers</span>
+                        <span class="kap-bar-value keepers" id="barKeepersSelected">0</span>
                     </div>
                     <div class="kap-bar-divider"></div>
                     <div class="kap-bar-item">
@@ -121,17 +119,17 @@
                 <div class="keeper-summary-cards">
                     <div class="keeper-summary-card">
                         <div class="summary-stat">
-                            <span class="summary-label">Keepers Selected</span>
-                            <span class="summary-value" id="keepersSelected">0</span>
-                            <span class="summary-sublabel">/ 26 max</span>
-                        </div>
-                    </div>
-                    <div class="keeper-summary-card">
-                        <div class="summary-stat">
                             <span class="summary-label">Salary Cost</span>
                             <span class="summary-value" id="salaryCost">$0</span>
                         </div>
                     </div>
+                </div>
+
+                <div class="nav-buttons nav-buttons-top">
+                    <div></div>
+                    <button class="btn-primary" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
 
                 <div id="keeperList"></div>

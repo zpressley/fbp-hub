@@ -150,6 +150,13 @@ async function initKAPPage() {
     displayRaT();
     displayBuyIns();
     
+    // Make step circles clickable
+    document.querySelectorAll('.progress-step').forEach((stepEl, index) => {
+        stepEl.addEventListener('click', () => {
+            goToStep(index);
+        });
+    });
+    
     // Setup sticky bar
     setupStickyBar();
 }
@@ -405,18 +412,26 @@ function updateKAPBudgetDisplay() {
     const totalSpend = taxableSpend + taxFreeSpend;
     const remaining = KAP_STATE.totalAvailable - totalSpend;
     const taxBracket = calculateTaxBracket(taxableSpend);
+    const salaryCost = calculateKeeperSalaryCost();
     
-    document.getElementById('barTotalKAP').textContent = `$${KAP_STATE.totalAvailable}`;
-    document.getElementById('barTaxableSpend').textContent = `$${taxableSpend}`;
-    document.getElementById('barTaxFreeSpend').textContent = `$${taxFreeSpend}`;
-    document.getElementById('barRemaining').textContent = `$${remaining}`;
+    const remainingEl = document.getElementById('barRemaining');
+    const salaryEl = document.getElementById('barSalaryCost');
+    const taxableEl = document.getElementById('barTaxableSpend');
+    const keepersEl = document.getElementById('barKeepersSelected');
+    const bracketEl = document.getElementById('barTaxBracket');
+    const roundsEl = document.getElementById('barTaxRounds');
+    
+    if (remainingEl) remainingEl.textContent = `$${remaining}`;
+    if (salaryEl) salaryEl.textContent = `$${salaryCost}`;
+    if (taxableEl) taxableEl.textContent = `$${taxableSpend}`;
+    if (keepersEl) keepersEl.textContent = String(KAP_STATE.selectedKeepers.length);
     
     if (taxBracket.rounds.length > 0) {
-        document.getElementById('barTaxBracket').textContent = `$${taxBracket.min}-${taxBracket.max}`;
-        document.getElementById('barTaxRounds').textContent = `Lose: ${taxBracket.rounds.join(', ')}`;
+        if (bracketEl) bracketEl.textContent = `$${taxBracket.min}-${taxBracket.max}`;
+        if (roundsEl) roundsEl.textContent = `Lose: ${taxBracket.rounds.join(', ')}`;
     } else {
-        document.getElementById('barTaxBracket').textContent = 'None';
-        document.getElementById('barTaxRounds').textContent = '';
+        if (bracketEl) bracketEl.textContent = 'None';
+        if (roundsEl) roundsEl.textContent = '';
     }
 }
 
@@ -474,9 +489,11 @@ function displayKeepers() {
         `;
     }).join('');
     
-    // Update summary cards
-    document.getElementById('keepersSelected').textContent = KAP_STATE.selectedKeepers.length;
-    document.getElementById('salaryCost').textContent = `$${calculateKeeperSalaryCost()}`;
+    // Update summary card
+    const salaryCard = document.getElementById('salaryCost');
+    if (salaryCard) {
+        salaryCard.textContent = `$${calculateKeeperSalaryCost()}`;
+    }
 }
 
 /**
@@ -534,7 +551,7 @@ function displayILTags() {
         
         return `
             <div class="il-tag-slot ${ilTag ? 'used' : ''}">
-                <div class="il-tag-label">${tier} Tag</div>
+                <div class="il-tag-label">${tier} IL Tag</div>
                 <div class="il-tag-discount">-$${discount}</div>
                 <div class="il-tag-player ${ilTag ? 'active' : ''}">
                     ${ilTag ? ilTag.name : 'Available'}
@@ -810,6 +827,9 @@ function updateSummary() {
     
     document.getElementById('summaryKeepers').innerHTML = keepersHTML || '<div class="summary-empty">No keepers selected</div>';
     document.getElementById('summaryKeeperCount').textContent = KAP_STATE.selectedKeepers.length;
+    
+    // Keep banner in sync
+    updateKAPBudgetDisplay();
     
     // Tools summary
     const toolsHTML = [];
@@ -1235,7 +1255,30 @@ function showToast(message, type = 'success') {
     const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
     toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 5000);
+
+    const removeToast = () => {
+        if (!toast.isConnected) return;
+        toast.remove();
+        document.removeEventListener('click', onDocumentClick);
+    };
+
+    const onDocumentClick = (event) => {
+        // Any click (on toast or elsewhere) dismisses the toast
+        removeToast();
+    };
+
+    toast.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeToast();
+    });
+
+    // Attach document listener on next tick so we don't instantly consume
+    // the click that triggered the toast.
+    setTimeout(() => {
+        document.addEventListener('click', onDocumentClick, { once: true });
+    }, 0);
+
+    setTimeout(removeToast, 5000);
 }
 
 // Expose functions

@@ -69,10 +69,10 @@
     line-height: 1;
 }
 
-.kap-bar-value.total { color: var(--accent-yellow); }
-.kap-bar-value.taxable { color: var(--primary-red); }
-.kap-bar-value.taxfree { color: #2196F3; }
 .kap-bar-value.remaining { color: var(--success); }
+.kap-bar-value.salary { color: var(--accent-yellow); }
+.kap-bar-value.taxable { color: var(--primary-red); }
+.kap-bar-value.keepers { color: var(--accent-yellow); }
 .kap-bar-value.tax { color: #FF9800; font-size: var(--text-base); }
 
 .kap-bar-sublabel {
@@ -184,7 +184,7 @@
 /* Keeper Summary Cards */
 .keeper-summary-cards {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: var(--space-lg);
     margin-bottom: var(--space-xl);
 }
@@ -782,18 +782,45 @@
     border-top: var(--border-width) solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-buttons button {
+.nav-buttons-top {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.nav-buttons button,
+.nav-buttons-top button {
     padding: var(--space-md) var(--space-xl);
     font-size: var(--text-base);
     font-weight: 700;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-sm);
+    border-radius: 999px;
 }
 
 .nav-buttons .btn-primary,
-.nav-buttons .btn-secondary {
+.nav-buttons-top .btn-primary,
+.nav-buttons .btn-secondary,
+.nav-buttons-top .btn-secondary {
     min-width: 150px;
+}
+
+/* Make Next (btn-primary) match PAD wizard styling */
+.nav-buttons .btn-primary,
+.nav-buttons-top .btn-primary {
+    background-color: var(--primary-red);
+    color: var(--text-white);
+    border: none;
+}
+
+.nav-buttons .btn-primary:hover,
+.nav-buttons-top .btn-primary:hover {
+    background-color: #D63034;
+    transform: scale(1.06);
+    box-shadow: 0 6px 16px rgba(239, 62, 66, 0.4);
 }
 
 .btn-submit {
@@ -991,8 +1018,8 @@
 /* Toast */
 .toast {
     position: fixed;
-    bottom: 100px;
-    right: var(--space-lg);
+    bottom: 72px;
+    right: var(--space-2xl);
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid;
     border-radius: var(--radius-lg);
@@ -1026,7 +1053,7 @@
    ============================================ */
 @media (max-width: 767px) {
     .kap-bar-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: var(--space-md);
     }
     
@@ -1034,8 +1061,17 @@
         display: none;
     }
     
+    .kap-bar-label {
+        font-size: var(--text-sm);
+    }
+    
     .kap-bar-value {
-        font-size: var(--text-lg);
+        font-size: var(--text-2xl);
+    }
+    
+    /* Place tax bracket centered below the 1x4 row */
+    .kap-bar-item:last-child {
+        grid-column: 1 / -1;
     }
     
     .progress-line {
