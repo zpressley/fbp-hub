@@ -1009,9 +1009,37 @@ function updateSummary() {
 }
 
 /**
+ * Determine whether PAD is in test mode for the current session.
+ *
+ * Test mode is expected to be driven by the backend via a flag exposed on
+ * FBPHub.config.padTestMode, which in turn can be wired to the
+ * PAD_TEST_MODE environment variable in Render.
+ *
+ * As a secondary escape hatch, commissioners/admins are always treated as
+ * test-mode users so they can re-run scenarios.
+ */
+function isPadTestMode() {
+    const cfgFlag = !!(window.FBPHub && FBPHub.config && FBPHub.config.padTestMode);
+
+    if (cfgFlag) return true;
+    if (typeof authManager === 'undefined') return false;
+
+    const isCommissioner = typeof authManager.isCommissioner === 'function' && authManager.isCommissioner();
+    const isAdmin = typeof authManager.isAdmin === 'function' && authManager.isAdmin();
+    return isCommissioner || isAdmin;
+}
+
+/**
  * Show confirmation modal
  */
 function showConfirmation() {
+    // Block re-submission in normal mode once PAD is marked submitted.
+    if (PAD_STATE.submitted && !isPadTestMode()) {
+        showToast('PAD has already been submitted for this team. Please contact the commissioner for changes.', 'error');
+        showSubmittedView();
+        return;
+    }
+
     // Enforce PAD open date: managers can mock PAD anytime but cannot submit before pad_open_date.
     const padOpenIso = PAD_STATE.seasonDates?.pad_open_date;
     if (padOpenIso) {
@@ -1158,6 +1186,14 @@ function setPadSubmitting(isSubmitting) {
  */
 async function confirmSubmit() {
     console.log('🚀 Submitting PAD to backend...');
+
+    // Block duplicate submits in normal mode; test mode users can resubmit.
+    if (PAD_STATE.submitted && !isPadTestMode()) {
+        showToast('PAD has already been submitted for this team. Please contact the commissioner for changes.', 'error');
+        cancelSubmit();
+        return;
+    }
+
     setPadSubmitting(true);
 
     // Double-check PAD open date in case the window changed while the page was open.
@@ -1386,6 +1422,13 @@ function logPlayerChange(data) {
  * Show submitted view
  */
 function showSubmittedView() {
+    // Once submitted, hide the wizard so the submitted page fully replaces it
+    // instead of being appended beneath step 3.
+    const padContent = document.getElementById('padContent');
+    if (padContent) {
+        padContent.style.display = 'none';
+    }
+
     document.getElementById('submittedView').style.display = 'block';
     
     // In production: fetch from pad_submissions.json
