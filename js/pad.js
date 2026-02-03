@@ -1325,7 +1325,7 @@ async function confirmSubmit() {
         // Close modal and flip UI into submitted state.
         document.getElementById('confirmationModal').classList.remove('active');
         showSubmittedView();
-        showToast('✅ PAD submitted! Changes will be reflected in the bot shortly.', 'success');
+        showToast('✅ PAD submitted! Changes will be reflected in your roster soon.', 'success');
     } catch (e) {
         console.error('Error submitting PAD:', e);
         showToast('Unexpected error while submitting PAD. Please try again.', 'error');
