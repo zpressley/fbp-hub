@@ -1132,10 +1132,33 @@ function buildPadSubmissionPayload() {
 }
 
 /**
+ * Helper to toggle submitting state on the confirmation button.
+ */
+function setPadSubmitting(isSubmitting) {
+    const btn = document.getElementById('confirmPadBtn');
+    if (!btn) return;
+
+    if (isSubmitting) {
+        if (!btn.dataset.originalHtml) {
+            btn.dataset.originalHtml = btn.innerHTML;
+        }
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    } else {
+        btn.disabled = false;
+        if (btn.dataset.originalHtml) {
+            btn.innerHTML = btn.dataset.originalHtml;
+            delete btn.dataset.originalHtml;
+        }
+    }
+}
+
+/**
  * Confirm and submit PAD via the bot API.
  */
 async function confirmSubmit() {
     console.log('🚀 Submitting PAD to backend...');
+    setPadSubmitting(true);
 
     // Double-check PAD open date in case the window changed while the page was open.
     const padOpenIso = PAD_STATE.seasonDates?.pad_open_date;
@@ -1151,6 +1174,7 @@ async function confirmSubmit() {
             const formatted = typeof formatDate === 'function' ? formatDate(openDate) : openDate.toISOString().slice(0, 10);
             showToast(`PAD submissions open on ${formatted}. You can continue editing your draft until then.`, 'error');
             cancelSubmit();
+            setPadSubmitting(false);
             return;
         }
     }
@@ -1161,6 +1185,7 @@ async function confirmSubmit() {
 
     if (total > PAD_STATE.totalAvailable) {
         showToast('PAD spend exceeds available balance. Please adjust your allocations.', 'error');
+        setPadSubmitting(false);
         return;
     }
 
@@ -1190,6 +1215,7 @@ async function confirmSubmit() {
                 PAD_STATE.submittedAt = null;
                 document.getElementById('confirmationModal').classList.remove('active');
                 showSubmittedView();
+                setPadSubmitting(false);
                 return;
             }
 
@@ -1220,6 +1246,7 @@ async function confirmSubmit() {
                 const baseMsg = `Failed to submit PAD (status ${response.status})`;
                 const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
                 showToast(fullMsg, 'error');
+                setPadSubmitting(false);
                 return;
             }
 
@@ -1266,6 +1293,8 @@ async function confirmSubmit() {
     } catch (e) {
         console.error('Error submitting PAD:', e);
         showToast('Unexpected error while submitting PAD. Please try again.', 'error');
+    } finally {
+        setPadSubmitting(false);
     }
 }
 

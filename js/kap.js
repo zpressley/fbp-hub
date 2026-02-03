@@ -178,22 +178,41 @@ async function checkSubmissionStatus() {
  * Load KAP data
  */
 async function loadKAPData() {
-    // Load rollover from managers.json (kap_rollover_2026), capped at $30
+    // Load KAP budget + PAD→KAP rollover from managers.json so the UI
+    // matches the constitution and per-team WizBucks config.
     try {
         const res = await fetch('./config/managers.json');
         if (res.ok) {
             const cfg = await res.json();
             const teamCfg = cfg?.teams?.[KAP_STATE.team];
+
+            // 1) Base KAP allotment comes from wizbucks[2026].allotments.KAP.total
+            //    which already includes bracket bonuses and any carry that
+            //    should be available at KAP. Fallback to the constitutional
+            //    baseline of 375 if the config is missing.
+            const seasonCfg = teamCfg?.wizbucks?.["2026"];
+            const kapAllot = seasonCfg?.allotments?.KAP?.total;
+            if (typeof kapAllot === 'number' && kapAllot > 0) {
+                KAP_STATE.kapAllotment = kapAllot;
+            } else {
+                KAP_STATE.kapAllotment = 375;
+            }
+
+            // 2) PAD→KAP rollover from PAD submissions (kap_rollover_2026),
+            //    clamped to $30 per the constitution.
             if (teamCfg && typeof teamCfg.kap_rollover_2026 === 'number') {
                 KAP_STATE.rolloverFromPAD = Math.max(0, Math.min(30, teamCfg.kap_rollover_2026));
             } else {
                 KAP_STATE.rolloverFromPAD = 0;
             }
         } else {
+            // managers.json missing/unreachable: fallback to 375 with no rollover
+            KAP_STATE.kapAllotment = 375;
             KAP_STATE.rolloverFromPAD = 0;
         }
     } catch (e) {
-        console.error('Failed to load KAP rollover from managers.json:', e);
+        console.error('Failed to load KAP config from managers.json:', e);
+        KAP_STATE.kapAllotment = 375;
         KAP_STATE.rolloverFromPAD = 0;
     }
     KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + KAP_STATE.rolloverFromPAD;

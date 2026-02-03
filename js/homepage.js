@@ -327,9 +327,12 @@ async function displayUpcomingDeadline() {
 
             const daysUntilNext = Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24));
         
-        if (daysUntilNext <= 3 && deadlineBanner) {
-            deadlineBanner.style.background = 'var(--bg-charcoal)';
-        }
+            if (daysUntilNext <= 3 && deadlineBanner) {
+                deadlineBanner.style.background = 'var(--bg-charcoal)';
+            }
+
+            // We have upcoming events; don't fall through to the off-season state.
+            return;
         }
 
         // Config present but nothing upcoming: treat as completed season

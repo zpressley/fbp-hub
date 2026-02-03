@@ -430,65 +430,127 @@ function cancelEditConfirm() {
  * Confirm and apply player update
  */
 async function confirmPlayerUpdate() {
-    console.log('💾 Saving player changes and logging to player_log.json...');
+    console.log('💾 Saving player changes via admin API...');
     
     const adminNote = document.getElementById('editAdminNote').value.trim();
     
-    // Log to player_log.json
-    const logEntry = {
-        log_id: `player_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
-        timestamp: new Date().toISOString(),
-        season: 2026,
-        source: 'admin_portal',
-        admin: ADMIN_STATE.adminUser,
-        
-        upid: ADMIN_STATE.selectedPlayer.upid,
-        player_name: ADMIN_STATE.selectedPlayer.name,
-        team: document.getElementById('editTeam').value || '',
-        pos: document.getElementById('editPosition').value || '',
-        age: parseInt(document.getElementById('editAge').value) || null,
-        level: document.getElementById('editLevel').value || '',
-        
-        owner: document.getElementById('editOwner').value || '',
-        update_type: 'admin_manual',
-        
-        changes: ADMIN_STATE.pendingChanges,
-        event: `Admin update: ${adminNote}`,
-        
-        related_transactions: {
-            wizbucks_txn_id: null
-        },
-        
-        metadata: {
-            admin_note: adminNote,
-            fields_updated: Object.keys(ADMIN_STATE.pendingChanges).join(', ')
-        }
-    };
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
     
-    // Save to player log
-    const playerLog = JSON.parse(localStorage.getItem('player_log') || '[]');
-    playerLog.push(logEntry);
-    localStorage.setItem('player_log', JSON.stringify(playerLog));
+    if (!token) {
+        showToast('Your session has expired. Please log in again.', 'error');
+        document.getElementById('editConfirmModal').classList.remove('active');
+        return;
+    }
     
-    console.log('📋 Player log entry created:', logEntry.log_id);
-    
-    // Update player in memory
+    // Build field patch for backend (field -> new value)
+    const fieldPatch = {};
     Object.entries(ADMIN_STATE.pendingChanges).forEach(([field, change]) => {
-        ADMIN_STATE.selectedPlayer[field] = change.to;
+        fieldPatch[field] = change.to;
     });
     
-    // In production: POST to /api/admin/update-player
-    // Would update combined_players.json via GitHub commit
+    const payload = {
+        season: 2026, // TODO: keep in sync with current season/year
+        admin: ADMIN_STATE.adminUser,
+        upid: ADMIN_STATE.selectedPlayer.upid,
+        changes: fieldPatch,
+        log_event: `Admin update: ${adminNote}`,
+        log_source: 'admin_portal',
+        update_type: 'admin_manual'
+        // For now, WizBucks adjustments are handled separately via the WB tab.
+    };
     
-    // Close modal
-    document.getElementById('editConfirmModal').classList.remove('active');
-    
-    // Show success and reset form
-    showToast(`✅ ${ADMIN_STATE.selectedPlayer.name} updated successfully!`, 'success');
-    
-    cancelEdit();
-    updateAdminStats();
-    loadRecentLogs();
+    try {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/update-player`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+            let detail = '';
+            try {
+                const body = await res.json();
+                detail = body.detail || body.error || '';
+            } catch (e) {
+                // Non-JSON error body; ignore
+            }
+            const baseMsg = `Admin update failed (status ${res.status})`;
+            const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+            console.error('Admin update failed', { status: res.status, detail });
+            showToast(fullMsg, 'error');
+            return;
+        }
+        
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (e) {
+            data = {};
+        }
+        
+        if (data && data.player && typeof data.player === 'object') {
+            Object.assign(ADMIN_STATE.selectedPlayer, data.player);
+        } else {
+            // Fallback: apply pendingChanges locally
+            Object.entries(ADMIN_STATE.pendingChanges).forEach(([field, change]) => {
+                ADMIN_STATE.selectedPlayer[field] = change.to;
+            });
+        }
+        
+        // Also maintain local admin log cache for this UI
+        const logEntry = {
+            log_id: `player_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
+            timestamp: new Date().toISOString(),
+            season: 2026,
+            source: 'admin_portal',
+            admin: ADMIN_STATE.adminUser,
+            
+            upid: ADMIN_STATE.selectedPlayer.upid,
+            player_name: ADMIN_STATE.selectedPlayer.name,
+            team: document.getElementById('editTeam').value || '',
+            pos: document.getElementById('editPosition').value || '',
+            age: parseInt(document.getElementById('editAge').value) || null,
+            level: document.getElementById('editLevel').value || '',
+            
+            owner: document.getElementById('editOwner').value || '',
+            update_type: 'admin_manual',
+            
+            changes: ADMIN_STATE.pendingChanges,
+            event: `Admin update: ${adminNote}`,
+            
+            related_transactions: {
+                wizbucks_txn_id: null
+            },
+            
+            metadata: {
+                admin_note: adminNote,
+                fields_updated: Object.keys(ADMIN_STATE.pendingChanges).join(', ')
+            }
+        };
+        
+        const playerLog = JSON.parse(localStorage.getItem('player_log') || '[]');
+        playerLog.push(logEntry);
+        localStorage.setItem('player_log', JSON.stringify(playerLog));
+        
+        console.log('📋 Player log entry created:', logEntry.log_id);
+        
+        // Close modal
+        document.getElementById('editConfirmModal').classList.remove('active');
+        
+        // Show success and reset form
+        showToast(`✅ ${ADMIN_STATE.selectedPlayer.name} updated successfully!`, 'success');
+        
+        cancelEdit();
+        updateAdminStats();
+        loadRecentLogs();
+    } catch (err) {
+        console.error('Admin update error', err);
+        showToast('Admin update failed due to a network error. Please try again.', 'error');
+    }
 }
 
 /**
@@ -507,28 +569,61 @@ function cancelEdit() {
 /**
  * Load recent logs
  */
-function loadRecentLogs() {
-    const playerLog = JSON.parse(localStorage.getItem('player_log') || '[]');
+async function loadRecentLogs() {
     const typeFilter = document.getElementById('logTypeFilter')?.value || '';
     const limitFilter = parseInt(document.getElementById('logLimitFilter')?.value || '50');
-    
-    let logs = [...playerLog].reverse(); // Most recent first
-    
-    // Apply type filter
-    if (typeFilter) {
-        logs = logs.filter(log => log.update_type === typeFilter);
-    }
-    
-    // Apply limit
-    logs = logs.slice(0, limitFilter);
-    
     const container = document.getElementById('activityLog');
-    
-    if (logs.length === 0) {
+
+    let logs = [];
+
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+
+    // Prefer live API via Cloudflare Worker → FastAPI → player_log.json
+    if (AUTH_CONFIG?.workerUrl && token) {
+        try {
+            const params = new URLSearchParams();
+            params.set('limit', String(limitFilter));
+            if (typeFilter) params.set('update_type', typeFilter);
+
+            const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/player-log?${params.toString()}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    logs = data;
+                }
+            } else {
+                console.warn('Admin player log API returned', res.status);
+            }
+        } catch (e) {
+            console.warn('Failed to load admin player log via API', e);
+        }
+    }
+
+    // Fallback: localStorage cache used by earlier admin portal versions
+    if (!Array.isArray(logs) || logs.length === 0) {
+        const playerLog = JSON.parse(localStorage.getItem('player_log') || '[]');
+        logs = [...playerLog].reverse(); // Most recent first
+
+        if (typeFilter) {
+            logs = logs.filter(log => log.update_type === typeFilter);
+        }
+
+        logs = logs.slice(0, limitFilter);
+    }
+
+    if (!container) return;
+
+    if (!logs.length) {
         container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No activity logs</p></div>';
         return;
     }
-    
+
     container.innerHTML = logs.map(log => {
         const isAdmin = log.update_type === 'admin_manual';
         
@@ -565,27 +660,55 @@ function loadRecentLogs() {
 /**
  * Load team WizBucks balances
  */
-function loadTeamBalances() {
-    // In production: calculate from wizbucks_ledger.json
-    const ledger = JSON.parse(localStorage.getItem('wizbucks_ledger') || '[]');
-    
-    const teams = ['WIZ', 'B2J', 'CFL', 'HAM', 'JEP', 'LFB', 'LAW', 'SAD', 'DRO', 'RV', 'TBB', 'WAR'];
-    
-    const balances = {};
-    teams.forEach(team => {
-        const teamTxns = ledger.filter(txn => txn.team === team);
-        const balance = teamTxns.length > 0 
-            ? teamTxns[teamTxns.length - 1].balance_after 
-            : 0;
-        balances[team] = balance;
-    });
-    
+async function loadTeamBalances() {
     const container = document.getElementById('teamBalances');
-    
+    if (!container) return;
+
+    const teams = ['WIZ', 'B2J', 'CFL', 'HAM', 'JEP', 'LFB', 'LAW', 'SAD', 'DRO', 'RV', 'TBB', 'WAR'];
+    let balances = {};
+
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+
+    // Prefer live balances from the bot API via the Worker
+    if (AUTH_CONFIG?.workerUrl && token) {
+        try {
+            const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/wizbucks-balances`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.balances && typeof data.balances === 'object') {
+                    balances = data.balances;
+                }
+            } else {
+                console.warn('Admin WB balances API returned', res.status);
+            }
+        } catch (e) {
+            console.warn('Failed to load WB balances via API', e);
+        }
+    }
+
+    // Fallback: localStorage ledger used by earlier admin versions
+    if (!balances || Object.keys(balances).length === 0) {
+        const ledger = JSON.parse(localStorage.getItem('wizbucks_ledger') || '[]');
+        const tmpBalances = {};
+        teams.forEach(team => {
+            const teamTxns = ledger.filter(txn => txn.team === team);
+            const balance = teamTxns.length > 0
+                ? teamTxns[teamTxns.length - 1].balance_after
+                : 0;
+            tmpBalances[team] = balance;
+        });
+        balances = tmpBalances;
+    }
+
     container.innerHTML = teams.map(team => `
         <div class="team-balance-card">
             <span class="team-balance-name">${team}</span>
-            <span class="team-balance-amount">$${balances[team]}</span>
+            <span class="team-balance-amount">$${balances[team] || 0}</span>
         </div>
     `).join('');
 }
@@ -593,7 +716,7 @@ function loadTeamBalances() {
 /**
  * Apply WizBucks adjustment
  */
-function applyWBAdjustment() {
+async function applyWBAdjustment() {
     const team = document.getElementById('wbTeam').value;
     const installment = document.getElementById('wbInstallment').value;
     const amount = parseInt(document.getElementById('wbAmount').value);
@@ -603,46 +726,68 @@ function applyWBAdjustment() {
         showToast('All fields are required', 'error');
         return;
     }
-    
-    // Get current balance
-    const ledger = JSON.parse(localStorage.getItem('wizbucks_ledger') || '[]');
-    const teamTxns = ledger.filter(txn => txn.team === team);
-    const currentBalance = teamTxns.length > 0 
-        ? teamTxns[teamTxns.length - 1].balance_after 
-        : 0;
-    
-    // Create transaction
-    const txn = {
-        txn_id: `wb_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
-        timestamp: new Date().toISOString(),
-        team: team,
-        installment: installment,
-        amount: amount,
-        balance_before: currentBalance,
-        balance_after: currentBalance + amount,
-        transaction_type: 'admin_adjustment',
-        description: `Admin adjustment: ${reason}`,
-        related_player: null,
-        metadata: {
-            season: 2026,
-            source: 'admin_portal',
-            admin: ADMIN_STATE.adminUser,
-            reason: reason
-        }
+
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+
+    if (!AUTH_CONFIG?.workerUrl || !token) {
+        showToast('WB adjustments require a valid admin session. Please log in again.', 'error');
+        return;
+    }
+
+    const payload = {
+        season: 2026, // keep in sync with current league season
+        admin: ADMIN_STATE.adminUser,
+        team,
+        installment,
+        amount,
+        reason,
     };
-    
-    ledger.push(txn);
-    localStorage.setItem('wizbucks_ledger', JSON.stringify(ledger));
-    
-    console.log('💰 WizBucks adjustment logged:', txn.txn_id);
-    
-    // Reset form
-    document.getElementById('wbAdjustmentForm').reset();
-    
-    // Reload balances
-    loadTeamBalances();
-    
-    showToast(`✅ $${amount >= 0 ? '+' : ''}${amount} applied to ${team}`, 'success');
+
+    try {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/wizbucks-adjustment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+            let detail = '';
+            try {
+                const body = await res.json();
+                detail = body.detail || body.error || '';
+            } catch (e) {
+                // non-JSON error body
+            }
+            const baseMsg = `WB adjustment failed (status ${res.status})`;
+            const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+            console.error('WB adjustment failed', { status: res.status, detail });
+            showToast(fullMsg, 'error');
+            return;
+        }
+
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (e) {
+            data = {};
+        }
+
+        // Reset form
+        document.getElementById('wbAdjustmentForm').reset();
+
+        // Refresh balances from API
+        await loadTeamBalances();
+
+        const applied = typeof amount === 'number' && !isNaN(amount) ? amount : 0;
+        showToast(`✅ $${applied >= 0 ? '+' : ''}${applied} applied to ${team}`, 'success');
+    } catch (err) {
+        console.error('WB adjustment error', err);
+        showToast('WB adjustment failed due to a network error. Please try again.', 'error');
+    }
 }
 
 /**
