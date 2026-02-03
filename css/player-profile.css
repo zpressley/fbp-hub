@@ -146,7 +146,6 @@
 }
 
 .position-badge,
-.team-badge,
 .age-info {
     padding: var(--space-xs) var(--space-md);
     border-radius: var(--radius-sm);
@@ -160,10 +159,13 @@
     color: white;
 }
 
+/* Team badge on the player profile reuses the global .team-badge layout
+   but locks colors to the current team theme: solid primary background,
+   secondary text color, no border. */
 .team-badge {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--text-white);
-    border: 1px solid var(--team-secondary, rgba(255, 255, 255, 0.2));
+    background-color: var(--team-primary, var(--primary-red));
+    color: var(--team-secondary, var(--accent-yellow));
+    border: none;
 }
 
 .age-info {

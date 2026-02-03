@@ -195,10 +195,16 @@ function updatePreview() {
         accent3: document.getElementById('accent3ColorHex').value || null
     };
     
-    // Update preview banner
+    // Update preview banner: solid primary background, secondary text color
     const banner = document.getElementById('previewBanner');
-    banner.style.background = `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`;
-    banner.style.borderColor = colors.primary;
+    const teamNameEl = document.getElementById('previewTeamName');
+    const teamFullEl = document.getElementById('previewTeamFull');
+
+    banner.style.background = colors.primary;
+
+    const textColor = colors.secondary || '#FFFFFF';
+    if (teamNameEl) teamNameEl.style.color = textColor;
+    if (teamFullEl) teamFullEl.style.color = textColor;
     
     // Update preview badges
     const badge1 = document.getElementById('previewBadge1');

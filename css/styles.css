@@ -534,16 +534,19 @@ section {
    BADGES - Your Exact Specifications
    ============================================ */
 
-/* Team Badges */
+/* Team Badges (team flags) */
 .team-badge {
-    background-color: var(--primary-red);
-    color: var(--text-white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 4px 12px;
     border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
-    font-weight: 800;
-    font-family: var(--font-body);
-    letter-spacing: 1px;
+    font-size: var(--text-sm);
+    font-weight: 900;
+    font-family: var(--font-hero);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none; /* No outline; color handled inline or via theme variables */
 }
 
 /* Position Badges */

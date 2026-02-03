@@ -595,20 +595,25 @@ function getTeamColor(teamAbbr) {
 
 /**
  * Create team badge HTML (uses team_colors when available)
+ *
+ * Design: solid primary background, secondary text color, no outline.
+ * Font styling is provided by the global .team-badge class so badges
+ * match the FBP HUB 3.0 title treatment.
  */
 function createTeamBadge(teamAbbr) {
     if (!teamAbbr) return '';
 
     const colors = FBPHub.data.teamColors?.[teamAbbr];
     if (colors && colors.primary) {
-        const borderColor = colors.secondary || colors.primary;
-        const style = `background-color: ${colors.primary}; color: white; border: 2px solid ${borderColor};`;
+        const textColor = colors.secondary || '#FFFFFF';
+        const style = `background-color: ${colors.primary}; color: ${textColor};`;
         return `<span class="team-badge" style="${style}">${teamAbbr}</span>`;
     }
 
     // Fallback to static color map and base CSS styling
     const fallback = getTeamColor(teamAbbr);
-    return `<span class="team-badge" style="background-color: ${fallback}; color: white;">${teamAbbr}</span>`;
+    const style = `background-color: ${fallback}; color: #FFFFFF;`;
+    return `<span class="team-badge" style="${style}">${teamAbbr}</span>`;
 }
 
 /**
