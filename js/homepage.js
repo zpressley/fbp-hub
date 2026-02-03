@@ -257,6 +257,7 @@ async function displayUpcomingDeadline() {
     if (!deadlineName || !deadlineDate) return;
 
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     // Try dynamic config first (season_dates.json)
     const config = await loadSeasonDatesConfig();
@@ -267,7 +268,7 @@ async function displayUpcomingDeadline() {
         const rawEvents = [
             { key: 'pad_open_date', label: 'PAD Opens' },
             { key: 'pad_date', label: 'Prospect Assignment Day' },
-            { key: 'ppd_date', label: 'Prospect Draft' },
+            { key: 'prospect_draft', label: 'Prospect Draft' },
             { key: 'franchise_tag_date', label: 'Franchise Tag Deadline' },
             { key: 'trade_window_start', label: 'Trade Window Opens' },
             { key: 'trade_window_end', label: 'Trade Window Closes' },
@@ -298,7 +299,8 @@ async function displayUpcomingDeadline() {
             .filter(Boolean)
             .sort((a, b) => a.date - b.date);
 
-        const upcomingList = deadlines.filter(d => d.date > now);
+        // Upcoming events are those on or after "today".
+        const upcomingList = deadlines.filter(d => d.date >= today);
 
         if (upcomingList.length > 0) {
             const upcoming = upcomingList[0];
@@ -307,7 +309,7 @@ async function displayUpcomingDeadline() {
             deadlineName.textContent = 'Upcoming League Events';
             deadlineDate.textContent = formatDate(upcoming.date);
 
-            const items = upcomingList.slice(0, 3).map(d => {
+            const items = upcomingList.slice(0, 4).map(d => {
                 const daysUntil = Math.ceil((d.date - now) / (1000 * 60 * 60 * 24));
                 let rel = '';
                 if (daysUntil === 0) rel = 'Today';
@@ -359,7 +361,8 @@ async function displayUpcomingDeadline() {
     ];
     
     // Find next upcoming deadline
-    const upcoming = deadlines.find(d => d.date > now);
+    // Upcoming events are those on or after today.
+    const upcoming = deadlines.find(d => d.date >= today);
     
     if (upcoming) {
         deadlineName.textContent = upcoming.name;
