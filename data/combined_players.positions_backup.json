@@ -2,7 +2,7 @@
   {
     "name": "Tim Anderson",
     "team": "LAA",
-    "position": "2B,SS",
+    "position": "SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -46,7 +46,7 @@
   {
     "name": "Anthony DeSclafani",
     "team": "AZ",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -266,7 +266,7 @@
   {
     "name": "Austin Riley",
     "team": "ATL",
-    "position": "3B",
+    "position": "1B,3B,OF",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -332,7 +332,7 @@
   {
     "name": "Sean Manaea",
     "team": "NYM",
-    "position": "SP,RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -421,7 +421,7 @@
   {
     "name": "Dustin May",
     "team": "STL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -443,7 +443,7 @@
   {
     "name": "Edwin Díaz",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -880,7 +880,7 @@
   {
     "name": "Reid Detmers",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1133,7 +1133,7 @@
   {
     "name": "Raisel Iglesias",
     "team": "ATL",
-    "position": "RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1284,7 +1284,7 @@
   {
     "name": "José Berríos",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1306,7 +1306,7 @@
   {
     "name": "Zack Wheeler",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1328,7 +1328,7 @@
   {
     "name": "Jack Flaherty",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1350,7 +1350,7 @@
   {
     "name": "Luis Castillo",
     "team": "SEA",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1394,7 +1394,7 @@
   {
     "name": "Rafael Devers",
     "team": "SF",
-    "position": "1B",
+    "position": "3B",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1438,7 +1438,7 @@
   {
     "name": "Kevin Gausman",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1460,7 +1460,7 @@
   {
     "name": "Teoscar Hernández",
     "team": "LAD",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1482,7 +1482,7 @@
   {
     "name": "Zac Gallen",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1504,7 +1504,7 @@
   {
     "name": "Blake Treinen",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1570,7 +1570,7 @@
   {
     "name": "Bryce Harper",
     "team": "PHI",
-    "position": "1B",
+    "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1784,7 +1784,7 @@
   {
     "name": "Yimi García",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -2466,7 +2466,7 @@
   {
     "name": "Alex Bregman",
     "team": "BOS",
-    "position": "3B",
+    "position": "3B,SS",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -2842,7 +2842,7 @@
   {
     "name": "Ian Happ",
     "team": "CHC",
-    "position": "OF",
+    "position": "2B,3B,CF",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -2953,7 +2953,7 @@
   {
     "name": "Jonathan India",
     "team": "KC",
-    "position": "2B,3B,OF",
+    "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3043,7 +3043,7 @@
   {
     "name": "Justin Verlander",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3110,7 +3110,7 @@
   {
     "name": "Ranger Suárez",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3290,7 +3290,7 @@
   {
     "name": "Tommy Edman",
     "team": "LAD",
-    "position": "2B,3B,CF",
+    "position": "2B,3B,SS,OF",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3357,7 +3357,7 @@
   {
     "name": "Tyler Stephenson",
     "team": "CIN",
-    "position": "C",
+    "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3379,7 +3379,7 @@
   {
     "name": "Vladimir Guerrero Jr.",
     "team": "TOR",
-    "position": "1B",
+    "position": "1B,3B",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3401,7 +3401,7 @@
   {
     "name": "Walker Buehler",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3489,7 +3489,7 @@
   {
     "name": "Chris Sale",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3533,7 +3533,7 @@
   {
     "name": "Framber Valdez",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3555,7 +3555,7 @@
   {
     "name": "Michael Soroka",
     "team": "AZ",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3577,7 +3577,7 @@
   {
     "name": "Nathan Eovaldi",
     "team": "TEX",
-    "position": "SP",
+    "position": "P",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3753,7 +3753,7 @@
   {
     "name": "Logan Gilbert",
     "team": "SEA",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3797,7 +3797,7 @@
   {
     "name": "Sonny Gray",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4551,7 +4551,7 @@
   {
     "name": "Max Fried",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4573,7 +4573,7 @@
   {
     "name": "Ronald Acuña Jr.",
     "team": "ATL",
-    "position": "OF",
+    "position": "CF",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4639,7 +4639,7 @@
   {
     "name": "Adolis García",
     "team": "PHI",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4661,7 +4661,7 @@
   {
     "name": "Isiah Kiner-Falefa",
     "team": "TOR",
-    "position": "2B,3B,SS",
+    "position": "C,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4793,7 +4793,7 @@
   {
     "name": "Luis García",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4837,7 +4837,7 @@
   {
     "name": "Pete Fairbanks",
     "team": "MIA",
-    "position": "RP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4847,8 +4847,7 @@
     "upid": "3092",
     "mlb_id": null,
     "FBP_Team": "JEP",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "fypd": false
   },
   {
     "name": "Taylor Ward",
@@ -5205,7 +5204,7 @@
   {
     "name": "Luis Gil",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5612,7 +5611,7 @@
   {
     "name": "Mookie Betts",
     "team": "LAD",
-    "position": "SS",
+    "position": "2B,CF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5634,7 +5633,7 @@
   {
     "name": "Gleyber Torres",
     "team": "DET",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5656,7 +5655,7 @@
   {
     "name": "Fernando Tatis Jr.",
     "team": "SD",
-    "position": "OF",
+    "position": "SS,CF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5678,7 +5677,7 @@
   {
     "name": "Brandon Woodruff",
     "team": "MIL",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5746,7 +5745,7 @@
   {
     "name": "Gavin Lux",
     "team": "CIN",
-    "position": "2B,3B,OF",
+    "position": "2B,SS,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -5790,7 +5789,7 @@
   {
     "name": "Jazz Chisholm Jr.",
     "team": "NYY",
-    "position": "2B,3B",
+    "position": "2B,SS",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5812,7 +5811,7 @@
   {
     "name": "Jesús Luzardo",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5879,7 +5878,7 @@
   {
     "name": "Randy Arozarena",
     "team": "SEA",
-    "position": "CF",
+    "position": "OF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5901,7 +5900,7 @@
   {
     "name": "Shane McClanahan",
     "team": "TB",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5923,7 +5922,7 @@
   {
     "name": "Tarik Skubal",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5968,7 +5967,7 @@
   {
     "name": "Zach Eflin",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -6836,7 +6835,7 @@
   {
     "name": "Blake Snell",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6858,7 +6857,7 @@
   {
     "name": "Aroldis Chapman",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6880,7 +6879,7 @@
   {
     "name": "Jose Altuve",
     "team": "HOU",
-    "position": "2B,OF",
+    "position": "2B",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6902,7 +6901,7 @@
   {
     "name": "Josh Hader",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6924,7 +6923,7 @@
   {
     "name": "Dylan Cease",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6946,7 +6945,7 @@
   {
     "name": "Manny Machado",
     "team": "SD",
-    "position": "3B",
+    "position": "3B,SS",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6968,7 +6967,7 @@
   {
     "name": "Robbie Ray",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6990,7 +6989,7 @@
   {
     "name": "Casey Mize",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -7012,7 +7011,7 @@
   {
     "name": "Emmanuel Clase",
     "team": "CLE",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7918,7 +7917,7 @@
   {
     "name": "J.T. Realmuto",
     "team": "PHI",
-    "position": "C",
+    "position": "C,1B",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7962,7 +7961,7 @@
   {
     "name": "Carlos Correa",
     "team": "HOU",
-    "position": "3B,SS",
+    "position": "SS",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7984,7 +7983,7 @@
   {
     "name": "Kyle Schwarber",
     "team": "PHI",
-    "position": "OF",
+    "position": "1B,OF",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8028,7 +8027,7 @@
   {
     "name": "Aaron Nola",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8050,7 +8049,7 @@
   {
     "name": "Drew Rasmussen",
     "team": "TB",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8160,7 +8159,7 @@
   {
     "name": "Logan Webb",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8248,7 +8247,7 @@
   {
     "name": "Willson Contreras",
     "team": "BOS",
-    "position": "1B",
+    "position": "C",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8990,7 +8989,7 @@
   {
     "name": "Gerrit Cole",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9012,7 +9011,7 @@
   {
     "name": "Ketel Marte",
     "team": "AZ",
-    "position": "2B",
+    "position": "2B,SS,CF",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9034,7 +9033,7 @@
   {
     "name": "Shane Bieber",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9078,7 +9077,7 @@
   {
     "name": "Freddy Peralta",
     "team": "MIL",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9232,7 +9231,7 @@
   {
     "name": "Michael Kopech",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -10261,7 +10260,7 @@
   {
     "name": "Trea Turner",
     "team": "PHI",
-    "position": "SS",
+    "position": "2B,SS",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10283,7 +10282,7 @@
   {
     "name": "Yu Darvish",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10305,7 +10304,7 @@
   {
     "name": "Chris Bassitt",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -10327,7 +10326,7 @@
   {
     "name": "Corbin Burnes",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10349,7 +10348,7 @@
   {
     "name": "Kenley Jansen",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10393,7 +10392,7 @@
   {
     "name": "Salvador Perez",
     "team": "KC",
-    "position": "C,1B",
+    "position": "C",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10415,7 +10414,7 @@
   {
     "name": "Devin Williams",
     "team": "NYM",
-    "position": "RP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10481,7 +10480,7 @@
   {
     "name": "Jordan Romano",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -10525,7 +10524,7 @@
   {
     "name": "Lance McCullers Jr.",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -10591,7 +10590,7 @@
   {
     "name": "Tyler Glasnow",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11390,7 +11389,7 @@
   {
     "name": "Alex Vesia",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11458,7 +11457,7 @@
   {
     "name": "Bailey Ober",
     "team": "MIN",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -11503,7 +11502,7 @@
   {
     "name": "Brandon Lowe",
     "team": "PIT",
-    "position": "2B",
+    "position": "1B,2B,OF",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11789,7 +11788,7 @@
   {
     "name": "Garrett Crochet",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": "Weekend Warriors",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12072,7 +12071,7 @@
   {
     "name": "Kris Bubic",
     "team": "KC",
-    "position": "SP",
+    "position": "P",
     "manager": "Weekend Warriors",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12094,7 +12093,7 @@
   {
     "name": "Lucas Giolito",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -12207,7 +12206,7 @@
   {
     "name": "Max Scherzer",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -12626,7 +12625,7 @@
   {
     "name": "Jacob deGrom",
     "team": "TEX",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12648,7 +12647,7 @@
   {
     "name": "Cody Bellinger",
     "team": "NYY",
-    "position": "CF",
+    "position": "1B,CF",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12670,7 +12669,7 @@
   {
     "name": "Max Muncy",
     "team": "LAD",
-    "position": "3B",
+    "position": "1B,2B,3B",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12714,7 +12713,7 @@
   {
     "name": "Shohei Ohtani (Pitcher)",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12736,7 +12735,7 @@
   {
     "name": "Carlos Rodón",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12758,7 +12757,7 @@
   {
     "name": "Sandy Alcantara",
     "team": "MIA",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12935,7 +12934,7 @@
   {
     "name": "José Alvarado",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -13046,7 +13045,7 @@
   {
     "name": "Nico Hoerner",
     "team": "CHC",
-    "position": "2B",
+    "position": "2B,3B,SS",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -13068,7 +13067,7 @@
   {
     "name": "Pablo López",
     "team": "MIN",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -13248,7 +13247,7 @@
   {
     "name": "Marcus Semien",
     "team": "NYM",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13758,7 +13757,7 @@
   {
     "name": "Kris Bryant",
     "team": "COL",
-    "position": "Util",
+    "position": "1B,3B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13803,7 +13802,7 @@
   {
     "name": "Javier Báez",
     "team": "DET",
-    "position": "2B,3B,SS,CF",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13847,7 +13846,7 @@
   {
     "name": "Mike Clevinger",
     "team": "CWS",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13869,7 +13868,7 @@
   {
     "name": "Starling Marte",
     "team": "NYM",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14001,7 +14000,7 @@
   {
     "name": "Alex Verdugo",
     "team": "ATL",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14045,7 +14044,7 @@
   {
     "name": "Cal Quantrill",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14089,7 +14088,7 @@
   {
     "name": "Chris Taylor",
     "team": "LAA",
-    "position": "2B,CF",
+    "position": "2B,3B,SS,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14155,7 +14154,7 @@
   {
     "name": "Frankie Montas",
     "team": "NYM",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14177,7 +14176,7 @@
   {
     "name": "Germán Márquez",
     "team": "COL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14199,7 +14198,7 @@
   {
     "name": "Jesse Winker",
     "team": "NYM",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14221,7 +14220,7 @@
   {
     "name": "Joe Musgrove",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14243,7 +14242,7 @@
   {
     "name": "Jorge Polanco",
     "team": "NYM",
-    "position": "2B,3B",
+    "position": "2B,SS",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -14331,7 +14330,7 @@
   {
     "name": "Liam Hendriks",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14375,7 +14374,7 @@
   {
     "name": "Ryan McMahon",
     "team": "NYY",
-    "position": "3B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14397,7 +14396,7 @@
   {
     "name": "Ryan Pressly",
     "team": "CHC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14463,7 +14462,7 @@
   {
     "name": "Ty France",
     "team": "TOR",
-    "position": "1B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14485,7 +14484,7 @@
   {
     "name": "Tyler Mahle",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14551,7 +14550,7 @@
   {
     "name": "Aaron Ashby",
     "team": "MIL",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "",
@@ -14595,7 +14594,7 @@
   {
     "name": "Aaron Bummer",
     "team": "ATL",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14617,7 +14616,7 @@
   {
     "name": "Aaron Civale",
     "team": "CHC",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14877,7 +14876,7 @@
   {
     "name": "Adrian Houser",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -14899,7 +14898,7 @@
   {
     "name": "Akil Baddoo",
     "team": "MIL",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15024,7 +15023,7 @@
   {
     "name": "Alek Manoah",
     "team": "LAA",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15090,7 +15089,7 @@
   {
     "name": "Alex Lange",
     "team": "KC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15200,7 +15199,7 @@
   {
     "name": "Andrés Giménez",
     "team": "TOR",
-    "position": "2B,SS",
+    "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15237,7 +15236,7 @@
   {
     "name": "Andrew Benintendi",
     "team": "CWS",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15259,7 +15258,7 @@
   {
     "name": "Andrew Chafin",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15391,7 +15390,7 @@
   {
     "name": "Andrew Vaughn",
     "team": "MIL",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "",
@@ -15428,7 +15427,7 @@
   {
     "name": "Andy Ibáñez",
     "team": "DET",
-    "position": "2B,3B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15481,7 +15480,7 @@
   {
     "name": "Anthony Bender",
     "team": "MIA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15584,7 +15583,7 @@
   {
     "name": "Antonio Senzatela",
     "team": "COL",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15754,7 +15753,7 @@
   {
     "name": "Austin Hays",
     "team": "CIN",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16159,7 +16158,7 @@
   {
     "name": "Brendan Rodgers",
     "team": "HOU",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16284,7 +16283,7 @@
   {
     "name": "Brusdar Graterol",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16470,7 +16469,7 @@
   {
     "name": "Carlos Carrasco",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16624,7 +16623,7 @@
   {
     "name": "Cavan Biggio",
     "team": "KC",
-    "position": "1B,OF",
+    "position": "2B,3B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16646,7 +16645,7 @@
   {
     "name": "Chad Green",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16866,7 +16865,7 @@
   {
     "name": "Chris Flexen",
     "team": "CHC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16910,7 +16909,7 @@
   {
     "name": "Chris Paddack",
     "team": "DET",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16932,7 +16931,7 @@
   {
     "name": "Chris Stratton",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16954,7 +16953,7 @@
   {
     "name": "Christian Vázquez",
     "team": "MIN",
-    "position": "C",
+    "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -17280,7 +17279,7 @@
   {
     "name": "Craig Kimbrel",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -17302,7 +17301,7 @@
   {
     "name": "Cristian Javier",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "",
@@ -17661,7 +17660,7 @@
   {
     "name": "Daulton Varsho",
     "team": "TOR",
-    "position": "CF",
+    "position": "C,CF",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "",
@@ -18398,7 +18397,7 @@
   {
     "name": "Eduardo Rodriguez",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -18722,7 +18721,7 @@
   {
     "name": "Erick Fedde",
     "team": "MIL",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19051,7 +19050,7 @@
   {
     "name": "Garrett Whitlock",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "",
@@ -19095,7 +19094,7 @@
   {
     "name": "Génesis Cabrera",
     "team": "MIN",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19390,7 +19389,7 @@
   {
     "name": "Héctor Neris",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19501,7 +19500,7 @@
   {
     "name": "Hunter Renfroe",
     "team": "KC",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19739,7 +19738,7 @@
   {
     "name": "Jackson Kowar",
     "team": "SEA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -20488,7 +20487,7 @@
   {
     "name": "Jo Adell",
     "team": "LAA",
-    "position": "CF",
+    "position": "OF",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "",
@@ -20877,7 +20876,7 @@
   {
     "name": "John Means",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -20987,7 +20986,7 @@
   {
     "name": "Jon Gray",
     "team": "TEX",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21053,7 +21052,7 @@
   {
     "name": "Jonathan Loáisiga",
     "team": "NYY",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21469,7 +21468,7 @@
   {
     "name": "José Urquidy",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21491,7 +21490,7 @@
   {
     "name": "Josh Bell",
     "team": "MIN",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21839,7 +21838,7 @@
   {
     "name": "Justin Turner",
     "team": "CHC",
-    "position": "1B,3B",
+    "position": "3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22272,7 +22271,7 @@
   {
     "name": "Kyle Farmer",
     "team": "COL",
-    "position": "1B,2B,3B,SS",
+    "position": "C,1B,2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22294,7 +22293,7 @@
   {
     "name": "Kyle Freeland",
     "team": "COL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22448,7 +22447,7 @@
   {
     "name": "LaMonte Wade Jr.",
     "team": "LAA",
-    "position": "1B,OF",
+    "position": "1B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22552,7 +22551,7 @@
   {
     "name": "Lourdes Gurriel Jr.",
     "team": "AZ",
-    "position": "OF",
+    "position": "1B,2B,OF",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -22678,7 +22677,7 @@
   {
     "name": "Luis Severino",
     "team": "ATH",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "",
@@ -22722,7 +22721,7 @@
   {
     "name": "Luis Urías",
     "team": "ATH",
-    "position": "2B,3B",
+    "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22744,7 +22743,7 @@
   {
     "name": "Luke Jackson",
     "team": "SEA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22898,7 +22897,7 @@
   {
     "name": "Marcus Stroman",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22920,7 +22919,7 @@
   {
     "name": "Mark Canha",
     "team": "KC",
-    "position": "OF",
+    "position": "1B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23280,7 +23279,7 @@
   {
     "name": "Michael Conforto",
     "team": "LAD",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23317,7 +23316,7 @@
   {
     "name": "Michael Lorenzen (Pitcher)",
     "team": "KC",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23327,8 +23326,7 @@
     "upid": "2977",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "SP"
+    "fypd": false
   },
   {
     "name": "Michael Morales",
@@ -23731,7 +23729,7 @@
   {
     "name": "Nestor Cortes",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23973,7 +23971,7 @@
   {
     "name": "Nick Sandlin",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24017,7 +24015,7 @@
   {
     "name": "Nicky Lopez",
     "team": "COL",
-    "position": "3B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24240,7 +24238,7 @@
   {
     "name": "Patrick Sandoval",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24306,7 +24304,7 @@
   {
     "name": "Paul Sewald",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25046,7 +25044,7 @@
   {
     "name": "Ryan Mountcastle",
     "team": "BAL",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25112,7 +25110,7 @@
   {
     "name": "Ryan Yarbrough",
     "team": "NYY",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25304,7 +25302,7 @@
   {
     "name": "Scott Barlow",
     "team": "CIN",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25636,7 +25634,7 @@
   {
     "name": "Steven Matz",
     "team": "TB",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25747,7 +25745,7 @@
   {
     "name": "Tanner Rainey",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25960,7 +25958,7 @@
   {
     "name": "Tim Mayza",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26101,7 +26099,7 @@
   {
     "name": "Tony Gonsolin",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26292,7 +26290,7 @@
   {
     "name": "Trevor Rogers",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -26594,7 +26592,7 @@
   {
     "name": "Tyler Rogers",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -26638,7 +26636,7 @@
   {
     "name": "Tyler Wells",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26682,7 +26680,7 @@
   {
     "name": "Tylor Megill",
     "team": "NYM",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "",
@@ -33792,7 +33790,7 @@
   {
     "name": "Austin Warren",
     "team": "NYM",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -33802,8 +33800,7 @@
     "upid": "3983",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "fypd": false
   },
   {
     "name": "Moisés Gómez",
@@ -34109,7 +34106,7 @@
   {
     "name": "Jordan Montgomery",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -37551,7 +37548,7 @@
   {
     "name": "Nolan Gorman",
     "team": "STL",
-    "position": "2B,3B",
+    "position": "3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -67927,7 +67924,7 @@
   {
     "name": "Lou Trivino",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -67937,8 +67934,7 @@
     "upid": "",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "fypd": false
   },
   {
     "name": "Adam Wainwright",
@@ -68586,7 +68582,7 @@
   {
     "name": "Eric Lauer",
     "team": "TOR",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -68596,8 +68592,7 @@
     "upid": "",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "SP"
+    "fypd": false
   },
   {
     "name": "Jake McGee",

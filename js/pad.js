@@ -78,6 +78,9 @@ async function initPADPage() {
     
     // Load PAD data
     await loadPADData();
+
+    // Ensure DC slots UI reflects any restored draft state
+    syncDcSlotsUI();
     
     // Show PAD content
     document.getElementById('padContent').style.display = 'block';
@@ -288,6 +291,22 @@ async function loadPADData() {
     } catch (e) {
         console.error('Failed to enrich PAD prospects with Top 100 rank:', e);
     }
+}
+
+/**
+ * Ensure the DC slots UI (count + cost) reflects the current PAD_STATE.
+ * This is particularly important when restoring a saved draft from
+ * localStorage, so the UI doesn't show 0 slots while PAD_STATE.dcSlots
+ * still holds a non-zero value.
+ */
+function syncDcSlotsUI() {
+    const countEl = document.getElementById('dcSlotsCount');
+    const costEl = document.getElementById('dcSlotsCost');
+    if (!countEl || !costEl) return;
+
+    const count = Number(PAD_STATE.dcSlots) || 0;
+    countEl.textContent = count;
+    costEl.textContent = `$${count * 5}`;
 }
 
 /**

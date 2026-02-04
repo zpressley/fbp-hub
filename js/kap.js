@@ -224,25 +224,30 @@ async function loadKAPData() {
     }
     KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + KAP_STATE.rolloverFromPAD;
     
-    // Load MLB players
+    // Load MLB players from combined_players.json via FBPHub, using years_simple
+    // as the canonical contract/status field for KAP salary math.
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
-        KAP_STATE.mlbPlayers = FBPHub.data.players.filter(p => 
-            p.FBP_Team === KAP_STATE.team && 
-            p.player_type === 'MLB'
-        ).map(p => ({
-            upid: p.upid || '',
-            name: p.name,
-            team: p.team,
-            position: p.position,
-            age: p.age || null,
-            contract: p.contract_type || 'TC-1',
-            years: p.years_simple || '',
-            isKeeper: false,
-            hasILTag: false,
-            hasRaT: false,
-            ilDiscount: 0,
-            effectiveContract: p.contract_type || 'TC-1'
-        }));
+        KAP_STATE.mlbPlayers = FBPHub.data.players
+            .filter(p => p.FBP_Team === KAP_STATE.team && p.player_type === 'MLB')
+            .map(p => {
+                const contract = normalizeYearsSimpleToContract(p.years_simple, p.contract_type);
+                return {
+                    upid: p.upid || '',
+                    name: p.name,
+                    team: p.team,
+                    position: p.position,
+                    age: p.age || null,
+                    // Canonical KAP contract code (e.g. "TC-1", "VC-2", "FC-2+")
+                    contract,
+                    // Raw display string from combined_players
+                    years: p.years_simple || (p.contract_type || ''),
+                    isKeeper: false,
+                    hasILTag: false,
+                    hasRaT: false,
+                    ilDiscount: 0,
+                    effectiveContract: contract
+                };
+            });
     } else {
         // Mock data
         KAP_STATE.mlbPlayers = getMockMLBPlayers();
@@ -269,6 +274,76 @@ async function loadKAPData() {
             console.error('Failed to load draft:', e);
         }
     }
+}
+
+/**
+ * Normalize combined_players.years_simple (or legacy contract_type) into a
+ * canonical KAP contract code that matches KEEPER_SALARIES keys.
+ *
+ * Examples:
+ *   "TC 1"  → "TC-1"
+ *   "VC 2"  → "VC-2"
+ *   "FC 2+" → "FC-2+"
+ *   "R-4"   → "TC-R" (rookie tender)
+ */
+function normalizeYearsSimpleToContract(yearsSimple, contractType) {
+    // Prefer years_simple; fall back to contract_type if needed
+    const raw = (yearsSimple || contractType || '').toString().trim();
+    if (!raw) {
+        return 'TC-1'; // conservative default
+    }
+
+    const upper = raw.toUpperCase();
+
+    // If it's already a direct key in KEEPER_SALARIES, use it as-is
+    if (KEEPER_SALARIES[upper] !== undefined) {
+        return upper;
+    }
+
+    // Common form in combined_players is "TC 1", "VC 2", "FC 2+".
+    const dashNormalized = upper.replace(/\s+/g, '-');
+    if (KEEPER_SALARIES[dashNormalized] !== undefined) {
+        return dashNormalized;
+    }
+
+    // Handle compact forms like "TC1" or "VC2+" → "TC-1", "VC-2+"
+    const compactMatch = upper.match(/^([A-Z]+)[-]?([0-9]+\+?)$/);
+    if (compactMatch) {
+        const candidate = `${compactMatch[1]}-${compactMatch[2]}`;
+        if (KEEPER_SALARIES[candidate] !== undefined) {
+            return candidate;
+        }
+    }
+
+    // Rookies / rookie years (e.g. "R", "R-4") map to TC-R in KAP salary table
+    if (upper === 'R' || upper.startsWith('R-') || upper === 'ROOKIE') {
+        if (KEEPER_SALARIES['TC-R'] !== undefined) {
+            return 'TC-R';
+        }
+    }
+
+    // Bridge contracts in text form such as "TC BC 1" → "TC-BC-1"
+    if (upper.includes('TC') && upper.includes('BC')) {
+        const num = (upper.match(/(\d+)/) || [null, '1'])[1];
+        const candidate = `TC-BC-${num}`;
+        if (KEEPER_SALARIES[candidate] !== undefined) {
+            return candidate;
+        }
+    }
+
+    // Fallback: if it at least starts with TC/VC/FC, try mapping to "X-1" or "X-2"
+    if (upper.startsWith('TC')) {
+        return 'TC-1';
+    }
+    if (upper.startsWith('VC')) {
+        return 'VC-1';
+    }
+    if (upper.startsWith('FC')) {
+        return 'FC-1';
+    }
+
+    // Absolute fallback
+    return 'TC-1';
 }
 
 /**
@@ -896,6 +971,7 @@ function validateKAP() {
     const warnings = [];
     const warningsEl = document.getElementById('validationWarnings');
     const submitBtn = document.getElementById('submitKAPBtn');
+    const submitBtnTop = document.getElementById('submitKAPBtnTop');
     
     // Check keeper count
     if (KAP_STATE.selectedKeepers.length > 26) {
@@ -932,10 +1008,12 @@ function validateKAP() {
             <ul>${allMessages.map(w => `<li>• ${w}</li>`).join('')}</ul>
         `;
         submitBtn.disabled = true;
+        if (submitBtnTop) submitBtnTop.disabled = true;
     } else {
         warningsEl.classList.remove('has-warnings');
         warningsEl.innerHTML = '';
         submitBtn.disabled = false;
+        if (submitBtnTop) submitBtnTop.disabled = false;
     }
 }
 

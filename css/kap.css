@@ -41,7 +41,7 @@
 
 .kap-bar-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
     align-items: center;
 }
@@ -74,6 +74,28 @@
 .kap-bar-value.taxable { color: var(--primary-red); }
 .kap-bar-value.keepers { color: var(--accent-yellow); }
 .kap-bar-value.tax { color: #FF9800; font-size: var(--text-base); }
+
+.kap-bar-tax {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+}
+
+.kap-tax-label {
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.kap-tax-value {
+    font-family: var(--font-mono);
+    color: #FF9800;
+}
 
 .kap-bar-sublabel {
     font-family: var(--font-mono);
