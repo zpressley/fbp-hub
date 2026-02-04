@@ -175,18 +175,34 @@ function updateUserMenuForAuth() {
             <i class="fas fa-trophy"></i>
             KAP
         </a>
-        <a href="draft-board.html">
-            <i class="fas fa-clipboard-list"></i>
-            Draft Board
-        </a>
         <a href="settings.html">
             <i class="fas fa-cog"></i>
             Settings
         </a>
-        ${authManager.isAdmin ? authManager.isAdmin() : authManager.isCommissioner && authManager.isCommissioner() ? `
+        ${authManager.isAdmin && authManager.isAdmin() ? `
             <a href="admin.html">
                 <i class="fas fa-shield-alt"></i>
-                Admin
+                Admin Portal
+            </a>
+            <a href="auction.html">
+                <i class="fas fa-gavel"></i>
+                Auction
+            </a>
+            <a href="draft.html">
+                <i class="fas fa-table-list"></i>
+                Draft
+            </a>
+            <a href="draft-board.html">
+                <i class="fas fa-clipboard-list"></i>
+                Draft Board
+            </a>
+            <a href="draft-picks.html">
+                <i class="fas fa-list-ol"></i>
+                Draft Picks
+            </a>
+            <a href="transactions.html">
+                <i class="fas fa-exchange-alt"></i>
+                Transactions
             </a>
         ` : ''}
         <a href="#" id="headerLogout">
@@ -662,6 +678,79 @@ function createContractBadge(contract) {
 }
 
 /**
+ * Normalize a raw position string into an array of uppercase tokens.
+ *
+ * Example: "1B,3B" → ["1B", "3B"]
+ */
+function getPositionTokens(positionStr) {
+    if (!positionStr) return [];
+    return positionStr
+        .split(',')
+        .map(p => p.trim().toUpperCase())
+        .filter(Boolean);
+}
+
+/**
+ * Determine whether a player's position string matches a canonical
+ * position filter code.
+ *
+ * Canonical filters we support across the site:
+ *   C, 1B, 2B, SS, 3B, CF, OF, DH, SP, RP, P
+ *
+ * Pitcher rules:
+ * - SP: token list contains "SP"
+ * - RP: token list contains "RP"
+ * - P: generic/unspecified pitchers only:
+ *      - explicit "P", OR
+ *      - RHP/LHP *without* SP or RP (prospect-style roles)
+ */
+function positionMatchesFilter(positionStr, filterCode) {
+    if (!filterCode) return true;
+    const tokens = getPositionTokens(positionStr);
+    if (!tokens.length) return false;
+
+    const has = (code) => tokens.includes(code);
+    const hasAny = (codes) => codes.some(c => tokens.includes(c));
+
+    const hasSP = has('SP');
+    const hasRP = has('RP');
+    const hasP = has('P');
+    const hasHanded = has('RHP') || has('LHP');
+
+    switch (filterCode) {
+        case 'C':
+            return has('C');
+        case '1B':
+            return has('1B');
+        case '2B':
+            return has('2B');
+        case 'SS':
+            return has('SS');
+        case '3B':
+            return has('3B');
+        case 'CF':
+            return has('CF');
+        case 'OF':
+            // Treat LF/CF/RF as OF for filtering purposes.
+            return hasAny(['OF', 'LF', 'CF', 'RF']);
+        case 'DH':
+            return has('DH');
+        case 'SP':
+            return hasSP;
+        case 'RP':
+            return hasRP;
+        case 'P':
+            // Generic pitchers: explicit P, or handed-only (RHP/LHP)
+            // that are not already classified as SP or RP.
+            if (hasP) return true;
+            if (hasHanded && !hasSP && !hasRP) return true;
+            return false;
+        default:
+            return has(filterCode.toUpperCase());
+    }
+}
+
+/**
  * Filter players by criteria
  */
 function filterPlayers(criteria) {
@@ -672,9 +761,9 @@ function filterPlayers(criteria) {
         filtered = filtered.filter(p => p.player_type === criteria.playerType);
     }
     
-    // Filter by position
+    // Filter by position (using canonical filter codes)
     if (criteria.position) {
-        filtered = filtered.filter(p => p.position === criteria.position);
+        filtered = filtered.filter(p => positionMatchesFilter(p.position, criteria.position));
     }
     
     // Filter by team
@@ -762,6 +851,8 @@ window.formatDate = formatDate;
 window.formatRelativeTime = formatRelativeTime;
 window.createTeamBadge = createTeamBadge;
 window.createPositionBadge = createPositionBadge;
+window.filterPlayers = filterPlayers;
+window.positionMatchesFilter = positionMatchesFilter;
 window.createContractBadge = createContractBadge;
 window.filterPlayers = filterPlayers;
 window.getUniqueValues = getUniqueValues;

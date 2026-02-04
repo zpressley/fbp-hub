@@ -219,6 +219,7 @@ function displayAvailablePlayers() {
     const container = document.getElementById('availableList');
     const hideFilter = document.getElementById('hidePickedToggle')?.checked;
     const searchQuery = document.getElementById('availableSearch')?.value.toLowerCase() || '';
+    const posFilter = document.getElementById('positionFilter')?.value || '';
     
     let players = BOARD_STATE.availablePlayers.filter(p => p.available);
     
@@ -229,6 +230,17 @@ function displayAvailablePlayers() {
             (p.position || '').toLowerCase().includes(searchQuery) ||
             (p.mlb_team || '').toLowerCase().includes(searchQuery)
         );
+    }
+
+    // Filter by canonical position (C, 1B, 2B, SS, 3B, CF, OF, DH, SP, RP, P)
+    if (posFilter) {
+        if (typeof positionMatchesFilter === 'function') {
+            players = players.filter(p => positionMatchesFilter(p.position, posFilter));
+        } else {
+            // Fallback: simple substring match
+            const upper = posFilter.toUpperCase();
+            players = players.filter(p => (p.position || '').toUpperCase().includes(upper));
+        }
     }
     
     // Hide picked if enabled

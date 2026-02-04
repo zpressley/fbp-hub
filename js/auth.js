@@ -415,6 +415,10 @@ function addUserMenu() {
                 <i class="fas fa-tachometer-alt"></i>
                 Dashboard
             </a>
+            <a href="rosters.html?team=${team?.abbreviation || ''}">
+                <i class="fas fa-baseball-ball"></i>
+                My Roster
+            </a>
             <a href="pad.html">
                 <i class="fas fa-receipt"></i>
                 PAD
@@ -423,10 +427,6 @@ function addUserMenu() {
                 <i class="fas fa-trophy"></i>
                 KAP
             </a>
-            <a href="draft-board.html">
-                <i class="fas fa-clipboard-list"></i>
-                Draft Board
-            </a>
             <a href="settings.html">
                 <i class="fas fa-sliders-h"></i>
                 Settings
@@ -434,7 +434,27 @@ function addUserMenu() {
             ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>
-                    Admin
+                    Admin Portal
+                </a>
+                <a href="auction.html">
+                    <i class="fas fa-gavel"></i>
+                    Auction
+                </a>
+                <a href="draft.html">
+                    <i class="fas fa-table-list"></i>
+                    Draft
+                </a>
+                <a href="draft-board.html">
+                    <i class="fas fa-clipboard-list"></i>
+                    Draft Board
+                </a>
+                <a href="draft-picks.html">
+                    <i class="fas fa-list-ol"></i>
+                    Draft Picks
+                </a>
+                <a href="transactions.html">
+                    <i class="fas fa-exchange-alt"></i>
+                    Transactions
                 </a>
             ` : ''}
             <a href="#" id="userMenuLogout">

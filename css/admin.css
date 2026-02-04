@@ -487,6 +487,34 @@
     resize: vertical;
 }
 
+/* Log Entry Section */
+.log-entry-section {
+    background-color: rgba(76, 175, 80, 0.1);
+    border: var(--border-width) solid #4CAF50;
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.log-entry-section h4 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: #4CAF50;
+    margin-bottom: var(--space-md);
+    font-size: var(--text-base);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.log-entry-section h4 i {
+    color: #4CAF50;
+}
+
+.log-entry-section .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
 /* Changes Preview */
 .changes-preview {
     background-color: rgba(33, 150, 243, 0.1);

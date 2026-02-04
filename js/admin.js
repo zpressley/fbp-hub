@@ -28,24 +28,55 @@ const POSITIONS = [
     '2B, 3B, SS', '2B, 3B, SS, OF', 'C, 1B', 'C, OF'
 ];
 
-// Contract type options
+// Contract type options (from FBP Constitution Article 2 & 3)
+// Values match what's stored in combined_players.json
 const CONTRACT_TYPES = [
-    '', 'TC-1', 'TC-2', 'TC-3', 'TC-4', 'TC-5',
-    'VC-1', 'VC-2', 'VC-3', 'VC-4', 'VC-5',
-    'FC-1', 'FC-2', 'FC-3', 'FC-4', 'FC-5',
-    'DC', 'BC', 'PC'
+    '',
+    'Keeper Contract',      // MLB keepers (TC, VC, FC tiers)
+    'Development Cont.',    // DC - Prospect development contract ($5)
+    'Purchased Contract',   // PC - Purchased prospect contract ($10)
+    'Blue Chip Contract',   // BC - Blue-chip prospect contract ($20)
+    'Farm Contract'         // Legacy/alternate prospect contract type
 ];
 
-// Years simple options
+// Years simple - contract tier display (from combined_players.json)
+// Format: [Contract Type] [Year/Status]
 const YEARS_SIMPLE = [
-    '', 'TC 1', 'TC 2', 'TC 3', 'TC 4', 'TC 5',
-    'VC-1', 'VC-2', 'VC-3', 'VC-4', 'VC-5',
-    'FC-1', 'FC-2', 'FC-3', 'FC-4', 'FC-5',
-    'DC', 'BC', 'P', 'R-1', 'R-2', 'R-3', 'R-4', 'R-5'
+    '',
+    // Team Contract tiers
+    'TC R',     // Team Contract Rookie ($5)
+    'TC 1',     // Team Contract Year 1 ($15)
+    'TC 2',     // Team Contract Year 2 ($25)
+    // Veteran Contract tiers  
+    'VC 1',     // Veteran Contract Year 1 ($35)
+    'VC 2',     // Veteran Contract Year 2 ($55)
+    // Franchise Contract tiers
+    'FC 1',     // Franchise Contract Year 1 ($85)
+    'FC 2',     // Franchise Contract Year 2+ ($125)
+    // Prospect status
+    'P'         // Prospect (DC, PC, or BC)
 ];
 
 // Level options
 const LEVELS = ['MLB', 'AAA', 'AA', 'A+', 'A', 'A-', 'Rk', 'CPX'];
+
+// Update type options (for player_log entries)
+const UPDATE_TYPES = [
+    'Admin',
+    'Auction',
+    'Call Up Penalty',
+    'DC',
+    'Draft',
+    'Drop',
+    'Franchise',
+    'Graduate',
+    'Keeper',
+    'PAD',
+    'Purchase',
+    'Reset',
+    'Roster',
+    'Trade'
+];
 
 /**
  * Initialize admin portal
@@ -194,6 +225,14 @@ function populateDropdowns() {
     
     const editLevel = document.getElementById('editLevel');
     if (editLevel) editLevel.innerHTML = levelOptions;
+    
+    // Populate Update Type dropdown
+    const updateTypeOptions = UPDATE_TYPES.map(ut => 
+        `<option value="${ut}">${ut}</option>`
+    ).join('');
+    
+    const editUpdateType = document.getElementById('editUpdateType');
+    if (editUpdateType) editUpdateType.innerHTML = updateTypeOptions;
 }
 
 /**
@@ -667,9 +706,9 @@ function savePlayerChanges() {
         return;
     }
     
-    const adminNote = document.getElementById('editAdminNote').value.trim();
-    if (!adminNote) {
-        showToast('Admin note is required', 'error');
+    const updateType = document.getElementById('editUpdateType').value;
+    if (!updateType) {
+        showToast('Update Type is required', 'error');
         return;
     }
     
@@ -681,6 +720,9 @@ function savePlayerChanges() {
  * Show edit confirmation modal
  */
 function showEditConfirmation() {
+    const updateType = document.getElementById('editUpdateType').value;
+    const event = document.getElementById('editEvent').value.trim();
+    
     const summaryHTML = `
         <div class="confirmation-section">
             <h4>Player: ${ADMIN_STATE.selectedPlayer.name}</h4>
@@ -697,9 +739,10 @@ function showEditConfirmation() {
         </div>
         
         <div class="confirmation-section">
-            <h4>Admin Note</h4>
+            <h4>Log Entry</h4>
             <p style="color: var(--text-white); font-size: var(--text-sm);">
-                ${document.getElementById('editAdminNote').value}
+                <strong>Update Type:</strong> ${updateType}<br>
+                ${event ? `<strong>Event:</strong> ${event}` : ''}
             </p>
         </div>
     `;
@@ -721,7 +764,8 @@ function cancelEditConfirm() {
 async function confirmPlayerUpdate() {
     console.log('💾 Saving player changes via admin API...');
     
-    const adminNote = document.getElementById('editAdminNote').value.trim();
+    const updateType = document.getElementById('editUpdateType').value;
+    const event = document.getElementById('editEvent').value.trim();
     
     const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
     const token = session?.token;
@@ -731,6 +775,9 @@ async function confirmPlayerUpdate() {
         document.getElementById('editConfirmModal').classList.remove('active');
         return;
     }
+    
+    // Calculate current season (year)
+    const currentSeason = new Date().getFullYear();
     
     // Build field patch for backend (field -> new value)
     const fieldPatch = {};
@@ -744,14 +791,13 @@ async function confirmPlayerUpdate() {
     });
     
     const payload = {
-        season: 2026, // TODO: keep in sync with current season/year
+        season: currentSeason,
         admin: ADMIN_STATE.adminUser,
         upid: ADMIN_STATE.selectedPlayer.upid,
         changes: fieldPatch,
-        log_event: `Admin update: ${adminNote}`,
-        log_source: 'admin_portal',
-        update_type: 'admin_manual'
-        // For now, WizBucks adjustments are handled separately via the WB tab.
+        log_event: event || '',
+        log_source: 'Admin Portal',
+        update_type: updateType
     };
     
     try {
@@ -796,12 +842,17 @@ async function confirmPlayerUpdate() {
         }
         
         // Also maintain local admin log cache for this UI
+        // Format matches player_log.json structure
+        const timestamp = new Date().toISOString();
+        const ownerValue = document.getElementById('editOwner').value || '';
+        const ownerName = ownerValue ? (ADMIN_STATE.managers[ownerValue]?.name || ownerValue) : '';
+        
         const logEntry = {
-            log_id: `player_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
-            timestamp: new Date().toISOString(),
-            season: 2026,
-            source: 'admin_portal',
+            id: `${currentSeason}-${timestamp}-UPID_${ADMIN_STATE.selectedPlayer.upid}-${updateType}-Admin_Portal`,
+            season: currentSeason,
+            source: 'Admin Portal',
             admin: ADMIN_STATE.adminUser,
+            timestamp: timestamp,
             
             upid: ADMIN_STATE.selectedPlayer.upid,
             player_name: ADMIN_STATE.selectedPlayer.name,
@@ -809,28 +860,27 @@ async function confirmPlayerUpdate() {
             pos: document.getElementById('editPosition').value || '',
             age: parseInt(document.getElementById('editAge').value) || null,
             level: document.getElementById('editLevel').value || '',
+            team_rank: null,
+            rank: null,
+            eta: '',
+            player_type: document.getElementById('editPlayerType').value || '',
             
-            owner: document.getElementById('editOwner').value || '',
-            update_type: 'admin_manual',
+            owner: ownerName,
+            contract: document.getElementById('editContract').value || '',
+            status: document.getElementById('editStatus').value || '',
+            years: document.getElementById('editYears').value || '',
             
-            changes: ADMIN_STATE.pendingChanges,
-            event: `Admin update: ${adminNote}`,
+            update_type: updateType,
+            event: event || '',
             
-            related_transactions: {
-                wizbucks_txn_id: null
-            },
-            
-            metadata: {
-                admin_note: adminNote,
-                fields_updated: Object.keys(ADMIN_STATE.pendingChanges).join(', ')
-            }
+            changes: ADMIN_STATE.pendingChanges
         };
         
         const playerLog = JSON.parse(localStorage.getItem('player_log') || '[]');
         playerLog.push(logEntry);
         localStorage.setItem('player_log', JSON.stringify(playerLog));
         
-        console.log('📋 Player log entry created:', logEntry.log_id);
+        console.log('📋 Player log entry created:', logEntry.id);
         
         // Close modal
         document.getElementById('editConfirmModal').classList.remove('active');
@@ -858,6 +908,12 @@ function cancelEdit() {
     document.getElementById('noPlayerSelected').style.display = 'flex';
     document.getElementById('playerEditForm').style.display = 'none';
     document.getElementById('changesPreview').classList.remove('has-changes');
+    
+    // Clear log entry fields
+    const updateTypeEl = document.getElementById('editUpdateType');
+    if (updateTypeEl) updateTypeEl.selectedIndex = 0;
+    const eventEl = document.getElementById('editEvent');
+    if (eventEl) eventEl.value = '';
 }
 
 /**

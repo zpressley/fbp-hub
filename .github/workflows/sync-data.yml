@@ -139,7 +139,11 @@ jobs:
           
           download_file "combined_players.json" || FAILED=$((FAILED + 1))
           download_file "wizbucks.json" || FAILED=$((FAILED + 1))
+          download_file "wizbucks_transactions.json" || FAILED=$((FAILED + 1))
           download_file "standings.json" || FAILED=$((FAILED + 1))
+          download_file "service_stats.json" || FAILED=$((FAILED + 1))
+          download_file "top100_prospects.json" || FAILED=$((FAILED + 1))
+          download_file "auction_current.json" || FAILED=$((FAILED + 1))
           download_file "yahoo_players.json" || FAILED=$((FAILED + 1))
           download_file "player_log.json" || FAILED=$((FAILED + 1))
           # Per-player season stats used by player-profile page

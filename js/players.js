@@ -84,11 +84,11 @@ function setupQuickFilters() {
  * Setup filter dropdowns
  */
 function setupFilterDropdowns() {
-    // Position filter
+    // Position filter (use canonical position set across the site)
     const positionFilter = document.getElementById('positionFilter');
     if (positionFilter) {
-        const positions = getUniqueValues('position');
-        positions.forEach(pos => {
+        const canonicalPositions = ['C', '1B', '2B', 'SS', '3B', 'CF', 'OF', 'DH', 'SP', 'RP', 'P'];
+        canonicalPositions.forEach(pos => {
             const option = document.createElement('option');
             option.value = pos;
             option.textContent = pos;

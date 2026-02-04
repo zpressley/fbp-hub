@@ -85,9 +85,54 @@ function getGreeting() {
 }
 
 /**
+ * Load auction state for the dashboard (safe wrapper).
+ * Returns an object with { bidCount, phaseLabel } for the given team.
+ */
+async function getAuctionBidSummary(teamAbbr) {
+    const DATA_PATH = window.FBPHub?.config?.dataPath || './data/';
+
+    try {
+        const res = await fetch(`${DATA_PATH}auction_current.json`, { cache: 'no-store' });
+        if (!res.ok) {
+            return { bidCount: 0, phaseLabel: 'Auction off week' };
+        }
+
+        const state = await res.json();
+        const phase = state?.phase || 'off_week';
+        const allBids = Array.isArray(state?.bids) ? state.bids : [];
+
+        const myBids = allBids.filter(b => String(b.team).toUpperCase() === String(teamAbbr).toUpperCase());
+        let phaseLabel;
+        switch (phase) {
+            case 'ob_window':
+                phaseLabel = 'OB window open';
+                break;
+            case 'cb_window':
+                phaseLabel = 'CB window open';
+                break;
+            case 'ob_final':
+                phaseLabel = 'OB match/forfeit window';
+                break;
+            case 'processing':
+                phaseLabel = 'Processing results';
+                break;
+            case 'off_week':
+            default:
+                phaseLabel = 'Auction off week';
+                break;
+        }
+
+        return { bidCount: myBids.length, phaseLabel };
+    } catch (e) {
+        console.warn('Dashboard: auction_current.json not available or invalid', e);
+        return { bidCount: 0, phaseLabel: 'Auction data unavailable' };
+    }
+}
+
+/**
  * Load team statistics
  */
-function loadTeamStats(team) {
+async function loadTeamStats(team) {
     const statsGrid = document.getElementById('teamStats');
     if (!statsGrid || !team) return;
     
@@ -104,25 +149,22 @@ function loadTeamStats(team) {
     } else if (Object.prototype.hasOwnProperty.call(wizData, team.abbreviation)) {
         wizbucks = wizData[team.abbreviation];
     }
-    
-    // Get team standing
-    const standings = FBPHub.data.standings?.standings || [];
-    const teamStanding = standings.find(s => s.team === team.abbreviation);
-    const rank = teamStanding?.rank || '--';
-    const record = teamStanding?.record || '--';
 
     // Prospect contract breakdown
     const purchasedProspects = prospects.filter(p => (p.contract_type || '').includes('Purchased')).length;
+
+    // Auction bids this week
+    const { bidCount, phaseLabel } = await getAuctionBidSummary(team.abbreviation);
     
     statsGrid.innerHTML = `
         <div class="stat-card-large">
             <div class="stat-icon">
-                <i class="fas fa-trophy"></i>
+                <i class="fas fa-gavel"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">League Rank</div>
-                <div class="stat-value-large">#${rank}</div>
-                <div class="stat-meta">${record}</div>
+                <div class="stat-label">Auction Bids</div>
+                <div class="stat-value-large">${bidCount}</div>
+                <div class="stat-meta">${phaseLabel}</div>
             </div>
         </div>
         
@@ -277,11 +319,12 @@ function renderDashboardRosterSection(players, title) {
 
     const { batters, pitchers } = groupPlayersForDashboard(players);
 
-    // Apply section-level filters (Infield/Outfield/SP/RP)
+    // Apply section-level filters (Catcher/Infield/Outfield/SP/RP)
     const section = dashboardRosterFilters.section || 'all';
 
     const filteredBattersEntries = Object.entries(batters).filter(([groupName, list]) => {
         if (!list.length) return false;
+        if (section === 'catcher') return groupName === 'Catcher';
         if (section === 'infield') return groupName === 'Infield';
         if (section === 'outfield') return groupName === 'Outfield';
         if (section === 'sp' || section === 'rp') return false; // pitching-only filter
@@ -292,7 +335,7 @@ function renderDashboardRosterSection(players, title) {
         if (!list.length) return false;
         if (section === 'sp') return groupName === 'Starting Pitcher';
         if (section === 'rp') return groupName === 'Relief Pitcher';
-        if (section === 'infield' || section === 'outfield') return false; // hitting-only filter
+        if (section === 'catcher' || section === 'infield' || section === 'outfield') return false; // hitting-only filter
         return true; // 'all'
     });
     
