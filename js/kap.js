@@ -225,14 +225,64 @@ async function loadKAPData() {
     KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + KAP_STATE.rolloverFromPAD;
     
     // Load MLB players from combined_players.json via FBPHub, using years_simple
-    // as the canonical contract/status field for KAP salary math.
+    // as the canonical contract/status field for KAP salary math. Two-way
+    // players (e.g. Shohei Ohtani) are treated as a single payable unit but
+    // still consume two roster slots.
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
-        KAP_STATE.mlbPlayers = FBPHub.data.players
-            .filter(p => p.FBP_Team === KAP_STATE.team && p.player_type === 'MLB')
-            .map(p => {
+        const rawPlayers = FBPHub.data.players
+            .filter(p => p.FBP_Team === KAP_STATE.team && p.player_type === 'MLB');
+
+        const seenTwoWay = new Set();
+        KAP_STATE.mlbPlayers = [];
+
+        rawPlayers.forEach(p => {
+            const upid = (p.upid || '').toString();
+            if (!upid) return;
+
+            const partnerUpid = (p["2wayplayer"] || '').toString();
+            if (partnerUpid) {
+                // Canonicalize the pair so we only create one combined entry.
+                const pairKey = [upid, partnerUpid].sort().join('-');
+                if (seenTwoWay.has(pairKey)) {
+                    return;
+                }
+                seenTwoWay.add(pairKey);
+
+                const partner = rawPlayers.find(other => (other.upid || '').toString() === partnerUpid);
                 const contract = normalizeYearsSimpleToContract(p.years_simple, p.contract_type);
-                return {
-                    upid: p.upid || '',
+
+                let baseName = p.name || '';
+                baseName = baseName.replace(' (Batter)', '').replace(' (Pitcher)', '').trim();
+                const displayName = `${baseName || p.name} (2 Way player - Counts as 2 roster slots)`;
+
+                const positions = [];
+                if (p.position) positions.push(p.position);
+                if (partner && partner.position) positions.push(partner.position);
+                const combinedPosition = Array.from(new Set(positions)).join(',');
+
+                KAP_STATE.mlbPlayers.push({
+                    upid,
+                    name: displayName,
+                    team: p.team,
+                    position: combinedPosition || p.position,
+                    age: p.age || (partner && partner.age) || null,
+                    // Canonical KAP contract code (e.g. "TC-1", "VC-2", "FC-2+")
+                    contract,
+                    // Raw display string from combined_players
+                    years: p.years_simple || (p.contract_type || ''),
+                    isKeeper: false,
+                    hasILTag: false,
+                    hasRaT: false,
+                    ilDiscount: 0,
+                    effectiveContract: contract,
+                    rosterSlots: 2,
+                    isTwoWay: true,
+                    twoWayPartnerUpid: partnerUpid
+                });
+            } else {
+                const contract = normalizeYearsSimpleToContract(p.years_simple, p.contract_type);
+                KAP_STATE.mlbPlayers.push({
+                    upid,
                     name: p.name,
                     team: p.team,
                     position: p.position,
@@ -245,9 +295,13 @@ async function loadKAPData() {
                     hasILTag: false,
                     hasRaT: false,
                     ilDiscount: 0,
-                    effectiveContract: contract
-                };
-            });
+                    effectiveContract: contract,
+                    rosterSlots: 1,
+                    isTwoWay: false,
+                    twoWayPartnerUpid: null
+                });
+            }
+        });
     } else {
         // Mock data
         KAP_STATE.mlbPlayers = getMockMLBPlayers();
@@ -258,7 +312,10 @@ async function loadKAPData() {
     if (savedDraft) {
         try {
             const draft = JSON.parse(savedDraft);
-            KAP_STATE.selectedKeepers = draft.selectedKeepers || [];
+            KAP_STATE.selectedKeepers = (draft.selectedKeepers || [])
+                // Drop any legacy keeper entries that no longer exist (e.g. old
+                // two-way partner UPIDs now represented by a single entry).
+                .filter(keeperUPID => KAP_STATE.mlbPlayers.some(p => p.upid === keeperUPID));
             KAP_STATE.ilTags = draft.ilTags || { TC: null, VC: null, FC: null };
             KAP_STATE.ratApplications = draft.ratApplications || [];
             KAP_STATE.buyIns = draft.buyIns || { 1: false, 2: false, 3: false };
@@ -351,12 +408,12 @@ function normalizeYearsSimpleToContract(yearsSimple, contractType) {
  */
 function getMockMLBPlayers() {
     return [
-        { upid: '10001', name: 'Bobby Witt Jr.', team: 'KC', position: 'SS', age: 24, contract: 'VC-2', years: 'VC-2', isKeeper: false },
-        { upid: '10002', name: 'Kyle Schwarber', team: 'PHI', position: 'OF', age: 31, contract: 'FC-1', years: 'FC-1', isKeeper: false },
-        { upid: '10003', name: 'Jackson Chourio', team: 'MIL', position: 'OF', age: 20, contract: 'TC-R', years: 'R-4', isKeeper: false },
-        { upid: '10004', name: 'Corbin Carroll', team: 'ARI', position: 'OF', age: 23, contract: 'VC-1', years: 'VC-1', isKeeper: false },
-        { upid: '10005', name: 'Jazz Chisholm Jr.', team: 'NYY', position: '3B', age: 26, contract: 'TC-2', years: 'TC-2', isKeeper: false },
-        { upid: '10006', name: 'Jordan Westburg', team: 'BAL', position: '2B', age: 25, contract: 'TC-1', years: 'TC-1', isKeeper: false }
+        { upid: '10001', name: 'Bobby Witt Jr.', team: 'KC', position: 'SS', age: 24, contract: 'VC-2', years: 'VC-2', isKeeper: false, rosterSlots: 1 },
+        { upid: '10002', name: 'Kyle Schwarber', team: 'PHI', position: 'OF', age: 31, contract: 'FC-1', years: 'FC-1', isKeeper: false, rosterSlots: 1 },
+        { upid: '10003', name: 'Jackson Chourio', team: 'MIL', position: 'OF', age: 20, contract: 'TC-R', years: 'R-4', isKeeper: false, rosterSlots: 1 },
+        { upid: '10004', name: 'Corbin Carroll', team: 'ARI', position: 'OF', age: 23, contract: 'VC-1', years: 'VC-1', isKeeper: false, rosterSlots: 1 },
+        { upid: '10005', name: 'Jazz Chisholm Jr.', team: 'NYY', position: '3B', age: 26, contract: 'TC-2', years: 'TC-2', isKeeper: false, rosterSlots: 1 },
+        { upid: '10006', name: 'Jordan Westburg', team: 'BAL', position: '2B', age: 25, contract: 'TC-1', years: 'TC-1', isKeeper: false, rosterSlots: 1 }
     ];
 }
 
@@ -468,6 +525,19 @@ function calculateKeeperSalaryCost() {
     return total;
 }
 
+// Helper: compute total roster slots consumed by selected keepers,
+// treating two-way players as 2 slots but 1 salary.
+function getSelectedKeeperSlots() {
+    let total = 0;
+    KAP_STATE.selectedKeepers.forEach(upid => {
+        const player = KAP_STATE.mlbPlayers.find(p => p.upid === upid);
+        if (!player) return;
+        const slots = (typeof player.rosterSlots === 'number' && player.rosterSlots > 0) ? player.rosterSlots : 1;
+        total += slots;
+    });
+    return total;
+}
+
 function calculateTaxableSpend() {
     const salaryCost = calculateKeeperSalaryCost();
     const buyInCost = (KAP_STATE.buyIns[1] ? 55 : 0) + (KAP_STATE.buyIns[2] ? 35 : 0) + (KAP_STATE.buyIns[3] ? 10 : 0);
@@ -512,7 +582,7 @@ function updateKAPBudgetDisplay() {
     if (remainingEl) remainingEl.textContent = `$${remaining}`;
     if (salaryEl) salaryEl.textContent = `$${salaryCost}`;
     if (taxableEl) taxableEl.textContent = `$${taxableSpend}`;
-    if (keepersEl) keepersEl.textContent = String(KAP_STATE.selectedKeepers.length);
+    if (keepersEl) keepersEl.textContent = String(getSelectedKeeperSlots());
     
     if (taxBracket.rounds.length > 0) {
         if (bracketEl) bracketEl.textContent = `$${taxBracket.min}-${taxBracket.max}`;
@@ -611,8 +681,10 @@ function toggleKeeper(upid) {
         player.hasRaT = false;
     } else {
         // Add keeper
-        if (KAP_STATE.selectedKeepers.length >= 26) {
-            showToast('Maximum 26 keepers', 'error');
+        const currentSlots = getSelectedKeeperSlots();
+        const slotsForPlayer = (typeof player.rosterSlots === 'number' && player.rosterSlots > 0) ? player.rosterSlots : 1;
+        if (currentSlots + slotsForPlayer > 26) {
+            showToast('Maximum 26 keepers (roster slots) exceeded', 'error');
             return;
         }
         
@@ -914,7 +986,7 @@ function updateSummary() {
     }).join('');
     
     document.getElementById('summaryKeepers').innerHTML = keepersHTML || '<div class="summary-empty">No keepers selected</div>';
-    document.getElementById('summaryKeeperCount').textContent = KAP_STATE.selectedKeepers.length;
+    document.getElementById('summaryKeeperCount').textContent = getSelectedKeeperSlots();
     
     // Keep banner in sync
     updateKAPBudgetDisplay();
@@ -986,9 +1058,9 @@ function validateKAP() {
     const submitBtn = document.getElementById('submitKAPBtn');
     const submitBtnTop = document.getElementById('submitKAPBtnTop');
     
-    // Check keeper count
-    if (KAP_STATE.selectedKeepers.length > 26) {
-        warnings.push('Maximum 26 keepers exceeded');
+    // Check keeper count (roster slots)
+    if (getSelectedKeeperSlots() > 26) {
+        warnings.push('Maximum 26 keepers (roster slots) exceeded');
     }
     
     // Check taxable spend limit
@@ -1055,11 +1127,11 @@ function showConfirmation() {
     
     const summaryHTML = `
         <div class="confirmation-section">
-            <h4>Keepers (${KAP_STATE.selectedKeepers.length})</h4>
+            <h4>Keepers (${getSelectedKeeperSlots()})</h4>
             <ul>
                 ${KAP_STATE.selectedKeepers.map(upid => {
                     const p = KAP_STATE.mlbPlayers.find(pl => pl.upid === upid);
-                    return `<li>${p.name} - ${p.contract}</li>`;
+                    return `<li>${p ? p.name : upid} - ${p ? p.contract : ''}</li>`;
                 }).join('')}
             </ul>
         </div>
