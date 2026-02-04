@@ -30,7 +30,7 @@
     background-color: var(--bg-charcoal);
     border: var(--border-width-thick) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
+    padding: var(--space-md) var(--space-xl);
     margin-bottom: var(--space-2xl);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: all var(--transition-fast);
@@ -40,10 +40,15 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
+/* Base (mobile-first) layout: 2x2 grid of metrics with Tax Bracket centered underneath */
 .kap-bar-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-lg);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "remaining taxable"
+        "salary keepers"
+        "tax tax";
+    gap: var(--space-md);
     align-items: center;
 }
 
@@ -51,12 +56,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
+    text-align: center;
 }
+
+.kap-bar-remaining { grid-area: remaining; }
+.kap-bar-taxable { grid-area: taxable; }
+.kap-bar-salary { grid-area: salary; }
+.kap-bar-keepers { grid-area: keepers; }
+.kap-bar-tax { grid-area: tax; }
 
 .kap-bar-label {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--text-gray);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -65,25 +77,24 @@
 
 .kap-bar-value {
     font-family: var(--font-mono);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.1;
 }
 
 .kap-bar-value.remaining { color: var(--success); }
 .kap-bar-value.salary { color: var(--accent-yellow); }
 .kap-bar-value.taxable { color: var(--primary-red); }
 .kap-bar-value.keepers { color: var(--accent-yellow); }
-.kap-bar-value.tax { color: #FF9800; font-size: var(--text-base); }
 
 .kap-bar-tax {
     display: flex;
-    justify-content: flex-end;
-    align-items: baseline;
-    gap: var(--space-xs);
-    margin-top: var(--space-sm);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 0;
     font-family: var(--font-body);
-    font-size: var(--text-sm);
 }
 
 .kap-tax-label {
@@ -91,24 +102,36 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 700;
+    font-size: var(--text-sm);
 }
 
 .kap-tax-value {
     font-family: var(--font-mono);
     color: #FF9800;
+    font-size: var(--text-xl);
 }
 
 .kap-bar-sublabel {
     font-family: var(--font-mono);
-    font-size: var(--text-2xs);
+    font-size: var(--text-xs);
     color: var(--text-gray);
 }
 
-.kap-bar-divider {
-    width: 2px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.1);
-    justify-self: center;
+/* Desktop / tablet: single row across the banner, Tax Bracket centered */
+@media (min-width: 768px) {
+    .kap-sticky-bar {
+        padding: var(--space-lg) var(--space-2xl);
+    }
+
+    .kap-bar-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-areas: "remaining taxable tax salary keepers";
+        gap: var(--space-xl);
+    }
+
+    .kap-bar-item {
+        align-items: center;
+    }
 }
 
 /* Progress Steps (reuse from PAD) */

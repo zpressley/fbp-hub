@@ -359,35 +359,50 @@
 
 .current-info-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-md);
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-sm) var(--space-md);
 }
 
 .current-info-item {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: 2px;
+    padding: var(--space-xs);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
 }
 
 .current-info-label {
-    font-size: var(--text-xs);
+    font-size: 10px;
     color: var(--text-gray);
     text-transform: uppercase;
     font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .current-info-value {
     font-family: var(--font-mono);
     font-weight: 700;
     color: var(--text-white);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
+    word-break: break-word;
+}
+
+.current-player-info h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.current-player-info h4 i {
+    color: var(--accent-yellow);
 }
 
 /* Form Styles */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
 }
 
 .form-group {
@@ -402,11 +417,45 @@
 
 .form-group label {
     font-family: var(--font-body);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--text-gray);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Checkbox form group */
+.form-group-checkbox {
+    justify-content: flex-end;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    padding: var(--space-sm) var(--space-md);
+    background-color: rgba(0, 0, 0, 0.3);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.checkbox-label:hover {
+    border-color: var(--primary-red);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-red);
+    cursor: pointer;
+}
+
+.checkbox-label span {
+    font-size: var(--text-sm);
+    color: var(--text-white);
+    font-weight: 600;
 }
 
 .form-input,
@@ -859,6 +908,17 @@
     display: block;
 }
 
+/* Changes Preview improvements */
+.changes-preview h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.changes-preview h4 i {
+    color: #2196F3;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -884,7 +944,7 @@
     }
     
     .current-info-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .search-results-meta {
@@ -895,6 +955,14 @@
 
 @media (min-width: 768px) and (max-width: 1023px) {
     .admin-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .current-info-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }

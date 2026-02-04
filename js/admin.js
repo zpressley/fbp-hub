@@ -9,8 +9,43 @@ let ADMIN_STATE = {
     filteredPlayers: [],
     selectedPlayer: null,
     originalPlayerData: null,
-    pendingChanges: {}
+    pendingChanges: {},
+    managers: {}
 };
+
+// MLB Teams list
+const MLB_TEAMS = [
+    'AZ', 'ATL', 'BAL', 'BOS', 'CHC', 'CHW', 'CIN', 'CLE', 'COL', 'DET',
+    'HOU', 'KC', 'LAA', 'LAD', 'MIA', 'MIL', 'MIN', 'NYM', 'NYY', 'OAK',
+    'PHI', 'PIT', 'SD', 'SF', 'SEA', 'STL', 'TB', 'TEX', 'TOR', 'WSH', 'FA'
+];
+
+// Position options
+const POSITIONS = [
+    'C', '1B', '2B', '3B', 'SS', 'OF', 'CF', 'LF', 'RF', 'DH', 'Util',
+    'P', 'SP', 'RP', 'SP, RP',
+    '2B, SS', '2B, 3B', '3B, SS', '1B, 3B', '1B, OF', 'SS, OF',
+    '2B, 3B, SS', '2B, 3B, SS, OF', 'C, 1B', 'C, OF'
+];
+
+// Contract type options
+const CONTRACT_TYPES = [
+    '', 'TC-1', 'TC-2', 'TC-3', 'TC-4', 'TC-5',
+    'VC-1', 'VC-2', 'VC-3', 'VC-4', 'VC-5',
+    'FC-1', 'FC-2', 'FC-3', 'FC-4', 'FC-5',
+    'DC', 'BC', 'PC'
+];
+
+// Years simple options
+const YEARS_SIMPLE = [
+    '', 'TC 1', 'TC 2', 'TC 3', 'TC 4', 'TC 5',
+    'VC-1', 'VC-2', 'VC-3', 'VC-4', 'VC-5',
+    'FC-1', 'FC-2', 'FC-3', 'FC-4', 'FC-5',
+    'DC', 'BC', 'P', 'R-1', 'R-2', 'R-3', 'R-4', 'R-5'
+];
+
+// Level options
+const LEVELS = ['MLB', 'AAA', 'AA', 'A+', 'A', 'A-', 'Rk', 'CPX'];
 
 /**
  * Initialize admin portal
@@ -29,11 +64,17 @@ async function initAdminPortal() {
     
     ADMIN_STATE.adminUser = user.username || team.abbreviation;
     
+    // Load managers config
+    await loadManagersConfig();
+    
     // Load all players
     await loadAllPlayers();
     
     // Show admin content
     document.getElementById('adminContent').style.display = 'block';
+    
+    // Populate dynamic dropdowns
+    populateDropdowns();
     
     // Initialize displays
     updateAdminStats();
@@ -41,6 +82,96 @@ async function initAdminPortal() {
     setupTabs();
     loadRecentLogs();
     loadTeamBalances();
+}
+
+/**
+ * Load managers configuration from config/managers.json
+ */
+async function loadManagersConfig() {
+    try {
+        const response = await fetch('./config/managers.json');
+        if (response.ok) {
+            const data = await response.json();
+            ADMIN_STATE.managers = data.teams || {};
+            console.log(`✅ Loaded ${Object.keys(ADMIN_STATE.managers).length} managers from config`);
+        }
+    } catch (e) {
+        console.warn('Failed to load managers config, using defaults', e);
+    }
+}
+
+/**
+ * Populate all dynamic dropdowns
+ */
+function populateDropdowns() {
+    // Get manager abbreviations sorted
+    const managerAbbrevs = Object.keys(ADMIN_STATE.managers).sort();
+    
+    // Populate Owner filters in search
+    const ownerFilterOptions = '<option value="">All Owners</option>' + 
+        managerAbbrevs.map(abbr => {
+            const name = ADMIN_STATE.managers[abbr]?.name || abbr;
+            return `<option value="${abbr}">${abbr} - ${name}</option>`;
+        }).join('');
+    
+    const searchOwnerFilter = document.getElementById('searchOwnerFilter');
+    if (searchOwnerFilter) searchOwnerFilter.innerHTML = ownerFilterOptions;
+    
+    // Populate edit form owner dropdown
+    const editOwnerOptions = '<option value="">Unowned</option>' + 
+        managerAbbrevs.map(abbr => {
+            const name = ADMIN_STATE.managers[abbr]?.name || abbr;
+            return `<option value="${abbr}">${abbr} - ${name}</option>`;
+        }).join('');
+    
+    const editOwner = document.getElementById('editOwner');
+    if (editOwner) editOwner.innerHTML = editOwnerOptions;
+    
+    // Populate WizBucks team dropdown
+    const wbTeamOptions = '<option value="">Select Team...</option>' + 
+        managerAbbrevs.map(abbr => {
+            const name = ADMIN_STATE.managers[abbr]?.name || abbr;
+            return `<option value="${abbr}">${abbr} - ${name}</option>`;
+        }).join('');
+    
+    const wbTeam = document.getElementById('wbTeam');
+    if (wbTeam) wbTeam.innerHTML = wbTeamOptions;
+    
+    // Populate MLB Team dropdown
+    const mlbTeamOptions = '<option value="">N/A</option>' + 
+        MLB_TEAMS.map(team => `<option value="${team}">${team}</option>`).join('');
+    
+    const editTeam = document.getElementById('editTeam');
+    if (editTeam) editTeam.innerHTML = mlbTeamOptions;
+    
+    // Populate Position dropdown
+    const positionOptions = '<option value="">N/A</option>' + 
+        POSITIONS.map(pos => `<option value="${pos}">${pos}</option>`).join('');
+    
+    const editPosition = document.getElementById('editPosition');
+    if (editPosition) editPosition.innerHTML = positionOptions;
+    
+    // Populate Contract Type dropdown
+    const contractOptions = CONTRACT_TYPES.map(ct => 
+        `<option value="${ct}">${ct || '(None)'}</option>`
+    ).join('');
+    
+    const editContract = document.getElementById('editContract');
+    if (editContract) editContract.innerHTML = contractOptions;
+    
+    // Populate Years Simple dropdown
+    const yearsOptions = YEARS_SIMPLE.map(ys => 
+        `<option value="${ys}">${ys || '(None)'}</option>`
+    ).join('');
+    
+    const editYears = document.getElementById('editYears');
+    if (editYears) editYears.innerHTML = yearsOptions;
+    
+    // Populate Level dropdown
+    const levelOptions = LEVELS.map(lvl => `<option value="${lvl}">${lvl}</option>`).join('');
+    
+    const editLevel = document.getElementById('editLevel');
+    if (editLevel) editLevel.innerHTML = levelOptions;
 }
 
 /**
@@ -256,48 +387,114 @@ function selectPlayerForEdit(upid) {
  * Populate edit form with player data
  */
 function populateEditForm(player) {
+    // Set all form values
     document.getElementById('editName').value = player.name || '';
     document.getElementById('editUPID').value = player.upid || '';
-    document.getElementById('editPosition').value = player.position || '';
-    document.getElementById('editTeam').value = player.team || '';
+    
+    // For select elements, we need to handle custom values that may not be in the dropdown
+    setSelectOrCustom('editPosition', player.position);
+    setSelectOrCustom('editTeam', player.team);
     document.getElementById('editAge').value = player.age || '';
-    document.getElementById('editLevel').value = player.level || 'MLB';
+    setSelectOrCustom('editLevel', player.level || 'MLB');
     document.getElementById('editOwner').value = player.manager || '';
     document.getElementById('editPlayerType').value = player.player_type || 'MLB';
-    document.getElementById('editContract').value = player.contract_type || '';
-    document.getElementById('editYears').value = player.years_simple || '';
+    setSelectOrCustom('editContract', player.contract_type);
+    setSelectOrCustom('editYears', player.years_simple);
+    document.getElementById('editStatus').value = player.status || '';
+    document.getElementById('editBats').value = player.bats || '';
+    document.getElementById('editThrows').value = player.throws || '';
+    document.getElementById('editFYPD').checked = player.fypd === true;
     document.getElementById('editAdminNote').value = '';
     
-    // Display current info
-    const currentInfoHTML = `
-        <h4>Current Player Data</h4>
-        <div class="current-info-grid">
-            <div class="current-info-item">
-                <span class="current-info-label">Name</span>
-                <span class="current-info-value">${player.name}</span>
-            </div>
-            <div class="current-info-item">
-                <span class="current-info-label">Owner</span>
-                <span class="current-info-value">${player.manager || 'Unowned'}</span>
-            </div>
-            <div class="current-info-item">
-                <span class="current-info-label">Contract</span>
-                <span class="current-info-value">${player.contract_type || 'None'}</span>
-            </div>
-        </div>
-    `;
-    
+    // Build current player info display showing ALL fields
+    const currentInfoHTML = buildCurrentPlayerInfo(player);
     document.getElementById('currentPlayerInfo').innerHTML = currentInfoHTML;
     
     // Setup change detection
     setupChangeDetection();
+    
+    // Setup owner change handler to sync FBP_Team
+    const ownerSelect = document.getElementById('editOwner');
+    ownerSelect.removeEventListener('change', handleOwnerChange);
+    ownerSelect.addEventListener('change', handleOwnerChange);
+}
+
+/**
+ * Helper to set select value, adding custom option if needed
+ */
+function setSelectOrCustom(selectId, value) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    
+    const val = value || '';
+    
+    // Check if option exists
+    const optionExists = Array.from(select.options).some(opt => opt.value === val);
+    
+    if (!optionExists && val) {
+        // Add custom option
+        const customOpt = document.createElement('option');
+        customOpt.value = val;
+        customOpt.textContent = val + ' (custom)';
+        select.appendChild(customOpt);
+    }
+    
+    select.value = val;
+}
+
+/**
+ * Build the current player info display
+ */
+function buildCurrentPlayerInfo(player) {
+    const fields = [
+        { label: 'Name', value: player.name },
+        { label: 'UPID', value: player.upid },
+        { label: 'MLB Team', value: player.team || 'N/A' },
+        { label: 'Position', value: player.position || 'N/A' },
+        { label: 'Age', value: player.age || 'N/A' },
+        { label: 'Level', value: player.level || 'MLB' },
+        { label: 'FBP Owner', value: player.manager || 'Unowned' },
+        { label: 'FBP Team', value: player.FBP_Team || 'N/A' },
+        { label: 'Player Type', value: player.player_type || 'N/A' },
+        { label: 'Contract', value: player.contract_type || 'None' },
+        { label: 'Years', value: player.years_simple || 'N/A' },
+        { label: 'Status', value: player.status || 'N/A' },
+        { label: 'Bats', value: player.bats || 'N/A' },
+        { label: 'Throws', value: player.throws || 'N/A' },
+        { label: 'FYPD', value: player.fypd ? 'Yes' : 'No' },
+    ];
+    
+    return `
+        <h4><i class="fas fa-database"></i> Current Version</h4>
+        <div class="current-info-grid">
+            ${fields.map(f => `
+                <div class="current-info-item">
+                    <span class="current-info-label">${f.label}</span>
+                    <span class="current-info-value">${f.value}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+/**
+ * Handle owner change - sync FBP_Team
+ */
+function handleOwnerChange(e) {
+    // FBP_Team should match the manager abbreviation
+    // This is tracked in pendingChanges via detectChanges()
+    detectChanges();
 }
 
 /**
  * Setup change detection
  */
 function setupChangeDetection() {
-    const fields = ['editName', 'editPosition', 'editTeam', 'editAge', 'editLevel', 'editOwner', 'editPlayerType', 'editContract', 'editYears'];
+    const fields = [
+        'editName', 'editPosition', 'editTeam', 'editAge', 'editLevel', 
+        'editOwner', 'editPlayerType', 'editContract', 'editYears',
+        'editStatus', 'editBats', 'editThrows', 'editFYPD'
+    ];
     
     fields.forEach(fieldId => {
         const element = document.getElementById(fieldId);
@@ -322,7 +519,10 @@ function detectChanges() {
         editOwner: 'manager',
         editPlayerType: 'player_type',
         editContract: 'contract_type',
-        editYears: 'years_simple'
+        editYears: 'years_simple',
+        editStatus: 'status',
+        editBats: 'bats',
+        editThrows: 'throws'
     };
     
     Object.entries(fieldMap).forEach(([elementId, field]) => {
@@ -340,6 +540,33 @@ function detectChanges() {
         }
     });
     
+    // Handle FYPD checkbox
+    const fypdEl = document.getElementById('editFYPD');
+    if (fypdEl) {
+        const newFYPD = fypdEl.checked;
+        const oldFYPD = ADMIN_STATE.originalPlayerData.fypd === true;
+        if (newFYPD !== oldFYPD) {
+            changes['fypd'] = {
+                from: oldFYPD ? 'Yes' : 'No',
+                to: newFYPD ? 'Yes' : 'No'
+            };
+        }
+    }
+    
+    // Auto-sync FBP_Team with manager
+    const ownerEl = document.getElementById('editOwner');
+    if (ownerEl) {
+        const newManager = ownerEl.value;
+        const oldFBPTeam = ADMIN_STATE.originalPlayerData.FBP_Team || '';
+        // FBP_Team should match manager
+        if (newManager !== oldFBPTeam) {
+            changes['FBP_Team'] = {
+                from: oldFBPTeam,
+                to: newManager
+            };
+        }
+    }
+    
     ADMIN_STATE.pendingChanges = changes;
     
     // Display changes preview
@@ -347,17 +574,36 @@ function detectChanges() {
     
     if (Object.keys(changes).length === 0) {
         previewEl.classList.remove('has-changes');
+        previewEl.innerHTML = '';
         return;
     }
     
     previewEl.classList.add('has-changes');
     
+    // Field display names for better readability
+    const fieldLabels = {
+        name: 'Name',
+        position: 'Position',
+        team: 'MLB Team',
+        age: 'Age',
+        level: 'Level',
+        manager: 'FBP Owner',
+        FBP_Team: 'FBP Team',
+        player_type: 'Player Type',
+        contract_type: 'Contract',
+        years_simple: 'Years',
+        status: 'Status',
+        bats: 'Bats',
+        throws: 'Throws',
+        fypd: 'FYPD'
+    };
+    
     const changesHTML = `
-        <h4>Pending Changes</h4>
+        <h4><i class="fas fa-exchange-alt"></i> Pending Changes</h4>
         <div class="changes-list">
             ${Object.entries(changes).map(([field, change]) => `
                 <div class="change-item">
-                    <span class="change-field">${field}:</span>
+                    <span class="change-field">${fieldLabels[field] || field}:</span>
                     <span class="change-from">${change.from || '(empty)'}</span>
                     <span class="change-arrow">→</span>
                     <span class="change-to">${change.to || '(empty)'}</span>
@@ -446,7 +692,12 @@ async function confirmPlayerUpdate() {
     // Build field patch for backend (field -> new value)
     const fieldPatch = {};
     Object.entries(ADMIN_STATE.pendingChanges).forEach(([field, change]) => {
-        fieldPatch[field] = change.to;
+        // Convert FYPD display value back to boolean
+        if (field === 'fypd') {
+            fieldPatch[field] = change.to === 'Yes';
+        } else {
+            fieldPatch[field] = change.to;
+        }
     });
     
     const payload = {

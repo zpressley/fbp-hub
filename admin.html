@@ -205,12 +205,16 @@
                                 
                                 <div class="form-group">
                                     <label>Position</label>
-                                    <input type="text" id="editPosition" class="form-input">
+                                    <select id="editPosition" class="form-input">
+                                        <!-- Populated dynamically -->
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>MLB Team</label>
-                                    <input type="text" id="editTeam" class="form-input">
+                                    <select id="editTeam" class="form-input">
+                                        <!-- Populated dynamically -->
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
@@ -221,31 +225,14 @@
                                 <div class="form-group">
                                     <label>Level</label>
                                     <select id="editLevel" class="form-input">
-                                        <option value="MLB">MLB</option>
-                                        <option value="AAA">AAA</option>
-                                        <option value="AA">AA</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A">A</option>
-                                        <option value="Rk">Rookie</option>
+                                        <!-- Populated dynamically -->
                                     </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>FBP Owner</label>
                                     <select id="editOwner" class="form-input">
-                                        <option value="">Unowned</option>
-                                        <option value="WIZ">WIZ</option>
-                                        <option value="B2J">B2J</option>
-                                        <option value="CFL">CFL</option>
-                                        <option value="HAM">HAM</option>
-                                        <option value="JEP">JEP</option>
-                                        <option value="LFB">LFB</option>
-                                        <option value="LAW">LAW</option>
-                                        <option value="SAD">SAD</option>
-                                        <option value="DRO">DRO</option>
-                                        <option value="RV">RV</option>
-                                        <option value="TBB">TBB</option>
-                                        <option value="WAR">WAR</option>
+                                        <!-- Populated dynamically from config/managers.json -->
                                     </select>
                                 </div>
                                 
@@ -259,12 +246,47 @@
                                 
                                 <div class="form-group">
                                     <label>Contract Type</label>
-                                    <input type="text" id="editContract" class="form-input" placeholder="e.g., VC-2, DC, PC">
+                                    <select id="editContract" class="form-input">
+                                        <!-- Populated dynamically -->
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>Years Status</label>
-                                    <input type="text" id="editYears" class="form-input" placeholder="e.g., VC-2, P, R-4">
+                                    <select id="editYears" class="form-input">
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <input type="text" id="editStatus" class="form-input" placeholder="e.g., [5] TC1">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Bats</label>
+                                    <select id="editBats" class="form-input">
+                                        <option value="">N/A</option>
+                                        <option value="R">R</option>
+                                        <option value="L">L</option>
+                                        <option value="S">S (Switch)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Throws</label>
+                                    <select id="editThrows" class="form-input">
+                                        <option value="">N/A</option>
+                                        <option value="R">R</option>
+                                        <option value="L">L</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group form-group-checkbox">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="editFYPD">
+                                        <span>FYPD Eligible</span>
+                                    </label>
                                 </div>
                             </div>
                             
