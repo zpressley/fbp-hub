@@ -101,6 +101,28 @@ async function loadManagersConfig() {
 }
 
 /**
+ * Get manager abbreviation from either abbreviation or full name
+ */
+function getManagerAbbreviation(value) {
+    if (!value) return '';
+    
+    // Check if it's already an abbreviation
+    if (ADMIN_STATE.managers[value]) {
+        return value;
+    }
+    
+    // Look up by full name
+    for (const [abbr, data] of Object.entries(ADMIN_STATE.managers)) {
+        if (data.name === value || data.name?.toLowerCase() === value.toLowerCase()) {
+            return abbr;
+        }
+    }
+    
+    // Return original value if no match found
+    return value;
+}
+
+/**
  * Populate all dynamic dropdowns
  */
 function populateDropdowns() {
@@ -396,7 +418,11 @@ function populateEditForm(player) {
     setSelectOrCustom('editTeam', player.team);
     document.getElementById('editAge').value = player.age || '';
     setSelectOrCustom('editLevel', player.level || 'MLB');
-    document.getElementById('editOwner').value = player.manager || '';
+    
+    // Owner needs special handling - could be abbreviation or full name
+    const ownerAbbrev = getManagerAbbreviation(player.manager);
+    document.getElementById('editOwner').value = ownerAbbrev;
+    
     document.getElementById('editPlayerType').value = player.player_type || 'MLB';
     setSelectOrCustom('editContract', player.contract_type);
     setSelectOrCustom('editYears', player.years_simple);
@@ -446,6 +472,12 @@ function setSelectOrCustom(selectId, value) {
  * Build the current player info display
  */
 function buildCurrentPlayerInfo(player) {
+    // Resolve owner to show both abbreviation and name consistently
+    const ownerAbbrev = getManagerAbbreviation(player.manager);
+    const ownerDisplay = ownerAbbrev 
+        ? `${ownerAbbrev}${ADMIN_STATE.managers[ownerAbbrev]?.name ? ' - ' + ADMIN_STATE.managers[ownerAbbrev].name : ''}`
+        : 'Unowned';
+    
     const fields = [
         { label: 'Name', value: player.name },
         { label: 'UPID', value: player.upid },
@@ -453,7 +485,7 @@ function buildCurrentPlayerInfo(player) {
         { label: 'Position', value: player.position || 'N/A' },
         { label: 'Age', value: player.age || 'N/A' },
         { label: 'Level', value: player.level || 'MLB' },
-        { label: 'FBP Owner', value: player.manager || 'Unowned' },
+        { label: 'FBP Owner', value: ownerDisplay },
         { label: 'FBP Team', value: player.FBP_Team || 'N/A' },
         { label: 'Player Type', value: player.player_type || 'N/A' },
         { label: 'Contract', value: player.contract_type || 'None' },
@@ -510,13 +542,14 @@ function setupChangeDetection() {
  */
 function detectChanges() {
     const changes = {};
+    
+    // Fields to check - manager handled separately due to name/abbrev normalization
     const fieldMap = {
         editName: 'name',
         editPosition: 'position',
         editTeam: 'team',
         editAge: 'age',
         editLevel: 'level',
-        editOwner: 'manager',
         editPlayerType: 'player_type',
         editContract: 'contract_type',
         editYears: 'years_simple',
@@ -553,17 +586,27 @@ function detectChanges() {
         }
     }
     
-    // Auto-sync FBP_Team with manager
+    // Handle manager/owner - normalize both to abbreviation for comparison
     const ownerEl = document.getElementById('editOwner');
     if (ownerEl) {
-        const newManager = ownerEl.value;
+        const newManager = ownerEl.value; // Always abbreviation from dropdown
+        const originalManagerAbbrev = getManagerAbbreviation(ADMIN_STATE.originalPlayerData.manager);
         const oldFBPTeam = ADMIN_STATE.originalPlayerData.FBP_Team || '';
-        // FBP_Team should match manager
-        if (newManager !== oldFBPTeam) {
-            changes['FBP_Team'] = {
-                from: oldFBPTeam,
-                to: newManager
+        
+        // Only show manager change if it actually changed (compare abbreviations)
+        if (newManager !== originalManagerAbbrev) {
+            changes['manager'] = {
+                from: originalManagerAbbrev || '(empty)',
+                to: newManager || '(empty)'
             };
+            
+            // Also update FBP_Team when manager changes
+            if (newManager !== oldFBPTeam) {
+                changes['FBP_Team'] = {
+                    from: oldFBPTeam,
+                    to: newManager
+                };
+            }
         }
     }
     

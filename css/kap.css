@@ -48,7 +48,7 @@
         "remaining taxable"
         "salary keepers"
         "tax tax";
-    gap: var(--space-md);
+    gap: var(--space-lg);
     align-items: center;
 }
 
@@ -56,7 +56,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-xs);
     text-align: center;
 }
 
@@ -68,7 +68,7 @@
 
 .kap-bar-label {
     font-family: var(--font-body);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--text-gray);
     text-transform: uppercase;
     letter-spacing: 1px;

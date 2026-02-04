@@ -12,7 +12,7 @@ const AUTH_CONFIG = {
     workerUrl: 'https://fbp-auth.zpressley.workers.dev',
     
     // Redirect URI (should match Discord app settings)
-    redirectUri: 'https://zpressley.github.io/fbp-hub/callback.html',
+    redirectUri: 'https://www.pantheonleagues.com/callback.html',
     
     // Discord OAuth scopes
     scopes: ['identify', 'guilds'],
