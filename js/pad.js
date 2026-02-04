@@ -152,9 +152,10 @@ function buildProspectsForTeam(teamAbbr) {
             // Flag legacy DCs so they get special PAD treatment (e.g. free BC option).
             legacy_dc: p.contract_type === 'Development Cont.' || p.contract_type === 'Development Contract',
             top_100_rank: p.top_100_rank || null,
-            // Has MLB service time (DC-ineligible). For now, accept either a
-            // dedicated flag or a future service_time_days field.
-            has_mlb_service: p.has_mlb_service || (p.service_time_days || 0) > 0,
+            // PAD DC eligibility is driven solely by the unified `debuted` flag
+            // added to combined_players.json by the debut pipeline.
+            // debuted === true -> DC not available in the UI.
+            debuted: !!p.debuted,
             // Rookie eligibility flag from combined_players (default to true when
             // missing so prospects without MLB stats are treated as rookies).
             mlb_rookie: Object.prototype.hasOwnProperty.call(p, 'MLBRookie') ? !!p.MLBRookie : true
@@ -314,12 +315,12 @@ function syncDcSlotsUI() {
  */
 function getMockProspects() {
     return [
-        { upid: '12345', name: 'Leo de Vries', team: 'ATL', position: 'SS', age: 20, level: 'AAA', contract_type: null, has_mlb_service: false },
-        { upid: '12346', name: 'Chase Burns', team: 'CIN', position: 'SP', age: 21, level: 'AAA', contract_type: 'BC', top_100_rank: 42, has_mlb_service: false },
-        { upid: '12347', name: 'Jett Williams', team: 'NYM', position: '2B', age: 19, level: 'AA', contract_type: 'DC', has_mlb_service: false },
-        { upid: '12348', name: 'Bryce Eldridge', team: 'SF', position: '1B', age: 19, level: 'A+', contract_type: 'PC', has_mlb_service: false },
-        { upid: '12349', name: 'Dylan Beavers', team: 'BAL', position: 'OF', age: 22, level: 'AAA', contract_type: null, has_mlb_service: true },
-        { upid: '12350', name: 'Marcelo Mayer', team: 'BOS', position: 'SS', age: 21, level: 'AAA', contract_type: null, has_mlb_service: false }
+        { upid: '12345', name: 'Leo de Vries', team: 'ATL', position: 'SS', age: 20, level: 'AAA', contract_type: null, debuted: false },
+        { upid: '12346', name: 'Chase Burns', team: 'CIN', position: 'SP', age: 21, level: 'AAA', contract_type: 'BC', top_100_rank: 42, debuted: false },
+        { upid: '12347', name: 'Jett Williams', team: 'NYM', position: '2B', age: 19, level: 'AA', contract_type: 'DC', debuted: false },
+        { upid: '12348', name: 'Bryce Eldridge', team: 'SF', position: '1B', age: 19, level: 'A+', contract_type: 'PC', debuted: false },
+        { upid: '12349', name: 'Dylan Beavers', team: 'BAL', position: 'OF', age: 22, level: 'AAA', contract_type: null, debuted: true },
+        { upid: '12350', name: 'Marcelo Mayer', team: 'BOS', position: 'SS', age: 21, level: 'AAA', contract_type: null, debuted: false }
     ];
 }
 
@@ -588,12 +589,11 @@ function displayProspects() {
                 </div>
                 <div class="prospect-actions">
                     ${!hasContract ? (
-                        p.has_mlb_service
+                        p.debuted
                             ? `
-                                <div class="prospect-service-note">
-                                    <i class="fas fa-ban"></i>
-                                    <span>Has MLB service time  DC ineligible</span>
-                                </div>
+                                <button class="btn-contract dc" disabled aria-disabled="true">
+                                    <i class="fas fa-ban"></i> Debuted \u2013 DC not available
+                                </button>
                                 <button class="btn-contract pc" onclick="assignContract('${p.upid}', 'PC')">
                                     <i class="fas fa-star"></i> ${pcLabel}
                                 </button>
