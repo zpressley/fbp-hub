@@ -7,8 +7,9 @@ const PAD_SEASON = 2026;
 
 let PAD_STATE = {
     team: null,
+    teamName: null,
     currentStep: 0,
-    // Total PAD spending capacity for this season (from config/managers.json wizbucks[season].allotments.PAD.total)
+    // Total PAD spending capacity for this season (derived from WizBucks wallet balance)
     totalAvailable: 0,
     // Season dates / submission window
     seasonDates: null,
@@ -55,8 +56,10 @@ async function initPADPage() {
         return;
     }
     
-    // Get user's team
-    PAD_STATE.team = authManager.getTeam()?.abbreviation;
+    // Get user's team (abbreviation + full name)
+    const teamInfo = authManager.getTeam();
+    PAD_STATE.team = teamInfo?.abbreviation;
+    PAD_STATE.teamName = teamInfo?.name || null;
     if (!PAD_STATE.team) {
         showToast('Could not determine your team', 'error');
         return;
@@ -196,34 +199,46 @@ async function loadTop100MapForPAD() {
 async function loadPADData() {
     const team = PAD_STATE.team;
 
-    // Read PAD total from config/managers.json wizbucks[season].allotments.PAD.total
+    // Read PAD total directly from the WizBucks wallet (wizbucks.json) via
+    // FBPHub.data.wizbucks instead of using static PAD allotments in
+    // config/managers.json. The wallet is the single source of truth.
     let padTotal = 0;
     try {
-        const res = await fetch('./config/managers.json');
-        if (res.ok) {
-            const cfg = await res.json();
-            const teamCfg = cfg?.teams?.[team];
-            const wiz = teamCfg?.wizbucks?.[String(PAD_SEASON)];
-            const padCfg = wiz?.allotments?.PAD;
+        const wizData = FBPHub?.data?.wizbucks || {};
+        let teamName = PAD_STATE.teamName || null;
 
-            if (padCfg && typeof padCfg.total === 'number') {
-                padTotal = padCfg.total;
-            } else if (padCfg) {
-                const base = Number(padCfg.base || 0);
-                const bonus = Number(padCfg.bonus || 0);
-                const optional = Number(padCfg.optional || 0);
-                const leftoverIn = Number(padCfg.leftoverIn || 0);
-                const fines = Number(padCfg.finesOrAwards || 0);
-                padTotal = base + bonus + optional + leftoverIn + fines;
+        // If we don't already know the full team name, derive it either from the
+        // TEAM_NAMES map (auth.js) or, as a final fallback, from config/managers.json.
+        if (!teamName) {
+            if (typeof TEAM_NAMES !== 'undefined' && TEAM_NAMES && TEAM_NAMES[team]) {
+                teamName = TEAM_NAMES[team];
+            } else {
+                try {
+                    const res = await fetch('./config/managers.json');
+                    if (res.ok) {
+                        const cfg = await res.json();
+                        const teamCfg = cfg?.teams?.[team];
+                        if (teamCfg && teamCfg.name) {
+                            teamName = teamCfg.name;
+                        }
+                    }
+                } catch (err) {
+                    console.warn('PAD: failed to load managers.json for team mapping', err);
+                }
             }
         }
+
+        if (teamName && Object.prototype.hasOwnProperty.call(wizData, teamName)) {
+            padTotal = wizData[teamName];
+        } else if (Object.prototype.hasOwnProperty.call(wizData, team)) {
+            padTotal = wizData[team];
+        }
     } catch (e) {
-        console.error('Failed to load managers config for PAD:', e);
+        console.error('PAD: failed to derive PAD total from WizBucks wallet:', e);
     }
 
-    if (!Number.isFinite(padTotal) || padTotal <= 0) {
-        console.warn('PAD total not found in managers.json; defaulting to $140.');
-        padTotal = 140;
+    if (!Number.isFinite(padTotal)) {
+        padTotal = 0;
     }
 
     PAD_STATE.totalAvailable = padTotal;
