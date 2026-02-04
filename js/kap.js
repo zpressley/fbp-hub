@@ -364,6 +364,7 @@ function getMockMLBPlayers() {
  * Setup sticky bar
  * - Keeps the KAP bar pinned just below the main nav
  * - Adds a stronger shadow when it "sticks" while scrolling
+ * - Mirrors PAD's sticky bar behavior so the nav/header and bar move together
  */
 function setupStickyBar() {
     const stickyBar = document.getElementById('kapStickyBar');
@@ -371,23 +372,35 @@ function setupStickyBar() {
 
     const nav = document.querySelector('.mobile-nav');
 
+    // Dynamically match the nav height so the bar never hides underneath it.
     const updateOffset = () => {
         if (!nav) return;
         const navRect = nav.getBoundingClientRect();
-        const navHeight = navRect.height || 0;
+        // When the nav is hidden (scrolled away), treat its height as 0 so
+        // the KAP sticky bar can slide all the way up to the top of the
+        // viewport. Otherwise, keep it parked just below the visible nav.
+        const isNavHidden = nav.classList.contains('nav-hidden');
+        const navHeight = isNavHidden ? 0 : (navRect.height || 0);
+        // Small gap so the red nav border and bar border don't visually merge
         const offset = navHeight + 8;
         stickyBar.style.top = `${offset}px`;
     };
 
     updateOffset();
 
-    window.addEventListener('resize',
-        typeof debounce === 'function' ? debounce(updateOffset, 150) : updateOffset
-    );
+    // Recalculate offset on resize/orientation change and while scrolling,
+    // so changes in nav-hidden state are reflected immediately.
+    const debouncedUpdate = typeof debounce === 'function' ? debounce(updateOffset, 75) : updateOffset;
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('scroll', debouncedUpdate);
     
     const observer = new IntersectionObserver(
         ([entry]) => {
-            stickyBar.classList.toggle('is-stuck', !entry.isIntersecting);
+            if (!entry.isIntersecting) {
+                stickyBar.classList.add('is-stuck');
+            } else {
+                stickyBar.classList.remove('is-stuck');
+            }
         },
         { threshold: [1] }
     );

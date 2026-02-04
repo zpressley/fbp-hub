@@ -74,7 +74,11 @@ async function initPADPage() {
     // Check if already submitted
     await checkSubmissionStatus();
     
-    if (PAD_STATE.submitted) {
+    // In normal mode, once a team has submitted PAD we show the submitted
+    // summary view and block further edits. In test mode (global flag or
+    // admin/commissioner), we *do not* short-circuit here so that test
+    // users can re-run PAD end-to-end.
+    if (PAD_STATE.submitted && !isPadTestMode()) {
         showSubmittedView();
         return;
     }
