@@ -2,7 +2,7 @@
   {
     "name": "Tim Anderson",
     "team": "LAA",
-    "position": "2B,SS",
+    "position": "SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -46,7 +46,7 @@
   {
     "name": "Anthony DeSclafani",
     "team": "AZ",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -209,7 +209,7 @@
     "yahoo_id": "",
     "upid": "4426",
     "mlb_id": 666160,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1998-05-13",
     "age": 27,
     "height": "6' 2\"",
@@ -266,7 +266,7 @@
   {
     "name": "Austin Riley",
     "team": "ATL",
-    "position": "3B",
+    "position": "1B,3B,OF",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -332,7 +332,7 @@
   {
     "name": "Sean Manaea",
     "team": "NYM",
-    "position": "SP,RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -363,7 +363,7 @@
     "yahoo_id": "",
     "upid": "2025",
     "mlb_id": 670970,
-    "FBP_Team": "B2J",
+    "FBP_Team": "DRO",
     "birth_date": "1999-02-27",
     "age": 26,
     "height": "5' 11\"",
@@ -408,7 +408,7 @@
     "yahoo_id": "",
     "upid": "2278",
     "mlb_id": 605280,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1993-03-27",
     "age": 32,
     "height": "6' 5\"",
@@ -421,7 +421,7 @@
   {
     "name": "Dustin May",
     "team": "STL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -441,9 +441,9 @@
     "fypd": false
   },
   {
-    "name": "Edwin Díaz",
+    "name": "Edwin D\u00edaz",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -496,7 +496,7 @@
     "yahoo_id": "",
     "upid": "2501",
     "mlb_id": 657757,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1996-04-23",
     "age": 29,
     "height": "6' 3\"",
@@ -556,7 +556,7 @@
     "yahoo_id": "",
     "upid": "3447",
     "mlb_id": 671213,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "2000-01-15",
     "age": 26,
     "height": "6' 4\"",
@@ -578,7 +578,7 @@
     "yahoo_id": "",
     "upid": "2952",
     "mlb_id": 680574,
-    "FBP_Team": "TBB",
+    "FBP_Team": "DRO",
     "birth_date": "1999-08-06",
     "age": 26,
     "height": "5' 9\"",
@@ -623,7 +623,7 @@
     "yahoo_id": "",
     "upid": "3477",
     "mlb_id": 676917,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1998-08-14",
     "age": 27,
     "height": "6' 4\"",
@@ -645,7 +645,7 @@
     "yahoo_id": "",
     "upid": "3479",
     "mlb_id": 686217,
-    "FBP_Team": "LAW",
+    "FBP_Team": "DRO",
     "birth_date": "2000-04-19",
     "age": 25,
     "height": "5' 8\"",
@@ -690,7 +690,7 @@
     "yahoo_id": "",
     "upid": "3502",
     "mlb_id": 669224,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1999-07-12",
     "age": 26,
     "height": "6' 1\"",
@@ -734,7 +734,7 @@
     "yahoo_id": "",
     "upid": "3538",
     "mlb_id": 677944,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1999-06-24",
     "age": 26,
     "height": "6' 4\"",
@@ -756,7 +756,7 @@
     "yahoo_id": "",
     "upid": "3562",
     "mlb_id": 677008,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1999-02-12",
     "age": 26,
     "height": "6' 2\"",
@@ -778,7 +778,7 @@
     "yahoo_id": "",
     "upid": "3605",
     "mlb_id": 668715,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1997-12-07",
     "age": 28,
     "height": "5' 9\"",
@@ -822,7 +822,7 @@
     "yahoo_id": "",
     "upid": "3732",
     "mlb_id": 668901,
-    "FBP_Team": "LFB",
+    "FBP_Team": "DRO",
     "birth_date": "1999-12-11",
     "age": 26,
     "height": "6' 3\"",
@@ -844,7 +844,7 @@
     "yahoo_id": "",
     "upid": "2907",
     "mlb_id": 673357,
-    "FBP_Team": "B2J",
+    "FBP_Team": "DRO",
     "birth_date": "1997-08-03",
     "age": 28,
     "height": "6' 2\"",
@@ -880,7 +880,7 @@
   {
     "name": "Reid Detmers",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -900,7 +900,7 @@
     "fypd": false
   },
   {
-    "name": "Félix Bautista",
+    "name": "F\u00e9lix Bautista",
     "team": "BAL",
     "position": "RP",
     "manager": "Rick Vaughn",
@@ -933,7 +933,7 @@
     "yahoo_id": "",
     "upid": "4028",
     "mlb_id": 666808,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1997-07-04",
     "age": 28,
     "height": "6' 2\"",
@@ -955,7 +955,7 @@
     "yahoo_id": "",
     "upid": "4178",
     "mlb_id": 592454,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1989-08-07",
     "age": 36,
     "height": "6' 1\"",
@@ -977,7 +977,7 @@
     "yahoo_id": "",
     "upid": "4594",
     "mlb_id": 681293,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "2000-01-02",
     "age": 26,
     "height": "6' 2\"",
@@ -1097,7 +1097,7 @@
     "yahoo_id": "",
     "upid": "6069",
     "mlb_id": 671212,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1999-08-14",
     "age": 26,
     "height": "6' 8\"",
@@ -1133,7 +1133,7 @@
   {
     "name": "Raisel Iglesias",
     "team": "ATL",
-    "position": "RP",
+    "position": "P",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1164,7 +1164,7 @@
     "yahoo_id": "",
     "upid": "7488",
     "mlb_id": 676395,
-    "FBP_Team": "",
+    "FBP_Team": "DRO",
     "birth_date": "1996-06-14",
     "age": 29,
     "height": "6' 4\"",
@@ -1282,9 +1282,9 @@
     "rank": 1571
   },
   {
-    "name": "José Berríos",
+    "name": "Jos\u00e9 Berr\u00edos",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1306,7 +1306,7 @@
   {
     "name": "Zack Wheeler",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1328,7 +1328,7 @@
   {
     "name": "Jack Flaherty",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1337,7 +1337,7 @@
     "yahoo_id": "10592",
     "upid": "1906",
     "mlb_id": 656427,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1995-10-15",
     "age": 30,
     "height": "6' 4\"",
@@ -1350,7 +1350,7 @@
   {
     "name": "Luis Castillo",
     "team": "SEA",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1394,7 +1394,7 @@
   {
     "name": "Rafael Devers",
     "team": "SF",
-    "position": "1B",
+    "position": "3B",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1438,7 +1438,7 @@
   {
     "name": "Kevin Gausman",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1458,9 +1458,9 @@
     "fypd": false
   },
   {
-    "name": "Teoscar Hernández",
+    "name": "Teoscar Hern\u00e1ndez",
     "team": "LAD",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1482,7 +1482,7 @@
   {
     "name": "Zac Gallen",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -1504,7 +1504,7 @@
   {
     "name": "Blake Treinen",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1570,7 +1570,7 @@
   {
     "name": "Bryce Harper",
     "team": "PHI",
-    "position": "1B",
+    "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1601,7 +1601,7 @@
     "yahoo_id": "",
     "upid": "2300",
     "mlb_id": 657136,
-    "FBP_Team": "",
+    "FBP_Team": "B2J",
     "birth_date": "1996-05-19",
     "age": 29,
     "height": "5' 10\"",
@@ -1727,7 +1727,7 @@
     "yahoo_id": "",
     "upid": "3380",
     "mlb_id": 650489,
-    "FBP_Team": "",
+    "FBP_Team": "B2J",
     "birth_date": "1997-04-24",
     "age": 28,
     "height": "6' 0\"",
@@ -1760,7 +1760,7 @@
     "fypd": false
   },
   {
-    "name": "Yandy Díaz",
+    "name": "Yandy D\u00edaz",
     "team": "TB",
     "position": "1B",
     "manager": "Btwn2Jackies",
@@ -1782,9 +1782,9 @@
     "fypd": false
   },
   {
-    "name": "Yimi García",
+    "name": "Yimi Garc\u00eda",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -1827,7 +1827,7 @@
     "rank": 1574
   },
   {
-    "name": "Jasson Domínguez",
+    "name": "Jasson Dom\u00ednguez",
     "team": "NYY",
     "position": "OF",
     "manager": "Btwn2Jackies",
@@ -1849,7 +1849,7 @@
     "fypd": false
   },
   {
-    "name": "Iván Herrera",
+    "name": "Iv\u00e1n Herrera",
     "team": "STL",
     "position": "C",
     "manager": "Btwn2Jackies",
@@ -2052,7 +2052,7 @@
     "fypd": false
   },
   {
-    "name": "José Leclerc",
+    "name": "Jos\u00e9 Leclerc",
     "team": "OAK",
     "position": "RP",
     "manager": "Btwn2Jackies",
@@ -2063,7 +2063,7 @@
     "yahoo_id": "",
     "upid": "4053",
     "mlb_id": 600917,
-    "FBP_Team": "",
+    "FBP_Team": "B2J",
     "birth_date": "1993-12-19",
     "age": 32,
     "height": "6' 0\"",
@@ -2085,7 +2085,7 @@
     "yahoo_id": "",
     "upid": "4137",
     "mlb_id": 670102,
-    "FBP_Team": "",
+    "FBP_Team": "B2J",
     "birth_date": "1996-04-22",
     "age": 29,
     "height": "6' 5\"",
@@ -2123,7 +2123,7 @@
     "yahoo_id": "",
     "upid": "4687",
     "mlb_id": 689981,
-    "FBP_Team": "",
+    "FBP_Team": "B2J",
     "birth_date": "1998-08-17",
     "age": 27,
     "height": "6' 2\"",
@@ -2466,7 +2466,7 @@
   {
     "name": "Alex Bregman",
     "team": "BOS",
-    "position": "3B",
+    "position": "3B,SS",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -2497,7 +2497,7 @@
     "yahoo_id": "",
     "upid": "2165",
     "mlb_id": 663903,
-    "FBP_Team": "DRO",
+    "FBP_Team": "CFL",
     "birth_date": "1996-08-04",
     "age": 29,
     "height": "6' 5\"",
@@ -2672,7 +2672,7 @@
     "yahoo_id": "",
     "upid": "3585",
     "mlb_id": 687792,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "2001-01-04",
     "age": 25,
     "height": "6' 2\"",
@@ -2784,7 +2784,7 @@
     "yahoo_id": "",
     "upid": "7179",
     "mlb_id": 802686,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1999-03-02",
     "age": 26,
     "height": "6' 0\"",
@@ -2806,7 +2806,7 @@
     "yahoo_id": "",
     "upid": "3818",
     "mlb_id": 671218,
-    "FBP_Team": "WAR",
+    "FBP_Team": "CFL",
     "birth_date": "1999-09-07",
     "age": 26,
     "height": "5' 11\"",
@@ -2842,7 +2842,7 @@
   {
     "name": "Ian Happ",
     "team": "CHC",
-    "position": "OF",
+    "position": "2B,3B,CF",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -2873,7 +2873,7 @@
     "yahoo_id": "",
     "upid": "2566",
     "mlb_id": 641487,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1995-01-11",
     "age": 31,
     "height": "6' 0\"",
@@ -2953,7 +2953,7 @@
   {
     "name": "Jonathan India",
     "team": "KC",
-    "position": "2B,3B,OF",
+    "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -2973,7 +2973,7 @@
     "fypd": false
   },
   {
-    "name": "Josue Briceño",
+    "name": "Josue Brice\u00f1o",
     "team": "DET",
     "position": "C/1B",
     "manager": "Country Fried Lamb",
@@ -3043,7 +3043,7 @@
   {
     "name": "Justin Verlander",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3097,7 +3097,7 @@
     "yahoo_id": "",
     "upid": "7346",
     "mlb_id": 823356,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1999-11-16",
     "age": 26,
     "height": "5' 5\"",
@@ -3108,9 +3108,9 @@
     "fypd": false
   },
   {
-    "name": "Ranger Suárez",
+    "name": "Ranger Su\u00e1rez",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3141,7 +3141,7 @@
     "yahoo_id": "",
     "upid": "3170",
     "mlb_id": 664854,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1994-07-18",
     "age": 31,
     "height": "6' 2\"",
@@ -3254,7 +3254,7 @@
     "yahoo_id": "",
     "upid": "3265",
     "mlb_id": 656945,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1994-07-22",
     "age": 31,
     "height": "6' 0\"",
@@ -3290,7 +3290,7 @@
   {
     "name": "Tommy Edman",
     "team": "LAD",
-    "position": "2B,3B,CF",
+    "position": "2B,3B,SS,OF",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3344,7 +3344,7 @@
     "yahoo_id": "",
     "upid": "4138",
     "mlb_id": 663947,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1996-06-13",
     "age": 29,
     "height": "6' 2\"",
@@ -3357,7 +3357,7 @@
   {
     "name": "Tyler Stephenson",
     "team": "CIN",
-    "position": "C",
+    "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3379,7 +3379,7 @@
   {
     "name": "Vladimir Guerrero Jr.",
     "team": "TOR",
-    "position": "1B",
+    "position": "1B,3B",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3401,7 +3401,7 @@
   {
     "name": "Walker Buehler",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3454,7 +3454,7 @@
     "yahoo_id": "",
     "upid": "7281",
     "mlb_id": 673513,
-    "FBP_Team": "",
+    "FBP_Team": "CFL",
     "birth_date": "1995-10-30",
     "age": 30,
     "height": "5' 8\"",
@@ -3489,7 +3489,7 @@
   {
     "name": "Chris Sale",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3533,7 +3533,7 @@
   {
     "name": "Framber Valdez",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3555,7 +3555,7 @@
   {
     "name": "Michael Soroka",
     "team": "AZ",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -3577,7 +3577,7 @@
   {
     "name": "Nathan Eovaldi",
     "team": "TEX",
-    "position": "SP",
+    "position": "P",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3652,7 +3652,7 @@
     "yahoo_id": "",
     "upid": "2211",
     "mlb_id": 682243,
-    "FBP_Team": "LFB",
+    "FBP_Team": "HAM",
     "birth_date": "1998-08-23",
     "age": 27,
     "height": "6' 2\"",
@@ -3696,7 +3696,7 @@
     "yahoo_id": "",
     "upid": "2424",
     "mlb_id": 669276,
-    "FBP_Team": "",
+    "FBP_Team": "HAM",
     "birth_date": "1994-08-01",
     "age": 31,
     "height": "6' 3\"",
@@ -3718,7 +3718,7 @@
     "yahoo_id": "",
     "upid": "2477",
     "mlb_id": 623465,
-    "FBP_Team": "",
+    "FBP_Team": "HAM",
     "birth_date": "1994-09-11",
     "age": 31,
     "height": "6' 2\"",
@@ -3753,7 +3753,7 @@
   {
     "name": "Logan Gilbert",
     "team": "SEA",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3797,7 +3797,7 @@
   {
     "name": "Sonny Gray",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -3828,7 +3828,7 @@
     "yahoo_id": "",
     "upid": "3415",
     "mlb_id": 579328,
-    "FBP_Team": "",
+    "FBP_Team": "HAM",
     "birth_date": "1991-06-17",
     "age": 34,
     "height": "6' 0\"",
@@ -3956,7 +3956,7 @@
     "yahoo_id": "",
     "upid": "3624",
     "mlb_id": 669911,
-    "FBP_Team": "",
+    "FBP_Team": "HAM",
     "birth_date": "1998-08-16",
     "age": 27,
     "height": "6' 5\"",
@@ -4113,7 +4113,7 @@
     "yahoo_id": "",
     "upid": "4284",
     "mlb_id": 671739,
-    "FBP_Team": "LFB",
+    "FBP_Team": "HAM",
     "birth_date": "2001-03-07",
     "age": 24,
     "height": "6' 0\"",
@@ -4551,7 +4551,7 @@
   {
     "name": "Max Fried",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4571,9 +4571,9 @@
     "fypd": false
   },
   {
-    "name": "Ronald Acuña Jr.",
+    "name": "Ronald Acu\u00f1a Jr.",
     "team": "ATL",
-    "position": "OF",
+    "position": "CF",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4582,7 +4582,7 @@
     "yahoo_id": "10646",
     "upid": "1917",
     "mlb_id": 660670,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1997-12-18",
     "age": 28,
     "height": "6' 0\"",
@@ -4604,7 +4604,7 @@
     "yahoo_id": "10918",
     "upid": "1971",
     "mlb_id": 624413,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1994-12-07",
     "age": 31,
     "height": "6' 3\"",
@@ -4626,7 +4626,7 @@
     "yahoo_id": "10642",
     "upid": "1987",
     "mlb_id": 669257,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1995-03-28",
     "age": 30,
     "height": "5' 10\"",
@@ -4637,9 +4637,9 @@
     "fypd": false
   },
   {
-    "name": "Adolis García",
+    "name": "Adolis Garc\u00eda",
     "team": "PHI",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4661,7 +4661,7 @@
   {
     "name": "Isiah Kiner-Falefa",
     "team": "TOR",
-    "position": "2B,3B,SS",
+    "position": "C,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4736,7 +4736,7 @@
     "yahoo_id": "",
     "upid": "2812",
     "mlb_id": 669211,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "1995-04-01",
     "age": 30,
     "height": "6' 0\"",
@@ -4758,7 +4758,7 @@
     "yahoo_id": "",
     "upid": "2835",
     "mlb_id": 489446,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "1987-03-25",
     "age": 38,
     "height": "5' 10\"",
@@ -4780,7 +4780,7 @@
     "yahoo_id": "11903",
     "upid": "2897",
     "mlb_id": 677651,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1996-12-13",
     "age": 29,
     "height": "6' 1\"",
@@ -4791,9 +4791,9 @@
     "fypd": false
   },
   {
-    "name": "Luis García",
+    "name": "Luis Garc\u00eda",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -4837,7 +4837,7 @@
   {
     "name": "Pete Fairbanks",
     "team": "MIA",
-    "position": "RP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -4846,9 +4846,8 @@
     "yahoo_id": "11597",
     "upid": "3092",
     "mlb_id": null,
-    "FBP_Team": "JEP",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "FBP_Team": "I'LL",
+    "fypd": false
   },
   {
     "name": "Taylor Ward",
@@ -4862,7 +4861,7 @@
     "yahoo_id": "",
     "upid": "3277",
     "mlb_id": 621493,
-    "FBP_Team": "HAM",
+    "FBP_Team": "JEP",
     "birth_date": "1993-12-14",
     "age": 32,
     "height": "6' 0\"",
@@ -4884,7 +4883,7 @@
     "yahoo_id": "",
     "upid": "3319",
     "mlb_id": 656730,
-    "FBP_Team": "SAD",
+    "FBP_Team": "JEP",
     "birth_date": "1993-12-05",
     "age": 32,
     "height": "6' 8\"",
@@ -4906,7 +4905,7 @@
     "yahoo_id": "",
     "upid": "3471",
     "mlb_id": 668904,
-    "FBP_Team": "DRO",
+    "FBP_Team": "JEP",
     "birth_date": "1999-06-05",
     "age": 26,
     "height": "6' 0\"",
@@ -5035,7 +5034,7 @@
     "yahoo_id": "",
     "upid": "3613",
     "mlb_id": 676282,
-    "FBP_Team": "DRO",
+    "FBP_Team": "JEP",
     "birth_date": "1999-12-18",
     "age": 26,
     "height": "6' 4\"",
@@ -5080,7 +5079,7 @@
     "yahoo_id": "",
     "upid": "3840",
     "mlb_id": 669364,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "1999-08-09",
     "age": 26,
     "height": "5' 8\"",
@@ -5091,7 +5090,7 @@
     "fypd": false
   },
   {
-    "name": "Luisangel Acuña",
+    "name": "Luisangel Acu\u00f1a",
     "team": "NYM",
     "position": "SS",
     "manager": "Jepordizers!",
@@ -5102,7 +5101,7 @@
     "yahoo_id": "",
     "upid": "3853",
     "mlb_id": 682668,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "2002-03-12",
     "age": 23,
     "height": "5' 8\"",
@@ -5170,7 +5169,7 @@
     "yahoo_id": "",
     "upid": "3982",
     "mlb_id": 695336,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "2002-04-10",
     "age": 23,
     "height": "5' 11\"",
@@ -5181,7 +5180,7 @@
     "fypd": false
   },
   {
-    "name": "Reynaldo López",
+    "name": "Reynaldo L\u00f3pez",
     "team": "ATL",
     "position": "SP",
     "manager": "Jepordizers!",
@@ -5205,7 +5204,7 @@
   {
     "name": "Luis Gil",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5214,7 +5213,7 @@
     "yahoo_id": "11689",
     "upid": "4090",
     "mlb_id": 661563,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1998-06-03",
     "age": 27,
     "height": "6' 2\"",
@@ -5296,7 +5295,7 @@
     "yahoo_id": "",
     "upid": "4563",
     "mlb_id": 700249,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "2000-04-12",
     "age": 25,
     "height": "6' 3\"",
@@ -5430,7 +5429,7 @@
     "yahoo_id": "",
     "upid": "6283",
     "mlb_id": 668964,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "1998-08-05",
     "age": 27,
     "height": "6' 1\"",
@@ -5468,7 +5467,7 @@
     "yahoo_id": "",
     "upid": "6562",
     "mlb_id": 686611,
-    "FBP_Team": "",
+    "FBP_Team": "JEP",
     "birth_date": "2002-02-26",
     "age": 23,
     "height": "6' 0\"",
@@ -5612,7 +5611,7 @@
   {
     "name": "Mookie Betts",
     "team": "LAD",
-    "position": "SS",
+    "position": "2B,CF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5634,7 +5633,7 @@
   {
     "name": "Gleyber Torres",
     "team": "DET",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5656,7 +5655,7 @@
   {
     "name": "Fernando Tatis Jr.",
     "team": "SD",
-    "position": "OF",
+    "position": "SS,CF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5678,7 +5677,7 @@
   {
     "name": "Brandon Woodruff",
     "team": "MIL",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5746,7 +5745,7 @@
   {
     "name": "Gavin Lux",
     "team": "CIN",
-    "position": "2B,3B,OF",
+    "position": "2B,SS,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -5790,7 +5789,7 @@
   {
     "name": "Jazz Chisholm Jr.",
     "team": "NYY",
-    "position": "2B,3B",
+    "position": "2B,SS",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5810,9 +5809,9 @@
     "fypd": false
   },
   {
-    "name": "Jesús Luzardo",
+    "name": "Jes\u00fas Luzardo",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5843,7 +5842,7 @@
     "yahoo_id": "",
     "upid": "2854",
     "mlb_id": 640448,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "1991-09-04",
     "age": 34,
     "height": "6' 2\"",
@@ -5879,7 +5878,7 @@
   {
     "name": "Randy Arozarena",
     "team": "SEA",
-    "position": "CF",
+    "position": "OF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5901,7 +5900,7 @@
   {
     "name": "Shane McClanahan",
     "team": "TB",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5923,7 +5922,7 @@
   {
     "name": "Tarik Skubal",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -5968,7 +5967,7 @@
   {
     "name": "Zach Eflin",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -5999,7 +5998,7 @@
     "yahoo_id": "",
     "upid": "3435",
     "mlb_id": 682626,
-    "FBP_Team": "CFL",
+    "FBP_Team": "LFB",
     "birth_date": "2001-11-19",
     "age": 24,
     "height": "5' 10\"",
@@ -6065,7 +6064,7 @@
     "yahoo_id": "",
     "upid": "3464",
     "mlb_id": 671737,
-    "FBP_Team": "DRO",
+    "FBP_Team": "LFB",
     "birth_date": "2001-03-20",
     "age": 24,
     "height": "6' 2\"",
@@ -6087,7 +6086,7 @@
     "yahoo_id": "",
     "upid": "3488",
     "mlb_id": 678662,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "2001-08-01",
     "age": 24,
     "height": "6' 0\"",
@@ -6154,7 +6153,7 @@
     "yahoo_id": "",
     "upid": "3559",
     "mlb_id": 691723,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "2001-12-10",
     "age": 24,
     "height": "6' 4\"",
@@ -6199,7 +6198,7 @@
     "yahoo_id": "",
     "upid": "3644",
     "mlb_id": 678009,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "1999-11-02",
     "age": 26,
     "height": "6' 5\"",
@@ -6244,7 +6243,7 @@
     "yahoo_id": "",
     "upid": "3781",
     "mlb_id": 680573,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "2000-09-27",
     "age": 25,
     "height": "6' 3\"",
@@ -6362,7 +6361,7 @@
     "fypd": false
   },
   {
-    "name": "Andrés Muñoz",
+    "name": "Andr\u00e9s Mu\u00f1oz",
     "team": "SEA",
     "position": "RP",
     "manager": "La Flama Blanca",
@@ -6428,7 +6427,7 @@
     "fypd": false
   },
   {
-    "name": "Alexis Díaz",
+    "name": "Alexis D\u00edaz",
     "team": "CIN",
     "position": "RP",
     "manager": "La Flama Blanca",
@@ -6439,7 +6438,7 @@
     "yahoo_id": "",
     "upid": "4032",
     "mlb_id": 664747,
-    "FBP_Team": "",
+    "FBP_Team": "LFB",
     "birth_date": "1996-09-28",
     "age": 29,
     "height": "6' 2\"",
@@ -6789,7 +6788,7 @@
     "rank": 811
   },
   {
-    "name": "Elian Peña",
+    "name": "Elian Pe\u00f1a",
     "team": "NYM",
     "position": "3B",
     "manager": "La Flama Blanca",
@@ -6836,7 +6835,7 @@
   {
     "name": "Blake Snell",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6858,7 +6857,7 @@
   {
     "name": "Aroldis Chapman",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6880,7 +6879,7 @@
   {
     "name": "Jose Altuve",
     "team": "HOU",
-    "position": "2B,OF",
+    "position": "2B",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6902,7 +6901,7 @@
   {
     "name": "Josh Hader",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6924,7 +6923,7 @@
   {
     "name": "Dylan Cease",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6946,7 +6945,7 @@
   {
     "name": "Manny Machado",
     "team": "SD",
-    "position": "3B",
+    "position": "3B,SS",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6968,7 +6967,7 @@
   {
     "name": "Robbie Ray",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -6990,7 +6989,7 @@
   {
     "name": "Casey Mize",
     "team": "DET",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -7012,7 +7011,7 @@
   {
     "name": "Emmanuel Clase",
     "team": "CLE",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7109,7 +7108,7 @@
     "yahoo_id": "",
     "upid": "2984",
     "mlb_id": 608379,
-    "FBP_Team": "WAR",
+    "FBP_Team": "LAW",
     "birth_date": "1991-07-01",
     "age": 34,
     "height": "6' 6\"",
@@ -7131,7 +7130,7 @@
     "yahoo_id": "",
     "upid": "3213",
     "mlb_id": 669221,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "1994-10-04",
     "age": 31,
     "height": "6' 3\"",
@@ -7153,7 +7152,7 @@
     "yahoo_id": "",
     "upid": "3261",
     "mlb_id": 656557,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "1996-06-29",
     "age": 29,
     "height": "6' 5\"",
@@ -7264,7 +7263,7 @@
     "yahoo_id": "",
     "upid": "3532",
     "mlb_id": 694297,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "1998-10-15",
     "age": 27,
     "height": "6' 4\"",
@@ -7275,7 +7274,7 @@
     "fypd": false
   },
   {
-    "name": "Angel Martínez",
+    "name": "Angel Mart\u00ednez",
     "team": "CLE",
     "position": "2B",
     "manager": "Law-Abiding Citizens",
@@ -7286,7 +7285,7 @@
     "yahoo_id": "",
     "upid": "3615",
     "mlb_id": 682657,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "2002-01-27",
     "age": 23,
     "height": "5' 11\"",
@@ -7308,7 +7307,7 @@
     "yahoo_id": "",
     "upid": "3640",
     "mlb_id": 690993,
-    "FBP_Team": "RV",
+    "FBP_Team": "LAW",
     "birth_date": "2001-08-14",
     "age": 24,
     "height": "6' 2\"",
@@ -7480,7 +7479,7 @@
     "yahoo_id": "",
     "upid": "4174",
     "mlb_id": 670955,
-    "FBP_Team": "CFL",
+    "FBP_Team": "LAW",
     "birth_date": "1998-01-09",
     "age": 28,
     "height": "6' 0\"",
@@ -7524,7 +7523,7 @@
     "yahoo_id": "",
     "upid": "4306",
     "mlb_id": 681082,
-    "FBP_Team": "TBB",
+    "FBP_Team": "LAW",
     "birth_date": "1997-10-06",
     "age": 28,
     "height": "6' 1\"",
@@ -7546,7 +7545,7 @@
     "yahoo_id": "",
     "upid": "4361",
     "mlb_id": 672580,
-    "FBP_Team": "DRO",
+    "FBP_Team": "LAW",
     "birth_date": "2000-03-03",
     "age": 25,
     "height": "6' 1\"",
@@ -7568,7 +7567,7 @@
     "yahoo_id": "",
     "upid": "4556",
     "mlb_id": 701581,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "2000-03-08",
     "age": 25,
     "height": "6' 6\"",
@@ -7613,7 +7612,7 @@
     "yahoo_id": "",
     "upid": "5216",
     "mlb_id": 679885,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "2001-07-30",
     "age": 24,
     "height": "6' 3\"",
@@ -7894,7 +7893,7 @@
     "rank": 1632
   },
   {
-    "name": "José Ramírez",
+    "name": "Jos\u00e9 Ram\u00edrez",
     "team": "CLE",
     "position": "3B",
     "manager": "not much of a donkey",
@@ -7918,7 +7917,7 @@
   {
     "name": "J.T. Realmuto",
     "team": "PHI",
-    "position": "C",
+    "position": "C,1B",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7962,7 +7961,7 @@
   {
     "name": "Carlos Correa",
     "team": "HOU",
-    "position": "3B,SS",
+    "position": "SS",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -7984,7 +7983,7 @@
   {
     "name": "Kyle Schwarber",
     "team": "PHI",
-    "position": "OF",
+    "position": "1B,OF",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8028,7 +8027,7 @@
   {
     "name": "Aaron Nola",
     "team": "PHI",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8050,7 +8049,7 @@
   {
     "name": "Drew Rasmussen",
     "team": "TB",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8125,7 +8124,7 @@
     "yahoo_id": "",
     "upid": "2590",
     "mlb_id": 664776,
-    "FBP_Team": "",
+    "FBP_Team": "SAD",
     "birth_date": "1994-07-14",
     "age": 31,
     "height": "6' 4\"",
@@ -8147,7 +8146,7 @@
     "yahoo_id": "",
     "upid": "2644",
     "mlb_id": 605488,
-    "FBP_Team": "CFL",
+    "FBP_Team": "SAD",
     "birth_date": "1992-09-20",
     "age": 33,
     "height": "6' 3\"",
@@ -8160,7 +8159,7 @@
   {
     "name": "Logan Webb",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8213,7 +8212,7 @@
     "yahoo_id": "",
     "upid": "3300",
     "mlb_id": 663574,
-    "FBP_Team": "",
+    "FBP_Team": "SAD",
     "birth_date": "1997-04-15",
     "age": 28,
     "height": "6' 3\"",
@@ -8235,7 +8234,7 @@
     "yahoo_id": "",
     "upid": "3361",
     "mlb_id": 645302,
-    "FBP_Team": "",
+    "FBP_Team": "SAD",
     "birth_date": "1997-05-19",
     "age": 28,
     "height": "6' 0\"",
@@ -8248,7 +8247,7 @@
   {
     "name": "Willson Contreras",
     "team": "BOS",
-    "position": "1B",
+    "position": "C",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -8290,7 +8289,7 @@
     "fypd": false
   },
   {
-    "name": "Eury Pérez",
+    "name": "Eury P\u00e9rez",
     "team": "MIA",
     "position": "SP",
     "manager": "not much of a donkey",
@@ -8356,7 +8355,7 @@
     "fypd": false
   },
   {
-    "name": "Kevin Alcántara",
+    "name": "Kevin Alc\u00e1ntara",
     "team": "CHC",
     "position": "OF",
     "manager": "not much of a donkey",
@@ -8572,7 +8571,7 @@
     "yahoo_id": "",
     "upid": "3995",
     "mlb_id": 676440,
-    "FBP_Team": "",
+    "FBP_Team": "HAM",
     "birth_date": "1999-03-05",
     "age": 26,
     "height": "6' 2\"",
@@ -8693,7 +8692,7 @@
     "fypd": false
   },
   {
-    "name": "Julio Rodríguez",
+    "name": "Julio Rodr\u00edguez",
     "team": "SEA",
     "position": "CF",
     "manager": "not much of a donkey",
@@ -8816,7 +8815,7 @@
     "yahoo_id": "",
     "upid": "6592",
     "mlb_id": 807713,
-    "FBP_Team": "",
+    "FBP_Team": "SAD",
     "birth_date": "2001-11-06",
     "age": 24,
     "height": "5' 10\"",
@@ -8990,7 +8989,7 @@
   {
     "name": "Gerrit Cole",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9012,7 +9011,7 @@
   {
     "name": "Ketel Marte",
     "team": "AZ",
-    "position": "2B",
+    "position": "2B,SS,CF",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9034,7 +9033,7 @@
   {
     "name": "Shane Bieber",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9078,7 +9077,7 @@
   {
     "name": "Freddy Peralta",
     "team": "MIL",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -9153,7 +9152,7 @@
     "yahoo_id": "",
     "upid": "2274",
     "mlb_id": 572233,
-    "FBP_Team": "CFL",
+    "FBP_Team": "RV",
     "birth_date": "1991-03-28",
     "age": 34,
     "height": "5' 11\"",
@@ -9164,7 +9163,7 @@
     "fypd": false
   },
   {
-    "name": "Eugenio Suárez",
+    "name": "Eugenio Su\u00e1rez",
     "team": "AZ",
     "position": "3B",
     "manager": "Rick Vaughn",
@@ -9197,7 +9196,7 @@
     "yahoo_id": "",
     "upid": "2906",
     "mlb_id": 650859,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "1997-02-26",
     "age": 28,
     "height": "5' 10\"",
@@ -9219,7 +9218,7 @@
     "yahoo_id": "",
     "upid": "2916",
     "mlb_id": 596133,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "1993-08-21",
     "age": 32,
     "height": "6' 2\"",
@@ -9232,7 +9231,7 @@
   {
     "name": "Michael Kopech",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -9263,7 +9262,7 @@
     "yahoo_id": "",
     "upid": "3183",
     "mlb_id": 677960,
-    "FBP_Team": "DRO",
+    "FBP_Team": "RV",
     "birth_date": "1999-12-17",
     "age": 26,
     "height": "6' 1\"",
@@ -9329,7 +9328,7 @@
     "yahoo_id": "",
     "upid": "3501",
     "mlb_id": 678246,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "1999-11-17",
     "age": 26,
     "height": "6' 2\"",
@@ -9351,7 +9350,7 @@
     "yahoo_id": "",
     "upid": "3519",
     "mlb_id": 681351,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "2000-02-09",
     "age": 25,
     "height": "6' 2\"",
@@ -9417,7 +9416,7 @@
     "yahoo_id": "",
     "upid": "3623",
     "mlb_id": 686668,
-    "FBP_Team": "JEP",
+    "FBP_Team": "RV",
     "birth_date": "1998-05-14",
     "age": 27,
     "height": "6' 3\"",
@@ -9733,7 +9732,7 @@
     "yahoo_id": "",
     "upid": "4080",
     "mlb_id": 640462,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "1995-04-25",
     "age": 30,
     "height": "6' 7\"",
@@ -9755,7 +9754,7 @@
     "yahoo_id": "",
     "upid": "4101",
     "mlb_id": 669358,
-    "FBP_Team": "CFL",
+    "FBP_Team": "DRO",
     "birth_date": "1999-06-17",
     "age": 26,
     "height": "6' 3\"",
@@ -9845,7 +9844,7 @@
     "yahoo_id": "",
     "upid": "6367",
     "mlb_id": null,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "fypd": false
   },
   {
@@ -9975,7 +9974,7 @@
     "yahoo_id": "",
     "upid": "6784",
     "mlb_id": 668674,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "birth_date": "1995-05-01",
     "age": 30,
     "height": "6' 2\"",
@@ -10261,7 +10260,7 @@
   {
     "name": "Trea Turner",
     "team": "PHI",
-    "position": "SS",
+    "position": "2B,SS",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10283,7 +10282,7 @@
   {
     "name": "Yu Darvish",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10305,7 +10304,7 @@
   {
     "name": "Chris Bassitt",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -10327,7 +10326,7 @@
   {
     "name": "Corbin Burnes",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10349,7 +10348,7 @@
   {
     "name": "Kenley Jansen",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10393,7 +10392,7 @@
   {
     "name": "Salvador Perez",
     "team": "KC",
-    "position": "C,1B",
+    "position": "C",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10415,7 +10414,7 @@
   {
     "name": "Devin Williams",
     "team": "NYM",
-    "position": "RP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10446,7 +10445,7 @@
     "yahoo_id": "",
     "upid": "2429",
     "mlb_id": 700337,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "2003-04-06",
     "age": 22,
     "height": "5' 10\"",
@@ -10481,7 +10480,7 @@
   {
     "name": "Jordan Romano",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -10512,7 +10511,7 @@
     "yahoo_id": "",
     "upid": "2795",
     "mlb_id": 595777,
-    "FBP_Team": "CFL",
+    "FBP_Team": "TBB",
     "birth_date": "1993-02-20",
     "age": 32,
     "height": "5' 11\"",
@@ -10525,7 +10524,7 @@
   {
     "name": "Lance McCullers Jr.",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -10556,7 +10555,7 @@
     "yahoo_id": "",
     "upid": "2928",
     "mlb_id": 542303,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1990-11-12",
     "age": 35,
     "height": "6' 1\"",
@@ -10591,7 +10590,7 @@
   {
     "name": "Tyler Glasnow",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -10644,7 +10643,7 @@
     "yahoo_id": "",
     "upid": "3457",
     "mlb_id": 690986,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "2001-08-12",
     "age": 24,
     "height": "6' 2\"",
@@ -10712,7 +10711,7 @@
     "yahoo_id": "",
     "upid": "3491",
     "mlb_id": 678554,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "2000-10-26",
     "age": 25,
     "height": "6' 1\"",
@@ -10734,7 +10733,7 @@
     "yahoo_id": "",
     "upid": "3497",
     "mlb_id": 669084,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1998-09-19",
     "age": 27,
     "height": "6' 1\"",
@@ -10801,7 +10800,7 @@
     "yahoo_id": "",
     "upid": "3563",
     "mlb_id": 681393,
-    "FBP_Team": "DRO",
+    "FBP_Team": "TBB",
     "birth_date": "2000-06-08",
     "age": 25,
     "height": "5' 10\"",
@@ -10823,7 +10822,7 @@
     "yahoo_id": "",
     "upid": "3586",
     "mlb_id": 676962,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1999-09-09",
     "age": 26,
     "height": "6' 6\"",
@@ -10845,7 +10844,7 @@
     "yahoo_id": "",
     "upid": "3647",
     "mlb_id": 666215,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1997-09-15",
     "age": 28,
     "height": "6' 7\"",
@@ -10867,7 +10866,7 @@
     "yahoo_id": "",
     "upid": "3653",
     "mlb_id": 670223,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1998-04-16",
     "age": 27,
     "height": "6' 2\"",
@@ -10933,7 +10932,7 @@
     "yahoo_id": "",
     "upid": "3706",
     "mlb_id": 669003,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1998-09-04",
     "age": 27,
     "height": "6' 2\"",
@@ -10999,7 +10998,7 @@
     "yahoo_id": "",
     "upid": "3846",
     "mlb_id": 670224,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1998-01-09",
     "age": 28,
     "height": "6' 4\"",
@@ -11067,7 +11066,7 @@
     "yahoo_id": "",
     "upid": "3963",
     "mlb_id": 690829,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "2000-09-17",
     "age": 25,
     "height": "6' 5\"",
@@ -11134,7 +11133,7 @@
     "yahoo_id": "",
     "upid": "6064",
     "mlb_id": 669165,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1998-05-30",
     "age": 27,
     "height": "6' 3\"",
@@ -11332,7 +11331,7 @@
     "yahoo_id": "",
     "upid": "7409",
     "mlb_id": 671286,
-    "FBP_Team": "",
+    "FBP_Team": "TBB",
     "birth_date": "1999-11-04",
     "age": 26,
     "height": "6' 1\"",
@@ -11377,7 +11376,7 @@
     "yahoo_id": "",
     "upid": "3543",
     "mlb_id": 680728,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1999-09-27",
     "age": 26,
     "height": "5' 10\"",
@@ -11390,7 +11389,7 @@
   {
     "name": "Alex Vesia",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11458,7 +11457,7 @@
   {
     "name": "Bailey Ober",
     "team": "MIN",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -11503,7 +11502,7 @@
   {
     "name": "Brandon Lowe",
     "team": "PIT",
-    "position": "2B",
+    "position": "1B,2B,OF",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11534,7 +11533,7 @@
     "yahoo_id": "",
     "upid": "2175",
     "mlb_id": 669016,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1997-12-18",
     "age": 28,
     "height": "6' 2\"",
@@ -11579,7 +11578,7 @@
     "yahoo_id": "",
     "upid": "6124",
     "mlb_id": 681035,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1999-06-15",
     "age": 26,
     "height": "6' 4\"",
@@ -11692,7 +11691,7 @@
     "yahoo_id": "",
     "upid": "2360",
     "mlb_id": 502085,
-    "FBP_Team": "WIZ",
+    "FBP_Team": "WAR",
     "birth_date": "1985-04-09",
     "age": 40,
     "height": "5' 11\"",
@@ -11714,7 +11713,7 @@
     "yahoo_id": "",
     "upid": "2375",
     "mlb_id": 571882,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1990-09-14",
     "age": 35,
     "height": "6' 3\"",
@@ -11789,7 +11788,7 @@
   {
     "name": "Garrett Crochet",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": "Weekend Warriors",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -11931,7 +11930,7 @@
     "yahoo_id": "",
     "upid": "2620",
     "mlb_id": 683003,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "2001-08-06",
     "age": 24,
     "height": "6' 0\"",
@@ -11976,7 +11975,7 @@
     "yahoo_id": "",
     "upid": "3695",
     "mlb_id": null,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "fypd": false
   },
   {
@@ -12014,7 +12013,7 @@
     "yahoo_id": "",
     "upid": "2774",
     "mlb_id": 669701,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1997-08-07",
     "age": 28,
     "height": "5' 9\"",
@@ -12072,7 +12071,7 @@
   {
     "name": "Kris Bubic",
     "team": "KC",
-    "position": "SP",
+    "position": "P",
     "manager": "Weekend Warriors",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12094,7 +12093,7 @@
   {
     "name": "Lucas Giolito",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -12207,7 +12206,7 @@
   {
     "name": "Max Scherzer",
     "team": "TOR",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -12227,7 +12226,7 @@
     "fypd": false
   },
   {
-    "name": "Moisés Chace",
+    "name": "Mois\u00e9s Chace",
     "team": "PHI",
     "position": "RHP",
     "manager": "Weekend Warriors",
@@ -12299,7 +12298,7 @@
     "yahoo_id": "",
     "upid": "4030",
     "mlb_id": 690916,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1999-12-17",
     "age": 26,
     "height": "6' 3\"",
@@ -12454,7 +12453,7 @@
     "yahoo_id": "",
     "upid": "4125",
     "mlb_id": 687462,
-    "FBP_Team": "",
+    "FBP_Team": "WAR",
     "birth_date": "1997-11-14",
     "age": 28,
     "height": "5' 11\"",
@@ -12626,7 +12625,7 @@
   {
     "name": "Jacob deGrom",
     "team": "TEX",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12648,7 +12647,7 @@
   {
     "name": "Cody Bellinger",
     "team": "NYY",
-    "position": "CF",
+    "position": "1B,CF",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12670,7 +12669,7 @@
   {
     "name": "Max Muncy",
     "team": "LAD",
-    "position": "3B",
+    "position": "1B,2B,3B",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12714,7 +12713,7 @@
   {
     "name": "Shohei Ohtani (Pitcher)",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12734,9 +12733,9 @@
     "fypd": false
   },
   {
-    "name": "Carlos Rodón",
+    "name": "Carlos Rod\u00f3n",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12758,7 +12757,7 @@
   {
     "name": "Sandy Alcantara",
     "team": "MIA",
-    "position": "SP",
+    "position": "P",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12789,7 +12788,7 @@
     "yahoo_id": "",
     "upid": "2038",
     "mlb_id": 807799,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "1993-07-15",
     "age": 32,
     "height": "5' 8\"",
@@ -12866,7 +12865,7 @@
     "fypd": false
   },
   {
-    "name": "Cristopher Sánchez",
+    "name": "Cristopher S\u00e1nchez",
     "team": "PHI",
     "position": "SP",
     "manager": "Whiz Kids",
@@ -12899,7 +12898,7 @@
     "yahoo_id": "",
     "upid": "2521",
     "mlb_id": 643377,
-    "FBP_Team": "CFL",
+    "FBP_Team": "WIZ",
     "birth_date": "1994-11-22",
     "age": 31,
     "height": "6' 2\"",
@@ -12933,9 +12932,9 @@
     "rank": 70
   },
   {
-    "name": "José Alvarado",
+    "name": "Jos\u00e9 Alvarado",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -12988,7 +12987,7 @@
     "yahoo_id": "",
     "upid": "2872",
     "mlb_id": 663457,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "1997-09-08",
     "age": 28,
     "height": "6' 1\"",
@@ -13046,7 +13045,7 @@
   {
     "name": "Nico Hoerner",
     "team": "CHC",
-    "position": "2B",
+    "position": "2B,3B,SS",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -13066,9 +13065,9 @@
     "fypd": false
   },
   {
-    "name": "Pablo López",
+    "name": "Pablo L\u00f3pez",
     "team": "MIN",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "Keeper Contract",
@@ -13099,7 +13098,7 @@
     "yahoo_id": "",
     "upid": "3441",
     "mlb_id": 683011,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "2001-04-28",
     "age": 24,
     "height": "5' 10\"",
@@ -13190,7 +13189,7 @@
     "yahoo_id": "",
     "upid": "3987",
     "mlb_id": 657376,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "1996-02-20",
     "age": 29,
     "height": "6' 1\"",
@@ -13235,7 +13234,7 @@
     "yahoo_id": "",
     "upid": "4266",
     "mlb_id": 687863,
-    "FBP_Team": "CFL",
+    "FBP_Team": "WIZ",
     "birth_date": "2001-02-21",
     "age": 24,
     "height": "6' 4\"",
@@ -13248,7 +13247,7 @@
   {
     "name": "Marcus Semien",
     "team": "NYM",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13279,7 +13278,7 @@
     "yahoo_id": "",
     "upid": "4604",
     "mlb_id": 689147,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "2001-04-04",
     "age": 24,
     "height": "6' 2\"",
@@ -13301,7 +13300,7 @@
     "yahoo_id": "",
     "upid": "4783",
     "mlb_id": 666149,
-    "FBP_Team": "",
+    "FBP_Team": "WIZ",
     "birth_date": "1997-09-15",
     "age": 28,
     "height": "6' 2\"",
@@ -13585,7 +13584,7 @@
     "yahoo_id": "",
     "upid": "7286",
     "mlb_id": 808982,
-    "FBP_Team": "LAW",
+    "FBP_Team": "WIZ",
     "birth_date": "1998-08-20",
     "age": 27,
     "height": "6' 0\"",
@@ -13630,7 +13629,7 @@
     "yahoo_id": "",
     "upid": "7335",
     "mlb_id": 684974,
-    "FBP_Team": "",
+    "FBP_Team": "LAW",
     "birth_date": "1999-10-23",
     "age": 26,
     "height": "6' 2\"",
@@ -13758,7 +13757,7 @@
   {
     "name": "Kris Bryant",
     "team": "COL",
-    "position": "Util",
+    "position": "1B,3B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13801,9 +13800,9 @@
     "rank": 923
   },
   {
-    "name": "Javier Báez",
+    "name": "Javier B\u00e1ez",
     "team": "DET",
-    "position": "2B,3B,SS,CF",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13847,7 +13846,7 @@
   {
     "name": "Mike Clevinger",
     "team": "CWS",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13869,7 +13868,7 @@
   {
     "name": "Starling Marte",
     "team": "NYM",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -13900,7 +13899,7 @@
     "yahoo_id": "9571",
     "upid": "1899",
     "mlb_id": 596115,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1992-11-15",
     "age": 33,
     "height": "6' 1\"",
@@ -13977,7 +13976,7 @@
     "fypd": false
   },
   {
-    "name": "Yoán Moncada",
+    "name": "Yo\u00e1n Moncada",
     "team": "LAA",
     "position": "3B",
     "manager": "The Bluke Blokes",
@@ -14001,7 +14000,7 @@
   {
     "name": "Alex Verdugo",
     "team": "ATL",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14045,7 +14044,7 @@
   {
     "name": "Cal Quantrill",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14089,7 +14088,7 @@
   {
     "name": "Chris Taylor",
     "team": "LAA",
-    "position": "2B,CF",
+    "position": "2B,3B,SS,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14131,7 +14130,7 @@
     "fypd": false
   },
   {
-    "name": "Eloy Jiménez",
+    "name": "Eloy Jim\u00e9nez",
     "team": "TB",
     "position": "OF",
     "manager": null,
@@ -14155,7 +14154,7 @@
   {
     "name": "Frankie Montas",
     "team": "NYM",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14175,9 +14174,9 @@
     "fypd": false
   },
   {
-    "name": "Germán Márquez",
+    "name": "Germ\u00e1n M\u00e1rquez",
     "team": "COL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14199,7 +14198,7 @@
   {
     "name": "Jesse Winker",
     "team": "NYM",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14221,7 +14220,7 @@
   {
     "name": "Joe Musgrove",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14243,7 +14242,7 @@
   {
     "name": "Jorge Polanco",
     "team": "NYM",
-    "position": "2B,3B",
+    "position": "2B,SS",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -14263,7 +14262,7 @@
     "fypd": false
   },
   {
-    "name": "José Abreu",
+    "name": "Jos\u00e9 Abreu",
     "team": "HOU",
     "position": "1B",
     "manager": null,
@@ -14285,7 +14284,7 @@
     "fypd": false
   },
   {
-    "name": "Julio Urías",
+    "name": "Julio Ur\u00edas",
     "team": "LAD",
     "position": "P",
     "manager": null,
@@ -14331,7 +14330,7 @@
   {
     "name": "Liam Hendriks",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14375,7 +14374,7 @@
   {
     "name": "Ryan McMahon",
     "team": "NYY",
-    "position": "3B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14397,7 +14396,7 @@
   {
     "name": "Ryan Pressly",
     "team": "CHC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14463,7 +14462,7 @@
   {
     "name": "Ty France",
     "team": "TOR",
-    "position": "1B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14485,7 +14484,7 @@
   {
     "name": "Tyler Mahle",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14538,7 +14537,7 @@
     "yahoo_id": "",
     "upid": "1994",
     "mlb_id": 621345,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1993-09-02",
     "age": 32,
     "height": "6' 0\"",
@@ -14551,7 +14550,7 @@
   {
     "name": "Aaron Ashby",
     "team": "MIL",
-    "position": "RP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "",
@@ -14595,7 +14594,7 @@
   {
     "name": "Aaron Bummer",
     "team": "ATL",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14617,7 +14616,7 @@
   {
     "name": "Aaron Civale",
     "team": "CHC",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14877,7 +14876,7 @@
   {
     "name": "Adrian Houser",
     "team": "SF",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -14899,7 +14898,7 @@
   {
     "name": "Akil Baddoo",
     "team": "MIL",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -14978,7 +14977,7 @@
     "fypd": false
   },
   {
-    "name": "Aledmys Díaz",
+    "name": "Aledmys D\u00edaz",
     "team": "OAK",
     "position": "1B,2B,3B,SS,OF",
     "manager": null,
@@ -15024,7 +15023,7 @@
   {
     "name": "Alek Manoah",
     "team": "LAA",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15090,7 +15089,7 @@
   {
     "name": "Alex Lange",
     "team": "KC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15198,9 +15197,9 @@
     "fypd": false
   },
   {
-    "name": "Andrés Giménez",
+    "name": "Andr\u00e9s Gim\u00e9nez",
     "team": "TOR",
-    "position": "2B,SS",
+    "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15237,7 +15236,7 @@
   {
     "name": "Andrew Benintendi",
     "team": "CWS",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15259,7 +15258,7 @@
   {
     "name": "Andrew Chafin",
     "team": "LAA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15391,7 +15390,7 @@
   {
     "name": "Andrew Vaughn",
     "team": "MIL",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": "I'LL",
     "player_type": "MLB",
     "contract_type": "",
@@ -15400,7 +15399,7 @@
     "yahoo_id": "11866",
     "upid": "2088",
     "mlb_id": 683734,
-    "FBP_Team": "JEP",
+    "FBP_Team": "I'LL",
     "birth_date": "1998-04-03",
     "age": 27,
     "height": "5' 10\"",
@@ -15426,9 +15425,9 @@
     "fypd": false
   },
   {
-    "name": "Andy Ibáñez",
+    "name": "Andy Ib\u00e1\u00f1ez",
     "team": "DET",
-    "position": "2B,3B",
+    "position": "1B,2B,3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15481,7 +15480,7 @@
   {
     "name": "Anthony Bender",
     "team": "MIA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15584,7 +15583,7 @@
   {
     "name": "Antonio Senzatela",
     "team": "COL",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15754,7 +15753,7 @@
   {
     "name": "Austin Hays",
     "team": "CIN",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -15906,7 +15905,7 @@
     "fypd": false
   },
   {
-    "name": "Avisaíl García",
+    "name": "Avisa\u00edl Garc\u00eda",
     "team": "MIA",
     "position": "CF",
     "manager": null,
@@ -16042,7 +16041,7 @@
     "yahoo_id": "",
     "upid": "2158",
     "mlb_id": 641745,
-    "FBP_Team": "CFL",
+    "FBP_Team": "",
     "birth_date": "1995-07-27",
     "age": 30,
     "height": "6' 5\"",
@@ -16159,7 +16158,7 @@
   {
     "name": "Brendan Rodgers",
     "team": "HOU",
-    "position": "2B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16284,7 +16283,7 @@
   {
     "name": "Brusdar Graterol",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16470,7 +16469,7 @@
   {
     "name": "Carlos Carrasco",
     "team": "ATL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16490,7 +16489,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Estévez",
+    "name": "Carlos Est\u00e9vez",
     "team": "KC",
     "position": "RP",
     "manager": null,
@@ -16501,7 +16500,7 @@
     "yahoo_id": "",
     "upid": "2229",
     "mlb_id": 608032,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1992-12-28",
     "age": 33,
     "height": "6' 6\"",
@@ -16512,7 +16511,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Hernández",
+    "name": "Carlos Hern\u00e1ndez",
     "team": "CLE",
     "position": "P",
     "manager": null,
@@ -16624,7 +16623,7 @@
   {
     "name": "Cavan Biggio",
     "team": "KC",
-    "position": "1B,OF",
+    "position": "2B,3B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16646,7 +16645,7 @@
   {
     "name": "Chad Green",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16866,7 +16865,7 @@
   {
     "name": "Chris Flexen",
     "team": "CHC",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16910,7 +16909,7 @@
   {
     "name": "Chris Paddack",
     "team": "DET",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16932,7 +16931,7 @@
   {
     "name": "Chris Stratton",
     "team": "LAD",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16952,9 +16951,9 @@
     "fypd": false
   },
   {
-    "name": "Christian Vázquez",
+    "name": "Christian V\u00e1zquez",
     "team": "MIN",
-    "position": "C",
+    "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -16974,7 +16973,7 @@
     "fypd": false
   },
   {
-    "name": "Cionel Pérez",
+    "name": "Cionel P\u00e9rez",
     "team": "BAL",
     "position": "RP",
     "manager": null,
@@ -17280,7 +17279,7 @@
   {
     "name": "Craig Kimbrel",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -17302,7 +17301,7 @@
   {
     "name": "Cristian Javier",
     "team": "HOU",
-    "position": "SP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "",
@@ -17661,7 +17660,7 @@
   {
     "name": "Daulton Varsho",
     "team": "TOR",
-    "position": "CF",
+    "position": "C,CF",
     "manager": "Andromedans",
     "player_type": "MLB",
     "contract_type": "",
@@ -17857,7 +17856,7 @@
     "fypd": false
   },
   {
-    "name": "Deivi García",
+    "name": "Deivi Garc\u00eda",
     "team": "CWS",
     "position": "RP",
     "manager": null,
@@ -17890,7 +17889,7 @@
     "yahoo_id": "",
     "upid": "2370",
     "mlb_id": 642701,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1996-04-12",
     "age": 29,
     "height": "6' 2\"",
@@ -18026,7 +18025,7 @@
     "fypd": false
   },
   {
-    "name": "Domingo Germán",
+    "name": "Domingo Germ\u00e1n",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -18392,13 +18391,13 @@
     "yahoo_id": "",
     "upid": "2432",
     "mlb_id": null,
-    "FBP_Team": "B2J",
+    "FBP_Team": "",
     "fypd": false
   },
   {
     "name": "Eduardo Rodriguez",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -18456,7 +18455,7 @@
     "rank": 1321
   },
   {
-    "name": "Edwin Ríos",
+    "name": "Edwin R\u00edos",
     "team": "CIN",
     "position": "3B",
     "manager": null,
@@ -18544,7 +18543,7 @@
     "fypd": false
   },
   {
-    "name": "Elias Díaz",
+    "name": "Elias D\u00edaz",
     "team": "SD",
     "position": "C",
     "manager": null,
@@ -18566,7 +18565,7 @@
     "fypd": false
   },
   {
-    "name": "Elieser Hernández",
+    "name": "Elieser Hern\u00e1ndez",
     "team": "MIL",
     "position": "P",
     "manager": null,
@@ -18588,7 +18587,7 @@
     "fypd": false
   },
   {
-    "name": "Emilio Pagán",
+    "name": "Emilio Pag\u00e1n",
     "team": "CIN",
     "position": "RP",
     "manager": null,
@@ -18676,7 +18675,7 @@
     "fypd": false
   },
   {
-    "name": "Erasmo Ramírez",
+    "name": "Erasmo Ram\u00edrez",
     "team": "TB",
     "position": "RP",
     "manager": null,
@@ -18722,7 +18721,7 @@
   {
     "name": "Erick Fedde",
     "team": "MIL",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -18856,7 +18855,7 @@
     "rank": 1366
   },
   {
-    "name": "Francisco Pérez",
+    "name": "Francisco P\u00e9rez",
     "team": "OAK",
     "position": "RP",
     "manager": null,
@@ -18905,7 +18904,7 @@
     "yahoo_id": "",
     "upid": "2489",
     "mlb_id": 642100,
-    "FBP_Team": "RV",
+    "FBP_Team": "",
     "birth_date": "1995-04-12",
     "age": 30,
     "height": "5' 11\"",
@@ -18972,7 +18971,7 @@
     "yahoo_id": "",
     "upid": "2492",
     "mlb_id": 664076,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "birth_date": "1994-04-23",
     "age": 31,
     "height": "6' 1\"",
@@ -19051,7 +19050,7 @@
   {
     "name": "Garrett Whitlock",
     "team": "BOS",
-    "position": "RP",
+    "position": "P",
     "manager": "Law-Abiding Citizens",
     "player_type": "MLB",
     "contract_type": "",
@@ -19071,7 +19070,7 @@
     "fypd": false
   },
   {
-    "name": "Gary Sánchez",
+    "name": "Gary S\u00e1nchez",
     "team": "BAL",
     "position": "C",
     "manager": null,
@@ -19093,9 +19092,9 @@
     "fypd": false
   },
   {
-    "name": "Génesis Cabrera",
+    "name": "G\u00e9nesis Cabrera",
     "team": "MIN",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19322,7 +19321,7 @@
     "fypd": false
   },
   {
-    "name": "Harold Ramírez",
+    "name": "Harold Ram\u00edrez",
     "team": "TB",
     "position": "OF",
     "manager": null,
@@ -19355,7 +19354,7 @@
     "yahoo_id": "",
     "upid": "2528",
     "mlb_id": 664056,
-    "FBP_Team": "B2J",
+    "FBP_Team": "",
     "birth_date": "1994-06-03",
     "age": 31,
     "height": "5' 11\"",
@@ -19388,9 +19387,9 @@
     "fypd": false
   },
   {
-    "name": "Héctor Neris",
+    "name": "H\u00e9ctor Neris",
     "team": "HOU",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19501,7 +19500,7 @@
   {
     "name": "Hunter Renfroe",
     "team": "KC",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -19722,7 +19721,7 @@
     "fypd": false
   },
   {
-    "name": "Jack López",
+    "name": "Jack L\u00f3pez",
     "team": "SEA",
     "position": "2B",
     "manager": null,
@@ -19739,7 +19738,7 @@
   {
     "name": "Jackson Kowar",
     "team": "SEA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -20333,7 +20332,7 @@
     "yahoo_id": "",
     "upid": "2643",
     "mlb_id": 643446,
-    "FBP_Team": "CFL",
+    "FBP_Team": "",
     "birth_date": "1992-04-08",
     "age": 33,
     "height": "6' 0\"",
@@ -20405,7 +20404,7 @@
     "rank": 1542
   },
   {
-    "name": "Jesús Sánchez",
+    "name": "Jes\u00fas S\u00e1nchez",
     "team": "MIA",
     "position": "CF",
     "manager": null,
@@ -20427,7 +20426,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Tinoco",
+    "name": "Jes\u00fas Tinoco",
     "team": "MIA",
     "position": "RP",
     "manager": null,
@@ -20460,7 +20459,7 @@
     "yahoo_id": "",
     "upid": "2664",
     "mlb_id": 623474,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "birth_date": "1993-09-09",
     "age": 32,
     "height": "6' 3\"",
@@ -20488,7 +20487,7 @@
   {
     "name": "Jo Adell",
     "team": "LAA",
-    "position": "CF",
+    "position": "OF",
     "manager": "not much of a donkey",
     "player_type": "MLB",
     "contract_type": "",
@@ -20552,7 +20551,7 @@
     "fypd": false
   },
   {
-    "name": "Joe Jiménez",
+    "name": "Joe Jim\u00e9nez",
     "team": "ATL",
     "position": "RP",
     "manager": null,
@@ -20662,7 +20661,7 @@
     "fypd": false
   },
   {
-    "name": "Joely Rodríguez",
+    "name": "Joely Rodr\u00edguez",
     "team": "BOS",
     "position": "RP",
     "manager": null,
@@ -20717,7 +20716,7 @@
     "yahoo_id": "",
     "upid": "2683",
     "mlb_id": 664192,
-    "FBP_Team": "HAM",
+    "FBP_Team": "",
     "birth_date": "1993-06-06",
     "age": 32,
     "height": "6' 5\"",
@@ -20877,7 +20876,7 @@
   {
     "name": "John Means",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -20987,7 +20986,7 @@
   {
     "name": "Jon Gray",
     "team": "TEX",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21029,7 +21028,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Hernández",
+    "name": "Jonathan Hern\u00e1ndez",
     "team": "TB",
     "position": "P",
     "manager": null,
@@ -21051,9 +21050,9 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Loáisiga",
+    "name": "Jonathan Lo\u00e1isiga",
     "team": "NYY",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21161,7 +21160,7 @@
     "fypd": false
   },
   {
-    "name": "Jorge López",
+    "name": "Jorge L\u00f3pez",
     "team": "WSH",
     "position": "RP",
     "manager": null,
@@ -21249,7 +21248,7 @@
     "fypd": false
   },
   {
-    "name": "José Cisnero",
+    "name": "Jos\u00e9 Cisnero",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -21309,7 +21308,7 @@
     "fypd": false
   },
   {
-    "name": "José Quijada",
+    "name": "Jos\u00e9 Quijada",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -21331,7 +21330,7 @@
     "fypd": false
   },
   {
-    "name": "José Quintana",
+    "name": "Jos\u00e9 Quintana",
     "team": "NYM",
     "position": "SP",
     "manager": null,
@@ -21342,7 +21341,7 @@
     "yahoo_id": "",
     "upid": "2749",
     "mlb_id": 500779,
-    "FBP_Team": "B2J",
+    "FBP_Team": "",
     "birth_date": "1989-01-24",
     "age": 36,
     "height": "6' 2\"",
@@ -21369,7 +21368,7 @@
     "rank": 1595
   },
   {
-    "name": "José Rodríguez",
+    "name": "Jos\u00e9 Rodr\u00edguez",
     "team": "CWS",
     "position": "2B",
     "manager": "",
@@ -21385,7 +21384,7 @@
     "rank": 1621
   },
   {
-    "name": "José Ruiz",
+    "name": "Jos\u00e9 Ruiz",
     "team": "PHI",
     "position": "RP",
     "manager": null,
@@ -21423,7 +21422,7 @@
     "rank": 1598
   },
   {
-    "name": "José Suarez",
+    "name": "Jos\u00e9 Suarez",
     "team": "LAA",
     "position": "SP, RP",
     "manager": null,
@@ -21467,9 +21466,9 @@
     "fypd": false
   },
   {
-    "name": "José Urquidy",
+    "name": "Jos\u00e9 Urquidy",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21491,7 +21490,7 @@
   {
     "name": "Josh Bell",
     "team": "MIN",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -21839,7 +21838,7 @@
   {
     "name": "Justin Turner",
     "team": "CHC",
-    "position": "1B,3B",
+    "position": "3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22189,7 +22188,7 @@
     "fypd": false
   },
   {
-    "name": "Kiké Hernández",
+    "name": "Kik\u00e9 Hern\u00e1ndez",
     "team": "LAD",
     "position": "1B, 2B, 3B, SS, OF",
     "manager": null,
@@ -22272,7 +22271,7 @@
   {
     "name": "Kyle Farmer",
     "team": "COL",
-    "position": "1B,2B,3B,SS",
+    "position": "C,1B,2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22294,7 +22293,7 @@
   {
     "name": "Kyle Freeland",
     "team": "COL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22448,7 +22447,7 @@
   {
     "name": "LaMonte Wade Jr.",
     "team": "LAA",
-    "position": "1B,OF",
+    "position": "1B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22501,7 +22500,7 @@
     "yahoo_id": "",
     "upid": "2873",
     "mlb_id": 672820,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "birth_date": "2000-01-25",
     "age": 25,
     "height": "5' 11\"",
@@ -22552,7 +22551,7 @@
   {
     "name": "Lourdes Gurriel Jr.",
     "team": "AZ",
-    "position": "OF",
+    "position": "1B,2B,OF",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -22602,7 +22601,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Frías",
+    "name": "Luis Fr\u00edas",
     "team": "AZ",
     "position": "RP",
     "manager": null,
@@ -22617,7 +22616,7 @@
     "fypd": false
   },
   {
-    "name": "Luis García",
+    "name": "Luis Garc\u00eda",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -22654,7 +22653,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Patiño",
+    "name": "Luis Pati\u00f1o",
     "team": "SD",
     "position": "P",
     "manager": null,
@@ -22678,7 +22677,7 @@
   {
     "name": "Luis Severino",
     "team": "ATH",
-    "position": "SP",
+    "position": "P",
     "manager": "Whiz Kids",
     "player_type": "MLB",
     "contract_type": "",
@@ -22720,9 +22719,9 @@
     "fypd": false
   },
   {
-    "name": "Luis Urías",
+    "name": "Luis Ur\u00edas",
     "team": "ATH",
-    "position": "2B,3B",
+    "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22744,7 +22743,7 @@
   {
     "name": "Luke Jackson",
     "team": "SEA",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22852,7 +22851,7 @@
     "fypd": false
   },
   {
-    "name": "Manuel Rodríguez",
+    "name": "Manuel Rodr\u00edguez",
     "team": "TB",
     "position": "RP",
     "manager": null,
@@ -22898,7 +22897,7 @@
   {
     "name": "Marcus Stroman",
     "team": "NYY",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22920,7 +22919,7 @@
   {
     "name": "Mark Canha",
     "team": "KC",
-    "position": "OF",
+    "position": "1B,CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -22940,7 +22939,7 @@
     "fypd": false
   },
   {
-    "name": "Martín Maldonado",
+    "name": "Mart\u00edn Maldonado",
     "team": "CWS",
     "position": "C",
     "manager": null,
@@ -22962,7 +22961,7 @@
     "fypd": false
   },
   {
-    "name": "Martín Pérez",
+    "name": "Mart\u00edn P\u00e9rez",
     "team": "CWS",
     "position": "SP",
     "manager": null,
@@ -23160,7 +23159,7 @@
     "fypd": false
   },
   {
-    "name": "Mauricio Dubón",
+    "name": "Mauricio Dub\u00f3n",
     "team": "HOU",
     "position": "1B, 2B, 3B, CF",
     "manager": null,
@@ -23252,7 +23251,7 @@
     "yahoo_id": "",
     "upid": "2967",
     "mlb_id": 518876,
-    "FBP_Team": "WIZ",
+    "FBP_Team": "",
     "birth_date": "1988-10-14",
     "age": 37,
     "height": "6' 2\"",
@@ -23280,7 +23279,7 @@
   {
     "name": "Michael Conforto",
     "team": "LAD",
-    "position": "OF",
+    "position": "CF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23317,7 +23316,7 @@
   {
     "name": "Michael Lorenzen (Pitcher)",
     "team": "KC",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23327,8 +23326,7 @@
     "upid": "2977",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "SP"
+    "fypd": false
   },
   {
     "name": "Michael Morales",
@@ -23413,7 +23411,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Díaz",
+    "name": "Miguel D\u00edaz",
     "team": "DET",
     "position": "RP",
     "manager": null,
@@ -23450,7 +23448,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Sanó",
+    "name": "Miguel San\u00f3",
     "team": "LAA",
     "position": "1B,3B",
     "manager": null,
@@ -23505,7 +23503,7 @@
     "yahoo_id": "",
     "upid": "2999",
     "mlb_id": 681347,
-    "FBP_Team": "DRO",
+    "FBP_Team": "",
     "birth_date": "1999-11-08",
     "age": 26,
     "height": "6' 1\"",
@@ -23731,7 +23729,7 @@
   {
     "name": "Nestor Cortes",
     "team": "SD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -23973,7 +23971,7 @@
   {
     "name": "Nick Sandlin",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24017,7 +24015,7 @@
   {
     "name": "Nicky Lopez",
     "team": "COL",
-    "position": "3B",
+    "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24106,7 +24104,7 @@
     "fypd": false
   },
   {
-    "name": "Omar Narváez",
+    "name": "Omar Narv\u00e1ez",
     "team": "TEX",
     "position": "C",
     "manager": null,
@@ -24240,7 +24238,7 @@
   {
     "name": "Patrick Sandoval",
     "team": "BOS",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24306,7 +24304,7 @@
   {
     "name": "Paul Sewald",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -24512,7 +24510,7 @@
     "fypd": false
   },
   {
-    "name": "Rafael Marchán",
+    "name": "Rafael March\u00e1n",
     "team": "PHI",
     "position": "C",
     "manager": null,
@@ -24571,7 +24569,7 @@
     "fypd": false
   },
   {
-    "name": "Ramón Laureano",
+    "name": "Ram\u00f3n Laureano",
     "team": "BAL",
     "position": "CF",
     "manager": null,
@@ -24582,7 +24580,7 @@
     "yahoo_id": "",
     "upid": "3113",
     "mlb_id": 657656,
-    "FBP_Team": "WIZ",
+    "FBP_Team": "",
     "birth_date": "1994-07-15",
     "age": 31,
     "height": "5' 10\"",
@@ -24593,7 +24591,7 @@
     "fypd": false
   },
   {
-    "name": "Ramón Urías",
+    "name": "Ram\u00f3n Ur\u00edas",
     "team": "BAL",
     "position": "3B",
     "manager": null,
@@ -24659,7 +24657,7 @@
     "fypd": false
   },
   {
-    "name": "Ricardo Genovés",
+    "name": "Ricardo Genov\u00e9s",
     "team": "ATL",
     "position": "RHP",
     "manager": "",
@@ -24752,7 +24750,7 @@
     "yahoo_id": "",
     "upid": "3137",
     "mlb_id": null,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "fypd": false
   },
   {
@@ -24875,7 +24873,7 @@
     "rank": 922
   },
   {
-    "name": "Romy González",
+    "name": "Romy Gonz\u00e1lez",
     "team": "BOS",
     "position": "1B, 2B, 3B, SS",
     "manager": null,
@@ -24886,7 +24884,7 @@
     "yahoo_id": "",
     "upid": "3151",
     "mlb_id": 663853,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1996-09-06",
     "age": 29,
     "height": "6' 0\"",
@@ -25046,7 +25044,7 @@
   {
     "name": "Ryan Mountcastle",
     "team": "BAL",
-    "position": "1B",
+    "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25112,7 +25110,7 @@
   {
     "name": "Ryan Yarbrough",
     "team": "NYY",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25304,7 +25302,7 @@
   {
     "name": "Scott Barlow",
     "team": "CIN",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25394,7 +25392,7 @@
     "yahoo_id": "",
     "upid": "3214",
     "mlb_id": 656794,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "1993-06-12",
     "age": 32,
     "height": "6' 5\"",
@@ -25636,7 +25634,7 @@
   {
     "name": "Steven Matz",
     "team": "TB",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25747,7 +25745,7 @@
   {
     "name": "Tanner Rainey",
     "team": "DET",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -25960,7 +25958,7 @@
   {
     "name": "Tim Mayza",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26024,7 +26022,7 @@
     "fypd": false
   },
   {
-    "name": "Tomás Nido",
+    "name": "Tom\u00e1s Nido",
     "team": "DET",
     "position": "C",
     "manager": null,
@@ -26101,7 +26099,7 @@
   {
     "name": "Tony Gonsolin",
     "team": "LAD",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26292,7 +26290,7 @@
   {
     "name": "Trevor Rogers",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
     "contract_type": "",
@@ -26594,7 +26592,7 @@
   {
     "name": "Tyler Rogers",
     "team": "TOR",
-    "position": "RP",
+    "position": "P",
     "manager": "Hammers",
     "player_type": "MLB",
     "contract_type": "",
@@ -26638,7 +26636,7 @@
   {
     "name": "Tyler Wells",
     "team": "BAL",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -26682,7 +26680,7 @@
   {
     "name": "Tylor Megill",
     "team": "NYM",
-    "position": "SP",
+    "position": "P",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
     "contract_type": "",
@@ -26746,7 +26744,7 @@
     "fypd": false
   },
   {
-    "name": "Victor González",
+    "name": "Victor Gonz\u00e1lez",
     "team": "NYY",
     "position": "RP",
     "manager": null,
@@ -26948,7 +26946,7 @@
     "yahoo_id": "",
     "upid": "3379",
     "mlb_id": 676684,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "1995-06-06",
     "age": 30,
     "height": "6' 0\"",
@@ -27349,7 +27347,7 @@
     "yahoo_id": "",
     "upid": "3452",
     "mlb_id": 683146,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "birth_date": "1999-11-13",
     "age": 26,
     "height": "6' 3\"",
@@ -27438,7 +27436,7 @@
     "yahoo_id": "",
     "upid": "3465",
     "mlb_id": 682990,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "2000-09-16",
     "age": 25,
     "height": "6' 3\"",
@@ -27504,7 +27502,7 @@
     "yahoo_id": "",
     "upid": "3475",
     "mlb_id": 678394,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1999-05-17",
     "age": 26,
     "height": "6' 1\"",
@@ -27526,7 +27524,7 @@
     "yahoo_id": "",
     "upid": "3476",
     "mlb_id": 669461,
-    "FBP_Team": "LAW",
+    "FBP_Team": "",
     "birth_date": "1999-11-06",
     "age": 26,
     "height": "6' 4\"",
@@ -28024,7 +28022,7 @@
     "yahoo_id": "",
     "upid": "3534",
     "mlb_id": 669194,
-    "FBP_Team": "SAD",
+    "FBP_Team": "",
     "birth_date": "1998-02-01",
     "age": 27,
     "height": "6' 3\"",
@@ -28385,7 +28383,7 @@
     "yahoo_id": "",
     "upid": "3560",
     "mlb_id": 669065,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1998-01-02",
     "age": 28,
     "height": "6' 2\"",
@@ -28695,7 +28693,7 @@
     "fypd": false
   },
   {
-    "name": "Oscar Colás",
+    "name": "Oscar Col\u00e1s",
     "team": "CWS",
     "position": "CF",
     "manager": null,
@@ -28717,7 +28715,7 @@
     "fypd": false
   },
   {
-    "name": "Yoelqui Céspedes",
+    "name": "Yoelqui C\u00e9spedes",
     "team": "",
     "position": "OF",
     "manager": "",
@@ -29931,7 +29929,7 @@
     "yahoo_id": "",
     "upid": "3681",
     "mlb_id": 680718,
-    "FBP_Team": "DRO",
+    "FBP_Team": "",
     "birth_date": "1999-11-12",
     "age": 26,
     "height": "6' 0\"",
@@ -30181,7 +30179,7 @@
     "rank": 1129
   },
   {
-    "name": "Sixto Sánchez",
+    "name": "Sixto S\u00e1nchez",
     "team": "MIA",
     "position": "SP",
     "manager": null,
@@ -30665,7 +30663,7 @@
     "yahoo_id": "",
     "upid": "3729",
     "mlb_id": 663485,
-    "FBP_Team": "JEP",
+    "FBP_Team": "",
     "birth_date": "1997-07-17",
     "age": 28,
     "height": "6' 3\"",
@@ -30724,7 +30722,7 @@
     "rank": 1398
   },
   {
-    "name": "Joel Díaz",
+    "name": "Joel D\u00edaz",
     "team": "NYM",
     "position": "SP",
     "manager": "",
@@ -30789,7 +30787,7 @@
     "yahoo_id": "",
     "upid": "3741",
     "mlb_id": 686218,
-    "FBP_Team": "LAW",
+    "FBP_Team": "",
     "birth_date": "1999-11-15",
     "age": 26,
     "height": "6' 5\"",
@@ -30800,7 +30798,7 @@
     "fypd": false
   },
   {
-    "name": "Yoendrys Gómez",
+    "name": "Yoendrys G\u00f3mez",
     "team": "NYY",
     "position": "RHP",
     "manager": "",
@@ -31036,7 +31034,7 @@
     "yahoo_id": "",
     "upid": "3756",
     "mlb_id": 669372,
-    "FBP_Team": "SAD",
+    "FBP_Team": "",
     "birth_date": "1999-05-20",
     "age": 26,
     "height": "6' 2\"",
@@ -31412,7 +31410,7 @@
     "rank": 1806
   },
   {
-    "name": "Malcom Nuñez",
+    "name": "Malcom Nu\u00f1ez",
     "team": "PIT",
     "position": "1B",
     "manager": "",
@@ -32154,7 +32152,7 @@
     "yahoo_id": "",
     "upid": "3836",
     "mlb_id": 696100,
-    "FBP_Team": "SAD",
+    "FBP_Team": "",
     "birth_date": "1999-10-08",
     "age": 26,
     "height": "6' 0\"",
@@ -32450,7 +32448,7 @@
     "yahoo_id": "",
     "upid": "3860",
     "mlb_id": 672640,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "birth_date": "1998-10-01",
     "age": 27,
     "height": "5' 10\"",
@@ -33598,7 +33596,7 @@
     "rank": 1669
   },
   {
-    "name": "Nazier Mulé",
+    "name": "Nazier Mul\u00e9",
     "team": "CHC",
     "position": "SIRP",
     "manager": "",
@@ -33792,7 +33790,7 @@
   {
     "name": "Austin Warren",
     "team": "NYM",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -33802,11 +33800,10 @@
     "upid": "3983",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "fypd": false
   },
   {
-    "name": "Moisés Gómez",
+    "name": "Mois\u00e9s G\u00f3mez",
     "team": "",
     "position": "",
     "manager": null,
@@ -33921,7 +33918,7 @@
     "yahoo_id": "",
     "upid": "3998",
     "mlb_id": 666018,
-    "FBP_Team": "HAM",
+    "FBP_Team": "",
     "birth_date": "1998-05-23",
     "age": 27,
     "height": "6' 0\"",
@@ -34109,7 +34106,7 @@
   {
     "name": "Jordan Montgomery",
     "team": "AZ",
-    "position": "SP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -34203,7 +34200,7 @@
     "yahoo_id": "",
     "upid": "4027",
     "mlb_id": 641329,
-    "FBP_Team": "CFL",
+    "FBP_Team": "",
     "birth_date": "1994-12-02",
     "age": 31,
     "height": "6' 6\"",
@@ -34252,7 +34249,7 @@
     "fypd": false
   },
   {
-    "name": "Seranthony Domínguez",
+    "name": "Seranthony Dom\u00ednguez",
     "team": "BAL",
     "position": "RP",
     "manager": null,
@@ -34263,7 +34260,7 @@
     "yahoo_id": "",
     "upid": "4034",
     "mlb_id": 622554,
-    "FBP_Team": "DRO",
+    "FBP_Team": "",
     "birth_date": "1994-11-25",
     "age": 31,
     "height": "6' 1\"",
@@ -34423,7 +34420,7 @@
     "fypd": false
   },
   {
-    "name": "José Ureña",
+    "name": "Jos\u00e9 Ure\u00f1a",
     "team": "TEX",
     "position": "SP, RP",
     "manager": null,
@@ -34691,7 +34688,7 @@
     "fypd": false
   },
   {
-    "name": "Dany Jiménez",
+    "name": "Dany Jim\u00e9nez",
     "team": "OAK",
     "position": "RP",
     "manager": null,
@@ -34964,7 +34961,7 @@
     "yahoo_id": "",
     "upid": "4077",
     "mlb_id": 665795,
-    "FBP_Team": "WIZ",
+    "FBP_Team": "",
     "birth_date": "1998-04-13",
     "age": 27,
     "height": "6' 5\"",
@@ -35008,7 +35005,7 @@
     "yahoo_id": "",
     "upid": "4081",
     "mlb_id": 518585,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1990-03-28",
     "age": 35,
     "height": "6' 2\"",
@@ -35205,7 +35202,7 @@
     "fypd": false
   },
   {
-    "name": "Jhonathan Díaz",
+    "name": "Jhonathan D\u00edaz",
     "team": "SEA",
     "position": "P",
     "manager": null,
@@ -36177,7 +36174,7 @@
     "yahoo_id": "",
     "upid": "4209",
     "mlb_id": 657585,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "1993-01-02",
     "age": 33,
     "height": "6' 2\"",
@@ -36367,7 +36364,7 @@
     "yahoo_id": "",
     "upid": "4226",
     "mlb_id": 657649,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "1994-01-24",
     "age": 31,
     "height": "6' 5\"",
@@ -36486,7 +36483,7 @@
     "yahoo_id": "",
     "upid": "4242",
     "mlb_id": null,
-    "FBP_Team": "LAW",
+    "FBP_Team": "",
     "fypd": false
   },
   {
@@ -36512,7 +36509,7 @@
     "fypd": false
   },
   {
-    "name": "Adrián Martínez",
+    "name": "Adri\u00e1n Mart\u00ednez",
     "team": "OAK",
     "position": "RP",
     "manager": null,
@@ -36571,7 +36568,7 @@
     "fypd": false
   },
   {
-    "name": "José Marte",
+    "name": "Jos\u00e9 Marte",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -36773,7 +36770,7 @@
     "rank": 1082
   },
   {
-    "name": "Adrián Sugastey",
+    "name": "Adri\u00e1n Sugastey",
     "team": "SF",
     "position": "C",
     "manager": null,
@@ -36919,7 +36916,7 @@
     "rank": 1995
   },
   {
-    "name": "Jeremy Peña",
+    "name": "Jeremy Pe\u00f1a",
     "team": "HOU",
     "position": "SS",
     "manager": null,
@@ -36930,7 +36927,7 @@
     "yahoo_id": "",
     "upid": "4291",
     "mlb_id": 665161,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1997-09-22",
     "age": 28,
     "height": "6' 1\"",
@@ -37161,7 +37158,7 @@
     "yahoo_id": "",
     "upid": "4307",
     "mlb_id": 678024,
-    "FBP_Team": "DRO",
+    "FBP_Team": "",
     "birth_date": "2000-03-19",
     "age": 25,
     "height": "6' 5\"",
@@ -37228,7 +37225,7 @@
     "yahoo_id": "",
     "upid": "4311",
     "mlb_id": 624428,
-    "FBP_Team": "WAR",
+    "FBP_Team": "",
     "birth_date": "1991-12-14",
     "age": 34,
     "height": "5' 10\"",
@@ -37505,7 +37502,7 @@
     "fypd": false
   },
   {
-    "name": "José Azocar",
+    "name": "Jos\u00e9 Azocar",
     "team": "NYM",
     "position": "CF",
     "manager": null,
@@ -37551,7 +37548,7 @@
   {
     "name": "Nolan Gorman",
     "team": "STL",
-    "position": "2B,3B",
+    "position": "3B",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -37582,7 +37579,7 @@
     "yahoo_id": "",
     "upid": "4337",
     "mlb_id": null,
-    "FBP_Team": "TBB",
+    "FBP_Team": "",
     "fypd": false
   },
   {
@@ -37707,7 +37704,7 @@
     "yahoo_id": "",
     "upid": "4344",
     "mlb_id": 666139,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1998-02-02",
     "age": 27,
     "height": "6' 4\"",
@@ -37844,7 +37841,7 @@
     "fypd": false
   },
   {
-    "name": "Nelson Velázquez",
+    "name": "Nelson Vel\u00e1zquez",
     "team": "KC",
     "position": "OF",
     "manager": null,
@@ -37910,7 +37907,7 @@
     "fypd": false
   },
   {
-    "name": "René Pinto",
+    "name": "Ren\u00e9 Pinto",
     "team": "AZ",
     "position": "C",
     "manager": null,
@@ -37976,7 +37973,7 @@
     "fypd": false
   },
   {
-    "name": "Simón Muzziotti",
+    "name": "Sim\u00f3n Muzziotti",
     "team": "PHI",
     "position": "OF",
     "manager": "",
@@ -38177,7 +38174,7 @@
     "fypd": false
   },
   {
-    "name": "Jerar Encarnación",
+    "name": "Jerar Encarnaci\u00f3n",
     "team": "SF",
     "position": "OF",
     "manager": null,
@@ -38340,7 +38337,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Pérez",
+    "name": "Carlos P\u00e9rez",
     "team": "CWS",
     "position": "C",
     "manager": null,
@@ -38431,7 +38428,7 @@
     "fypd": false
   },
   {
-    "name": "Vidal Bruján",
+    "name": "Vidal Bruj\u00e1n",
     "team": "CHC",
     "position": "2B, 3B, SS, CF",
     "manager": null,
@@ -38568,7 +38565,7 @@
     "yahoo_id": "",
     "upid": "4445",
     "mlb_id": 679529,
-    "FBP_Team": "LFB",
+    "FBP_Team": "",
     "birth_date": "1999-08-26",
     "age": 26,
     "height": "6' 1\"",
@@ -38691,7 +38688,7 @@
     "fypd": false
   },
   {
-    "name": "Ali Sánchez",
+    "name": "Ali S\u00e1nchez",
     "team": "PIT",
     "position": "C",
     "manager": null,
@@ -38853,7 +38850,7 @@
     "rank": 1953
   },
   {
-    "name": "Wilderd Patiño",
+    "name": "Wilderd Pati\u00f1o",
     "team": "AZ",
     "position": "OF",
     "manager": "",
@@ -39030,7 +39027,7 @@
     "fypd": false
   },
   {
-    "name": "Albert Suárez",
+    "name": "Albert Su\u00e1rez",
     "team": "BAL",
     "position": "SP, RP",
     "manager": null,
@@ -39534,7 +39531,7 @@
     "yahoo_id": "",
     "upid": "4567",
     "mlb_id": 694738,
-    "FBP_Team": "SAD",
+    "FBP_Team": "",
     "birth_date": "1998-09-10",
     "age": 27,
     "height": "6' 2\"",
@@ -39840,7 +39837,7 @@
     "yahoo_id": "",
     "upid": "4587",
     "mlb_id": 669707,
-    "FBP_Team": "B2J",
+    "FBP_Team": "",
     "birth_date": "1998-02-08",
     "age": 27,
     "height": "6' 3\"",
@@ -41956,7 +41953,7 @@
     "yahoo_id": "",
     "upid": "5006",
     "mlb_id": 702070,
-    "FBP_Team": "SAD",
+    "FBP_Team": "",
     "birth_date": "1999-07-17",
     "age": 26,
     "height": "6' 3\"",
@@ -42692,7 +42689,7 @@
     "fypd": false
   },
   {
-    "name": "José Caballero",
+    "name": "Jos\u00e9 Caballero",
     "team": "TB",
     "position": "2B, 3B, SS",
     "manager": null,
@@ -42741,7 +42738,7 @@
     "yahoo_id": "",
     "upid": "5298",
     "mlb_id": 678606,
-    "FBP_Team": "HAM",
+    "FBP_Team": "",
     "birth_date": "2000-03-03",
     "age": 25,
     "height": "6' 1\"",
@@ -43214,7 +43211,7 @@
     "yahoo_id": "",
     "upid": "5464",
     "mlb_id": null,
-    "FBP_Team": "HAM",
+    "FBP_Team": "",
     "fypd": false
   },
   {
@@ -44020,7 +44017,7 @@
     "rank": 1159
   },
   {
-    "name": "César Salazar",
+    "name": "C\u00e9sar Salazar",
     "team": "HOU",
     "position": "C",
     "manager": "",
@@ -44140,7 +44137,7 @@
     "yahoo_id": "",
     "upid": "5829",
     "mlb_id": 702332,
-    "FBP_Team": "HAM",
+    "FBP_Team": "",
     "birth_date": "2000-02-22",
     "age": 25,
     "height": "5' 7\"",
@@ -45742,7 +45739,7 @@
     "yahoo_id": "",
     "upid": "6097",
     "mlb_id": 682842,
-    "FBP_Team": "RV",
+    "FBP_Team": "",
     "birth_date": "2000-06-20",
     "age": 25,
     "height": "6' 3\"",
@@ -46751,7 +46748,7 @@
     "fypd": false
   },
   {
-    "name": "Melvin Adón",
+    "name": "Melvin Ad\u00f3n",
     "team": "COL",
     "position": "RHP",
     "manager": "",
@@ -46799,7 +46796,7 @@
     "rank": 1494
   },
   {
-    "name": "José Soriano",
+    "name": "Jos\u00e9 Soriano",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -47018,7 +47015,7 @@
     "fypd": false
   },
   {
-    "name": "Dedniel Núñez",
+    "name": "Dedniel N\u00fa\u00f1ez",
     "team": "",
     "position": "",
     "manager": "",
@@ -47275,7 +47272,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Bermúdez",
+    "name": "Jonathan Berm\u00fadez",
     "team": "MIA",
     "position": "SP",
     "manager": null,
@@ -47582,7 +47579,7 @@
     "rank": 1060
   },
   {
-    "name": "Guillermo Zuñiga",
+    "name": "Guillermo Zu\u00f1iga",
     "team": "LAA",
     "position": "RP",
     "manager": "",
@@ -47940,7 +47937,7 @@
     "fypd": false
   },
   {
-    "name": "José Tena",
+    "name": "Jos\u00e9 Tena",
     "team": "WSH",
     "position": "2B, 3B",
     "manager": null,
@@ -47978,7 +47975,7 @@
     "rank": 1746
   },
   {
-    "name": "José Fermín",
+    "name": "Jos\u00e9 Ferm\u00edn",
     "team": "STL",
     "position": "2B, 3B",
     "manager": null,
@@ -49602,7 +49599,7 @@
     "yahoo_id": "",
     "upid": "6643",
     "mlb_id": 673929,
-    "FBP_Team": "WIZ",
+    "FBP_Team": "",
     "birth_date": "1998-08-15",
     "age": 27,
     "height": "6' 3\"",
@@ -50185,7 +50182,7 @@
     "rank": 644
   },
   {
-    "name": "Juan Nuñez",
+    "name": "Juan Nu\u00f1ez",
     "team": "",
     "position": "",
     "manager": "",
@@ -50201,7 +50198,7 @@
     "rank": 1638
   },
   {
-    "name": "Nasim Nuñez",
+    "name": "Nasim Nu\u00f1ez",
     "team": "",
     "position": "",
     "manager": "",
@@ -51290,7 +51287,7 @@
     "rank": 2165
   },
   {
-    "name": "José Cruz",
+    "name": "Jos\u00e9 Cruz",
     "team": "",
     "position": "",
     "manager": "",
@@ -52931,7 +52928,7 @@
     "rank": 598
   },
   {
-    "name": "Marcos Castañon",
+    "name": "Marcos Casta\u00f1on",
     "team": "SD",
     "position": "3B",
     "manager": "",
@@ -57755,7 +57752,7 @@
     "rank": 1014
   },
   {
-    "name": "Nerwilian Cedeño",
+    "name": "Nerwilian Cede\u00f1o",
     "team": "SD",
     "position": "2B",
     "manager": "",
@@ -57821,7 +57818,7 @@
     "yahoo_id": "",
     "upid": "7153",
     "mlb_id": 682052,
-    "FBP_Team": "CFL",
+    "FBP_Team": "",
     "birth_date": "1998-03-11",
     "age": 27,
     "height": "6' 4\"",
@@ -58011,7 +58008,7 @@
     "fypd": false
   },
   {
-    "name": "Luis De León",
+    "name": "Luis De Le\u00f3n",
     "team": "BAL",
     "position": "LHP",
     "manager": "",
@@ -60980,7 +60977,7 @@
     "fypd": false
   },
   {
-    "name": "Daysbel Hernández",
+    "name": "Daysbel Hern\u00e1ndez",
     "team": "ATL",
     "position": "RP",
     "manager": null,
@@ -61950,7 +61947,7 @@
     "rank": 893
   },
   {
-    "name": "Alex Ramírez",
+    "name": "Alex Ram\u00edrez",
     "team": "STL",
     "position": "C",
     "manager": "",
@@ -61982,7 +61979,7 @@
     "rank": 1153
   },
   {
-    "name": "Pedro León",
+    "name": "Pedro Le\u00f3n",
     "team": "AZ",
     "position": "RHP",
     "manager": "",
@@ -64106,7 +64103,7 @@
     "rank": 2142
   },
   {
-    "name": "Guillo Zuñiga",
+    "name": "Guillo Zu\u00f1iga",
     "team": "PHI",
     "position": "RP",
     "manager": null,
@@ -64153,7 +64150,7 @@
     "rank": 1596
   },
   {
-    "name": "José Butto",
+    "name": "Jos\u00e9 Butto",
     "team": "WSH",
     "position": "SS",
     "manager": "",
@@ -64346,7 +64343,7 @@
     "rank": 1408
   },
   {
-    "name": "Griff O’Ferrall",
+    "name": "Griff O\u2019Ferrall",
     "team": "BAL",
     "position": "SS",
     "manager": "",
@@ -65222,7 +65219,7 @@
     "rank": 1941
   },
   {
-    "name": "Jose Luis Peña",
+    "name": "Jose Luis Pe\u00f1a",
     "team": "BAL",
     "position": "SS",
     "manager": "",
@@ -65307,7 +65304,7 @@
     "rank": 858
   },
   {
-    "name": "Warren Calcaño",
+    "name": "Warren Calca\u00f1o",
     "team": "KCR",
     "position": "SS",
     "manager": "",
@@ -67611,7 +67608,7 @@
     "rank": 438
   },
   {
-    "name": "Sean Paul Liñan",
+    "name": "Sean Paul Li\u00f1an",
     "team": "LAD",
     "position": "P",
     "manager": "",
@@ -67927,7 +67924,7 @@
   {
     "name": "Lou Trivino",
     "team": "PHI",
-    "position": "RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -67937,8 +67934,7 @@
     "upid": "",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "RP"
+    "fypd": false
   },
   {
     "name": "Adam Wainwright",
@@ -67971,7 +67967,7 @@
     "fypd": false
   },
   {
-    "name": "Yonny Hernández",
+    "name": "Yonny Hern\u00e1ndez",
     "team": "NYM",
     "position": "2B,3B",
     "manager": null,
@@ -68188,7 +68184,7 @@
     "fypd": false
   },
   {
-    "name": "Richard Rodríguez",
+    "name": "Richard Rodr\u00edguez",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -68225,7 +68221,7 @@
     "fypd": false
   },
   {
-    "name": "José Álvarez",
+    "name": "Jos\u00e9 \u00c1lvarez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -68487,7 +68483,7 @@
     "fypd": false
   },
   {
-    "name": "Leury García",
+    "name": "Leury Garc\u00eda",
     "team": "ATL",
     "position": "2B,3B,SS,CF",
     "manager": null,
@@ -68586,7 +68582,7 @@
   {
     "name": "Eric Lauer",
     "team": "TOR",
-    "position": "SP,RP",
+    "position": "P",
     "manager": null,
     "player_type": "MLB",
     "contract_type": null,
@@ -68596,8 +68592,7 @@
     "upid": "",
     "mlb_id": null,
     "FBP_Team": "",
-    "fypd": false,
-    "mlb_primary_position": "SP"
+    "fypd": false
   },
   {
     "name": "Jake McGee",
@@ -68660,7 +68655,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Martínez",
+    "name": "Carlos Mart\u00ednez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -68817,7 +68812,7 @@
     "fypd": false
   },
   {
-    "name": "Alex Colomé",
+    "name": "Alex Colom\u00e9",
     "team": "WSH",
     "position": "P",
     "manager": null,
@@ -74094,7 +74089,7 @@
     "fypd_rank": 10
   },
   {
-    "name": "AngelNuñez Jr.",
+    "name": "AngelNu\u00f1ez Jr.",
     "team": "CIN",
     "position": "CF",
     "manager": null,
@@ -74604,7 +74599,7 @@
     "fypd_rank": 72
   },
   {
-    "name": "Jose Mañon",
+    "name": "Jose Ma\u00f1on",
     "team": "ATL",
     "position": "SS",
     "manager": null,
@@ -74655,7 +74650,7 @@
     "fypd_rank": 79
   },
   {
-    "name": "Kendri Faña",
+    "name": "Kendri Fa\u00f1a",
     "team": "LAA",
     "position": "RHP",
     "manager": null,
@@ -74723,7 +74718,7 @@
     "fypd_rank": 87
   },
   {
-    "name": "Ronny Muñoz Aleman",
+    "name": "Ronny Mu\u00f1oz Aleman",
     "team": "MIA",
     "position": "3B",
     "manager": null,
@@ -74859,7 +74854,7 @@
     "fypd_rank": 103
   },
   {
-    "name": "Yadier Muñoz",
+    "name": "Yadier Mu\u00f1oz",
     "team": "CHC",
     "position": "SS",
     "manager": null,
