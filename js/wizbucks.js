@@ -44,11 +44,11 @@ function initWizBucksPage() {
  */
 async function loadTransactions() {
     try {
-        // Try to load from wizbucks_transactions.json
         const response = await fetch('./data/wizbucks_transactions.json');
         
         if (response.ok) {
-            allTransactions = await response.json();
+            const raw = await response.json();
+            allTransactions = normalizeTransactions(raw || []);
         } else {
             // Generate sample data from current balances
             allTransactions = generateSampleTransactions();
@@ -63,6 +63,56 @@ async function loadTransactions() {
         allTransactions = generateSampleTransactions();
         displayLedger();
     }
+}
+
+/**
+ * Normalize transactions from either the legacy 2025 hub schema
+ * (id/action/note/date/credit/debit/manager/balance) or the newer
+ * 2026+ trade-bot schema (txn_id/timestamp/team/amount/...).
+ */
+function normalizeTransactions(raw) {
+    if (!Array.isArray(raw)) return [];
+    if (raw.length === 0) return [];
+
+    const first = raw[0] || {};
+
+    // New 2026+ schema from fbp-trade-bot
+    if (Object.prototype.hasOwnProperty.call(first, 'txn_id')) {
+        return raw.map((t) => {
+            const amount = Number(t.amount || 0);
+            const credit = amount > 0 ? amount : 0;
+            const debit = amount < 0 ? -amount : 0;
+            const managerAbbr = (t.team || '').toString().toUpperCase();
+            const balanceAfter = Number(t.balance_after ?? t.balance ?? 0);
+            const ts = t.timestamp || '';
+
+            return {
+                action: t.transaction_type || 'WB',
+                note: t.description || '',
+                date: ts,
+                credit,
+                debit,
+                manager: managerAbbr || getTeamAbbreviationFromName(managerAbbr),
+                balance: balanceAfter,
+                related_player: t.related_player || null,
+            };
+        });
+    }
+
+    // Legacy 2025 schema used by the old hub / Sheets export
+    return raw.map((t) => {
+        const managerAbbr = getTeamAbbreviationFromName(t.manager || '');
+        return {
+            action: t.action || '',
+            note: t.note || '',
+            date: t.date || '',
+            credit: Number(t.credit || 0),
+            debit: Number(t.debit || 0),
+            manager: managerAbbr,
+            balance: Number(t.balance || 0),
+            related_player: null,
+        };
+    });
 }
 
 /**
