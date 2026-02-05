@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBP Constitution - FBP Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/constitution.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="constitution.html" class="nav-link active">
+                <i class="fas fa-scroll"></i>
+                <span>Constitution</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="player-log.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Player Log</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container-wide">
+        <div class="constitution-layout">
+            <!-- Sticky Sidebar TOC (Desktop) -->
+            <aside class="toc-sidebar" id="tocSidebar">
+                <div class="toc-header">
+                    <h3><i class="fas fa-list"></i> Table of Contents</h3>
+                    <button class="btn-toc-collapse" id="tocCollapseBtn" title="Collapse all">
+                        <i class="fas fa-minus-square"></i>
+                    </button>
+                </div>
+
+                <div class="toc-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="tocSearch" placeholder="Search constitution...">
+                    <span class="search-count" id="desktopSearchCount"></span>
+                </div>
+                <div class="search-nav-btns" id="desktopSearchNav" style="display: none;">
+                    <button onclick="prevSearchResult()" title="Previous"><i class="fas fa-chevron-up"></i></button>
+                    <button onclick="nextSearchResult()" title="Next"><i class="fas fa-chevron-down"></i></button>
+                    <button onclick="clearDesktopSearch()" title="Clear"><i class="fas fa-times"></i></button>
+                </div>
+
+                <nav class="toc-nav" id="tocNav">
+                    <!-- Populated by JS -->
+                </nav>
+
+                <div class="toc-actions">
+                    <button class="btn-toc-action" onclick="copyCurrentLink()">
+                        <i class="fas fa-link"></i>
+                        <span>Copy Link</span>
+                    </button>
+                    <button class="btn-toc-action" onclick="printConstitution()">
+                        <i class="fas fa-print"></i>
+                        <span>Print</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <article class="constitution-content">
+                <!-- Constitution Header -->
+                <header class="constitution-header">
+                    <h1>Fantasy Baseball Pantheon</h1>
+                    <h2>Constitution</h2>
+                    <div class="constitution-meta">
+                        <span class="version-badge">Version: 2026</span>
+                        <span class="date-badge">Updated: January 1, 2026</span>
+                    </div>
+                </header>
+
+                <!-- Preamble -->
+                <section class="preamble" id="preamble">
+                    <h3>Preamble</h3>
+                    <div class="preamble-text" id="preambleContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Constitution Articles -->
+                <div id="constitutionContent">
+                    <!-- Populated by JS from markdown -->
+                </div>
+
+                <!-- Footer -->
+                <footer class="constitution-footer">
+                    <p>Last amended: January 1, 2026</p>
+                    <p>Questions? Contact the Commissioner's Office</p>
+                </footer>
+            </article>
+        </div>
+    </main>
+
+    <!-- Mobile Search Dropdown -->
+    <div class="mobile-search-dropdown" id="mobileSearchDropdown">
+        <div class="mobile-search-dropdown-inner">
+            <i class="fas fa-search"></i>
+            <input type="text" id="mobileSearch" placeholder="Search constitution...">
+            <span class="search-count" id="mobileSearchCount"></span>
+            <button class="close-search-btn" onclick="closeMobileSearch()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="search-nav-btns" id="mobileSearchNav" style="display: none;">
+            <button onclick="prevSearchResult()" title="Previous"><i class="fas fa-chevron-up"></i> Prev</button>
+            <button onclick="nextSearchResult()" title="Next"><i class="fas fa-chevron-down"></i> Next</button>
+            <button onclick="clearSearchInput()" title="Clear"><i class="fas fa-eraser"></i> Clear</button>
+        </div>
+    </div>
+
+    <!-- Mobile TOC Overlay -->
+    <div class="mobile-toc-overlay" id="mobileTocOverlay">
+        <div class="mobile-toc-header">
+            <h3>Table of Contents</h3>
+            <button class="btn-close-mobile-toc" onclick="closeMobileToc()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-toc-content" id="mobileTocContent">
+            <!-- Mirror of desktop TOC -->
+        </div>
+    </div>
+
+    <!-- Mobile Floating Buttons -->
+    <div class="mobile-float-buttons">
+        <button class="mobile-search-toggle" id="mobileSearchToggle" onclick="openMobileSearchDropdown()">
+            <i class="fas fa-search"></i>
+        </button>
+        <button class="mobile-toc-toggle" id="mobileTocToggle" onclick="openMobileToc()">
+            <i class="fas fa-list"></i>
+            <span>TOC</span>
+        </button>
+    </div>
+
+    <!-- Link Copied Toast -->
+    <div class="toast" id="linkToast" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span>Link copied to clipboard!</span>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/constitution.js"></script>
+    <script>
+        if (typeof FBPHub !== 'undefined') {
+            FBPHub.on('ready', () => {
+                if (typeof initConstitution === 'function') {
+                    initConstitution();
+                }
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof initConstitution === 'function') {
+                    initConstitution();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
