@@ -918,7 +918,7 @@ async function confirmPlayerUpdate() {
         // Also maintain local admin log cache for this UI
         // Format matches player_log.json structure
         const timestamp = new Date().toISOString();
-        const ownerValue = document.getElementById('editOwner').value || '';
+        const ownerValue = document.getElementById('editOwner')?.value || '';
         const ownerName = ownerValue ? (ADMIN_STATE.managers[ownerValue]?.name || ownerValue) : '';
         
         const logEntry = {
@@ -930,14 +930,14 @@ async function confirmPlayerUpdate() {
             
             upid: ADMIN_STATE.selectedPlayer.upid,
             player_name: ADMIN_STATE.selectedPlayer.name,
-            team: document.getElementById('editTeam').value || '',
-            pos: document.getElementById('editPosition').value || '',
-            age: parseInt(document.getElementById('editAge').value) || null,
-            level: document.getElementById('editLevel').value || '',
+            team: document.getElementById('editTeam')?.value || '',
+            pos: document.getElementById('editPosition')?.value || '',
+            age: parseInt(document.getElementById('editAge')?.value) || null,
+            level: document.getElementById('editLevel')?.value || '',
             team_rank: null,
             rank: null,
             eta: '',
-            player_type: document.getElementById('editPlayerType').value || '',
+            player_type: document.getElementById('editPlayerType')?.value || '',
             
             owner: ownerName,
             contract: document.getElementById('editContract')?.value || '',
