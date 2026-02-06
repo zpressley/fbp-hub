@@ -3,6 +3,12 @@
  * Real-time draft monitoring and updates
  */
 
+// ============================================
+// MANUAL TOGGLE: Set to true when draft is live
+// When false, redirects all visitors to draft-preview.html
+// ============================================
+const ACTIVE_DRAFT = false;
+
 let DRAFT_STATE = {
     draftData: null,
     draftPool: null,
@@ -20,6 +26,12 @@ let DRAFT_STATE = {
  * Initialize draft page
  */
 async function initDraft() {
+    // Redirect to draft-preview if no active draft
+    if (!ACTIVE_DRAFT) {
+        window.location.href = 'draft-preview.html';
+        return;
+    }
+    
     // If backend pre-detected an active draft type, honor it on first load
     // only. After that, allow managers to switch views locally.
     if (!DRAFT_STATE.initializedFromHint && window.FBPHub && FBPHub.draftInitialMode && (FBPHub.draftInitialMode === 'keeper' || FBPHub.draftInitialMode === 'prospect')) {
