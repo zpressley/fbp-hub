@@ -469,7 +469,12 @@ function populateEditForm(player) {
     document.getElementById('editBats').value = player.bats || '';
     document.getElementById('editThrows').value = player.throws || '';
     document.getElementById('editFYPD').checked = player.fypd === true;
-    document.getElementById('editAdminNote').value = '';
+    
+    // Clear log entry fields
+    const updateTypeEl = document.getElementById('editUpdateType');
+    if (updateTypeEl) updateTypeEl.selectedIndex = 0;
+    const eventEl = document.getElementById('editEvent');
+    if (eventEl) eventEl.value = '';
     
     // Build current player info display showing ALL fields
     const currentInfoHTML = buildCurrentPlayerInfo(player);
