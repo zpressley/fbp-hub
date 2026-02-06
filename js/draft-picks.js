@@ -47,7 +47,7 @@ async function loadDraftPicks() {
             console.log(`✅ Loaded draft order:`, draftOrder);
         } else {
             console.warn('⚠️ No draft_order.json found, using fallback order');
-            draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'LAW', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
+            draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'DMN', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
         }
         
         // THEN: Try to load actual picks/trades from draft_picks.json
@@ -68,7 +68,7 @@ async function loadDraftPicks() {
     } catch (error) {
         console.error('Error loading draft picks:', error);
         // Fallback to default order
-        draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'LAW', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
+        draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'DMN', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
         draftPicks = generateDefaultPicks();
         buyIns = {};
     }

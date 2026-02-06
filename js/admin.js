@@ -1060,7 +1060,7 @@ async function loadTeamBalances() {
     const container = document.getElementById('teamBalances');
     if (!container) return;
 
-    const teams = ['WIZ', 'B2J', 'CFL', 'HAM', 'JEP', 'LFB', 'LAW', 'SAD', 'DRO', 'RV', 'TBB', 'WAR'];
+    const teams = ['WIZ', 'B2J', 'CFL', 'HAM', 'JEP', 'LFB', 'DMN', 'SAD', 'DRO', 'RV', 'TBB', 'WAR'];
     let balances = {};
 
     const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;

@@ -598,7 +598,7 @@ function getTeamColor(teamAbbr) {
         'HAM': '#F38181',
         'JEP': '#AA96DA',
         'LFB': '#FCBAD3',
-        'LAW': '#A8E6CF',
+        'DMN': '#A8E6CF',
         'SAD': '#FFD3B6',
         'DRO': '#FFAAA5',
         'RV': '#FF8B94',

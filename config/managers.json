@@ -261,10 +261,10 @@
         }
       }
     },
-    "LAW": {
-      "name": "Law-Abiding Citizens",
+    "DMN": {
+      "name": "The Damn Yankees",
       "discord_id": "892152416718422056",
-      "manager": "LAW",
+      "manager": "DMN",
       "final_rank_2025": 7,
       "kap_rollover_2026": 0,
       "wizbucks": {
