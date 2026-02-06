@@ -233,7 +233,7 @@ function populateDropdowns() {
     
     // Populate Contract Type dropdown
     const contractOptions = CONTRACT_TYPES.map(ct => 
-        `<option value="${ct}">${ct || '(None)'}</option>`
+        `<option value="${ct}">${ct || 'None (Unowned)'}</option>`
     ).join('');
     
     const editContract = document.getElementById('editContract');
