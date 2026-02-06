@@ -61,7 +61,7 @@
       "kap_rollover_2026": 0,
       "wizbucks": {
         "2026": {
-          "_comment": "Season 13 (2026) WizBucks config, including Optional Rollover and Leftovers (PAD→KAP, KAP→APA).",
+          "_comment": "Season 13 (2026) WizBucks config, including Optional Rollover and Leftovers (PAD\u2192KAP, KAP\u2192APA).",
           "meta": {
             "season": 2026,
             "finalRank": 6,
@@ -263,7 +263,7 @@
     },
     "DMN": {
       "name": "The Damn Yankees",
-      "discord_id": "892152416718422056",
+      "discord_id": "1085200118149562419",
       "manager": "DMN",
       "final_rank_2025": 7,
       "kap_rollover_2026": 0,
