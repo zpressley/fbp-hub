@@ -805,10 +805,34 @@ function cancelEditConfirm() {
 }
 
 /**
+ * Toggle loading state on confirm button
+ */
+function setAdminSubmitting(isSubmitting) {
+    const btn = document.getElementById('confirmUpdateBtn');
+    if (!btn) return;
+    
+    if (isSubmitting) {
+        if (!btn.dataset.originalHtml) {
+            btn.dataset.originalHtml = btn.innerHTML;
+        }
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+    } else {
+        btn.disabled = false;
+        if (btn.dataset.originalHtml) {
+            btn.innerHTML = btn.dataset.originalHtml;
+            delete btn.dataset.originalHtml;
+        }
+    }
+}
+
+/**
  * Confirm and apply player update
  */
 async function confirmPlayerUpdate() {
     console.log('💾 Saving player changes via admin API...');
+    
+    setAdminSubmitting(true);
     
     const updateType = document.getElementById('editUpdateType').value;
     const event = document.getElementById('editEvent').value.trim();
@@ -818,6 +842,7 @@ async function confirmPlayerUpdate() {
     
     if (!token) {
         showToast('Your session has expired. Please log in again.', 'error');
+        setAdminSubmitting(false);
         document.getElementById('editConfirmModal').classList.remove('active');
         return;
     }
@@ -868,8 +893,11 @@ async function confirmPlayerUpdate() {
             const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
             console.error('Admin update failed', { status: res.status, detail });
             showToast(fullMsg, 'error');
+            setAdminSubmitting(false);
             return;
         }
+        
+        console.log('✅ API returned 200 OK, processing response...');
         
         let data = {};
         try {
@@ -912,9 +940,9 @@ async function confirmPlayerUpdate() {
             player_type: document.getElementById('editPlayerType').value || '',
             
             owner: ownerName,
-            contract: document.getElementById('editContract').value || '',
-            status: document.getElementById('editStatus').value || '',
-            years: document.getElementById('editYears').value || '',
+            contract: document.getElementById('editContract')?.value || '',
+            status: generateStatusFromYears(document.getElementById('editYears')?.value) || '',
+            years: document.getElementById('editYears')?.value || '',
             
             update_type: updateType,
             event: event || '',
@@ -934,12 +962,14 @@ async function confirmPlayerUpdate() {
         // Show success and reset form
         showToast(`✅ ${ADMIN_STATE.selectedPlayer.name} updated successfully!`, 'success');
         
+        setAdminSubmitting(false);
         cancelEdit();
         updateAdminStats();
         loadRecentLogs();
     } catch (err) {
         console.error('Admin update error', err);
-        showToast('Admin update failed due to a network error. Please try again.', 'error');
+        showToast(`Admin update error: ${err.message || 'Network error'}. Check console for details.`, 'error');
+        setAdminSubmitting(false);
     }
 }
 
