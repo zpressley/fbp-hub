@@ -44,18 +44,45 @@ const CONTRACT_TYPES = [
 const YEARS_SIMPLE = [
     '',
     // Team Contract tiers
-    'TC R',     // Team Contract Rookie ($5)
-    'TC 1',     // Team Contract Year 1 ($15)
-    'TC 2',     // Team Contract Year 2 ($25)
+    'TC R',      // Team Contract Rookie ($5)
+    'TC BC-1',   // Team Contract Blue-Chip Year 1 ($5)
+    'TC BC-2',   // Team Contract Blue-Chip Year 2 ($5)
+    'TC 1',      // Team Contract Year 1 ($15)
+    'TC 2',      // Team Contract Year 2 ($25)
     // Veteran Contract tiers  
-    'VC 1',     // Veteran Contract Year 1 ($35)
-    'VC 2',     // Veteran Contract Year 2 ($55)
+    'VC 1',      // Veteran Contract Year 1 ($35)
+    'VC 2',      // Veteran Contract Year 2 ($55)
     // Franchise Contract tiers
-    'FC 1',     // Franchise Contract Year 1 ($85)
-    'FC 2',     // Franchise Contract Year 2+ ($125)
+    'FC 1',      // Franchise Contract Year 1 ($85)
+    'FC 2',      // Franchise Contract Year 2+ ($125)
     // Prospect status
-    'P'         // Prospect (DC, PC, or BC)
+    'P'          // Prospect (DC, PC, or BC)
 ];
+
+// Status rank mapping - lower number = higher priority/value
+// Status format: [rank] CODE
+const STATUS_FROM_YEARS = {
+    'FC 2':    { rank: 0, code: 'FC2' },
+    'FC 1':    { rank: 1, code: 'FC1' },
+    'VC 2':    { rank: 2, code: 'VC2' },
+    'VC 1':    { rank: 3, code: 'VC1' },
+    'TC 2':    { rank: 4, code: 'TC2' },
+    'TC 1':    { rank: 5, code: 'TC1' },
+    'TC R':    { rank: 6, code: 'TCR' },
+    'TC BC-2': { rank: 7, code: 'TCBC2' },
+    'TC BC-1': { rank: 8, code: 'TCBC1' },
+    'P':       { rank: 9, code: 'P' }
+};
+
+/**
+ * Generate status string from years_simple value
+ */
+function generateStatusFromYears(years) {
+    if (!years) return '';
+    const mapping = STATUS_FROM_YEARS[years];
+    if (!mapping) return '';
+    return `[${mapping.rank}] ${mapping.code}`;
+}
 
 // Level options
 const LEVELS = ['MLB', 'AAA', 'AA', 'A+', 'A', 'A-', 'Rk', 'CPX'];
@@ -465,7 +492,7 @@ function populateEditForm(player) {
     document.getElementById('editPlayerType').value = player.player_type || 'MLB';
     setSelectOrCustom('editContract', player.contract_type);
     setSelectOrCustom('editYears', player.years_simple);
-    document.getElementById('editStatus').value = player.status || '';
+    // Status is auto-generated from years_simple - no input field
     document.getElementById('editBats').value = player.bats || '';
     document.getElementById('editThrows').value = player.throws || '';
     document.getElementById('editFYPD').checked = player.fypd === true;
@@ -569,7 +596,7 @@ function setupChangeDetection() {
     const fields = [
         'editName', 'editPosition', 'editTeam', 'editAge', 'editLevel', 
         'editOwner', 'editPlayerType', 'editContract', 'editYears',
-        'editStatus', 'editBats', 'editThrows', 'editFYPD'
+        'editBats', 'editThrows', 'editFYPD'
     ];
     
     fields.forEach(fieldId => {
@@ -587,7 +614,7 @@ function setupChangeDetection() {
 function detectChanges() {
     const changes = {};
     
-    // Fields to check - manager handled separately due to name/abbrev normalization
+    // Fields to check - manager and status handled separately
     const fieldMap = {
         editName: 'name',
         editPosition: 'position',
@@ -597,7 +624,6 @@ function detectChanges() {
         editPlayerType: 'player_type',
         editContract: 'contract_type',
         editYears: 'years_simple',
-        editStatus: 'status',
         editBats: 'bats',
         editThrows: 'throws'
     };
@@ -616,6 +642,21 @@ function detectChanges() {
             };
         }
     });
+    
+    // Auto-generate status from years_simple
+    const yearsEl = document.getElementById('editYears');
+    if (yearsEl) {
+        const newYears = yearsEl.value;
+        const newStatus = generateStatusFromYears(newYears);
+        const oldStatus = ADMIN_STATE.originalPlayerData.status || '';
+        
+        if (newStatus !== oldStatus) {
+            changes['status'] = {
+                from: oldStatus,
+                to: newStatus
+            };
+        }
+    }
     
     // Handle FYPD checkbox
     const fypdEl = document.getElementById('editFYPD');
