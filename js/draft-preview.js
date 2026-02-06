@@ -11,7 +11,20 @@ let PREVIEW_STATE = {
     fypdByUpid: {},
     top100Upids: new Set(),
     currentTab: 'keeper',
-    fypdOnly: false
+    fypdOnly: false,
+    // New prospect tags system
+    prospectTags: [],
+    prospectFilters: {
+        fvYear: '2024',
+        status: 'any',
+        position: 'any',
+        badgeType: 'any',
+        search: ''
+    },
+    prospectSort: { field: 'badges', direction: 'desc' },
+    prospectPage: 0,
+    prospectPageSize: 50,
+    filteredProspects: []
 };
 
 /**
@@ -32,8 +45,13 @@ async function initDraftPreview() {
     // Setup filters
     setupFilters();
     
-    // Display initial view
-    displayKeeperPreview();
+    // Display initial view - default to prospect tab
+    const prospectTab = document.querySelector('.view-btn[data-tab="prospect"]');
+    if (prospectTab) {
+        prospectTab.click();
+    } else {
+        displayKeeperPreview();
+    }
 }
 
 /**
@@ -86,6 +104,18 @@ async function loadPreviewData() {
         }
     } catch (e) {
         console.log('No top100_prospects.json available');
+    }
+    
+    // Load prospect tags database (new badge/filter system)
+    try {
+        const response = await fetch('data/prospect_tags.json');
+        if (response.ok) {
+            const data = await response.json();
+            PREVIEW_STATE.prospectTags = data.players || [];
+            console.log(`✅ Loaded ${PREVIEW_STATE.prospectTags.length} prospects from prospect_tags.json`);
+        }
+    } catch (e) {
+        console.log('No prospect_tags.json available');
     }
 
     // Load 2025 player stats database (player_stats.json or fallback file)
@@ -202,22 +232,84 @@ function setupTabs() {
 function setupFilters() {
     const keeperSearch = document.getElementById('keeperSearch');
     const prospectSearch = document.getElementById('prospectSearch');
-    const fypdToggle = document.getElementById('fypdToggle');
     
     if (keeperSearch) {
         keeperSearch.addEventListener('input', displayKeeperPreview);
     }
     
+    // New prospect filter system
     if (prospectSearch) {
-        prospectSearch.addEventListener('input', displayProspectPreview);
-    }
-    
-    if (fypdToggle) {
-        fypdToggle.addEventListener('change', (e) => {
-            PREVIEW_STATE.fypdOnly = e.target.checked;
+        prospectSearch.addEventListener('input', (e) => {
+            PREVIEW_STATE.prospectFilters.search = e.target.value.toLowerCase();
+            PREVIEW_STATE.prospectPage = 0;
             displayProspectPreview();
         });
     }
+    
+    // FV Year filter
+    const fvYearFilter = document.getElementById('fvYearFilter');
+    if (fvYearFilter) {
+        fvYearFilter.addEventListener('change', (e) => {
+            PREVIEW_STATE.prospectFilters.fvYear = e.target.value;
+            PREVIEW_STATE.prospectPage = 0;
+            displayProspectPreview();
+        });
+    }
+    
+    // Status filter
+    const statusFilter = document.getElementById('statusFilter');
+    if (statusFilter) {
+        statusFilter.addEventListener('change', (e) => {
+            PREVIEW_STATE.prospectFilters.status = e.target.value;
+            PREVIEW_STATE.prospectPage = 0;
+            displayProspectPreview();
+        });
+    }
+    
+    // Position filter
+    const positionFilter = document.getElementById('positionFilter');
+    if (positionFilter) {
+        positionFilter.addEventListener('change', (e) => {
+            PREVIEW_STATE.prospectFilters.position = e.target.value;
+            PREVIEW_STATE.prospectPage = 0;
+            displayProspectPreview();
+        });
+    }
+    
+    // Badge Type filter
+    const badgeTypeFilter = document.getElementById('badgeTypeFilter');
+    if (badgeTypeFilter) {
+        badgeTypeFilter.addEventListener('change', (e) => {
+            PREVIEW_STATE.prospectFilters.badgeType = e.target.value;
+            PREVIEW_STATE.prospectPage = 0;
+            displayProspectPreview();
+        });
+    }
+    
+    // Setup table sorting
+    setupProspectTableSorting();
+}
+
+/**
+ * Setup prospect table column sorting
+ */
+function setupProspectTableSorting() {
+    const headers = document.querySelectorAll('.prospect-table th.sortable');
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const field = header.dataset.sort;
+            if (PREVIEW_STATE.prospectSort.field === field) {
+                // Toggle direction
+                PREVIEW_STATE.prospectSort.direction = 
+                    PREVIEW_STATE.prospectSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                PREVIEW_STATE.prospectSort.field = field;
+                PREVIEW_STATE.prospectSort.direction = field === 'fv' || field === 'badges' ? 'desc' : 'asc';
+            }
+            PREVIEW_STATE.prospectPage = 0;
+            displayProspectPreview();
+        });
+    });
 }
 
 /**
@@ -267,65 +359,289 @@ function displayKeeperPreview() {
 }
 
 /**
- * Display prospect draft preview
+ * Display prospect draft preview with new filtering system
  */
 function displayProspectPreview() {
-    const searchTerm = document.getElementById('prospectSearch')?.value.toLowerCase() || '';
+    const { fvYear, status, position, badgeType, search } = PREVIEW_STATE.prospectFilters;
     
-    // Filter: Farm players, not owned, not contracted
-    let available = PREVIEW_STATE.allPlayers.filter(p => 
-        p.player_type === 'Farm' &&
-        !p.manager &&
-        !p.FBP_Team &&
-        !isContracted(p)
-    );
+    // Start with all prospects from prospect_tags.json
+    let filtered = [...PREVIEW_STATE.prospectTags];
     
-    // Apply FYPD filter
-    if (PREVIEW_STATE.fypdOnly) {
-        const fypdUpids = new Set(PREVIEW_STATE.fypdPlayers.map(f => String(f.upid)));
-        available = available.filter(p => 
-            fypdUpids.has(String(p.upid)) || p.fypd === true
+    // Filter by status (status is now an array of tags)
+    if (status !== 'any') {
+        filtered = filtered.filter(p => {
+            const statusArr = p.status || [];
+            if (status === 'standard') {
+                // Standard = no status tags
+                return statusArr.length === 0;
+            }
+            // Check if player has this status tag
+            return statusArr.includes(status);
+        });
+    }
+    
+    // Filter by position
+    if (position !== 'any') {
+        filtered = filtered.filter(p => matchesPosition(p.position, position));
+    }
+    
+    // Filter by badge type
+    if (badgeType !== 'any') {
+        filtered = filtered.filter(p => 
+            p.badges?.some(b => b.type === badgeType)
         );
     }
     
-    // Apply search
-    if (searchTerm) {
-        available = available.filter(p =>
-            p.name.toLowerCase().includes(searchTerm) ||
-            (p.position || '').toLowerCase().includes(searchTerm) ||
-            (p.team || '').toLowerCase().includes(searchTerm)
+    // Filter by search term
+    if (search) {
+        filtered = filtered.filter(p =>
+            p.name?.toLowerCase().includes(search) ||
+            p.org?.toLowerCase().includes(search) ||
+            p.position?.toLowerCase().includes(search)
         );
     }
     
-    // Sort by global prospect rank when available, then FYPD rank, then name
-    available.sort((a, b) => {
-        const aRank = typeof a.rank === 'number' ? a.rank : Infinity;
-        const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
-        if (aRank !== bRank) return aRank - bRank;
-
-        const aFypd = PREVIEW_STATE.fypdByUpid ? PREVIEW_STATE.fypdByUpid[String(a.upid)] : null;
-        const bFypd = PREVIEW_STATE.fypdByUpid ? PREVIEW_STATE.fypdByUpid[String(b.upid)] : null;
-        if (aFypd && bFypd) return aFypd.rank - bFypd.rank;
-        if (aFypd) return -1;
-        if (bFypd) return 1;
-
-        return a.name.localeCompare(b.name);
-    });
+    // Sort
+    sortProspects(filtered, fvYear);
+    
+    // Store filtered results
+    PREVIEW_STATE.filteredProspects = filtered;
     
     // Update count
-    document.getElementById('prospectCount').textContent = `${available.length} prospects`;
+    const countEl = document.getElementById('prospectCount');
+    if (countEl) {
+        countEl.textContent = `${filtered.length} prospects`;
+    }
     
-    // Display
-    const container = document.getElementById('prospectGrid');
+    // Calculate pagination
+    const startIdx = 0;
+    const endIdx = (PREVIEW_STATE.prospectPage + 1) * PREVIEW_STATE.prospectPageSize;
+    const displayed = filtered.slice(startIdx, endIdx);
     
-    if (available.length === 0) {
-        container.innerHTML = '<div class="empty-state">No available prospects</div>';
+    // Render table
+    const tbody = document.getElementById('prospectTableBody');
+    if (!tbody) return;
+    
+    if (displayed.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-state">No prospects match your filters</td>
+            </tr>
+        `;
+        document.getElementById('prospectLoadMore').style.display = 'none';
         return;
     }
     
-    container.innerHTML = available
-        .map((player, index) => renderPlayerRow(player, true, index + 1))
-        .join('');
+    tbody.innerHTML = displayed.map(p => renderProspectTableRow(p, fvYear)).join('');
+    
+    // Show/hide load more
+    const loadMoreEl = document.getElementById('prospectLoadMore');
+    if (loadMoreEl) {
+        loadMoreEl.style.display = endIdx < filtered.length ? 'flex' : 'none';
+    }
+    
+    // Update sort indicators
+    updateSortIndicators();
+}
+
+/**
+ * Check if player position matches filter
+ */
+function matchesPosition(playerPos, filterPos) {
+    if (!playerPos) return false;
+    const pos = playerPos.toUpperCase();
+    const filter = filterPos.toUpperCase();
+    
+    // Split compound positions by common delimiters
+    const posParts = pos.split(/[,\/]/).map(p => p.trim());
+    
+    // Direct match on any part
+    if (posParts.includes(filter)) return true;
+    
+    // P matches any pitcher designation
+    if (filter === 'P') {
+        const pitcherTypes = ['SP', 'RP', 'LHP', 'RHP', 'SHP', 'P', 'MIRP', 'SIRP'];
+        return posParts.some(p => pitcherTypes.includes(p));
+    }
+    
+    // LHP matches LHP or any left-handed pitcher indicator
+    if (filter === 'LHP') {
+        return posParts.some(p => p === 'LHP' || p.includes('LHP'));
+    }
+    
+    // RHP matches RHP or any right-handed pitcher indicator
+    if (filter === 'RHP') {
+        return posParts.some(p => p === 'RHP' || p.includes('RHP') || p === 'SHP' || p === 'SIRP' || p === 'MIRP');
+    }
+    
+    // INF matches infield positions
+    if (filter === 'INF') {
+        const infTypes = ['C', '1B', '2B', '3B', 'SS', 'IF', 'INF'];
+        return posParts.some(p => infTypes.includes(p));
+    }
+    
+    // OF matches outfield positions
+    if (filter === 'OF') {
+        const ofTypes = ['OF', 'LF', 'CF', 'RF'];
+        return posParts.some(p => ofTypes.includes(p));
+    }
+    
+    // Check if any part matches the filter
+    return posParts.some(p => p === filter || p.includes(filter));
+}
+
+/**
+ * Sort prospects array in place
+ */
+function sortProspects(prospects, fvYear) {
+    const { field, direction } = PREVIEW_STATE.prospectSort;
+    const mult = direction === 'asc' ? 1 : -1;
+    
+    prospects.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch (field) {
+            case 'name':
+                return mult * (a.name || '').localeCompare(b.name || '');
+            case 'org':
+                return mult * (a.org || '').localeCompare(b.org || '');
+            case 'position':
+                return mult * (a.position || '').localeCompare(b.position || '');
+            case 'fv':
+                aVal = a.fv?.[fvYear] || 0;
+                bVal = b.fv?.[fvYear] || 0;
+                return mult * (aVal - bVal);
+            case 'badges':
+                aVal = a.badges?.length || 0;
+                bVal = b.badges?.length || 0;
+                return mult * (aVal - bVal);
+            case 'status':
+                aVal = getPrimaryStatus(a.status);
+                bVal = getPrimaryStatus(b.status);
+                return mult * aVal.localeCompare(bVal);
+            default:
+                return 0;
+        }
+    });
+}
+
+/**
+ * Get status display strings from status array
+ */
+function getStatusDisplayArray(statusArr) {
+    if (!statusArr || statusArr.length === 0) return ['Standard'];
+    
+    const displayMap = {
+        'fypd': 'FYPD',
+        'int_signee': 'INT',
+        'debuted': 'Debuted',
+        'dropped': 'Dropped'
+    };
+    
+    return statusArr.map(s => displayMap[s] || s);
+}
+
+/**
+ * Get primary status for sorting (priority: dropped > debuted > fypd > int_signee > standard)
+ */
+function getPrimaryStatus(statusArr) {
+    if (!statusArr || statusArr.length === 0) return 'Standard';
+    if (statusArr.includes('dropped')) return 'Dropped';
+    if (statusArr.includes('debuted')) return 'Debuted';
+    if (statusArr.includes('fypd')) return 'FYPD';
+    if (statusArr.includes('int_signee')) return 'INT';
+    return 'Standard';
+}
+
+/**
+ * Render a prospect table row
+ */
+function renderProspectTableRow(player, fvYear) {
+    const fv = player.fv?.[fvYear] || '-';
+    const badgeCount = player.badges?.length || 0;
+    const statusArr = player.status || [];
+    const statusBadges = renderStatusBadges(statusArr);
+    const isDropped = statusArr.includes('dropped');
+    const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(player) : '#';
+    
+    return `
+        <tr class="prospect-row${isDropped ? ' prospect-dropped' : ''}">
+            <td class="prospect-name">
+                <a href="${profileLink}" class="prospect-name-link">${player.name || 'Unknown'}</a>
+            </td>
+            <td class="prospect-org">${player.org || '-'}</td>
+            <td class="prospect-pos">${player.position || '-'}</td>
+            <td class="prospect-fv">${fv}</td>
+            <td class="prospect-badges">${badgeCount}</td>
+            <td class="prospect-status">
+                <div class="status-wrapper">${statusBadges}</div>
+            </td>
+        </tr>
+    `;
+}
+
+/**
+ * Render multiple status badges
+ */
+function renderStatusBadges(statusArr) {
+    if (!statusArr || statusArr.length === 0) {
+        return '<span class="status-badge status-standard">STND</span>';
+    }
+    
+    const badgeMap = {
+        'fypd': { class: 'status-fypd', label: 'FYPD' },
+        'int_signee': { class: 'status-int', label: 'INT' },
+        'debuted': { class: 'status-debuted', label: 'DEBU' },
+        'dropped': { class: 'status-dropped', label: 'DROP' }
+    };
+    
+    return statusArr.map(s => {
+        const badge = badgeMap[s] || { class: 'status-standard', label: s };
+        return `<span class="status-badge ${badge.class}">${badge.label}</span>`;
+    }).join(' ');
+}
+
+/**
+ * Get CSS class for a single status tag
+ */
+function getStatusClass(statusTag) {
+    const classMap = {
+        'fypd': 'status-fypd',
+        'int_signee': 'status-int',
+        'debuted': 'status-debuted',
+        'dropped': 'status-dropped'
+    };
+    return classMap[statusTag] || 'status-standard';
+}
+
+/**
+ * Update sort indicators in table headers
+ */
+function updateSortIndicators() {
+    const headers = document.querySelectorAll('.prospect-table th.sortable');
+    headers.forEach(header => {
+        const field = header.dataset.sort;
+        const icon = header.querySelector('i');
+        if (!icon) return;
+        
+        if (field === PREVIEW_STATE.prospectSort.field) {
+            icon.className = PREVIEW_STATE.prospectSort.direction === 'asc' 
+                ? 'fas fa-sort-up' 
+                : 'fas fa-sort-down';
+            header.classList.add('sorted');
+        } else {
+            icon.className = 'fas fa-sort';
+            header.classList.remove('sorted');
+        }
+    });
+}
+
+/**
+ * Load more prospects
+ */
+function loadMoreProspects() {
+    PREVIEW_STATE.prospectPage++;
+    displayProspectPreview();
 }
 
 /**

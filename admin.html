@@ -27,7 +27,7 @@
             </div>
             <div class="user-menu" id="userMenu"></div>
         </div>
-        <div class="nav-menu" id="navMenu">
+                <div class="nav-menu" id="navMenu">
             <a href="index.html" class="nav-link">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
@@ -44,10 +44,6 @@
                 <i class="fas fa-baseball-ball"></i>
                 <span>Rosters</span>
             </a>
-            <a href="draft.html" class="nav-link">
-                <i class="fas fa-table-list"></i>
-                <span>Draft</span>
-            </a>
             <a href="player-log.html" class="nav-link">
                 <i class="fas fa-clipboard-list"></i>
                 <span>Player Log</span>
@@ -56,9 +52,9 @@
                 <i class="fas fa-coins"></i>
                 <span>WizBucks</span>
             </a>
-            <a href="auction.html" class="nav-link">
-                <i class="fas fa-gavel"></i>
-                <span>Auction</span>
+            <a href="draft-preview.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Draft Preview</span>
             </a>
         </div>
     </nav>
@@ -316,12 +312,22 @@
                             <div class="changes-preview" id="changesPreview"></div>
                             
                             <div class="form-actions">
-                                <button type="button" class="btn-secondary" onclick="cancelEdit()">
-                                    <i class="fas fa-times"></i> Cancel
-                                </button>
-                                <button type="submit" class="btn-primary" onclick="savePlayerChanges()">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
+                                <div class="form-actions-left">
+                                    <button type="button" class="btn-danger" onclick="showDeleteConfirm()">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                    <button type="button" class="btn-warning" onclick="showMergeModal()">
+                                        <i class="fas fa-compress-arrows-alt"></i> Merge
+                                    </button>
+                                </div>
+                                <div class="form-actions-right">
+                                    <button type="button" class="btn-secondary" onclick="cancelEdit()">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                    <button type="submit" class="btn-primary" onclick="savePlayerChanges()">
+                                        <i class="fas fa-save"></i> Save Changes
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -399,16 +405,6 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label>Installment</label>
-                                    <select id="wbInstallment" class="form-input" required>
-                                        <option value="pad">PAD</option>
-                                        <option value="kap">KAP</option>
-                                        <option value="apa">APA</option>
-                                        <option value="ptda">PTDA</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
                                     <label>Amount (use - for deduction)</label>
                                     <input type="number" id="wbAmount" class="form-input" placeholder="e.g., 50 or -25" required>
                                 </div>
@@ -476,6 +472,81 @@
                 </button>
                 <button class="btn-primary" id="confirmUpdateBtn" onclick="confirmPlayerUpdate()">
                     <i class="fas fa-check"></i> Confirm Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="confirmation-modal" id="deleteConfirmModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header delete-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Delete Player</h2>
+                <p>This action cannot be undone</p>
+            </div>
+            
+            <div id="deleteConfirmSummary"></div>
+            
+            <div class="confirmation-warning delete-warning">
+                <i class="fas fa-skull-crossbones"></i>
+                <strong>PERMANENT DELETION</strong>
+                <p>This player will be completely removed from the database. All ownership and contract data will be lost.</p>
+            </div>
+            
+            <div class="form-group" style="margin: var(--space-md) 0;">
+                <label>Reason for Deletion (Required)</label>
+                <input type="text" id="deleteReason" class="form-input" placeholder="e.g., Duplicate record, Retired player" required>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="cancelDeleteConfirm()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-danger" id="confirmDeleteBtn" onclick="confirmPlayerDelete()">
+                    <i class="fas fa-trash"></i> Delete Forever
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merge Players Modal -->
+    <div class="confirmation-modal" id="mergePlayersModal">
+        <div class="confirmation-content merge-content">
+            <div class="confirmation-header">
+                <h2><i class="fas fa-compress-arrows-alt"></i> Merge Players</h2>
+                <p>Merge <strong id="mergeSourceName">-</strong> into another player record</p>
+            </div>
+            
+            <div class="merge-search-section">
+                <label>Search for target player to merge INTO:</label>
+                <div class="merge-search-box">
+                    <input type="text" id="mergeTargetSearch" class="form-input" 
+                           placeholder="Type player name..." oninput="searchMergeTarget()">
+                    <div id="mergeSearchResults" class="merge-search-results"></div>
+                </div>
+            </div>
+            
+            <div id="mergePreviewSection" class="merge-preview-section" style="display: none;">
+                <h4>Merge Preview</h4>
+                <p class="merge-preview-desc">
+                    <strong id="mergeSourceNamePreview">Source</strong> will be DELETED. 
+                    Fields will merge into <strong id="mergeTargetNamePreview">Target</strong>.
+                </p>
+                <div id="mergeFieldsPreview" class="merge-fields-preview"></div>
+            </div>
+            
+            <div class="confirmation-warning" style="display: none;" id="mergeWarning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Source player will be deleted</strong>
+                <p>The source player record will be permanently removed after merging.</p>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="cancelMerge()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" id="confirmMergeBtn" onclick="confirmMerge()" disabled>
+                    <i class="fas fa-compress-arrows-alt"></i> Confirm Merge
                 </button>
             </div>
         </div>

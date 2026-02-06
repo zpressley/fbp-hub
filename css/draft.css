@@ -1204,8 +1204,354 @@ body.draft-preview-page .pick-number {
 }
 
 /* ============================================
+   Prospect Draft Filters & Table
+   ============================================ */
+
+.prospect-filters-section {
+    background-color: var(--bg-charcoal);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.filters-title {
+    font-family: var(--font-title);
+    font-size: var(--text-lg);
+    color: var(--text-white);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.prospect-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.filter-group label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.prospect-filter-select {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--text-white);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.prospect-filter-select:hover,
+.prospect-filter-select:focus {
+    border-color: var(--primary-red);
+    outline: none;
+}
+
+.prospect-search-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    gap: var(--space-md);
+}
+
+.prospect-search-row .search-bar-inline {
+    flex: 1;
+    max-width: 400px;
+}
+
+/* Prospect Table */
+.prospect-table-container {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-lg);
+    border: var(--border-width) solid var(--primary-red);
+    overflow: auto;
+    max-height: 80vh;
+}
+
+.prospect-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.prospect-table thead th {
+    background-color: #1a1a2e;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.prospect-table th {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: var(--space-md) var(--space-lg);
+    text-align: left;
+    border-bottom: var(--border-width) solid var(--primary-red);
+}
+
+.prospect-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.prospect-table th.sortable:hover {
+    color: var(--accent-yellow);
+}
+
+.prospect-table th.sortable.sorted {
+    color: var(--accent-yellow);
+}
+
+.prospect-table th i {
+    margin-left: var(--space-xs);
+    font-size: var(--text-xs);
+    opacity: 0.6;
+}
+
+.prospect-table th.sorted i {
+    opacity: 1;
+}
+
+.prospect-table tbody tr {
+    border-bottom: var(--border-width) solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease;
+}
+
+.prospect-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.prospect-table td {
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--text-sm);
+    color: var(--text-white);
+}
+
+.prospect-table td.empty-state {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--text-gray);
+}
+
+.prospect-name-link {
+    color: var(--text-white);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.prospect-name-link:hover {
+    color: var(--accent-yellow);
+}
+
+.prospect-org {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+}
+
+.prospect-pos {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+}
+
+.prospect-fv {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-yellow);
+}
+
+.prospect-badges {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--primary-red);
+    text-align: center;
+}
+
+.prospect-row.prospect-dropped {
+    opacity: 0.6;
+    background-color: rgba(239, 62, 66, 0.05);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-standard {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #B0B0B0;
+}
+
+.status-fypd {
+    background-color: rgba(66, 165, 245, 0.25);
+    color: #64B5F6;
+    border: 1px solid rgba(66, 165, 245, 0.6);
+}
+
+.status-int {
+    background-color: rgba(102, 187, 106, 0.25);
+    color: #81C784;
+    border: 1px solid rgba(102, 187, 106, 0.6);
+}
+
+.status-debuted {
+    background-color: rgba(186, 104, 200, 0.25);
+    color: #CE93D8;
+    border: 1px solid rgba(186, 104, 200, 0.6);
+}
+
+.status-dropped {
+    background-color: rgba(239, 83, 80, 0.25);
+    color: #EF5350;
+    border: 1px solid rgba(239, 83, 80, 0.6);
+}
+
+/* Multiple status badges in a cell */
+.prospect-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.prospect-status .status-badge {
+    white-space: nowrap;
+}
+
+/* Load More Button */
+.prospect-load-more {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.prospect-load-more .btn-secondary {
+    background-color: transparent;
+    border: var(--border-width) solid var(--primary-red);
+    color: var(--primary-red);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.prospect-load-more .btn-secondary:hover {
+    background-color: var(--primary-red);
+    color: var(--text-white);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
+
+/* Prospect table responsive */
+@media (max-width: 767px) {
+    .prospect-filters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .prospect-table-container {
+        overflow-x: visible;
+    }
+    
+    .prospect-table {
+        min-width: 100%;
+        table-layout: fixed;
+    }
+    
+    .prospect-table th,
+    .prospect-table td {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: var(--text-xs);
+    }
+    
+    /* Column widths for mobile */
+    .prospect-table th:nth-child(1),
+    .prospect-table td:nth-child(1) { width: 28%; } /* Name */
+    .prospect-table th:nth-child(2),
+    .prospect-table td:nth-child(2) { width: 11%; } /* Org */
+    .prospect-table th:nth-child(3),
+    .prospect-table td:nth-child(3) { width: 11%; } /* Pos */
+    .prospect-table th:nth-child(4),
+    .prospect-table td:nth-child(4) { width: 9%; } /* FV */
+    .prospect-table th:nth-child(5),
+    .prospect-table td:nth-child(5) { width: 13%; } /* Badges */
+    .prospect-table th:nth-child(6),
+    .prospect-table td:nth-child(6) { 
+        width: 28%; /* Status */
+        text-align: center;
+    }
+    
+    .prospect-name-link {
+        font-size: var(--text-xs);
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .prospect-table th i {
+        display: none; /* Hide sort icons on mobile */
+    }
+    
+    .status-badge {
+        padding: 2px 4px;
+        font-size: 9px;
+    }
+    
+    /* Center status badges on mobile */
+    .status-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .prospect-filters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .prospect-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .prospect-search-row .search-bar-inline {
+        max-width: none;
+    }
+}
+
 @media (max-width: 767px) {
     .draft-header {
         flex-direction: column;

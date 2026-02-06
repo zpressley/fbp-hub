@@ -856,6 +856,10 @@ async function confirmPlayerUpdate() {
         // Convert FYPD display value back to boolean
         if (field === 'fypd') {
             fieldPatch[field] = change.to === 'Yes';
+        // Convert manager abbreviation to full name
+        } else if (field === 'manager') {
+            const abbrev = change.to;
+            fieldPatch[field] = abbrev ? (ADMIN_STATE.managers[abbrev]?.name || abbrev) : '';
         } else {
             fieldPatch[field] = change.to;
         }
@@ -1144,11 +1148,10 @@ async function loadTeamBalances() {
  */
 async function applyWBAdjustment() {
     const team = document.getElementById('wbTeam').value;
-    const installment = document.getElementById('wbInstallment').value;
     const amount = parseInt(document.getElementById('wbAmount').value);
     const reason = document.getElementById('wbReason').value.trim();
     
-    if (!team || !installment || isNaN(amount) || !reason) {
+    if (!team || isNaN(amount) || !reason) {
         showToast('All fields are required', 'error');
         return;
     }
@@ -1165,7 +1168,6 @@ async function applyWBAdjustment() {
         season: 2026, // keep in sync with current league season
         admin: ADMIN_STATE.adminUser,
         team,
-        installment,
         amount,
         reason,
     };
@@ -1282,6 +1284,397 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 5000);
 }
 
+/**
+ * Show delete confirmation modal
+ */
+function showDeleteConfirm() {
+    if (!ADMIN_STATE.selectedPlayer) {
+        showToast('No player selected', 'error');
+        return;
+    }
+    
+    const player = ADMIN_STATE.selectedPlayer;
+    const ownerAbbrev = getManagerAbbreviation(player.manager);
+    const ownerDisplay = ownerAbbrev 
+        ? `${ownerAbbrev} - ${ADMIN_STATE.managers[ownerAbbrev]?.name || ownerAbbrev}`
+        : 'Unowned';
+    
+    const summaryHTML = `
+        <div class="delete-player-summary">
+            <h3>${player.name}</h3>
+            <div class="delete-player-details">
+                <p><strong>UPID:</strong> ${player.upid}</p>
+                <p><strong>Team:</strong> ${player.team || 'N/A'}</p>
+                <p><strong>Position:</strong> ${player.position || 'N/A'}</p>
+                <p><strong>Owner:</strong> ${ownerDisplay}</p>
+                <p><strong>Contract:</strong> ${player.contract_type || 'None'}</p>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('deleteConfirmSummary').innerHTML = summaryHTML;
+    document.getElementById('deleteReason').value = '';
+    document.getElementById('deleteConfirmModal').classList.add('active');
+}
+
+/**
+ * Cancel delete confirmation
+ */
+function cancelDeleteConfirm() {
+    document.getElementById('deleteConfirmModal').classList.remove('active');
+}
+
+/**
+ * Confirm and execute player deletion
+ */
+async function confirmPlayerDelete() {
+    const reason = document.getElementById('deleteReason').value.trim();
+    
+    if (!reason) {
+        showToast('Please provide a reason for deletion', 'error');
+        return;
+    }
+    
+    if (!ADMIN_STATE.selectedPlayer) {
+        showToast('No player selected', 'error');
+        return;
+    }
+    
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+    
+    if (!token) {
+        showToast('Your session has expired. Please log in again.', 'error');
+        document.getElementById('deleteConfirmModal').classList.remove('active');
+        return;
+    }
+    
+    const btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+    
+    const payload = {
+        upid: ADMIN_STATE.selectedPlayer.upid,
+        admin: ADMIN_STATE.adminUser,
+        reason: reason
+    };
+    
+    try {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/delete-player`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+            let detail = '';
+            try {
+                const body = await res.json();
+                detail = body.detail || body.error || '';
+            } catch (e) {}
+            const baseMsg = `Delete failed (status ${res.status})`;
+            const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+            showToast(fullMsg, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-trash"></i> Delete Forever';
+            return;
+        }
+        
+        const playerName = ADMIN_STATE.selectedPlayer.name;
+        
+        // Remove from local state
+        ADMIN_STATE.allPlayers = ADMIN_STATE.allPlayers.filter(
+            p => p.upid !== ADMIN_STATE.selectedPlayer.upid
+        );
+        ADMIN_STATE.filteredPlayers = ADMIN_STATE.filteredPlayers.filter(
+            p => p.upid !== ADMIN_STATE.selectedPlayer.upid
+        );
+        
+        // Close modal and reset
+        document.getElementById('deleteConfirmModal').classList.remove('active');
+        cancelEdit();
+        displaySearchResults();
+        updateAdminStats();
+        
+        showToast(`🗑️ ${playerName} has been deleted`, 'success');
+        
+    } catch (err) {
+        console.error('Delete player error', err);
+        showToast(`Delete failed: ${err.message || 'Network error'}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> Delete Forever';
+    }
+}
+
+// ============================================
+// MERGE PLAYER FUNCTIONS
+// ============================================
+
+let mergeState = {
+    sourcePlayer: null,
+    targetPlayer: null,
+    searchTimeout: null
+};
+
+/**
+ * Show merge modal for current selected player (as source)
+ */
+function showMergeModal() {
+    if (!ADMIN_STATE.selectedPlayer) {
+        showToast('No player selected to merge', 'error');
+        return;
+    }
+    
+    mergeState.sourcePlayer = ADMIN_STATE.selectedPlayer;
+    mergeState.targetPlayer = null;
+    
+    document.getElementById('mergeSourceName').textContent = mergeState.sourcePlayer.name;
+    document.getElementById('mergeTargetSearch').value = '';
+    document.getElementById('mergeSearchResults').innerHTML = '';
+    document.getElementById('mergeSearchResults').classList.remove('active');
+    document.getElementById('mergePreviewSection').style.display = 'none';
+    document.getElementById('mergeWarning').style.display = 'none';
+    document.getElementById('confirmMergeBtn').disabled = true;
+    
+    document.getElementById('mergePlayersModal').classList.add('active');
+}
+
+/**
+ * Search for target player to merge into
+ */
+function searchMergeTarget() {
+    clearTimeout(mergeState.searchTimeout);
+    
+    const query = document.getElementById('mergeTargetSearch').value.trim().toLowerCase();
+    const resultsContainer = document.getElementById('mergeSearchResults');
+    
+    if (query.length < 2) {
+        resultsContainer.classList.remove('active');
+        resultsContainer.innerHTML = '';
+        return;
+    }
+    
+    mergeState.searchTimeout = setTimeout(() => {
+        const matches = ADMIN_STATE.allPlayers.filter(p => {
+            // Don't show source player in results
+            if (p.upid === mergeState.sourcePlayer.upid) return false;
+            
+            const name = (p.name || '').toLowerCase();
+            return name.includes(query);
+        }).slice(0, 10);
+        
+        if (matches.length === 0) {
+            resultsContainer.innerHTML = '<div class="merge-search-result"><span class="merge-result-name">No players found</span></div>';
+        } else {
+            resultsContainer.innerHTML = matches.map(p => `
+                <div class="merge-search-result" onclick="selectMergeTarget('${p.upid}')">
+                    <div class="merge-result-name">${p.name}</div>
+                    <div class="merge-result-meta">
+                        ${p.team || 'FA'} • ${p.position || 'N/A'} • 
+                        ${p.manager || 'Unowned'} • UPID: ${p.upid}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        resultsContainer.classList.add('active');
+    }, 200);
+}
+
+/**
+ * Select a target player for merge
+ */
+function selectMergeTarget(upid) {
+    const target = ADMIN_STATE.allPlayers.find(p => p.upid === upid);
+    if (!target) return;
+    
+    mergeState.targetPlayer = target;
+    
+    document.getElementById('mergeTargetSearch').value = target.name;
+    document.getElementById('mergeSearchResults').classList.remove('active');
+    
+    showMergePreview();
+}
+
+/**
+ * Display merge preview showing field comparison
+ */
+function showMergePreview() {
+    const source = mergeState.sourcePlayer;
+    const target = mergeState.targetPlayer;
+    
+    if (!source || !target) return;
+    
+    document.getElementById('mergeSourceNamePreview').textContent = source.name;
+    document.getElementById('mergeTargetNamePreview').textContent = target.name;
+    
+    // Fields to compare
+    const fields = [
+        { key: 'name', label: 'Name' },
+        { key: 'team', label: 'MLB Team' },
+        { key: 'position', label: 'Position' },
+        { key: 'manager', label: 'Manager' },
+        { key: 'player_type', label: 'Player Type' },
+        { key: 'contract_type', label: 'Contract' },
+        { key: 'years_simple', label: 'Years' },
+        { key: 'yahoo_id', label: 'Yahoo ID' },
+        { key: 'mlb_id', label: 'MLB ID' },
+        { key: 'birth_date', label: 'Birth Date' },
+        { key: 'bats', label: 'Bats' },
+        { key: 'throws', label: 'Throws' },
+        { key: 'fypd', label: 'FYPD' }
+    ];
+    
+    let previewHTML = `
+        <div class="merge-field-row">
+            <div class="merge-field-label"><strong>Field</strong></div>
+            <div class="merge-field-source"><strong>Source (Delete)</strong></div>
+            <div class="merge-field-target"><strong>Target (Keep)</strong></div>
+        </div>
+    `;
+    
+    for (const field of fields) {
+        const sourceVal = formatFieldValue(source[field.key]);
+        const targetVal = formatFieldValue(target[field.key]);
+        
+        // Check if source has a value that target is missing
+        const sourceHasValue = source[field.key] !== null && source[field.key] !== undefined && source[field.key] !== '';
+        const targetMissing = target[field.key] === null || target[field.key] === undefined || target[field.key] === '';
+        const willMerge = sourceHasValue && targetMissing;
+        
+        previewHTML += `
+            <div class="merge-field-row">
+                <div class="merge-field-label">${field.label}</div>
+                <div class="merge-field-source">${sourceVal}</div>
+                <div class="merge-field-target${willMerge ? ' merged' : ''}">${willMerge ? sourceVal + ' ←' : targetVal}</div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('mergeFieldsPreview').innerHTML = previewHTML;
+    document.getElementById('mergePreviewSection').style.display = 'block';
+    document.getElementById('mergeWarning').style.display = 'block';
+    document.getElementById('confirmMergeBtn').disabled = false;
+}
+
+/**
+ * Format a field value for display
+ */
+function formatFieldValue(val) {
+    if (val === null || val === undefined) return '<em>empty</em>';
+    if (val === '') return '<em>empty</em>';
+    if (typeof val === 'boolean') return val ? 'Yes' : 'No';
+    return String(val);
+}
+
+/**
+ * Cancel merge and close modal
+ */
+function cancelMerge() {
+    document.getElementById('mergePlayersModal').classList.remove('active');
+    mergeState.sourcePlayer = null;
+    mergeState.targetPlayer = null;
+}
+
+/**
+ * Confirm and execute player merge
+ */
+async function confirmMerge() {
+    if (!mergeState.sourcePlayer || !mergeState.targetPlayer) {
+        showToast('Please select both source and target players', 'error');
+        return;
+    }
+    
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+    
+    if (!token) {
+        showToast('Your session has expired. Please log in again.', 'error');
+        document.getElementById('mergePlayersModal').classList.remove('active');
+        return;
+    }
+    
+    const btn = document.getElementById('confirmMergeBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Merging...';
+    
+    const payload = {
+        source_upid: mergeState.sourcePlayer.upid,
+        target_upid: mergeState.targetPlayer.upid,
+        admin: ADMIN_STATE.adminUser
+    };
+    
+    try {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/merge-players`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+            let detail = '';
+            try {
+                const body = await res.json();
+                detail = body.detail || body.error || '';
+            } catch (e) {}
+            const baseMsg = `Merge failed (status ${res.status})`;
+            const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+            showToast(fullMsg, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Confirm Merge';
+            return;
+        }
+        
+        const result = await res.json();
+        const sourceName = mergeState.sourcePlayer.name;
+        const targetName = mergeState.targetPlayer.name;
+        
+        // Remove source from local state
+        ADMIN_STATE.allPlayers = ADMIN_STATE.allPlayers.filter(
+            p => p.upid !== mergeState.sourcePlayer.upid
+        );
+        ADMIN_STATE.filteredPlayers = ADMIN_STATE.filteredPlayers.filter(
+            p => p.upid !== mergeState.sourcePlayer.upid
+        );
+        
+        // Update target in local state with merged data
+        if (result.player) {
+            const idx = ADMIN_STATE.allPlayers.findIndex(p => p.upid === mergeState.targetPlayer.upid);
+            if (idx !== -1) {
+                ADMIN_STATE.allPlayers[idx] = result.player;
+            }
+            const fidx = ADMIN_STATE.filteredPlayers.findIndex(p => p.upid === mergeState.targetPlayer.upid);
+            if (fidx !== -1) {
+                ADMIN_STATE.filteredPlayers[fidx] = result.player;
+            }
+        }
+        
+        // Close modal and reset
+        document.getElementById('mergePlayersModal').classList.remove('active');
+        cancelEdit();
+        displaySearchResults();
+        updateAdminStats();
+        
+        showToast(`🔀 ${sourceName} merged into ${targetName}`, 'success');
+        
+    } catch (err) {
+        console.error('Merge players error', err);
+        showToast(`Merge failed: ${err.message || 'Network error'}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Confirm Merge';
+        mergeState.sourcePlayer = null;
+        mergeState.targetPlayer = null;
+    }
+}
+
 // Initialize on load
 window.initAdminPortal = initAdminPortal;
 
@@ -1293,3 +1686,11 @@ window.cancelEditConfirm = cancelEditConfirm;
 window.confirmPlayerUpdate = confirmPlayerUpdate;
 window.clearSearch = clearSearch;
 window.applyWBAdjustment = applyWBAdjustment;
+window.showDeleteConfirm = showDeleteConfirm;
+window.cancelDeleteConfirm = cancelDeleteConfirm;
+window.confirmPlayerDelete = confirmPlayerDelete;
+window.showMergeModal = showMergeModal;
+window.searchMergeTarget = searchMergeTarget;
+window.selectMergeTarget = selectMergeTarget;
+window.cancelMerge = cancelMerge;
+window.confirmMerge = confirmMerge;

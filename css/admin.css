@@ -631,6 +631,15 @@
     background-color: #d32f2f;
 }
 
+.btn-warning {
+    background-color: #FF9800;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #F57C00;
+}
+
 /* WizBucks Admin */
 .wizbucks-admin-section {
     background-color: var(--bg-charcoal);
@@ -945,6 +954,130 @@
 
 .changes-preview h4 i {
     color: #2196F3;
+}
+
+/* Merge Modal */
+.merge-content {
+    max-width: 700px;
+}
+
+.merge-search-section {
+    margin-bottom: var(--space-xl);
+}
+
+.merge-search-section label {
+    display: block;
+    color: var(--text-gray);
+    margin-bottom: var(--space-sm);
+    font-size: var(--text-sm);
+}
+
+.merge-search-box {
+    position: relative;
+}
+
+.merge-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-charcoal);
+    border: 2px solid var(--primary-red);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.merge-search-results.active {
+    display: block;
+}
+
+.merge-search-result {
+    padding: var(--space-md);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s;
+}
+
+.merge-search-result:hover {
+    background-color: rgba(239, 62, 66, 0.1);
+}
+
+.merge-search-result:last-child {
+    border-bottom: none;
+}
+
+.merge-result-name {
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.merge-result-meta {
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    margin-top: 2px;
+}
+
+.merge-preview-section {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.merge-preview-section h4 {
+    color: var(--accent-yellow);
+    margin-bottom: var(--space-md);
+}
+
+.merge-preview-desc {
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.merge-fields-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-xs);
+    font-size: var(--text-sm);
+}
+
+.merge-field-row {
+    display: contents;
+}
+
+.merge-field-label {
+    color: var(--text-gray);
+    padding: var(--space-sm);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.merge-field-source {
+    color: #f44336;
+    padding: var(--space-sm);
+    background-color: rgba(244, 67, 54, 0.05);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.merge-field-target {
+    color: var(--success);
+    padding: var(--space-sm);
+    background-color: rgba(46, 204, 113, 0.05);
+}
+
+.merge-field-target.merged {
+    border: 1px solid var(--success);
+    font-weight: 700;
+}
+
+.form-actions-left {
+    display: flex;
+    gap: var(--space-sm);
 }
 
 /* ============================================
