@@ -1,1 +1,5 @@
-{}
+{
+  "message": "This endpoint is temporarily being throttled. Please try again later. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)",
+  "documentation_url": "https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api",
+  "status": "429"
+}
