@@ -98,7 +98,7 @@ function createDailyTrigger() {
 
 // 🔔 1. Monday 3PM — Open Alert
 function sendAuctionOpenAlert() {
-  const message = "@everyone 🟢 **Auction Window is Now Open!**\nYou can now place your Originating Bids in the Weekly Auction Portal.";
+  const message = "@everyone 🟢 **Auction Window is Now Open!**\nYou can now place your Originating Bids in the Weekly Auction Potal.";
   postToDiscord(message);
 }
 
