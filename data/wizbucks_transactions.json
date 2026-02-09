@@ -1,5 +1,553 @@
-{
-  "message": "This endpoint is temporarily being throttled. Please try again later. For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service)",
-  "documentation_url": "https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api",
-  "status": "429"
-}
+[
+  {
+    "txn_id": "wb_2026-02-04_LFB_tim_tawa_refund",
+    "timestamp": "2026-02-04T13:59:16Z",
+    "team": "LFB",
+    "amount": 5,
+    "balance_before": 45,
+    "balance_after": 50,
+    "transaction_type": "manual_adjustment_refund",
+    "description": "Refund Tim Tawa prospect purchase",
+    "related_player": {
+      "upid": "4808",
+      "name": "Tim Tawa"
+    },
+    "metadata": {
+      "season": 2026,
+      "source": "manual_fix"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_HAM",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "HAM",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Consolation bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_RV",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "RV",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Consolation bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_B2J",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "B2J",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Consolation bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_CFL",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "CFL",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Consolation bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_LAW",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "DMN",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Consolation bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_LFB",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "LFB",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Championship bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_JEP",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "JEP",
+    "amount": 140,
+    "balance_before": 0,
+    "balance_after": 140,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Elimination bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_TBB",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "TBB",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Championship bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_WIZ",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "WIZ",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Championship bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_DRO",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "DRO",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Championship bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_SAD",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "SAD",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Championship bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_WAR",
+    "timestamp": "2026-02-04T14:08:03Z",
+    "team": "WAR",
+    "amount": 140,
+    "balance_before": 0,
+    "balance_after": 140,
+    "transaction_type": "PAD_allotment",
+    "description": "2026 PAD allotment - Elimination bracket",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_WIZ",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "WIZ",
+    "amount": 25,
+    "balance_before": 100,
+    "balance_after": 125,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_WAR",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "WAR",
+    "amount": 5,
+    "balance_before": 140,
+    "balance_after": 145,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_RV",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "RV",
+    "amount": 25,
+    "balance_before": 120,
+    "balance_after": 145,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_SAD",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "SAD",
+    "amount": 25,
+    "balance_before": 100,
+    "balance_after": 125,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_LFB",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "LFB",
+    "amount": 25,
+    "balance_before": 120,
+    "balance_after": 145,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_HAM",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "HAM",
+    "amount": 10,
+    "balance_before": 120,
+    "balance_after": 130,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_CFL",
+    "timestamp": "2026-02-04T16:31:06Z",
+    "team": "CFL",
+    "amount": 25,
+    "balance_before": 140,
+    "balance_after": 165,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-04_PAD_ROLLOVER_TBB",
+    "timestamp": "2026-02-04T16:39:11Z",
+    "team": "TBB",
+    "amount": 25,
+    "balance_before": 100,
+    "balance_after": 125,
+    "transaction_type": "PAD_optional_rollover",
+    "description": "Optional PAD rollover to KAP for 2026",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_optional_rollover"
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-05_PAD_FINISH_HAM",
+    "timestamp": "2026-02-05T21:45:09.019457Z",
+    "team": "HAM",
+    "amount": 20,
+    "balance_before": 150,
+    "balance_after": 170,
+    "transaction_type": "PAD_finish_reward",
+    "description": "2025 Elimination bracket winner PAD bonus (+$20)",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_finish_reward",
+      "final_rank_2025": 9
+    }
+  },
+  {
+    "txn_id": "wb_2026-02-05_PAD_FINISH_RV",
+    "timestamp": "2026-02-05T21:45:09.019457Z",
+    "team": "RV",
+    "amount": 10,
+    "balance_before": 165,
+    "balance_after": 175,
+    "transaction_type": "PAD_finish_reward",
+    "description": "2025 Elimination bracket runner-up PAD bonus (+$10)",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD_finish_reward",
+      "final_rank_2025": 10
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_DMN_1770402081",
+    "timestamp": "2026-02-06T13:21:21.779162-05:00",
+    "team": "DMN",
+    "amount": -130,
+    "balance_before": 145,
+    "balance_after": 15,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_CFL_1770406429",
+    "timestamp": "2026-02-06T14:33:49.611291-05:00",
+    "team": "CFL",
+    "amount": -125,
+    "balance_before": 145,
+    "balance_after": 20,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_HAM_1770407700",
+    "timestamp": "2026-02-06T14:55:00.603593-05:00",
+    "team": "HAM",
+    "amount": -155,
+    "balance_before": 170,
+    "balance_after": 15,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_DRO_1770409531",
+    "timestamp": "2026-02-06T15:25:31.982411-05:00",
+    "team": "DRO",
+    "amount": -75,
+    "balance_before": 100,
+    "balance_after": 25,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_RV_1770421620",
+    "timestamp": "2026-02-06T18:47:00.328057-05:00",
+    "team": "RV",
+    "amount": -175,
+    "balance_before": 175,
+    "balance_after": 0,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_ADMIN_CFL_1770422745",
+    "timestamp": "2026-02-07T00:05:45.518233Z",
+    "team": "CFL",
+    "amount": -5,
+    "balance_before": 20,
+    "balance_after": 15,
+    "transaction_type": "admin_adjustment",
+    "description": "PAD adjustment - purchase DC",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "zpressley",
+      "source": "admin_portal"
+    }
+  },
+  {
+    "txn_id": "wb_2026_ADMIN_CFL_1770422751",
+    "timestamp": "2026-02-07T00:05:51.826083Z",
+    "team": "CFL",
+    "amount": -5,
+    "balance_before": 15,
+    "balance_after": 10,
+    "transaction_type": "admin_adjustment",
+    "description": "PAD adjustment - purchase DC",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "zpressley",
+      "source": "admin_portal"
+    }
+  },
+  {
+    "txn_id": "wb_2026_ADMIN_CFL_1770434473",
+    "timestamp": "2026-02-07T03:21:13.372808Z",
+    "team": "CFL",
+    "amount": 5,
+    "balance_before": 10,
+    "balance_after": 15,
+    "transaction_type": "admin_adjustment",
+    "description": "Admin Correction",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "zpressley",
+      "source": "admin_portal"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_SAD_1770437155",
+    "timestamp": "2026-02-06T23:05:55.565889-05:00",
+    "team": "SAD",
+    "amount": -105,
+    "balance_before": 125,
+    "balance_after": 20,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_LFB_1770443454",
+    "timestamp": "2026-02-07T00:50:54.938673-05:00",
+    "team": "LFB",
+    "amount": -125,
+    "balance_before": 125,
+    "balance_after": 0,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_B2J_1770484992",
+    "timestamp": "2026-02-07T12:23:12.407578-05:00",
+    "team": "B2J",
+    "amount": -115,
+    "balance_before": 145,
+    "balance_after": 30,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_TBB_1770582522",
+    "timestamp": "2026-02-08T15:28:42.550860-05:00",
+    "team": "TBB",
+    "amount": -115,
+    "balance_before": 145,
+    "balance_after": 30,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  },
+  {
+    "txn_id": "wb_2026_PAD_SPEND_JEP_1770585222",
+    "timestamp": "2026-02-08T16:13:42.132776-05:00",
+    "team": "JEP",
+    "amount": -135,
+    "balance_before": 165,
+    "balance_after": 30,
+    "transaction_type": "PAD_spend",
+    "description": "2026 PAD prospect contracts and draft slots",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "source": "PAD"
+    }
+  }
+]
