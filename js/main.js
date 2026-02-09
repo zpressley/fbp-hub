@@ -200,10 +200,6 @@ function updateUserMenuForAuth() {
                 <i class="fas fa-list-ol"></i>
                 Draft Picks
             </a>
-            <a href="transactions.html">
-                <i class="fas fa-exchange-alt"></i>
-                Transactions
-            </a>
         ` : ''}
         <a href="#" id="headerLogout">
             <i class="fas fa-sign-out-alt"></i>
@@ -445,11 +441,6 @@ function initializePage(pageName) {
         case 'draft-picks':
             if (typeof initDraftPicksPage === 'function') {
                 initDraftPicksPage();
-            }
-            break; 
-        case 'transactions':
-            if (typeof initTransactionsPage === 'function') {
-                initTransactionsPage();
             }
             break; 
         case 'season-dates':

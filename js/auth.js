@@ -452,10 +452,6 @@ function addUserMenu() {
                     <i class="fas fa-list-ol"></i>
                     Draft Picks
                 </a>
-                <a href="transactions.html">
-                    <i class="fas fa-exchange-alt"></i>
-                    Transactions
-                </a>
             ` : ''}
             <a href="#" id="userMenuLogout">
                 <i class="fas fa-sign-out-alt"></i>

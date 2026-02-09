@@ -1,0 +1,415 @@
+/* ============================================
+   Contract Purchase Modal - Dashboard Self-Service
+   ============================================ */
+
+.contract-purchase-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.contract-purchase-modal.active {
+    display: flex;
+}
+
+.contract-purchase-content {
+    background-color: var(--bg-charcoal);
+    border: 3px solid var(--primary-red);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.contract-purchase-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: var(--border-width) solid rgba(255, 255, 255, 0.1);
+}
+
+.contract-purchase-header h2 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.contract-purchase-header h2 i {
+    color: var(--primary-red);
+}
+
+.contract-purchase-header p {
+    color: var(--text-gray);
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+.balance-display {
+    background-color: rgba(255, 182, 18, 0.1);
+    border: var(--border-width) solid var(--accent-yellow);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+}
+
+.balance-label {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.balance-value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--accent-yellow);
+}
+
+/* Contract Info Box - Pricing Reference */
+.contract-info-box {
+    background-color: rgba(33, 150, 243, 0.1);
+    border: var(--border-width) solid #2196F3;
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row:last-of-type {
+    border-bottom: none;
+}
+
+.info-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text-white);
+    font-size: var(--text-sm);
+}
+
+.info-value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: #2196F3;
+    font-size: var(--text-lg);
+}
+
+.info-note {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    text-align: center;
+}
+
+.upgrade-options h4 {
+    font-family: var(--font-subhead);
+    font-weight: 600;
+    color: var(--text-white);
+    margin-bottom: var(--space-lg);
+}
+
+.upgrade-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.upgrade-option {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.upgrade-option:hover {
+    border-color: var(--primary-red);
+    background-color: rgba(239, 62, 66, 0.08);
+}
+
+.upgrade-option.insufficient-funds {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.upgrade-option.insufficient-funds:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.upgrade-player-info {
+    flex: 1;
+}
+
+.upgrade-player-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--text-white);
+    margin-bottom: var(--space-xs);
+}
+
+.upgrade-player-meta {
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+}
+
+.upgrade-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+}
+
+.upgrade-type {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: var(--text-sm);
+}
+
+.upgrade-cost {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    color: var(--primary-red);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.upgrade-cost.insufficient {
+    color: var(--text-gray);
+}
+
+.insufficient-badge {
+    font-size: var(--text-xs);
+    color: var(--danger);
+    background-color: rgba(239, 62, 66, 0.2);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.contract-purchase-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: var(--space-lg);
+    border-top: var(--border-width) solid rgba(255, 255, 255, 0.1);
+}
+
+/* Contract Confirmation Modal */
+.contract-confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 3100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.contract-confirm-modal.active {
+    display: flex;
+}
+
+.upgrade-summary {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.upgrade-summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: var(--border-width-thin) solid rgba(255, 255, 255, 0.05);
+}
+
+.upgrade-summary-row:last-child {
+    border-bottom: none;
+}
+
+.upgrade-summary-row span:first-child {
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+}
+
+.upgrade-type-display {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-yellow) !important;
+    font-size: var(--text-base) !important;
+}
+
+.cost-display {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--primary-red) !important;
+    font-size: var(--text-xl) !important;
+}
+
+/* Toast - Enhanced for dashboard */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    right: var(--space-lg);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width-thick) solid;
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-width: 300px;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all var(--transition-normal);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast.success { 
+    border-color: var(--success); 
+}
+
+.toast.success i { 
+    color: var(--success); 
+    font-size: var(--text-xl);
+}
+
+.toast.error { 
+    border-color: var(--danger); 
+}
+
+.toast.error i { 
+    color: var(--danger); 
+    font-size: var(--text-xl);
+}
+
+.toast.warning { 
+    border-color: #FF9800; 
+}
+
+.toast.warning i { 
+    color: #FF9800; 
+    font-size: var(--text-xl);
+}
+
+.toast span {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text-white);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+/* Player Profile - Buy Contract Button */
+.btn-contract-purchase {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--primary-red);
+    color: var(--text-white);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-top: var(--space-md);
+}
+
+.btn-contract-purchase:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    box-shadow: 0 4px 12px rgba(239, 62, 66, 0.3);
+}
+
+.btn-contract-purchase i {
+    font-size: var(--text-base);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 767px) {
+    .contract-purchase-content,
+    .confirmation-content {
+        padding: var(--space-xl);
+        max-height: 95vh;
+    }
+    
+    .upgrade-option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+    
+    .upgrade-action {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .toast {
+        bottom: 80px;
+        left: var(--space-md);
+        right: var(--space-md);
+        min-width: auto;
+    }
+    
+    .contract-info-box {
+        font-size: var(--text-sm);
+    }
+}

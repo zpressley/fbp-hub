@@ -9,7 +9,10 @@ let PREVIEW_STATE = {
     seasonDates: null,
     statsByUpid: {},
     fypdByUpid: {},
+    tagsByUpid: {},  // Lookup for prospect_tags by UPID
     top100Upids: new Set(),
+    droppedUpids: new Set(),  // Players dropped during PAD
+    playerLog: [],
     currentTab: 'keeper',
     fypdOnly: false,
     // New prospect tags system
@@ -21,9 +24,9 @@ let PREVIEW_STATE = {
         badgeType: 'any',
         search: ''
     },
-    prospectSort: { field: 'badges', direction: 'desc' },
+    prospectSort: { field: 'rank', direction: 'asc' },  // Default to rank ascending
     prospectPage: 0,
-    prospectPageSize: 50,
+    prospectPageSize: 100,  // Increased from 50
     filteredProspects: []
 };
 
@@ -112,10 +115,54 @@ async function loadPreviewData() {
         if (response.ok) {
             const data = await response.json();
             PREVIEW_STATE.prospectTags = data.players || [];
+            
+            // Build lookup by UPID
+            PREVIEW_STATE.tagsByUpid = {};
+            PREVIEW_STATE.prospectTags.forEach(p => {
+                if (p.upid) {
+                    PREVIEW_STATE.tagsByUpid[String(p.upid)] = p;
+                }
+            });
+            
             console.log(`✅ Loaded ${PREVIEW_STATE.prospectTags.length} prospects from prospect_tags.json`);
         }
     } catch (e) {
         console.log('No prospect_tags.json available');
+    }
+    
+    // Load player_log.json to identify dropped prospects
+    try {
+        const response = await fetch('data/player_log.json');
+        if (response.ok) {
+            PREVIEW_STATE.playerLog = await response.json();
+            
+            // Find prospects dropped during PAD (this year)
+            const currentYear = new Date().getFullYear();
+            PREVIEW_STATE.droppedUpids = new Set();
+            
+            PREVIEW_STATE.playerLog.forEach(entry => {
+                const entryDate = entry.date || entry.timestamp || '';
+                const entryYear = new Date(entryDate).getFullYear();
+                const entryMonth = new Date(entryDate).getMonth() + 1; // 1-12
+                
+                // PAD period is February
+                const isPADPeriod = entryYear === currentYear && entryMonth === 2;
+                
+                // Check for drop indicators
+                const isDropped = (entry.event || '').toLowerCase().includes('drop') ||
+                                (entry.type || '').toLowerCase().includes('drop') ||
+                                (entry.update_type || '').toLowerCase().includes('drop') ||
+                                ((entry.contract_type === '' || entry.contract_type === null) && entry.player_type === 'Farm');
+                
+                if (isPADPeriod && isDropped && entry.upid) {
+                    PREVIEW_STATE.droppedUpids.add(String(entry.upid));
+                }
+            });
+            
+            console.log(`✅ Loaded player log - ${PREVIEW_STATE.droppedUpids.size} dropped prospects identified`);
+        }
+    } catch (e) {
+        console.log('No player_log.json available');
     }
 
     // Load 2025 player stats database (player_stats.json or fallback file)
@@ -304,7 +351,8 @@ function setupProspectTableSorting() {
                     PREVIEW_STATE.prospectSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
                 PREVIEW_STATE.prospectSort.field = field;
-                PREVIEW_STATE.prospectSort.direction = field === 'fv' || field === 'badges' ? 'desc' : 'asc';
+                // Rank uses ascending by default (lower rank = better), others vary
+                PREVIEW_STATE.prospectSort.direction = (field === 'rank') ? 'asc' : 'desc';
             }
             PREVIEW_STATE.prospectPage = 0;
             displayProspectPreview();
@@ -359,13 +407,83 @@ function displayKeeperPreview() {
 }
 
 /**
+ * Merge prospect data from combined_players.json and prospect_tags.json
+ * Add dropped status from player_log.json
+ */
+function mergeProspectData() {
+    const prospects = [];
+    const processedUpids = new Set();
+    
+    // Start with UNOWNED Farm players from combined_players.json (primary source)
+    PREVIEW_STATE.allPlayers.forEach(player => {
+        if (player.player_type !== 'Farm') return;
+        
+        // Skip owned prospects - they're not available for draft
+        // Note: Some data has manager='None' (string) instead of null/empty
+        const hasManager = player.manager && player.manager !== 'None';
+        const hasFbpTeam = player.FBP_Team && player.FBP_Team !== 'None';
+        if (hasManager || hasFbpTeam) return;
+        
+        const upid = String(player.upid || '');
+        if (!upid || processedUpids.has(upid)) return;
+        
+        processedUpids.add(upid);
+        
+        // Get tags data if available
+        const tagData = PREVIEW_STATE.tagsByUpid[upid] || {};
+        
+        // Get status from tags, then add dropped if applicable
+        let statusArr = tagData.status || [];
+        
+        // Check if player was dropped (from player_log)
+        if (PREVIEW_STATE.droppedUpids.has(upid)) {
+            if (!statusArr.includes('dropped')) {
+                statusArr = [...statusArr, 'dropped'];
+            }
+        }
+        
+        // Merge data
+        const merged = {
+            upid: player.upid,
+            name: player.name,
+            org: player.team || tagData.org || '-',
+            position: player.position || tagData.position || '-',
+            
+            // FV from tags
+            fv: tagData.fv || {},
+            
+            // Badges from tags
+            badges: tagData.badges || [],
+            badgeCount: (tagData.badges || []).length,
+            
+            // Status from tags + dropped from player_log
+            status: statusArr,
+            
+            // Rankings from combined_players
+            rank: player.rank,
+            fypd_rank: player.fypd_rank,
+            
+            // Contract info
+            manager: player.manager,
+            contract_type: player.contract_type,
+            years_simple: player.years_simple
+        };
+        
+        prospects.push(merged);
+    });
+    
+    console.log(`✅ Merged ${prospects.length} available (unowned) prospects`);
+    return prospects;
+}
+
+/**
  * Display prospect draft preview with new filtering system
  */
 function displayProspectPreview() {
     const { fvYear, status, position, badgeType, search } = PREVIEW_STATE.prospectFilters;
     
-    // Start with all prospects from prospect_tags.json
-    let filtered = [...PREVIEW_STATE.prospectTags];
+    // Merge data: combine combined_players.json with prospect_tags.json
+    let filtered = mergeProspectData();
     
     // Filter by status (status is now an array of tags)
     if (status !== 'any') {
@@ -425,7 +543,7 @@ function displayProspectPreview() {
     if (displayed.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" class="empty-state">No prospects match your filters</td>
+                <td colspan="7" class="empty-state">No prospects match your filters</td>
             </tr>
         `;
         document.getElementById('prospectLoadMore').style.display = 'none';
@@ -501,6 +619,11 @@ function sortProspects(prospects, fvYear) {
         let aVal, bVal;
         
         switch (field) {
+            case 'rank':
+                // Prioritize: fypd_rank > rank > infinity (unranked last)
+                aVal = a.fypd_rank || a.rank || Infinity;
+                bVal = b.fypd_rank || b.rank || Infinity;
+                return mult * (aVal - bVal);
             case 'name':
                 return mult * (a.name || '').localeCompare(b.name || '');
             case 'org':
@@ -510,11 +633,11 @@ function sortProspects(prospects, fvYear) {
             case 'fv':
                 aVal = a.fv?.[fvYear] || 0;
                 bVal = b.fv?.[fvYear] || 0;
-                return mult * (aVal - bVal);
+                return mult * (bVal - aVal);  // Higher FV first when ascending
             case 'badges':
                 aVal = a.badges?.length || 0;
                 bVal = b.badges?.length || 0;
-                return mult * (aVal - bVal);
+                return mult * (bVal - aVal);  // More badges first when ascending
             case 'status':
                 aVal = getPrimaryStatus(a.status);
                 bVal = getPrimaryStatus(b.status);
@@ -557,6 +680,7 @@ function getPrimaryStatus(statusArr) {
  * Render a prospect table row
  */
 function renderProspectTableRow(player, fvYear) {
+    const rank = player.fypd_rank || player.rank || '-';
     const fv = player.fv?.[fvYear] || '-';
     const badgeCount = player.badges?.length || 0;
     const statusArr = player.status || [];
@@ -566,6 +690,7 @@ function renderProspectTableRow(player, fvYear) {
     
     return `
         <tr class="prospect-row${isDropped ? ' prospect-dropped' : ''}">
+            <td class="prospect-rank">${rank}</td>
             <td class="prospect-name">
                 <a href="${profileLink}" class="prospect-name-link">${player.name || 'Unknown'}</a>
             </td>
@@ -732,11 +857,12 @@ function isContracted(player) {
 }
 
 /**
- * Format date
+ * Format date (parse as local time to avoid timezone shift)
  */
 function formatDate(dateStr) {
     if (!dateStr) return 'TBD';
-    const date = new Date(dateStr);
+    // Parse as local time by appending T00:00:00 (avoids UTC interpretation)
+    const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric'

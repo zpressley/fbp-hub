@@ -45,6 +45,9 @@ async function initPlayerProfile() {
     // Setup tabs
     setupTabs();
     
+    // Check if user can purchase contract for this player
+    checkContractPurchaseEligibility();
+    
     // Show profile
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('playerProfile').style.display = 'block';
@@ -687,3 +690,404 @@ window.createPlayerLink = function(player) {
 
 // Initialize on load
 window.initPlayerProfile = initPlayerProfile;
+
+/**
+ * Check if self-service contract purchases are enabled (after PAD deadline)
+ */
+async function isContractPurchaseEnabled() {
+    try {
+        const res = await fetch('./data/season_dates.json');
+        if (!res.ok) return true; // Default to enabled if file not found
+        const dates = await res.json();
+        const padDate = dates.pad_date;
+        if (!padDate) return true;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const padDeadline = new Date(padDate + 'T00:00:00');
+        
+        return today > padDeadline;
+    } catch (e) {
+        console.warn('Could not check PAD deadline:', e);
+        return true; // Default to enabled on error
+    }
+}
+
+/**
+ * Check if logged-in user can purchase a contract for this player
+ * Conditions: user is logged in, owns the player, player is a prospect with DC or PC contract
+ */
+async function checkContractPurchaseEligibility() {
+    const container = document.getElementById('purchaseContractContainer');
+    if (!container) return;
+    
+    // Check if self-service is enabled (after PAD deadline)
+    const enabled = await isContractPurchaseEnabled();
+    if (!enabled) {
+        return; // PAD not complete - hide button
+    }
+    
+    const player = PLAYER_DATA.player;
+    if (!player) return;
+    
+    // Check if user is authenticated
+    if (typeof authManager === 'undefined' || !authManager.isAuthenticated()) {
+        return; // Not logged in - hide button
+    }
+    
+    const userTeam = authManager.getTeam();
+    if (!userTeam) return;
+    
+    // Check if player belongs to user's team
+    const playerOwner = player.FBP_Team || player.manager || '';
+    if (playerOwner !== userTeam.abbreviation) {
+        return; // Not the user's player
+    }
+    
+    // Check if player is a prospect (Farm)
+    if (player.player_type !== 'Farm') {
+        return; // Not a prospect
+    }
+    
+    // Check if player has a DC or PC contract (eligible for upgrade)
+    const contract = (player.contract_type || '').toLowerCase();
+    const hasDC = contract.includes('development');
+    const hasPC = contract.includes('purchased');
+    
+    if (!hasDC && !hasPC) {
+        return; // BC or no contract - not eligible for upgrade
+    }
+    
+    // Player is eligible - show the button
+    container.innerHTML = `
+        <button type="button" class="btn-contract-purchase" onclick="showPlayerContractPurchase()">
+            <i class="fas fa-file-contract"></i>
+            <span>BUY CONTRACT</span>
+        </button>
+    `;
+}
+
+/**
+ * Show contract purchase modal for the current player
+ */
+function showPlayerContractPurchase() {
+    const player = PLAYER_DATA.player;
+    if (!player) return;
+    
+    const userTeam = authManager.getTeam();
+    if (!userTeam) return;
+    
+    // Get current WizBucks balance
+    const wizData = FBPHub.data.wizbucks || {};
+    let balance = 0;
+    if (userTeam.name && wizData[userTeam.name] !== undefined) {
+        balance = wizData[userTeam.name];
+    } else if (wizData[userTeam.abbreviation] !== undefined) {
+        balance = wizData[userTeam.abbreviation];
+    }
+    
+    // Determine upgrade options based on current contract
+    const contract = (player.contract_type || '').toLowerCase();
+    const options = [];
+    
+    if (contract.includes('development')) {
+        options.push({ upgradeType: 'DC → PC', cost: 5, newContract: 'Purchased Contract' });
+        options.push({ upgradeType: 'DC → BC', cost: 15, newContract: 'Blue Chip Contract' });
+    } else if (contract.includes('purchased')) {
+        options.push({ upgradeType: 'PC → BC', cost: 10, newContract: 'Blue Chip Contract' });
+    }
+    
+    if (options.length === 0) return;
+    
+    const modalHTML = `
+        <div class="contract-purchase-modal active" id="contractPurchaseModal">
+            <div class="contract-purchase-content">
+                <div class="contract-purchase-header">
+                    <h2><i class="fas fa-file-contract"></i> Purchase Contract Upgrade</h2>
+                    <p>Upgrade ${player.name}'s contract</p>
+                </div>
+                
+                <div class="balance-display">
+                    <span class="balance-label">Your WizBucks Balance:</span>
+                    <span class="balance-value">$${balance}</span>
+                </div>
+                
+                <div class="contract-info-box">
+                    <div class="info-row">
+                        <span class="info-label">Current Contract:</span>
+                        <span class="info-value">${player.contract_type || 'None'}</span>
+                    </div>
+                </div>
+                
+                <div class="upgrade-options">
+                    <h4>Available Upgrades:</h4>
+                    <div class="upgrade-list">
+                        ${options.map(opt => {
+                            const canAfford = balance >= opt.cost;
+                            return `
+                                <div class="upgrade-option ${canAfford ? '' : 'insufficient-funds'}" 
+                                     ${canAfford ? `onclick="selectPlayerContractUpgrade('${player.upid}', '${opt.upgradeType}', ${opt.cost}, '${opt.newContract}')"` : ''}>
+                                    <div class="upgrade-player-info">
+                                        <div class="upgrade-player-name">${opt.upgradeType}</div>
+                                        <div class="upgrade-player-meta">${opt.newContract}</div>
+                                    </div>
+                                    <div class="upgrade-action">
+                                        <div class="upgrade-cost ${canAfford ? '' : 'insufficient'}">
+                                            $${opt.cost}
+                                            ${!canAfford ? '<span class="insufficient-badge">Insufficient</span>' : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                <div class="contract-purchase-actions">
+                    <button class="btn-secondary" onclick="closePlayerContractModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+/**
+ * Close contract purchase modal
+ */
+function closePlayerContractModal() {
+    const modal = document.getElementById('contractPurchaseModal');
+    if (modal) modal.remove();
+}
+
+/**
+ * Select a contract upgrade and show confirmation
+ */
+function selectPlayerContractUpgrade(upid, upgradeType, cost, newContract) {
+    const player = PLAYER_DATA.player;
+    if (!player) return;
+    
+    const currentContract = player.contract_type || 'None';
+    
+    const confirmHTML = `
+        <div class="contract-confirm-modal active" id="contractConfirmModal">
+            <div class="confirmation-content">
+                <div class="confirmation-header">
+                    <h2><i class="fas fa-check-circle"></i> Confirm Contract Purchase</h2>
+                    <p>Review before purchasing</p>
+                </div>
+                
+                <div class="confirmation-section">
+                    <h4>Player: ${player.name}</h4>
+                    <div style="margin-top: var(--space-md);">
+                        <p><strong>Position:</strong> ${player.position || 'N/A'}</p>
+                        <p><strong>MLB Team:</strong> ${player.team || 'FA'}</p>
+                        <p><strong>Current Contract:</strong> ${currentContract}</p>
+                    </div>
+                </div>
+                
+                <div class="confirmation-section">
+                    <h4>Purchase Details</h4>
+                    <div class="upgrade-summary">
+                        <div class="upgrade-summary-row">
+                            <span>Contract Type:</span>
+                            <span class="upgrade-type-display">${newContract}</span>
+                        </div>
+                        <div class="upgrade-summary-row">
+                            <span>Cost:</span>
+                            <span class="cost-display">$${cost}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="confirmation-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>This will deduct $${cost} from your WizBucks balance</strong>
+                    <p>The contract purchase will be logged to your transaction history</p>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button class="btn-secondary" onclick="closePlayerConfirmModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn-primary" id="confirmPurchaseBtn" 
+                            onclick="confirmPlayerContractPurchase('${upid}', '${upgradeType}', ${cost}, '${newContract}')">
+                        <i class="fas fa-check"></i> Purchase for $${cost}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', confirmHTML);
+}
+
+/**
+ * Close confirmation modal
+ */
+function closePlayerConfirmModal() {
+    const modal = document.getElementById('contractConfirmModal');
+    if (modal) modal.remove();
+}
+
+/**
+ * Confirm and execute contract purchase
+ */
+async function confirmPlayerContractPurchase(upid, upgradeType, cost, newContract) {
+    const btn = document.getElementById('confirmPurchaseBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    }
+    
+    const session = typeof authManager !== 'undefined' ? authManager.getSession() : null;
+    const token = session?.token;
+    
+    if (!token) {
+        showProfileToast('Your session has expired. Please log in again.', 'error');
+        closePlayerConfirmModal();
+        return;
+    }
+    
+    const team = authManager.getTeam();
+    if (!team) {
+        showProfileToast('Could not determine your team', 'error');
+        closePlayerConfirmModal();
+        return;
+    }
+    
+    const player = PLAYER_DATA.player;
+    if (!player) {
+        showProfileToast('Player not found', 'error');
+        closePlayerConfirmModal();
+        return;
+    }
+    
+    const currentSeason = new Date().getFullYear();
+    
+    // Build admin payload for contract update + WizBucks deduction
+    const payload = {
+        season: currentSeason,
+        admin: team.abbreviation,
+        upid: upid,
+        changes: {
+            contract_type: newContract,
+            years_simple: 'P'
+        },
+        log_event: `${currentSeason} ${upgradeType}`,
+        log_source: 'Player Profile Self-Service',
+        update_type: 'Purchase',
+        wizbucks_team: team.abbreviation,
+        wizbucks_delta: -cost
+    };
+    
+    try {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/update-player`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+            let detail = '';
+            try {
+                const body = await res.json();
+                detail = body.detail || body.error || '';
+            } catch (e) {}
+            const baseMsg = `Contract purchase failed (status ${res.status})`;
+            const fullMsg = detail ? `${baseMsg}: ${detail}` : baseMsg;
+            showProfileToast(fullMsg, 'error');
+            
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Purchase for $' + cost;
+            }
+            return;
+        }
+        
+        const result = await res.json();
+        
+        // Update local player data
+        if (result.player) {
+            PLAYER_DATA.player = result.player;
+            const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
+            if (idx !== -1) {
+                FBPHub.data.players[idx] = result.player;
+            }
+        }
+        
+        // Update WizBucks balance locally
+        if (result.wizbucks_balance !== null && result.wizbucks_balance !== undefined) {
+            if (team.name && FBPHub.data.wizbucks[team.name] !== undefined) {
+                FBPHub.data.wizbucks[team.name] = result.wizbucks_balance;
+            } else if (FBPHub.data.wizbucks[team.abbreviation] !== undefined) {
+                FBPHub.data.wizbucks[team.abbreviation] = result.wizbucks_balance;
+            }
+        }
+        
+        // Close modals
+        closePlayerConfirmModal();
+        closePlayerContractModal();
+        
+        // Show success
+        const contractName = newContract === 'Purchased Contract' ? 'PC' : 'BC';
+        showProfileToast(`✅ ${player.name} - ${contractName} purchased! -$${cost} WB`, 'success');
+        
+        // Refresh player profile display
+        displayPlayerHeader();
+        displayOverview();
+        checkContractPurchaseEligibility();
+        
+    } catch (err) {
+        console.error('Contract purchase error', err);
+        showProfileToast(`Contract purchase failed: ${err.message || 'Network error'}`, 'error');
+        
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Purchase for $' + cost;
+        }
+    }
+}
+
+/**
+ * Show toast notification
+ */
+function showProfileToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        warning: 'exclamation-triangle'
+    };
+    
+    toast.innerHTML = `
+        <i class="fas fa-${icons[type]}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+// Expose modal functions to global scope
+window.showPlayerContractPurchase = showPlayerContractPurchase;
+window.closePlayerContractModal = closePlayerContractModal;
+window.selectPlayerContractUpgrade = selectPlayerContractUpgrade;
+window.closePlayerConfirmModal = closePlayerConfirmModal;
+window.confirmPlayerContractPurchase = confirmPlayerContractPurchase;
