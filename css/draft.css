@@ -1280,8 +1280,7 @@ body.draft-preview-page .pick-number {
     background-color: var(--card-bg);
     border-radius: var(--radius-lg);
     border: var(--border-width) solid var(--primary-red);
-    overflow: auto;
-    max-height: 80vh;
+    overflow: visible;
 }
 
 .prospect-table {
@@ -1290,7 +1289,7 @@ body.draft-preview-page .pick-number {
 }
 
 .prospect-table thead th {
-    background-color: #1a1a2e;
+    background-color: var(--accent-yellow);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -1299,9 +1298,9 @@ body.draft-preview-page .pick-number {
 
 .prospect-table th {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-base);
     font-weight: 700;
-    color: var(--text-gray);
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: var(--space-md) var(--space-lg);
@@ -1312,25 +1311,29 @@ body.draft-preview-page .pick-number {
 .prospect-table th.sortable {
     cursor: pointer;
     user-select: none;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .prospect-table th.sortable:hover {
-    color: var(--accent-yellow);
+    color: var(--text-white);
+    background-color: var(--primary-red);
 }
 
 .prospect-table th.sortable.sorted {
-    color: var(--accent-yellow);
+    color: var(--text-white);
+    background-color: var(--primary-red);
 }
 
 .prospect-table th i {
     margin-left: var(--space-xs);
-    font-size: var(--text-xs);
-    opacity: 0.6;
+    font-size: var(--text-sm);
+    opacity: 0.7;
+    color: inherit;
 }
 
 .prospect-table th.sorted i {
     opacity: 1;
+    color: inherit;
 }
 
 .prospect-table tbody tr {

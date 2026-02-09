@@ -262,9 +262,11 @@ function setupHeaderScrollBehavior() {
 
         // Desktop / tablet behavior on most pages: never fully hide the header.
         if (isDesktopOrTablet && !allowDesktopHide) {
-            if (currentY > 40) {
+            // HYSTERESIS: Add buffer so nav doesn't flicker at threshold
+            // Turn ON compact at >50px, turn OFF only when <10px
+            if (currentY > 50) {
                 nav.classList.add('nav-compact');
-            } else {
+            } else if (currentY < 10) {
                 nav.classList.remove('nav-compact');
             }
 
@@ -287,15 +289,15 @@ function setupHeaderScrollBehavior() {
             return;
         }
 
-        // Compact once user scrolls a bit
-        if (currentY > 40) {
+        // HYSTERESIS: Same buffer for mobile
+        if (currentY > 50) {
             nav.classList.add('nav-compact');
-        } else {
+        } else if (currentY < 10) {
             nav.classList.remove('nav-compact');
         }
 
         // Top of page: always show
-        if (currentY < 40) {
+        if (currentY < 10) {
             if (isHidden) {
                 nav.classList.remove('nav-hidden');
                 isHidden = false;
