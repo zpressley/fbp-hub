@@ -1866,8 +1866,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "12355",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3445",
     "mlb_id": 691783,
     "FBP_Team": "RV",
@@ -1982,8 +1987,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60120",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3790",
     "mlb_id": 694208,
     "FBP_Team": "B2J",
@@ -2007,8 +2017,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60368",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3809",
     "mlb_id": 703155,
     "FBP_Team": "B2J",
@@ -2057,8 +2072,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60294",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3910",
     "mlb_id": 682987,
     "FBP_Team": "B2J",
@@ -2170,8 +2190,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63613",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "4628",
     "mlb_id": 806960,
     "FBP_Team": "B2J",
@@ -2242,8 +2267,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62974",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6566",
     "mlb_id": 703601,
     "FBP_Team": "B2J",
@@ -2267,8 +2297,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62985",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6569",
     "mlb_id": 694371,
     "FBP_Team": "B2J",
@@ -2342,8 +2377,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63004",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6723",
     "mlb_id": 806071,
     "FBP_Team": "B2J",
@@ -2392,8 +2432,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63190",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7470",
     "mlb_id": 811315,
     "FBP_Team": "B2J",
@@ -2417,8 +2462,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64358",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7578",
     "mlb_id": 807276,
     "FBP_Team": "B2J",
@@ -2442,8 +2492,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64316",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7602",
     "mlb_id": 695505,
     "FBP_Team": "RV",
@@ -2467,8 +2522,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64362",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7609",
     "mlb_id": 815520,
     "FBP_Team": "B2J",
@@ -2492,8 +2552,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64351",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7662",
     "mlb_id": 696292,
     "FBP_Team": "B2J",
@@ -5178,8 +5243,13 @@
     "years_simple": "P",
     "yahoo_id": "",
     "upid": "3561",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 686751,
     "FBP_Team": "JEP",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 2042,
     "debut_date": null,
@@ -5200,8 +5270,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "12385",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3580",
     "mlb_id": 701649,
     "FBP_Team": "JEP",
@@ -5272,8 +5347,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "12477",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3708",
     "mlb_id": 691620,
     "FBP_Team": "JEP",
@@ -5341,8 +5421,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60381",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3900",
     "mlb_id": 687931,
     "FBP_Team": "JEP",
@@ -5366,8 +5451,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60254",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3906",
     "mlb_id": 694819,
     "FBP_Team": "JEP",
@@ -5504,8 +5594,13 @@
     "years_simple": "P",
     "yahoo_id": "12403",
     "upid": "4549",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 680951,
     "FBP_Team": "JEP",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1292,
     "debut_date": null,
@@ -5689,8 +5784,13 @@
     "years_simple": "P",
     "yahoo_id": "62057",
     "upid": "6476",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 805373,
     "FBP_Team": "JEP",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1451,
     "debut_date": null,
@@ -5733,8 +5833,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62986",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6581",
     "mlb_id": 806258,
     "FBP_Team": "B2J",
@@ -5758,8 +5863,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62957",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6599",
     "mlb_id": 805811,
     "FBP_Team": "JEP",
@@ -5783,8 +5893,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63023",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6720",
     "mlb_id": 807712,
     "FBP_Team": "JEP",
@@ -5811,8 +5926,13 @@
     "years_simple": "P",
     "yahoo_id": "63598",
     "upid": "6874",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 675375,
     "FBP_Team": "JEP",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1223,
     "debut_date": null,
@@ -5833,8 +5953,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64803",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7540",
     "mlb_id": 808963,
     "FBP_Team": "JEP",
@@ -5858,8 +5983,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64315",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7674",
     "mlb_id": 696146,
     "FBP_Team": "JEP",
@@ -5996,8 +6126,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "12487",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "2450",
     "mlb_id": 691181,
     "FBP_Team": "LFB",
@@ -6131,8 +6266,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60455",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3875",
     "mlb_id": 703186,
     "FBP_Team": "LFB",
@@ -6495,8 +6635,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60296",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3746",
     "mlb_id": 703149,
     "FBP_Team": "LFB",
@@ -6570,8 +6715,13 @@
     "years_simple": "P",
     "yahoo_id": "60538",
     "upid": "3893",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 701327,
     "FBP_Team": "LFB",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1327,
     "debut_date": null,
@@ -6802,8 +6952,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60239",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6075",
     "mlb_id": 683618,
     "FBP_Team": "LFB",
@@ -6827,8 +6982,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63545",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6140",
     "mlb_id": 806957,
     "FBP_Team": "LFB",
@@ -6874,8 +7034,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62980",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6571",
     "mlb_id": 800611,
     "FBP_Team": "LFB",
@@ -6902,8 +7067,13 @@
     "years_simple": "P",
     "yahoo_id": "62991",
     "upid": "6609",
+<<<<<<< HEAD
+    "mlb_id": null,
+    "FBP_Team": "",
+=======
     "mlb_id": 694966,
     "FBP_Team": "LFB",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1055,
     "debut_date": null,
@@ -6949,8 +7119,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62952",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6617",
     "mlb_id": 806252,
     "FBP_Team": "LFB",
@@ -6974,8 +7149,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64987",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6665",
     "mlb_id": 800169,
     "FBP_Team": "LFB",
@@ -7024,8 +7204,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64911",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7177",
     "mlb_id": 815899,
     "FBP_Team": "LFB",
@@ -7049,8 +7234,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64326",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7347",
     "mlb_id": 807284,
     "FBP_Team": "LFB",
@@ -7074,8 +7264,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64318",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7612",
     "mlb_id": 804606,
     "FBP_Team": "LFB",
@@ -7099,8 +7294,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "65056",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7746",
     "mlb_id": 829034,
     "FBP_Team": "LFB",
@@ -7124,8 +7324,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "65050",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7776",
     "mlb_id": 829679,
     "FBP_Team": "LFB",
@@ -7149,8 +7354,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "65645",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7785",
     "mlb_id": 821262,
     "FBP_Team": "LFB",
@@ -8937,8 +9147,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60185",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3935",
     "mlb_id": 691775,
     "FBP_Team": "SAD",
@@ -8962,8 +9177,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60129",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3951",
     "mlb_id": 701398,
     "FBP_Team": "SAD",
@@ -9163,8 +9383,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60092",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "4593",
     "mlb_id": 694212,
     "FBP_Team": "SAD",
@@ -9233,10 +9458,17 @@
     "position": "3B",
     "manager": "not much of a donkey",
     "player_type": "MLB",
+<<<<<<< HEAD
+    "contract_type": "Keeper Contract",
+    "status": "[6] TCR",
+    "years_simple": "TC R",
+    "yahoo_id": "",
+=======
     "contract_type": "",
     "status": "",
     "years_simple": "",
     "yahoo_id": "62984",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6592",
     "mlb_id": 807713,
     "FBP_Team": "SAD",
@@ -9258,8 +9490,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63538",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6593",
     "mlb_id": 800473,
     "FBP_Team": "SAD",
@@ -9283,8 +9520,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63027",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6752",
     "mlb_id": 691799,
     "FBP_Team": "SAD",
@@ -9873,8 +10115,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63576",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3661",
     "mlb_id": 800543,
     "FBP_Team": "RV",
@@ -9898,8 +10145,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "12516",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3779",
     "mlb_id": 696149,
     "FBP_Team": "RV",
@@ -9945,8 +10197,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60128",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3891",
     "mlb_id": 702253,
     "FBP_Team": "RV",
@@ -10020,8 +10277,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60070",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3920",
     "mlb_id": 702566,
     "FBP_Team": "RV",
@@ -10045,8 +10307,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60156",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3934",
     "mlb_id": 702273,
     "FBP_Team": "RV",
@@ -10274,8 +10541,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63633",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6141",
     "mlb_id": 806964,
     "FBP_Team": "RV",
@@ -10421,8 +10693,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63128",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6707",
     "mlb_id": 692225,
     "FBP_Team": "RV",
@@ -10543,8 +10820,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64966",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7213",
     "mlb_id": 815896,
     "FBP_Team": "RV",
@@ -10568,8 +10850,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64329",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7591",
     "mlb_id": 701807,
     "FBP_Team": "RV",
@@ -11516,8 +11803,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60580",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3901",
     "mlb_id": 702284,
     "FBP_Team": "TBB",
@@ -11541,8 +11833,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60119",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3924",
     "mlb_id": 701328,
     "FBP_Team": "TBB",
@@ -11588,8 +11885,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60414",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3984",
     "mlb_id": 800060,
     "FBP_Team": "TBB",
@@ -11704,8 +12006,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62977",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6577",
     "mlb_id": 695076,
     "FBP_Team": "TBB",
@@ -11729,8 +12036,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62997",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6604",
     "mlb_id": 806146,
     "FBP_Team": "TBB",
@@ -11754,8 +12066,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63011",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6702",
     "mlb_id": 800724,
     "FBP_Team": "TBB",
@@ -11804,8 +12121,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "63143",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6853",
     "mlb_id": 813349,
     "FBP_Team": "TBB",
@@ -11829,8 +12151,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62758",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7048",
     "mlb_id": 692216,
     "FBP_Team": "TBB",
@@ -11876,8 +12203,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64424",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7625",
     "mlb_id": 807267,
     "FBP_Team": "TBB",
@@ -35480,8 +35812,13 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "PC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "60091",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "3926",
     "mlb_id": 687637,
     "FBP_Team": "JEP",
@@ -44508,6 +44845,15 @@
     "position": "SP,RP",
     "manager": "not much of a donkey",
     "player_type": "Farm",
+<<<<<<< HEAD
+    "contract_type": "Purchased Contract",
+    "status": "[9] P",
+    "years_simple": "PC",
+    "yahoo_id": "",
+    "upid": "4665",
+    "mlb_id": null,
+    "FBP_Team": "SAD",
+=======
     "contract_type": "",
     "status": "[7] P",
     "years_simple": "P",
@@ -44515,10 +44861,15 @@
     "upid": "4665",
     "mlb_id": 675512,
     "FBP_Team": "",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 2106,
     "debut_date": null,
     "debuted": true,
+<<<<<<< HEAD
+    "mlb_primary_position": "SP",
+    "level": "MLB"
+=======
     "mlb_primary_position": "P",
     "birth_date": "2000-12-03",
     "age": 25,
@@ -44526,6 +44877,7 @@
     "weight": 210,
     "bats": "R",
     "throws": "R"
+>>>>>>> a1643c0 (Huge update to combined_players)
   },
   {
     "name": "Victor Mederos",
@@ -54746,8 +55098,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64967",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6564",
     "mlb_id": 808234,
     "FBP_Team": "SAD",
@@ -61158,8 +61515,13 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "BC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "62935",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "6911",
     "mlb_id": 690997,
     "FBP_Team": "SAD",
@@ -66127,8 +66489,14 @@
     "weight": 220,
     "bats": "L",
     "throws": "L",
+<<<<<<< HEAD
+    "mlb_primary_position": "SP",
+    "fypd": false,
+    "level": "MLB"
+=======
     "mlb_primary_position": "P",
     "fypd": false
+>>>>>>> a1643c0 (Huge update to combined_players)
   },
   {
     "name": "Jose Corniell",
@@ -71039,6 +71407,15 @@
     "position": "SP",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
+<<<<<<< HEAD
+    "contract_type": "Purchased Contract",
+    "status": "[9] P",
+    "years_simple": "PC",
+    "yahoo_id": "",
+    "upid": "7568",
+    "mlb_id": null,
+    "FBP_Team": "RV",
+=======
     "contract_type": "",
     "status": "[7] P",
     "years_simple": "P",
@@ -71046,10 +71423,15 @@
     "upid": "7568",
     "mlb_id": 693645,
     "FBP_Team": "",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "fypd": false,
     "rank": 1113,
     "debut_date": null,
     "debuted": true,
+<<<<<<< HEAD
+    "mlb_primary_position": "SP",
+    "level": "MLB"
+=======
     "mlb_primary_position": "P",
     "birth_date": "2001-02-05",
     "age": 25,
@@ -71057,6 +71439,7 @@
     "weight": 225,
     "bats": "R",
     "throws": "R"
+>>>>>>> a1643c0 (Huge update to combined_players)
   },
   {
     "name": "Alirio Ferrebus",
@@ -71930,8 +72313,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64916",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7622",
     "mlb_id": 823787,
     "FBP_Team": "B2J",
@@ -72797,8 +73185,13 @@
     "player_type": "Farm",
     "contract_type": "Development Contract",
     "status": "[7] P",
+<<<<<<< HEAD
+    "years_simple": "DC",
+    "yahoo_id": "",
+=======
     "years_simple": "P",
     "yahoo_id": "64370",
+>>>>>>> a1643c0 (Huge update to combined_players)
     "upid": "7675",
     "mlb_id": 815352,
     "FBP_Team": "SAD",
