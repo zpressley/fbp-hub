@@ -1296,6 +1296,15 @@ body.draft-preview-page .pick-number {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Match header corners to container border-radius */
+.prospect-table thead th:first-child {
+    border-top-left-radius: var(--radius-lg);
+}
+
+.prospect-table thead th:last-child {
+    border-top-right-radius: var(--radius-lg);
+}
+
 .prospect-table th {
     font-family: var(--font-body);
     font-size: var(--text-base);

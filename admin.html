@@ -13,6 +13,8 @@
     <meta name="theme-color" content="#EF3E42">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin-enhanced.css">
+    <link rel="stylesheet" href="css/admin-query.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -25,7 +27,20 @@
                 <h1>FBP HUB 3.0</h1>
                 <p class="season-year">Admin Portal</p>
             </div>
-            <div class="user-menu" id="userMenu"></div>
+            <div class="user-menu" id="userMenu">
+                <!-- Guest state -->
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
         </div>
                 <div class="nav-menu" id="navMenu">
             <a href="index.html" class="nav-link">
@@ -121,12 +136,45 @@
                     <i class="fas fa-clipboard-list"></i>
                     <span>Recent Logs</span>
                 </button>
+                <button class="admin-tab" data-tab="query">
+                    <i class="fas fa-paste"></i>
+                    <span>Paste Query</span>
+                </button>
             </div>
 
             <!-- Tab: Player Search -->
             <div class="admin-tab-content active" id="search-tab">
                 <div class="search-section">
-                    <h3>Player Search & Quick Actions</h3>
+                    <div class="search-header">
+                        <h3>Player Search & Management</h3>
+                        <button class="btn-primary" onclick="showAddPlayerModal()">
+                            <i class="fas fa-plus"></i> Add New Player
+                        </button>
+                    </div>
+                    
+                    <!-- Bulk Action Toolbar -->
+                    <div class="bulk-action-toolbar" id="bulkActionToolbar" style="display: none;">
+                        <div class="bulk-selection-info">
+                            <span id="bulkSelectedCount">0 selected</span>
+                        </div>
+                        <div class="bulk-action-buttons">
+                            <button class="btn-sm btn-secondary" onclick="selectAllFiltered()">
+                                <i class="fas fa-check-square"></i> Select All
+                            </button>
+                            <button class="btn-sm btn-secondary" onclick="clearBulkSelection()">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                            <button class="btn-sm btn-primary" id="bulkGraduateBtn" onclick="showBulkGraduationModal()" disabled>
+                                <i class="fas fa-graduation-cap"></i> Graduate (0)
+                            </button>
+                            <button class="btn-sm btn-warning" id="bulkContractBtn" onclick="showBulkContractModal()" disabled>
+                                <i class="fas fa-file-contract"></i> Update Contracts (0)
+                            </button>
+                            <button class="btn-sm btn-danger" id="bulkReleaseBtn" onclick="showBulkReleaseModal()" disabled>
+                                <i class="fas fa-user-slash"></i> Release (0)
+                            </button>
+                        </div>
+                    </div>
                     
                     <div class="search-controls">
                         <div class="search-bar-admin">
@@ -447,6 +495,116 @@
                     <div class="activity-log" id="activityLog"></div>
                 </div>
             </div>
+
+            <!-- Tab: Paste Query -->
+            <div class="admin-tab-content" id="query-tab">
+                <div class="query-section">
+                    <div class="search-header">
+                        <h3>Paste Query Tool</h3>
+                        <p class="section-subtitle">Paste a list of player names to look them up in bulk</p>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="query-input-area">
+                        <div class="query-input-header">
+                            <label for="queryTextarea">Player Names (one per line)</label>
+                            <div class="query-input-actions">
+                                <button class="btn-sm btn-secondary" onclick="clearQueryInput()">
+                                    <i class="fas fa-eraser"></i> Clear
+                                </button>
+                                <button class="btn-sm btn-secondary" onclick="pasteFromClipboard()">
+                                    <i class="fas fa-paste"></i> Paste
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="queryTextarea" 
+                                  class="form-textarea query-textarea" 
+                                  placeholder="Paste player names here, one per line..."
+                                  rows="8"></textarea>
+                        <div class="query-input-footer">
+                            <span id="queryLineCount" class="query-line-count">0 names</span>
+                            <div class="query-match-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="queryFuzzyMatch" checked>
+                                    <span>Fuzzy matching</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="queryShowUnmatched" checked>
+                                    <span>Show unmatched</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn-primary query-search-btn" onclick="executeQuery()">
+                            <i class="fas fa-search"></i> Search Players
+                        </button>
+                    </div>
+
+                    <!-- Results Area -->
+                    <div id="queryResults" class="query-results" style="display: none;">
+                        <div class="query-summary" id="querySummary"></div>
+
+                        <!-- Bulk Actions for Query Results -->
+                        <div class="query-bulk-toolbar" id="queryBulkToolbar" style="display: none;">
+                            <div class="bulk-selection-info">
+                                <span id="queryBulkCount">0 selected</span>
+                            </div>
+                            <div class="bulk-action-buttons">
+                                <button class="btn-sm btn-secondary" onclick="selectAllQueryResults()">
+                                    <i class="fas fa-check-square"></i> Select All Matched
+                                </button>
+                                <button class="btn-sm btn-secondary" onclick="clearQuerySelection()">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                                <button class="btn-sm btn-primary" id="queryBulkGraduateBtn" onclick="showBulkGraduationModal()" disabled>
+                                    <i class="fas fa-graduation-cap"></i> Graduate
+                                </button>
+                                <button class="btn-sm btn-warning" id="queryBulkContractBtn" onclick="showBulkContractModal()" disabled>
+                                    <i class="fas fa-file-contract"></i> Contracts
+                                </button>
+                                <button class="btn-sm btn-info" id="queryBulkOwnerBtn" onclick="showBulkOwnerModal()" disabled>
+                                    <i class="fas fa-exchange-alt"></i> Change Owner
+                                </button>
+                                <button class="btn-sm btn-danger" id="queryBulkReleaseBtn" onclick="showBulkReleaseModal()" disabled>
+                                    <i class="fas fa-user-slash"></i> Release
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Table -->
+                        <div class="query-table-container">
+                            <table class="query-results-table" id="queryResultsTable">
+                                <thead>
+                                    <tr>
+                                        <th class="col-checkbox"><input type="checkbox" id="querySelectAll" onchange="toggleQuerySelectAll(this)"></th>
+                                        <th class="col-status">Status</th>
+                                        <th class="col-input">Input Name</th>
+                                        <th class="col-name">Matched Player</th>
+                                        <th class="col-upid">UPID</th>
+                                        <th class="col-pos">Pos</th>
+                                        <th class="col-team">Team</th>
+                                        <th class="col-age">Age</th>
+                                        <th class="col-owner">Owner</th>
+                                        <th class="col-type">Type</th>
+                                        <th class="col-contract">Contract</th>
+                                        <th class="col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="queryResultsBody"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Export Options -->
+                        <div class="query-export-bar">
+                            <button class="btn-sm btn-secondary" onclick="exportQueryCSV()">
+                                <i class="fas fa-file-csv"></i> Export CSV
+                            </button>
+                            <button class="btn-sm btn-secondary" onclick="copyQueryToClipboard()">
+                                <i class="fas fa-copy"></i> Copy Table
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -552,6 +710,272 @@
         </div>
     </div>
 
+    <!-- Add Player Modal -->
+    <div class="confirmation-modal" id="addPlayerModal">
+        <div class="confirmation-content add-player-content">
+            <div class="confirmation-header">
+                <h2><i class="fas fa-plus-circle"></i> Add New Player</h2>
+                <p>Enter player information and enrich from APIs</p>
+            </div>
+            
+            <form id="addPlayerForm" onsubmit="return false;">
+                <!-- Basic Info Section -->
+                <div class="add-player-section">
+                    <h4><i class="fas fa-user"></i> Basic Information</h4>
+                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Player Name (Required)</label>
+                            <input type="text" id="addPlayerName" class="form-input" 
+                                   placeholder="e.g., Bobby Witt Jr." oninput="checkAddPlayerDuplicates()" required>
+                            <small class="form-hint" id="addPlayerUpidSuggestion">Next available: ...</small>
+                        </div>
+                        
+                        <div id="addPlayerDuplicates" class="full-width" style="display: none;"></div>
+                        
+                        <div class="form-group">
+                            <label>MLB Team</label>
+                            <select id="addPlayerTeam" class="form-input"></select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Position</label>
+                            <select id="addPlayerPosition" class="form-input" required></select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="addPlayerAge" class="form-input" min="16" max="50">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Level</label>
+                            <select id="addPlayerLevel" class="form-input"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="enrich-action">
+                        <button type="button" class="btn-secondary" onclick="enrichPlayerData()">
+                            <i class="fas fa-magic"></i> Auto-Fill from APIs
+                        </button>
+                        <span class="enrich-hint">Searches MLB Stats API</span>
+                    </div>
+                    
+                    <div id="addPlayerEnrichment" class="enrichment-container" style="display: none;"></div>
+                </div>
+                
+                <!-- Ownership Section -->
+                <div class="add-player-section">
+                    <h4><i class="fas fa-handshake"></i> FBP Ownership</h4>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>FBP Owner</label>
+                            <select id="addPlayerOwner" class="form-input"></select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Player Type</label>
+                            <select id="addPlayerType" class="form-input">
+                                <option value="Farm">Farm (Prospect)</option>
+                                <option value="MLB">MLB (Keeper)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Contract Type</label>
+                            <select id="addPlayerContract" class="form-input"></select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Years/Status</label>
+                            <select id="addPlayerYears" class="form-input"></select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Fields Section -->
+                <div class="add-player-section">
+                    <h4><i class="fas fa-database"></i> Advanced Fields</h4>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>MLB ID</label>
+                            <input type="text" id="addPlayerMLBId" class="form-input" placeholder="Auto-filled">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Yahoo ID</label>
+                            <input type="text" id="addPlayerYahooId" class="form-input" placeholder="Auto-filled">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Birth Date</label>
+                            <input type="date" id="addPlayerBirthDate" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>MLB Debut</label>
+                            <input type="date" id="addPlayerDebut" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Bats</label>
+                            <select id="addPlayerBats" class="form-input">
+                                <option value="">N/A</option>
+                                <option value="R">R</option>
+                                <option value="L">L</option>
+                                <option value="S">S (Switch)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Throws</label>
+                            <select id="addPlayerThrows" class="form-input">
+                                <option value="">N/A</option>
+                                <option value="R">R</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group form-group-checkbox">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="addPlayerFYPD">
+                                <span>FYPD Eligible</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Alternate Names (one per line)</label>
+                        <textarea id="addPlayerAltNames" class="form-textarea" 
+                                  placeholder="e.g.,&#10;Bobby Witt&#10;Bobby Witt Junior"></textarea>
+                        <small class="form-hint">Used for fuzzy matching in searches</small>
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelAddPlayer()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn-primary" onclick="submitAddPlayer()">
+                        <i class="fas fa-plus"></i> Add Player
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bulk Graduation Modal -->
+    <div class="confirmation-modal" id="bulkGraduationModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2><i class="fas fa-graduation-cap"></i> Bulk Graduate Prospects</h2>
+            </div>
+            
+            <div id="bulkGraduationList"></div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="document.getElementById('bulkGraduationModal').classList.remove('active')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" id="confirmBulkGraduationBtn" onclick="confirmBulkGraduation()">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Contract Update Modal -->
+    <div class="confirmation-modal" id="bulkContractModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2><i class="fas fa-file-contract"></i> Bulk Update Contracts</h2>
+            </div>
+            
+            <div id="bulkContractList"></div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="document.getElementById('bulkContractModal').classList.remove('active')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" id="confirmBulkContractBtn" onclick="confirmBulkContract()">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Release Modal -->
+    <div class="confirmation-modal" id="bulkReleaseModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header delete-header">
+                <h2><i class="fas fa-user-slash"></i> Bulk Release Players</h2>
+            </div>
+            
+            <div id="bulkReleaseList"></div>
+            
+            <div class="form-group" style="margin: var(--space-lg) 0;">
+                <label>Reason (Required)</label>
+                <input type="text" id="bulkReleaseReason" class="form-input" placeholder="e.g., PAD drops, Contract expirations" required>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="document.getElementById('bulkReleaseModal').classList.remove('active')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-danger" id="confirmBulkReleaseBtn" onclick="confirmBulkRelease()">
+                    <i class="fas fa-check"></i> Confirm Release
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Change Owner Modal -->
+    <div class="confirmation-modal" id="bulkOwnerModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2><i class="fas fa-exchange-alt"></i> Bulk Change Ownership</h2>
+            </div>
+            
+            <div id="bulkOwnerList"></div>
+            
+            <div class="form-group" style="margin: var(--space-lg) 0;">
+                <label>New Owner</label>
+                <select id="bulkOwnerSelect" class="form-input">
+                    <option value="">-- Select Owner --</option>
+                    <option value="">Unowned (FA)</option>
+                    <option value="WIZ">WIZ - Whiz Kids</option>
+                    <option value="B2J">B2J - Btwn2Jackies</option>
+                    <option value="CFL">CFL - Country Fried Lamb</option>
+                    <option value="HAM">HAM - Hammers</option>
+                    <option value="JEP">JEP - Jepordizers!</option>
+                    <option value="LFB">LFB - La Flama Blanca</option>
+                    <option value="DMN">DMN - The Damn Yankees</option>
+                    <option value="SAD">SAD - not much of a donkey</option>
+                    <option value="DRO">DRO - Andromedans</option>
+                    <option value="RV">RV - Rick Vaughn</option>
+                    <option value="TBB">TBB - The Bluke Blokes</option>
+                    <option value="WAR">WAR - Weekend Warriors</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin: var(--space-lg) 0;">
+                <label>Reason (Required)</label>
+                <input type="text" id="bulkOwnerReason" class="form-input" placeholder="e.g., Trade, Draft pick, Waiver claim" required>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="document.getElementById('bulkOwnerModal').classList.remove('active')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" id="confirmBulkOwnerBtn" onclick="confirmBulkOwnerChange()">
+                    <i class="fas fa-check"></i> Confirm Change
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
@@ -575,5 +999,7 @@
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/admin-enhanced.js"></script>
+    <script src="js/admin-query.js"></script>
 </body>
 </html>

@@ -21,6 +21,9 @@ const AUTH_CONFIG = {
     sessionDuration: 7 * 24 * 60 * 60 * 1000
 };
 
+// Dev mode detection
+const IS_DEV_MODE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
 // Manager mapping (Discord ID -> Team Abbreviation)
 const MANAGER_MAPPING = {
     '347571660230230017': 'HAM',
@@ -373,6 +376,76 @@ const AuthUI = {
 
 // Create global auth manager instance
 const authManager = new AuthManager();
+
+/**
+ * Dev mode utilities - only available on localhost
+ * Usage: devLogin('WAR') to login as Weekend Warriors
+ *        devLogin('WIZ', true) to login as admin (Whiz Kids)
+ */
+const DevAuth = {
+    /**
+     * Simulate login as a specific team (localhost only)
+     * @param {string} teamAbbr - Team abbreviation (e.g., 'WAR', 'WIZ')
+     */
+    login(teamAbbr) {
+        if (!IS_DEV_MODE) {
+            console.warn('DevAuth.login() only works on localhost');
+            return;
+        }
+        
+        // Find Discord ID for this team
+        const discordId = Object.entries(MANAGER_MAPPING).find(([id, abbr]) => abbr === teamAbbr)?.[0];
+        
+        if (!discordId) {
+            console.error(`Unknown team: ${teamAbbr}. Valid teams: ${Object.values(MANAGER_MAPPING).join(', ')}`);
+            return;
+        }
+        
+        const mockSession = {
+            user: {
+                id: discordId,
+                username: `dev_${teamAbbr.toLowerCase()}`,
+                discriminator: '0',
+                avatar: null
+            },
+            token: 'dev_token_' + Date.now(),
+            refreshToken: null,
+            expiresAt: Date.now() + AUTH_CONFIG.sessionDuration
+        };
+        
+        localStorage.setItem('fbp_session', JSON.stringify(mockSession));
+        console.log(`✅ Dev login as ${teamAbbr} (${TEAM_NAMES[teamAbbr]})`);
+        console.log(`   Admin: ${ADMIN_IDS.includes(discordId) ? 'Yes' : 'No'}`);
+        window.location.reload();
+    },
+    
+    /**
+     * List available teams for dev login
+     */
+    listTeams() {
+        console.log('Available teams for dev login:');
+        Object.entries(MANAGER_MAPPING).forEach(([discordId, abbr]) => {
+            const isAdmin = ADMIN_IDS.includes(discordId);
+            console.log(`  DevAuth.login('${abbr}') - ${TEAM_NAMES[abbr]}${isAdmin ? ' [ADMIN]' : ''}`);
+        });
+    },
+    
+    /**
+     * Logout dev session
+     */
+    logout() {
+        localStorage.removeItem('fbp_session');
+        localStorage.removeItem('oauth_state');
+        console.log('✅ Dev logout complete');
+        window.location.reload();
+    }
+};
+
+// Expose dev tools in console on localhost
+if (IS_DEV_MODE) {
+    window.DevAuth = DevAuth;
+    console.log('🔧 Dev mode enabled. Use DevAuth.listTeams() to see available logins.');
+}
 
 // Add logout functionality to navigation
 // Enhance the existing user menu on pages that have one,

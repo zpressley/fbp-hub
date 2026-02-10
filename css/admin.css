@@ -21,41 +21,46 @@
     margin-bottom: var(--space-lg);
 }
 
-/* Admin Stats Grid */
+/* Admin Stats Grid - Compact Design */
 .admin-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-lg);
-    margin-bottom: var(--space-2xl);
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
 }
 
 .admin-stat-card {
     background-color: var(--bg-charcoal);
-    border: var(--border-width-thick) solid var(--primary-red);
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-sm);
 }
 
 .admin-stat-card .stat-icon {
-    width: 56px;
-    height: 56px;
+    width: 28px;
+    height: 28px;
     background-color: var(--primary-red);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .admin-stat-card .stat-icon i {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xs);
     color: white;
 }
 
 .admin-stat-card .stat-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
     flex: 1;
+    min-width: 0;
 }
 
 .admin-stat-card .stat-label {
@@ -63,14 +68,14 @@
     font-size: var(--text-xs);
     color: var(--text-gray);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     font-weight: 700;
-    margin-bottom: var(--space-xs);
+    white-space: nowrap;
 }
 
 .admin-stat-card .stat-value {
     font-family: var(--font-mono);
-    font-size: var(--text-3xl);
+    font-size: var(--text-lg);
     font-weight: 700;
     color: var(--accent-yellow);
 }
@@ -640,6 +645,15 @@
     background-color: #F57C00;
 }
 
+.btn-info {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #1976D2;
+}
+
 /* WizBucks Admin */
 .wizbucks-admin-section {
     background-color: var(--bg-charcoal);
@@ -1084,8 +1098,40 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 767px) {
+    /* Compact square tiles on mobile */
     .admin-stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-xs);
+    }
+    
+    .admin-stat-card {
+        flex-direction: column;
+        padding: var(--space-sm);
+        text-align: center;
+        gap: var(--space-xs);
+    }
+    
+    .admin-stat-card .stat-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .admin-stat-card .stat-icon i {
+        font-size: var(--text-sm);
+    }
+    
+    .admin-stat-card .stat-content {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .admin-stat-card .stat-label {
+        font-size: 9px;
+        letter-spacing: 0;
+    }
+    
+    .admin-stat-card .stat-value {
+        font-size: var(--text-base);
     }
     
     .admin-tab span {

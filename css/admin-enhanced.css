@@ -1,0 +1,375 @@
+/* ============================================
+   Enhanced Admin - Add Player & Bulk Operations
+   ============================================ */
+
+/* Search Header with Add Button */
+.search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+}
+
+.search-header h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--text-white);
+    font-size: var(--text-xl);
+    letter-spacing: 1px;
+}
+
+/* Bulk Action Toolbar */
+.bulk-action-toolbar {
+    background-color: rgba(66, 165, 245, 0.1);
+    border: 2px solid rgba(66, 165, 245, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.bulk-selection-info {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: #64B5F6;
+    font-size: var(--text-sm);
+}
+
+.bulk-action-buttons {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* Player Result Card with Checkbox */
+.player-result-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.player-result-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-sm);
+}
+
+.player-result-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-red);
+}
+
+.player-result-info {
+    flex: 1;
+    cursor: pointer;
+}
+
+/* Add Player Modal */
+.add-player-content {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.add-player-section {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.add-player-section h4 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    margin-bottom: var(--space-lg);
+    font-size: var(--text-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.add-player-section h4 i {
+    color: var(--primary-red);
+}
+
+.form-hint {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+/* Enrich Action */
+.enrich-action {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.enrich-hint {
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+/* Enrichment Container */
+.enrichment-container {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: 2px solid;
+}
+
+.enrichment-loading {
+    border-color: #2196F3;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #64B5F6;
+    text-align: center;
+    padding: var(--space-xl);
+}
+
+.enrichment-loading i {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+    display: block;
+}
+
+.enrichment-success {
+    border-color: var(--success);
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.enrichment-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--success);
+    margin-bottom: var(--space-md);
+    font-weight: 700;
+}
+
+.enrichment-header i {
+    font-size: var(--text-xl);
+}
+
+.enrichment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.enrichment-field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+}
+
+.enrichment-field i {
+    color: var(--success);
+    min-width: 20px;
+}
+
+.enrichment-label {
+    color: var(--text-gray);
+    min-width: 80px;
+}
+
+.enrichment-value {
+    color: var(--text-white);
+    font-weight: 600;
+}
+
+.enrichment-tip {
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    font-style: italic;
+    text-align: center;
+}
+
+.enrichment-empty {
+    border-color: #FF9800;
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #FFA726;
+    text-align: center;
+    padding: var(--space-lg);
+}
+
+.enrichment-empty i {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+    display: block;
+}
+
+.enrichment-error {
+    border-color: var(--danger);
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #EF5350;
+    text-align: center;
+    padding: var(--space-lg);
+}
+
+.enrichment-error i {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+    display: block;
+}
+
+/* Duplicate Warning */
+.duplicate-warning {
+    background-color: rgba(255, 152, 0, 0.1);
+    border: 2px solid #FF9800;
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-top: var(--space-md);
+}
+
+.duplicate-warning i {
+    font-size: var(--text-xl);
+    color: #FF9800;
+    margin-right: var(--space-sm);
+}
+
+.duplicate-warning strong {
+    display: block;
+    color: #FFA726;
+    margin-bottom: var(--space-md);
+    font-size: var(--text-base);
+}
+
+.duplicate-entry {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    margin: var(--space-xs) 0;
+    font-size: var(--text-sm);
+    color: var(--text-white);
+}
+
+.duplicate-warning p {
+    margin-top: var(--space-md);
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+}
+
+/* Bulk Preview Lists */
+.bulk-preview-list {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.bulk-preview-item {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-sm);
+}
+
+.bulk-preview-item:last-child {
+    border-bottom: none;
+}
+
+.bulk-preview-item strong {
+    color: var(--text-white);
+    flex: 1;
+}
+
+.bulk-preview-item span {
+    color: var(--text-gray);
+    margin-left: var(--space-sm);
+}
+
+.bulk-graduation-options,
+.bulk-contract-options {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+}
+
+.bulk-graduation-options label,
+.bulk-contract-options label {
+    display: block;
+    color: var(--text-white);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.bulk-release-warning {
+    background-color: rgba(244, 67, 54, 0.1);
+    border: 2px solid var(--danger);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.bulk-release-warning i {
+    font-size: var(--text-2xl);
+    color: var(--danger);
+    display: block;
+    margin-bottom: var(--space-sm);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .search-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-md);
+    }
+    
+    .bulk-action-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .bulk-action-buttons {
+        flex-direction: column;
+    }
+    
+    .bulk-action-buttons button {
+        width: 100%;
+    }
+    
+    .player-result-card {
+        grid-template-columns: auto 1fr;
+    }
+    
+    .player-result-actions {
+        grid-column: 2;
+        margin-top: var(--space-sm);
+    }
+    
+    .enrichment-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .add-player-section .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
