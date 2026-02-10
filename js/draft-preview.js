@@ -41,6 +41,9 @@ async function initDraftPreview() {
     
     // Update draft status
     updateDraftStatus();
+
+    // Setup View Picks modal/button
+    setupPicksModal();
     
     // Setup tabs
     setupTabs();
@@ -867,6 +870,143 @@ function formatDate(dateStr) {
         month: 'short', 
         day: 'numeric'
     });
+}
+
+/**
+ * Get logged-in user's team abbreviation (if available)
+ */
+function getUserTeamAbbreviation() {
+    try {
+        if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
+            const team = authManager.getTeam();
+            return team && team.abbreviation ? team.abbreviation : null;
+        }
+    } catch (e) {
+        console.log('Auth manager not available for draft preview');
+    }
+    return null;
+}
+
+/**
+ * Load keeper (2025) draft picks for a team from draft_picks.json
+ */
+async function loadKeeperPicksForTeam(teamAbbr) {
+    try {
+        const resp = await fetch('data/draft_picks.json', { cache: 'no-store' });
+        if (!resp.ok) return [];
+        const data = await resp.json();
+        const picks = Array.isArray(data.picks) ? data.picks : [];
+        return picks
+            .filter(p => p.currentOwner === teamAbbr)
+            .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
+    } catch (e) {
+        console.log('No draft_picks.json available for keeper picks');
+        return [];
+    }
+}
+
+/**
+ * Load prospect draft picks for a team from draft_order_2026.json (if present).
+ * This is a simple preview of PAD-based FYPD/DC picks.
+ */
+async function loadProspectPicksForTeam(teamAbbr) {
+    try {
+        const resp = await fetch('data/draft_order_2026.json', { cache: 'no-store' });
+        if (!resp.ok) return [];
+        const data = await resp.json();
+        if (!Array.isArray(data)) return [];
+        return data
+            .filter(p => p.team === teamAbbr)
+            .map(p => ({ round: p.round, pick: p.pick, round_type: p.round_type || 'prospect' }))
+            .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
+    } catch (e) {
+        console.log('No draft_order_2026.json available for prospect picks');
+        return [];
+    }
+}
+
+/**
+ * Open the My Picks modal and render the current user's picks.
+ */
+async function openPicksModal() {
+    const modal = document.getElementById('picksModal');
+    const body = document.getElementById('picksModalBody');
+    if (!modal || !body) return;
+
+    body.innerHTML = '<p>Loading your picks...</p>';
+    modal.classList.add('active');
+
+    const teamAbbr = getUserTeamAbbreviation();
+    if (!teamAbbr) {
+        body.innerHTML = `
+            <p style="margin-bottom: 1rem;">Please log in to view your draft picks.</p>
+            <a href="login.html" class="btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Login with Discord
+            </a>
+        `;
+        return;
+    }
+
+    const [keeperPicks, prospectPicks] = await Promise.all([
+        loadKeeperPicksForTeam(teamAbbr),
+        loadProspectPicksForTeam(teamAbbr),
+    ]);
+
+    let html = `<p class="picks-count" style="margin-bottom: 1rem;">Team: <strong>${teamAbbr}</strong></p>`;
+
+    if (keeperPicks.length) {
+        html += '<h4 style="margin-top:0;">Keeper Draft Picks (2025)</h4>';
+        html += '<ul class="simple-list">';
+        keeperPicks.forEach(p => {
+            html += `<li>Round ${p.round}, Pick ${p.pick}</li>`;
+        });
+        html += '</ul>';
+    }
+
+    if (prospectPicks.length) {
+        html += '<h4 style="margin-top:1.5rem;">Prospect Draft Picks (2026)</h4>';
+        html += '<ul class="simple-list">';
+        prospectPicks.forEach(p => {
+            const label = p.round_type === 'fypd' ? 'FYPD' : p.round_type.toUpperCase();
+            html += `<li>Round ${p.round}, Pick ${p.pick} <span style="color: var(--accent-yellow); font-family: var(--font-mono); font-size: 0.8rem;">(${label})</span></li>`;
+        });
+        html += '</ul>';
+    }
+
+    if (!keeperPicks.length && !prospectPicks.length) {
+        html += '<p>No draft picks found for your team yet.</p>';
+    }
+
+    body.innerHTML = html;
+}
+
+/**
+ * Setup View Picks button + modal close handlers.
+ */
+function setupPicksModal() {
+    const btn = document.getElementById('viewPicksButton');
+    const modal = document.getElementById('picksModal');
+    const closeBtn = document.getElementById('closePicksModal');
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            openPicksModal();
+        });
+    }
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (evt) => {
+            if (evt.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
 }
 
 // Expose globally

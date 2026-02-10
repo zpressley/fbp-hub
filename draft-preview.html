@@ -81,6 +81,10 @@
                     <i class="fas fa-calendar"></i>
                     <span id="statusText">PRE-DRAFT</span>
                 </div>
+                <button class="view-picks-btn" id="viewPicksButton" type="button">
+                    <i class="fas fa-list-ol"></i>
+                    <span>View Picks</span>
+                </button>
             </div>
             <div class="draft-round-info" id="draftInfo">
                 <!-- Populated by JS -->
@@ -227,6 +231,21 @@
             </div>
         </div>
     </main>
+
+    <!-- My Picks Modal -->
+    <div class="modal" id="picksModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>My Draft Picks</h3>
+                <button class="modal-close" id="closePicksModal" type="button" aria-label="Close picks window">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="picksModalBody">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">

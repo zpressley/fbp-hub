@@ -90,6 +90,32 @@ body.draft-preview-page .pick-number {
     animation: pulse 2s ease-in-out infinite;
 }
 
+/* View Picks button next to status badge */
+.view-picks-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background-color: rgba(255, 182, 18, 0.15);
+    border: 2px solid var(--accent-yellow);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.view-picks-btn i {
+    animation: none;
+}
+
+.view-picks-btn:hover {
+    background-color: rgba(255, 182, 18, 0.3);
+    transform: translateY(-1px);
+}
+
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }

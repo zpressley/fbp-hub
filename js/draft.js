@@ -7,7 +7,7 @@
 // MANUAL TOGGLE: Set to true when draft is live
 // When false, redirects all visitors to draft-preview.html
 // ============================================
-const ACTIVE_DRAFT = false;
+const ACTIVE_DRAFT = true;
 
 let DRAFT_STATE = {
     draftData: null,
