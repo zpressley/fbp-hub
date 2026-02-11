@@ -1609,6 +1609,25 @@ body.draft-preview-page .pick-number {
         text-align: center;
     }
     
+    /* Draft Preview mobile: reorganize header */
+    body.draft-preview-page .draft-title-section {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-sm);
+    }
+    
+    body.draft-preview-page .draft-title-section h2 {
+        width: 100%;
+        margin-bottom: var(--space-xs);
+    }
+    
+    /* PRE-DRAFT badge and View Picks on same row */
+    body.draft-preview-page .draft-status-badge,
+    body.draft-preview-page .view-picks-btn {
+        padding: var(--space-xs) var(--space-md);
+        font-size: var(--text-xs);
+    }
+    
     .clock-banner {
         flex-direction: column;
         text-align: center;
