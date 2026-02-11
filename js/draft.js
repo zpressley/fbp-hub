@@ -516,11 +516,6 @@ function renderMyPicks() {
 }
 
 /**
- * Setup view toggle
- */
-function setupViewToggle() {
-
-/**
  * Setup main view toggle (Pool / Picks / Grid / Order)
  */
 function setupViewToggle() {
