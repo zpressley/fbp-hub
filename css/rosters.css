@@ -382,3 +382,86 @@
         grid-template-columns: 1fr 1fr;
     }
 }
+
+/* ============================================
+   Prospect Contract Type Layout
+   ============================================ */
+
+/* Single column layout for prospect contract grouping */
+.prospect-contracts-layout {
+    width: 100%;
+    grid-column: 1 / -1;  /* Span full width when inside position-groups grid */
+}
+
+.contract-group {
+    margin-bottom: var(--space-lg);
+}
+
+.contract-group .position-group-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.contract-group .group-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    opacity: 0.8;
+}
+
+/* Top 100 Rank Styling */
+.prospect-rank-cell {
+    width: 70px;
+    text-align: center;
+}
+
+.top100-rank {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent-yellow), #d4a00a);
+    color: #000;
+    font-family: var(--font-mono);
+    font-weight: 900;
+    font-size: var(--text-sm);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    min-width: 40px;
+}
+
+.no-rank {
+    color: var(--text-gray);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+}
+
+/* Highlight rows with Top 100 prospects */
+.roster-depth-table tr.has-top100 {
+    background-color: rgba(255, 182, 18, 0.08);
+}
+
+.roster-depth-table tr.has-top100:hover {
+    background-color: rgba(255, 182, 18, 0.15);
+}
+
+/* Prospect contract table adjustments */
+.prospect-contract-table th:first-child,
+.prospect-contract-table td:first-child {
+    text-align: center;
+}
+
+/* Mobile: stack contract groups vertically, full width */
+@media (max-width: 767px) {
+    .prospect-contracts-layout {
+        width: 100%;
+    }
+    
+    .prospect-rank-cell {
+        width: 55px;
+    }
+    
+    .top100-rank {
+        font-size: var(--text-xs);
+        padding: 3px 6px;
+        min-width: 32px;
+    }
+}

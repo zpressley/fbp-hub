@@ -6,12 +6,16 @@
 // Page state
 let currentRosterType = 'keepers';
 let selectedTeam = '';
+let top100ByUpid = {};  // Lookup for Top 100 rank by UPID
 
 /**
  * Initialize rosters page
  */
-function initRostersPage() {
+async function initRostersPage() {
     console.log('📋 Initializing rosters page...');
+    
+    // Load Top 100 data
+    await loadTop100Data();
     
     // Check URL for roster type + team
     const urlParams = new URLSearchParams(window.location.search);
@@ -37,6 +41,26 @@ function initRostersPage() {
     
     // Display rosters
     displayRosters();
+}
+
+/**
+ * Load Top 100 prospects data
+ */
+async function loadTop100Data() {
+    try {
+        const response = await fetch('data/top100_prospects.json');
+        if (response.ok) {
+            const data = await response.json();
+            data.forEach(p => {
+                if (p.upid) {
+                    top100ByUpid[String(p.upid)] = p.rank;
+                }
+            });
+            console.log(`✅ Loaded ${data.length} Top 100 prospects`);
+        }
+    } catch (e) {
+        console.log('No top100_prospects.json available');
+    }
 }
 
 /**
@@ -192,72 +216,79 @@ function createTeamRosterCard(teamAbbr, detailed = false) {
         `;
     }
     
-    // Group by position into batters vs pitchers
-    const { batters, pitchers } = groupPlayersByPosition(rosterPlayers);
+    let groupsHTML;
     
-    // Create batters column HTML
-    const batterGroupsHTML = Object.entries(batters)
-        .filter(([, players]) => players.length > 0)
-        .map(([groupName, players]) => {
-            const playersHTML = players.map(player => createDepthTableRow(player)).join('');
-            
-            return `
-                <div class="position-group">
-                    <div class="position-group-header">${groupName}</div>
-                    <table class="roster-depth-table">
-                        <thead>
-                            <tr>
-                                <th>STATUS</th>
-                                <th>PLAYER</th>
-                                <th>TEAM</th>
-                                <th>POS</th>
-                                <th>AGE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${playersHTML}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }).join('');
-    
-    // Create pitchers column HTML
-    const pitcherGroupsHTML = Object.entries(pitchers)
-        .filter(([, players]) => players.length > 0)
-        .map(([groupName, players]) => {
-            const playersHTML = players.map(player => createDepthTableRow(player)).join('');
-            
-            return `
-                <div class="position-group">
-                    <div class="position-group-header">${groupName}</div>
-                    <table class="roster-depth-table">
-                        <thead>
-                            <tr>
-                                <th>STATUS</th>
-                                <th>PLAYER</th>
-                                <th>TEAM</th>
-                                <th>POS</th>
-                                <th>AGE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${playersHTML}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }).join('');
-    
-    // Create position groups HTML with 2-column layout
-    const groupsHTML = `
-        <div class="position-groups-column">
-            ${batterGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No batters</div>'}
-        </div>
-        <div class="position-groups-column">
-            ${pitcherGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
-        </div>
-    `;
+    if (currentRosterType === 'prospects') {
+        // Group prospects by contract type (BC, PC, DC)
+        groupsHTML = createProspectContractGroupsHTML(rosterPlayers);
+    } else {
+        // Group keepers by position into batters vs pitchers
+        const { batters, pitchers } = groupPlayersByPosition(rosterPlayers);
+        
+        // Create batters column HTML
+        const batterGroupsHTML = Object.entries(batters)
+            .filter(([, players]) => players.length > 0)
+            .map(([groupName, players]) => {
+                const playersHTML = players.map(player => createDepthTableRow(player)).join('');
+                
+                return `
+                    <div class="position-group">
+                        <div class="position-group-header">${groupName}</div>
+                        <table class="roster-depth-table">
+                            <thead>
+                                <tr>
+                                    <th>STATUS</th>
+                                    <th>PLAYER</th>
+                                    <th>TEAM</th>
+                                    <th>POS</th>
+                                    <th>AGE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${playersHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+        
+        // Create pitchers column HTML
+        const pitcherGroupsHTML = Object.entries(pitchers)
+            .filter(([, players]) => players.length > 0)
+            .map(([groupName, players]) => {
+                const playersHTML = players.map(player => createDepthTableRow(player)).join('');
+                
+                return `
+                    <div class="position-group">
+                        <div class="position-group-header">${groupName}</div>
+                        <table class="roster-depth-table">
+                            <thead>
+                                <tr>
+                                    <th>STATUS</th>
+                                    <th>PLAYER</th>
+                                    <th>TEAM</th>
+                                    <th>POS</th>
+                                    <th>AGE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${playersHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+        
+        // Create position groups HTML with 2-column layout
+        groupsHTML = `
+            <div class="position-groups-column">
+                ${batterGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No batters</div>'}
+            </div>
+            <div class="position-groups-column">
+                ${pitcherGroupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
+            </div>
+        `;
+    }
     
     // Create summary if detailed view
     let summaryHTML = '';
@@ -276,6 +307,101 @@ function createTeamRosterCard(teamAbbr, detailed = false) {
             </div>
             ${summaryHTML}
         </div>
+    `;
+}
+
+/**
+ * Create prospect groups HTML organized by contract type (BC, PC, DC)
+ */
+function createProspectContractGroupsHTML(players) {
+    // Group players by contract type
+    const groups = {
+        'Blue Chip Contract (BC)': [],
+        'Purchased Contract (PC)': [],
+        'Development Contract (DC)': []
+    };
+    
+    players.forEach(player => {
+        const ct = (player.contract_type || '').toLowerCase();
+        if (ct.includes('purchased')) {
+            groups['Purchased Contract (PC)'].push(player);
+        } else if (ct.includes('development')) {
+            groups['Development Contract (DC)'].push(player);
+        } else if (ct.includes('blue chip') || ct.includes('farm')) {
+            groups['Blue Chip Contract (BC)'].push(player);
+        } else {
+            // Uncontracted prospects also go to BC section
+            groups['Blue Chip Contract (BC)'].push(player);
+        }
+    });
+    
+    // Sort each group by Top 100 rank (if available), then by name
+    Object.keys(groups).forEach(key => {
+        groups[key].sort((a, b) => {
+            const aRank = top100ByUpid[String(a.upid)] || Infinity;
+            const bRank = top100ByUpid[String(b.upid)] || Infinity;
+            if (aRank !== bRank) return aRank - bRank;
+            return (a.name || '').localeCompare(b.name || '');
+        });
+    });
+    
+    // Create HTML for each contract type section
+    const sectionsHTML = Object.entries(groups)
+        .filter(([, players]) => players.length > 0)
+        .map(([groupName, players]) => {
+            const playersHTML = players.map(player => createProspectTableRow(player)).join('');
+            
+            return `
+                <div class="position-group contract-group">
+                    <div class="position-group-header">${groupName} <span class="group-count">(${players.length})</span></div>
+                    <table class="roster-depth-table prospect-contract-table">
+                        <thead>
+                            <tr>
+                                <th>TOP 100</th>
+                                <th>PLAYER</th>
+                                <th>ORG</th>
+                                <th>POS</th>
+                                <th>AGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${playersHTML}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }).join('');
+    
+    // Return as a single column for prospects (contract type view)
+    return `
+        <div class="position-groups-column prospect-contracts-layout">
+            ${sectionsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No prospects</div>'}
+        </div>
+    `;
+}
+
+/**
+ * Create prospect table row with Top 100 rank
+ */
+function createProspectTableRow(player) {
+    const upid = String(player.upid || '');
+    const top100Rank = top100ByUpid[upid];
+    const rankDisplay = top100Rank ? `<span class="top100-rank">#${top100Rank}</span>` : '<span class="no-rank">-</span>';
+    
+    const org = player.team || 'FA';
+    const pos = player.position || '';
+    const age = player.age || '--';
+    
+    const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
+    
+    return `
+        <tr class="${top100Rank ? 'has-top100' : ''}">
+            <td class="prospect-rank-cell">${rankDisplay}</td>
+            <td class="roster-name"><a href="${profileLink}">${player.name}</a></td>
+            <td class="roster-team">${org}</td>
+            <td class="roster-pos">${pos}</td>
+            <td class="roster-age">${age}</td>
+        </tr>
     `;
 }
 
@@ -342,18 +468,9 @@ function createDepthTableRow(player) {
     // For prospects, display their prospect contract code (PC / DC / BC)
     let status;
     if (player.player_type === 'Farm') {
-        const ct = (player.contract_type || '').toLowerCase();
-        if (ct.includes('purchased')) {
-            status = 'PC';
-        } else if (ct.includes('development')) {
-            status = 'DC';
-        } else if (ct.includes('farm')) {
-            status = 'BC';
-        } else {
-            status = player.years_simple || player.status || '';
-        }
+        status = getProspectContractCode(player);
     } else {
-        status = player.years_simple || player.status || '';
+        status = player.years_simple || player.contract_type || player.status || '';
     }
 
     const team = player.team || 'FA';
@@ -388,6 +505,17 @@ function createDepthTableRow(player) {
 }
 
 /**
+ * Get contract type code for a prospect
+ */
+function getProspectContractCode(player) {
+    const ct = (player.contract_type || '').toLowerCase();
+    if (ct.includes('purchased')) return 'PC';
+    if (ct.includes('development')) return 'DC';
+    if (ct.includes('blue chip') || ct.includes('farm')) return 'BC';
+    return 'BC';  // Default uncontracted to BC
+}
+
+/**
  * Create roster summary
  */
 function createRosterSummary(players) {
@@ -401,10 +529,8 @@ function createRosterSummary(players) {
     let contractCounts = { BC: 0, PC: 0, DC: 0 };
     if (currentRosterType === 'prospects') {
         players.forEach(p => {
-            const ct = (p.contract_type || '').toLowerCase();
-            if (ct.includes('purchased')) contractCounts.PC++;
-            else if (ct.includes('development')) contractCounts.DC++;
-            else if (ct.includes('farm')) contractCounts.BC++;
+            const code = getProspectContractCode(p);
+            contractCounts[code]++;
         });
     }
     

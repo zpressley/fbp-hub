@@ -312,10 +312,66 @@ function groupPlayersForDashboard(players) {
 }
 
 /**
+ * Get contract type code for a prospect (same logic as rosters.js)
+ */
+function getDashboardContractCode(player) {
+    const ct = (player.contract_type || '').toLowerCase();
+    if (ct.includes('purchased')) return 'PC';
+    if (ct.includes('development')) return 'DC';
+    if (ct.includes('blue chip') || ct.includes('farm')) return 'BC';
+    return 'BC';  // Default uncontracted to BC
+}
+
+/**
+ * Group prospects by contract type for dashboard
+ */
+function groupProspectsByContract(players) {
+    const groups = {
+        'Blue Chip (BC)': [],
+        'Purchased (PC)': [],
+        'Development (DC)': []
+    };
+    
+    players.forEach(player => {
+        const code = getDashboardContractCode(player);
+        if (code === 'PC') {
+            groups['Purchased (PC)'].push(player);
+        } else if (code === 'DC') {
+            groups['Development (DC)'].push(player);
+        } else {
+            groups['Blue Chip (BC)'].push(player);
+        }
+    });
+    
+    return groups;
+}
+
+/**
  * Render a full roster section in depth-chart style (batters left, pitchers right)
+ * For prospects, groups by contract type instead
  */
 function renderDashboardRosterSection(players, title) {
     if (!players || players.length === 0) return '';
+    
+    // Check if this is prospects section - group by contract type
+    const isProspects = title === 'Prospects';
+    
+    if (isProspects) {
+        const contractGroups = groupProspectsByContract(players);
+        const groupsHTML = Object.entries(contractGroups)
+            .filter(([, list]) => list.length > 0)
+            .map(([groupName, list]) => renderProspectContractGroup(groupName, list))
+            .join('');
+        
+        return `
+            <div class="dashboard-roster-section">
+                <h4>${title}</h4>
+                <div class="dash-roster-contracts">
+                    ${groupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No prospects</div>'}
+                </div>
+            </div>
+        `;
+    }
 
     const { batters, pitchers } = groupPlayersForDashboard(players);
 
@@ -359,6 +415,33 @@ function renderDashboardRosterSection(players, title) {
                 <div class="dash-roster-column">
                     ${pitcherGroups || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
                 </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Render a prospect contract group for dashboard
+ */
+function renderProspectContractGroup(groupName, players) {
+    const playersHTML = players.map(player => {
+        const pos = player.position || '';
+        const org = player.team || 'FA';
+        const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
+        
+        return `
+            <div class="dash-roster-player">
+                <a href="${profileLink}" class="dash-player-name">${player.name}</a>
+                <span class="dash-player-meta">${org} • ${pos}</span>
+            </div>
+        `;
+    }).join('');
+    
+    return `
+        <div class="dash-contract-group">
+            <div class="dash-contract-header">${groupName} <span class="group-count">(${players.length})</span></div>
+            <div class="dash-contract-players">
+                ${playersHTML}
             </div>
         </div>
     `;
