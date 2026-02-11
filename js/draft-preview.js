@@ -434,15 +434,29 @@ function mergeProspectData() {
         
         // Get tags data if available
         const tagData = PREVIEW_STATE.tagsByUpid[upid] || {};
+        const badges = tagData.badges || [];
         
-        // Get status from tags, then add dropped if applicable
-        let statusArr = tagData.status || [];
+        // Build status array from combined_players and prospect_tags data
+        let statusArr = [];
         
-        // Check if player was dropped (from player_log)
+        // FYPD: from combined_players.json
+        if (player.fypd === true) {
+            statusArr.push('fypd');
+        }
+        
+        // Debuted: from combined_players.json
+        if (player.debuted === true) {
+            statusArr.push('debuted');
+        }
+        
+        // Int Signee: any player with an INT Signee badge from prospect_tags.json
+        if (badges.some(b => (b.type || '').includes('INT Signee'))) {
+            statusArr.push('int_signee');
+        }
+        
+        // Dropped: from player_log.json
         if (PREVIEW_STATE.droppedUpids.has(upid)) {
-            if (!statusArr.includes('dropped')) {
-                statusArr = [...statusArr, 'dropped'];
-            }
+            statusArr.push('dropped');
         }
         
         // Merge data
@@ -456,10 +470,10 @@ function mergeProspectData() {
             fv: tagData.fv || {},
             
             // Badges from tags
-            badges: tagData.badges || [],
-            badgeCount: (tagData.badges || []).length,
+            badges: badges,
+            badgeCount: badges.length,
             
-            // Status from tags + dropped from player_log
+            // Computed status array
             status: statusArr,
             
             // Rankings from combined_players
@@ -493,8 +507,8 @@ function displayProspectPreview() {
         filtered = filtered.filter(p => {
             const statusArr = p.status || [];
             if (status === 'standard') {
-                // Standard = no status tags
-                return statusArr.length === 0;
+                // Standard = any prospect NOT dropped
+                return !statusArr.includes('dropped');
             }
             // Check if player has this status tag
             return statusArr.includes(status);
@@ -595,9 +609,9 @@ function matchesPosition(playerPos, filterPos) {
         return posParts.some(p => p === 'RHP' || p.includes('RHP') || p === 'SHP' || p === 'SIRP' || p === 'MIRP');
     }
     
-    // INF matches infield positions
+    // INF matches infield positions (but NOT C which is catcher)
     if (filter === 'INF') {
-        const infTypes = ['C', '1B', '2B', '3B', 'SS', 'IF', 'INF'];
+        const infTypes = ['1B', '2B', '3B', 'SS', 'IF', 'INF'];
         return posParts.some(p => infTypes.includes(p));
     }
     
@@ -607,8 +621,13 @@ function matchesPosition(playerPos, filterPos) {
         return posParts.some(p => ofTypes.includes(p));
     }
     
-    // Check if any part matches the filter
-    return posParts.some(p => p === filter || p.includes(filter));
+    // C (catcher) - exact match only, don't match CF
+    if (filter === 'C') {
+        return posParts.includes('C');
+    }
+    
+    // For other position filters, require exact match only (don't use includes)
+    return posParts.includes(filter);
 }
 
 /**
