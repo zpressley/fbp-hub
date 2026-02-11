@@ -381,7 +381,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[5] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "3930",
     "mlb_id": 687075,
@@ -443,7 +443,7 @@
     "fypd": false
   },
   {
-    "name": "Edwin Díaz",
+    "name": "Edwin D\u00edaz",
     "team": "LAD",
     "position": "RP",
     "manager": "Andromedans",
@@ -670,7 +670,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "3495",
     "mlb_id": 694377,
@@ -911,7 +911,7 @@
     "fypd": false
   },
   {
-    "name": "Félix Bautista",
+    "name": "F\u00e9lix Bautista",
     "team": "BAL",
     "position": "RP",
     "manager": "Rick Vaughn",
@@ -1097,7 +1097,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60154",
     "upid": "6035",
     "mlb_id": 690022,
@@ -1235,7 +1235,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "63641",
     "upid": "7635",
     "mlb_id": 814307,
@@ -1260,7 +1260,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7642",
     "mlb_id": 695695,
@@ -1285,7 +1285,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "64350",
     "upid": "7709",
     "mlb_id": 701388,
@@ -1310,7 +1310,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "63189",
     "upid": "7743",
     "mlb_id": 675085,
@@ -1328,7 +1328,7 @@
     "debuted": false
   },
   {
-    "name": "José Berríos",
+    "name": "Jos\u00e9 Berr\u00edos",
     "team": "TOR",
     "position": "SP",
     "manager": null,
@@ -1504,7 +1504,7 @@
     "fypd": false
   },
   {
-    "name": "Teoscar Hernández",
+    "name": "Teoscar Hern\u00e1ndez",
     "team": "LAD",
     "position": "OF",
     "manager": null,
@@ -1815,7 +1815,7 @@
     "fypd": false
   },
   {
-    "name": "Yandy Díaz",
+    "name": "Yandy D\u00edaz",
     "team": "TB",
     "position": "1B",
     "manager": "Btwn2Jackies",
@@ -1837,7 +1837,7 @@
     "fypd": false
   },
   {
-    "name": "Yimi García",
+    "name": "Yimi Garc\u00eda",
     "team": "TOR",
     "position": "RP",
     "manager": "Btwn2Jackies",
@@ -1884,7 +1884,7 @@
     "debuted": true
   },
   {
-    "name": "Jasson Domínguez",
+    "name": "Jasson Dom\u00ednguez",
     "team": "NYY",
     "position": "CF",
     "manager": "Btwn2Jackies",
@@ -1906,7 +1906,7 @@
     "fypd": false
   },
   {
-    "name": "Iván Herrera",
+    "name": "Iv\u00e1n Herrera",
     "team": "STL",
     "position": "C",
     "manager": "Btwn2Jackies",
@@ -2005,7 +2005,7 @@
     "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60368",
@@ -2119,7 +2119,7 @@
     "fypd": false
   },
   {
-    "name": "José Leclerc",
+    "name": "Jos\u00e9 Leclerc",
     "team": "ATH",
     "position": "RP",
     "manager": "",
@@ -2168,7 +2168,7 @@
     "position": "SP",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63613",
@@ -2240,7 +2240,7 @@
     "position": "CF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62974",
@@ -2265,7 +2265,7 @@
     "position": "2B",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62985",
@@ -2340,7 +2340,7 @@
     "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63004",
@@ -2390,7 +2390,7 @@
     "position": "SP",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63190",
@@ -2415,7 +2415,7 @@
     "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64358",
@@ -2465,7 +2465,7 @@
     "position": "OF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64362",
@@ -2490,7 +2490,7 @@
     "position": "SP",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64351",
@@ -2621,7 +2621,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64319",
     "upid": "7681",
     "mlb_id": 800614,
@@ -2696,7 +2696,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "12451",
     "upid": "2237",
     "mlb_id": 695600,
@@ -2719,9 +2719,9 @@
     "position": "C",
     "manager": "Country Fried Lamb",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "62882",
     "upid": "7112",
     "mlb_id": 694876,
@@ -3107,7 +3107,7 @@
     "fypd": false
   },
   {
-    "name": "Josue Briceño",
+    "name": "Josue Brice\u00f1o",
     "team": "DET",
     "position": "C,1B",
     "manager": "CFL",
@@ -3162,7 +3162,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60317",
     "upid": "3895",
     "mlb_id": 702222,
@@ -3249,7 +3249,7 @@
     "fypd": false
   },
   {
-    "name": "Ranger Suárez",
+    "name": "Ranger Su\u00e1rez",
     "team": "PHI",
     "position": "SP",
     "manager": "Country Fried Lamb",
@@ -3325,7 +3325,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64322",
     "upid": "7595",
     "mlb_id": 814409,
@@ -3348,9 +3348,9 @@
     "position": "CF",
     "manager": "Country Fried Lamb",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64328",
     "upid": "7623",
     "mlb_id": 815154,
@@ -3466,7 +3466,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64311",
     "upid": "7677",
     "mlb_id": 683953,
@@ -4041,7 +4041,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "12580",
     "upid": "3482",
     "mlb_id": 691781,
@@ -4066,7 +4066,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "12574",
     "upid": "3494",
     "mlb_id": 694357,
@@ -4185,7 +4185,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60338",
     "upid": "3947",
     "mlb_id": 682995,
@@ -4345,7 +4345,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60143",
     "upid": "4610",
     "mlb_id": 694197,
@@ -4370,7 +4370,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60262",
     "upid": "6082",
     "mlb_id": 701656,
@@ -4395,7 +4395,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "62958",
     "upid": "6570",
     "mlb_id": 694462,
@@ -4420,7 +4420,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "6605",
     "mlb_id": null,
@@ -4485,7 +4485,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "62919",
     "upid": "6808",
     "mlb_id": 691003,
@@ -4510,7 +4510,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "6864",
     "mlb_id": 691373,
@@ -4535,7 +4535,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "64912",
     "upid": "7178",
     "mlb_id": 702910,
@@ -4607,7 +4607,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64991",
     "upid": "7571",
     "mlb_id": 821273,
@@ -4630,9 +4630,9 @@
     "position": "SS",
     "manager": "Hammers",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64352",
     "upid": "7604",
     "mlb_id": 815653,
@@ -4657,7 +4657,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "64360",
     "upid": "7632",
     "mlb_id": 703606,
@@ -4682,7 +4682,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "64340",
     "upid": "7690",
     "mlb_id": 701785,
@@ -4769,7 +4769,7 @@
     "fypd": false
   },
   {
-    "name": "Ronald Acuña Jr.",
+    "name": "Ronald Acu\u00f1a Jr.",
     "team": "ATL",
     "position": "OF",
     "manager": "Jepordizers",
@@ -4835,7 +4835,7 @@
     "fypd": false
   },
   {
-    "name": "Adolis García",
+    "name": "Adolis Garc\u00eda",
     "team": "PHI",
     "position": "OF",
     "manager": null,
@@ -4989,7 +4989,7 @@
     "fypd": false
   },
   {
-    "name": "Luis García",
+    "name": "Luis Garc\u00eda",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -5198,7 +5198,7 @@
     "position": "2B,CF",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "12385",
@@ -5270,7 +5270,7 @@
     "position": "C",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "12477",
@@ -5312,7 +5312,7 @@
     "fypd": false
   },
   {
-    "name": "Luisangel Acuña",
+    "name": "Luisangel Acu\u00f1a",
     "team": "NYM",
     "position": "2B",
     "manager": "",
@@ -5339,7 +5339,7 @@
     "position": "SP",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60381",
@@ -5364,7 +5364,7 @@
     "position": "SP",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60254",
@@ -5406,7 +5406,7 @@
     "fypd": false
   },
   {
-    "name": "Reynaldo López",
+    "name": "Reynaldo L\u00f3pez",
     "team": "ATL",
     "position": "SP",
     "manager": "Jepordizers!",
@@ -5731,7 +5731,7 @@
     "position": "SP",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62986",
@@ -5756,7 +5756,7 @@
     "position": "1B",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62957",
@@ -5781,7 +5781,7 @@
     "position": "2B",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63023",
@@ -5831,7 +5831,7 @@
     "position": "SP",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64803",
@@ -5856,7 +5856,7 @@
     "position": "SP",
     "manager": "Jepordizers!",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64315",
@@ -6080,7 +6080,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Luzardo",
+    "name": "Jes\u00fas Luzardo",
     "team": "PHI",
     "position": "SP",
     "manager": "La Flama Blanca",
@@ -6129,7 +6129,7 @@
     "position": "SP",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60455",
@@ -6657,7 +6657,7 @@
     "fypd": false
   },
   {
-    "name": "Andrés Muñoz",
+    "name": "Andr\u00e9s Mu\u00f1oz",
     "team": "SEA",
     "position": "RP",
     "manager": "La Flama Blanca",
@@ -6723,7 +6723,7 @@
     "fypd": false
   },
   {
-    "name": "Alexis Díaz",
+    "name": "Alexis D\u00edaz",
     "team": "CIN",
     "position": "RP",
     "manager": "",
@@ -6825,7 +6825,7 @@
     "position": "C",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63545",
@@ -6872,7 +6872,7 @@
     "position": "SP",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62980",
@@ -6947,7 +6947,7 @@
     "position": "1B",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62952",
@@ -6972,7 +6972,7 @@
     "position": "2B,3B",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64987",
@@ -7047,7 +7047,7 @@
     "position": "SP",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64326",
@@ -7072,7 +7072,7 @@
     "position": "SS,CF",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64318",
@@ -7097,7 +7097,7 @@
     "position": "SS",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "65056",
@@ -7122,7 +7122,7 @@
     "position": "SS",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "65050",
@@ -7142,12 +7142,12 @@
     "debuted": false
   },
   {
-    "name": "Elian Peña",
+    "name": "Elian Pe\u00f1a",
     "team": "NYM",
     "position": "OF",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "65645",
@@ -7632,7 +7632,7 @@
     "fypd": false
   },
   {
-    "name": "Angel Martínez",
+    "name": "Angel Mart\u00ednez",
     "team": "CLE",
     "position": "2B,CF",
     "manager": "",
@@ -7705,7 +7705,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60108",
     "upid": "3852",
     "mlb_id": 701350,
@@ -7793,7 +7793,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "60118",
     "upid": "3894",
     "mlb_id": 690990,
@@ -7995,9 +7995,9 @@
     "position": "OF",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "66410",
     "upid": "6500",
     "mlb_id": 829038,
@@ -8022,7 +8022,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "62962",
     "upid": "6568",
     "mlb_id": 805805,
@@ -8045,9 +8045,9 @@
     "position": "C",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "62960",
     "upid": "6602",
     "mlb_id": 805810,
@@ -8092,9 +8092,9 @@
     "position": "SP",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "6618",
     "mlb_id": 806046,
@@ -8163,7 +8163,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64317",
     "upid": "7619",
     "mlb_id": 802139,
@@ -8186,9 +8186,9 @@
     "position": "SP",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64337",
     "upid": "7631",
     "mlb_id": 701679,
@@ -8213,7 +8213,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7669",
     "mlb_id": null,
@@ -8231,7 +8231,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64312",
     "upid": "7685",
     "mlb_id": 695506,
@@ -8299,7 +8299,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "José Ramírez",
+    "name": "Jos\u00e9 Ram\u00edrez",
     "team": "CLE",
     "position": "3B",
     "manager": "not much of a donkey",
@@ -8695,7 +8695,7 @@
     "fypd": false
   },
   {
-    "name": "Eury Pérez",
+    "name": "Eury P\u00e9rez",
     "team": "MIA",
     "position": "SP",
     "manager": "not much of a donkey",
@@ -8761,7 +8761,7 @@
     "fypd": false
   },
   {
-    "name": "Kevin Alcántara",
+    "name": "Kevin Alc\u00e1ntara",
     "team": "CHC",
     "position": "OF",
     "manager": "not much of a donkey",
@@ -8838,9 +8838,9 @@
     "position": "2B",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "60582",
     "upid": "3816",
     "mlb_id": 703197,
@@ -8935,7 +8935,7 @@
     "position": "1B,OF",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60185",
@@ -9112,7 +9112,7 @@
     "fypd": false
   },
   {
-    "name": "Julio Rodríguez",
+    "name": "Julio Rodr\u00edguez",
     "team": "SEA",
     "position": "CF",
     "manager": "not much of a donkey",
@@ -9161,7 +9161,7 @@
     "position": "C",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60092",
@@ -9255,7 +9255,7 @@
     "position": "SS",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63538",
@@ -9407,7 +9407,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7657",
     "mlb_id": 695731,
@@ -9601,7 +9601,7 @@
     "fypd": false
   },
   {
-    "name": "Eugenio Suárez",
+    "name": "Eugenio Su\u00e1rez",
     "team": "AZ",
     "position": "3B",
     "manager": "Rick Vaughn",
@@ -9870,7 +9870,7 @@
     "position": "OF",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63576",
@@ -9942,7 +9942,7 @@
     "position": "1B,3B",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60128",
@@ -10017,7 +10017,7 @@
     "position": "SP",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60070",
@@ -10042,7 +10042,7 @@
     "position": "SP",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60156",
@@ -10271,7 +10271,7 @@
     "position": "3B,SS",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63633",
@@ -10540,7 +10540,7 @@
     "position": "SS",
     "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64966",
@@ -11268,7 +11268,7 @@
     "position": "1B,3B",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "",
@@ -11538,7 +11538,7 @@
     "position": "SP",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60119",
@@ -11585,7 +11585,7 @@
     "position": "Util",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Development Cont.",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60414",
@@ -11726,7 +11726,7 @@
     "position": "2B,3B,SS",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62997",
@@ -11751,7 +11751,7 @@
     "position": "1B",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63011",
@@ -11801,7 +11801,7 @@
     "position": "SP",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "63143",
@@ -11826,7 +11826,7 @@
     "position": "1B,OF",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62758",
@@ -11873,7 +11873,7 @@
     "position": "2B",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
-    "contract_type": "Farm Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64424",
@@ -11944,7 +11944,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "60592",
     "upid": "3484",
     "mlb_id": 691725,
@@ -11969,7 +11969,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "62751",
     "upid": "6677",
     "mlb_id": 689958,
@@ -12014,9 +12014,9 @@
     "position": "OF",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "65000",
     "upid": "7726",
     "mlb_id": 815589,
@@ -12085,7 +12085,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64310",
     "upid": "7630",
     "mlb_id": 809707,
@@ -12179,7 +12179,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "12413",
     "upid": "3522",
     "mlb_id": 695657,
@@ -12296,9 +12296,9 @@
     "position": "SS",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "63537",
     "upid": "7130",
     "mlb_id": 808265,
@@ -12321,9 +12321,9 @@
     "position": "OF",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7236",
     "mlb_id": null,
@@ -12451,7 +12451,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "3944",
     "mlb_id": 689200,
@@ -12496,9 +12496,9 @@
     "position": "2B,3B,SS",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64897",
     "upid": "7607",
     "mlb_id": 815908,
@@ -12545,7 +12545,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "64978",
     "upid": "6910",
     "mlb_id": 804636,
@@ -12681,9 +12681,9 @@
     "position": "2B,3B,SS",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64898",
     "upid": "7608",
     "mlb_id": 821270,
@@ -12755,7 +12755,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "60138",
     "upid": "3903",
     "mlb_id": 800050,
@@ -12795,14 +12795,14 @@
     "fypd": false
   },
   {
-    "name": "Moisés Chace",
+    "name": "Mois\u00e9s Chace",
     "team": "PHI",
     "position": "SP",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64773",
     "upid": "7579",
     "mlb_id": 691330,
@@ -12916,9 +12916,9 @@
     "position": "CF",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64479",
     "upid": "7624",
     "mlb_id": 814439,
@@ -13076,9 +13076,9 @@
     "position": "SP",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "62992",
     "upid": "6597",
     "mlb_id": 805809,
@@ -13103,7 +13103,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "64320",
     "upid": "7670",
     "mlb_id": 702056,
@@ -13195,9 +13195,9 @@
     "position": "SP",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64374",
     "upid": "7705",
     "mlb_id": 695611,
@@ -13327,7 +13327,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Rodón",
+    "name": "Carlos Rod\u00f3n",
     "team": "NYY",
     "position": "SP",
     "manager": "Whiz Kids",
@@ -13459,7 +13459,7 @@
     "fypd": false
   },
   {
-    "name": "Cristopher Sánchez",
+    "name": "Cristopher S\u00e1nchez",
     "team": "PHI",
     "position": "SP",
     "manager": "Whiz Kids",
@@ -13528,7 +13528,7 @@
     "debuted": false
   },
   {
-    "name": "José Alvarado",
+    "name": "Jos\u00e9 Alvarado",
     "team": "PHI",
     "position": "RP",
     "manager": "The Damn Yankees",
@@ -13663,7 +13663,7 @@
     "fypd": false
   },
   {
-    "name": "Pablo López",
+    "name": "Pablo L\u00f3pez",
     "team": "MIN",
     "position": "SP",
     "manager": "Whiz Kids",
@@ -13950,7 +13950,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "11372",
     "upid": "6263",
     "mlb_id": 677952,
@@ -13975,7 +13975,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "62961",
     "upid": "6578",
     "mlb_id": 805795,
@@ -14000,7 +14000,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "62983",
     "upid": "6580",
     "mlb_id": 690961,
@@ -14025,7 +14025,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "62978",
     "upid": "6590",
     "mlb_id": 805796,
@@ -14050,7 +14050,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "62955",
     "upid": "6591",
     "mlb_id": 805808,
@@ -14075,7 +14075,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "62954",
     "upid": "6595",
     "mlb_id": 806068,
@@ -14123,9 +14123,9 @@
     "position": "OF",
     "manager": "Whiz Kids",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "63002",
     "upid": "6696",
     "mlb_id": 694249,
@@ -14173,9 +14173,9 @@
     "position": "C",
     "manager": "Whiz Kids",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7146",
     "mlb_id": 806953,
@@ -14200,7 +14200,7 @@
     "player_type": "Farm",
     "contract_type": "Blue Chip Contract",
     "status": "[7] P",
-    "years_simple": "BC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7173",
     "mlb_id": 815888,
@@ -14317,9 +14317,9 @@
     "position": "OF",
     "manager": "Whiz Kids",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7605",
     "mlb_id": 701527,
@@ -14367,9 +14367,9 @@
     "position": "SP",
     "manager": "Country Fried Lamb",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "64327",
     "upid": "7710",
     "mlb_id": 815549,
@@ -14459,7 +14459,7 @@
     "debuted": true
   },
   {
-    "name": "Javier Báez",
+    "name": "Javier B\u00e1ez",
     "team": "DET",
     "position": "2B,3B,SS,CF",
     "manager": null,
@@ -14635,7 +14635,7 @@
     "fypd": false
   },
   {
-    "name": "Yoán Moncada",
+    "name": "Yo\u00e1n Moncada",
     "team": "LAA",
     "position": "3B",
     "manager": "The Bluke Blokes",
@@ -14789,7 +14789,7 @@
     "fypd": false
   },
   {
-    "name": "Eloy Jiménez",
+    "name": "Eloy Jim\u00e9nez",
     "team": "TB",
     "position": "OF",
     "manager": null,
@@ -14833,7 +14833,7 @@
     "fypd": false
   },
   {
-    "name": "Germán Márquez",
+    "name": "Germ\u00e1n M\u00e1rquez",
     "team": "COL",
     "position": "SP",
     "manager": null,
@@ -14921,7 +14921,7 @@
     "fypd": false
   },
   {
-    "name": "José Abreu",
+    "name": "Jos\u00e9 Abreu",
     "team": "HOU",
     "position": "1B",
     "manager": null,
@@ -14943,7 +14943,7 @@
     "fypd": false
   },
   {
-    "name": "Julio Urías",
+    "name": "Julio Ur\u00edas",
     "team": "LAD",
     "position": "P",
     "manager": null,
@@ -15649,7 +15649,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Aledmys Díaz",
+    "name": "Aledmys D\u00edaz",
     "team": "ATH",
     "position": "SS",
     "manager": null,
@@ -15869,7 +15869,7 @@
     "fypd": false
   },
   {
-    "name": "Andrés Giménez",
+    "name": "Andr\u00e9s Gim\u00e9nez",
     "team": "TOR",
     "position": "2B,SS",
     "manager": null,
@@ -16111,7 +16111,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Andy Ibáñez",
+    "name": "Andy Ib\u00e1\u00f1ez",
     "team": "DET",
     "position": "2B,3B",
     "manager": null,
@@ -16616,7 +16616,7 @@
     "fypd": false
   },
   {
-    "name": "Avisaíl García",
+    "name": "Avisa\u00edl Garc\u00eda",
     "team": "MIA",
     "position": "RF",
     "manager": null,
@@ -17234,7 +17234,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Estévez",
+    "name": "Carlos Est\u00e9vez",
     "team": "KC",
     "position": "RP",
     "manager": "La Flama Blanca",
@@ -17256,7 +17256,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Hernández",
+    "name": "Carlos Hern\u00e1ndez",
     "team": "CLE",
     "position": "P",
     "manager": null,
@@ -17696,7 +17696,7 @@
     "fypd": false
   },
   {
-    "name": "Christian Vázquez",
+    "name": "Christian V\u00e1zquez",
     "team": "MIN",
     "position": "C",
     "manager": null,
@@ -17718,7 +17718,7 @@
     "fypd": false
   },
   {
-    "name": "Cionel Pérez",
+    "name": "Cionel P\u00e9rez",
     "team": "BAL",
     "position": "P",
     "manager": null,
@@ -18666,7 +18666,7 @@
     "fypd": false
   },
   {
-    "name": "Deivi García",
+    "name": "Deivi Garc\u00eda",
     "team": "CWS",
     "position": "P",
     "manager": null,
@@ -18835,7 +18835,7 @@
     "fypd": false
   },
   {
-    "name": "Domingo Germán",
+    "name": "Domingo Germ\u00e1n",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -19299,7 +19299,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Edwin Ríos",
+    "name": "Edwin R\u00edos",
     "team": "CIN",
     "position": "1B",
     "manager": null,
@@ -19387,7 +19387,7 @@
     "fypd": false
   },
   {
-    "name": "Elias Díaz",
+    "name": "Elias D\u00edaz",
     "team": "SD",
     "position": "C",
     "manager": null,
@@ -19409,7 +19409,7 @@
     "fypd": false
   },
   {
-    "name": "Elieser Hernández",
+    "name": "Elieser Hern\u00e1ndez",
     "team": "MIL",
     "position": "P",
     "manager": null,
@@ -19431,7 +19431,7 @@
     "fypd": false
   },
   {
-    "name": "Emilio Pagán",
+    "name": "Emilio Pag\u00e1n",
     "team": "CIN",
     "position": "RP",
     "manager": null,
@@ -19519,7 +19519,7 @@
     "fypd": false
   },
   {
-    "name": "Erasmo Ramírez",
+    "name": "Erasmo Ram\u00edrez",
     "team": "TB",
     "position": "RP",
     "manager": null,
@@ -19726,7 +19726,7 @@
     "mlb_primary_position": "SS"
   },
   {
-    "name": "Francisco Pérez",
+    "name": "Francisco P\u00e9rez",
     "team": "ATH",
     "position": "RP",
     "manager": null,
@@ -19952,7 +19952,7 @@
     "fypd": false
   },
   {
-    "name": "Gary Sánchez",
+    "name": "Gary S\u00e1nchez",
     "team": "BAL",
     "position": "C",
     "manager": null,
@@ -19974,7 +19974,7 @@
     "fypd": false
   },
   {
-    "name": "Génesis Cabrera",
+    "name": "G\u00e9nesis Cabrera",
     "team": "MIN",
     "position": "RP",
     "manager": null,
@@ -20219,7 +20219,7 @@
     "fypd": false
   },
   {
-    "name": "Harold Ramírez",
+    "name": "Harold Ram\u00edrez",
     "team": "TB",
     "position": "RF",
     "manager": null,
@@ -20285,7 +20285,7 @@
     "fypd": false
   },
   {
-    "name": "Héctor Neris",
+    "name": "H\u00e9ctor Neris",
     "team": "HOU",
     "position": "RP",
     "manager": null,
@@ -20639,7 +20639,7 @@
     "fypd": false
   },
   {
-    "name": "Jack López",
+    "name": "Jack L\u00f3pez",
     "team": "SEA",
     "position": "2B",
     "manager": null,
@@ -21362,7 +21362,7 @@
     "debuted": false
   },
   {
-    "name": "Jesús Sánchez",
+    "name": "Jes\u00fas S\u00e1nchez",
     "team": "MIA",
     "position": "CF",
     "manager": null,
@@ -21384,7 +21384,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Tinoco",
+    "name": "Jes\u00fas Tinoco",
     "team": "MIA",
     "position": "P",
     "manager": null,
@@ -21516,7 +21516,7 @@
     "fypd": false
   },
   {
-    "name": "Joe Jiménez",
+    "name": "Joe Jim\u00e9nez",
     "team": "ATL",
     "position": "RP",
     "manager": null,
@@ -21626,7 +21626,7 @@
     "fypd": false
   },
   {
-    "name": "Joely Rodríguez",
+    "name": "Joely Rodr\u00edguez",
     "team": "BOS",
     "position": "P",
     "manager": null,
@@ -22000,7 +22000,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Hernández",
+    "name": "Jonathan Hern\u00e1ndez",
     "team": "TB",
     "position": "P",
     "manager": null,
@@ -22022,7 +22022,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Loáisiga",
+    "name": "Jonathan Lo\u00e1isiga",
     "team": "NYY",
     "position": "RP",
     "manager": null,
@@ -22132,7 +22132,7 @@
     "fypd": false
   },
   {
-    "name": "Jorge López",
+    "name": "Jorge L\u00f3pez",
     "team": "WSH",
     "position": "RP",
     "manager": null,
@@ -22220,7 +22220,7 @@
     "fypd": false
   },
   {
-    "name": "José Cisnero",
+    "name": "Jos\u00e9 Cisnero",
     "team": "LAA",
     "position": "P",
     "manager": null,
@@ -22282,7 +22282,7 @@
     "fypd": false
   },
   {
-    "name": "José Quijada",
+    "name": "Jos\u00e9 Quijada",
     "team": "LAA",
     "position": "P",
     "manager": null,
@@ -22304,7 +22304,7 @@
     "fypd": false
   },
   {
-    "name": "José Quintana",
+    "name": "Jos\u00e9 Quintana",
     "team": "NYM",
     "position": "SP",
     "manager": "Btwn2Jackies",
@@ -22351,7 +22351,7 @@
     "mlb_primary_position": "CF"
   },
   {
-    "name": "José Rodríguez",
+    "name": "Jos\u00e9 Rodr\u00edguez",
     "team": "CWS",
     "position": "2B",
     "manager": "",
@@ -22369,7 +22369,7 @@
     "debuted": false
   },
   {
-    "name": "José Ruiz",
+    "name": "Jos\u00e9 Ruiz",
     "team": "PHI",
     "position": "P",
     "manager": null,
@@ -22416,7 +22416,7 @@
     "mlb_primary_position": "2B"
   },
   {
-    "name": "José Suarez",
+    "name": "Jos\u00e9 Suarez",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -22460,7 +22460,7 @@
     "fypd": false
   },
   {
-    "name": "José Urquidy",
+    "name": "Jos\u00e9 Urquidy",
     "team": "DET",
     "position": "RP",
     "manager": null,
@@ -23214,7 +23214,7 @@
     "fypd": false
   },
   {
-    "name": "Kiké Hernández",
+    "name": "Kik\u00e9 Hern\u00e1ndez",
     "team": "LAD",
     "position": "1B, 2B, 3B, SS, OF",
     "manager": null,
@@ -23650,7 +23650,7 @@
     "throws": "R"
   },
   {
-    "name": "Luis Frías",
+    "name": "Luis Fr\u00edas",
     "team": "AZ",
     "position": "RP",
     "manager": null,
@@ -23672,7 +23672,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Luis García",
+    "name": "Luis Garc\u00eda",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -23709,7 +23709,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Patiño",
+    "name": "Luis Pati\u00f1o",
     "team": "SD",
     "position": "P",
     "manager": null,
@@ -23775,7 +23775,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Urías",
+    "name": "Luis Ur\u00edas",
     "team": "ATH",
     "position": "2B,3B",
     "manager": null,
@@ -23907,7 +23907,7 @@
     "fypd": false
   },
   {
-    "name": "Manuel Rodríguez",
+    "name": "Manuel Rodr\u00edguez",
     "team": "TB",
     "position": "RP",
     "manager": null,
@@ -23995,7 +23995,7 @@
     "fypd": false
   },
   {
-    "name": "Martín Maldonado",
+    "name": "Mart\u00edn Maldonado",
     "team": "CWS",
     "position": "C",
     "manager": null,
@@ -24017,7 +24017,7 @@
     "fypd": false
   },
   {
-    "name": "Martín Pérez",
+    "name": "Mart\u00edn P\u00e9rez",
     "team": "CWS",
     "position": "SP",
     "manager": null,
@@ -24215,7 +24215,7 @@
     "fypd": false
   },
   {
-    "name": "Mauricio Dubón",
+    "name": "Mauricio Dub\u00f3n",
     "team": "HOU",
     "position": "2B,3B,SS,CF",
     "manager": null,
@@ -24492,7 +24492,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Díaz",
+    "name": "Miguel D\u00edaz",
     "team": "DET",
     "position": "RP",
     "manager": null,
@@ -24536,7 +24536,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Sanó",
+    "name": "Miguel San\u00f3",
     "team": "LAA",
     "position": "3B",
     "manager": null,
@@ -25218,7 +25218,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Omar Narváez",
+    "name": "Omar Narv\u00e1ez",
     "team": "TEX",
     "position": "C",
     "manager": null,
@@ -25642,7 +25642,7 @@
     "fypd": false
   },
   {
-    "name": "Rafael Marchán",
+    "name": "Rafael March\u00e1n",
     "team": "PHI",
     "position": "C",
     "manager": null,
@@ -25708,7 +25708,7 @@
     "fypd": false
   },
   {
-    "name": "Ramón Laureano",
+    "name": "Ram\u00f3n Laureano",
     "team": "BAL",
     "position": "CF",
     "manager": "Whiz Kids",
@@ -25730,7 +25730,7 @@
     "fypd": false
   },
   {
-    "name": "Ramón Urías",
+    "name": "Ram\u00f3n Ur\u00edas",
     "team": "BAL",
     "position": "3B",
     "manager": null,
@@ -25796,7 +25796,7 @@
     "fypd": false
   },
   {
-    "name": "Ricardo Genovés",
+    "name": "Ricardo Genov\u00e9s",
     "team": "ATL",
     "position": "RHP",
     "manager": "",
@@ -26044,7 +26044,7 @@
     "mlb_primary_position": "2B"
   },
   {
-    "name": "Romy González",
+    "name": "Romy Gonz\u00e1lez",
     "team": "BOS",
     "position": "1B,2B",
     "manager": "The Bluke Blokes",
@@ -27234,7 +27234,7 @@
     "fypd": false
   },
   {
-    "name": "Tomás Nido",
+    "name": "Tom\u00e1s Nido",
     "team": "DET",
     "position": "C",
     "manager": null,
@@ -27988,7 +27988,7 @@
     "fypd": false
   },
   {
-    "name": "Victor González",
+    "name": "Victor Gonz\u00e1lez",
     "team": "NYY",
     "position": "P",
     "manager": null,
@@ -30067,7 +30067,7 @@
     "fypd": false
   },
   {
-    "name": "Oscar Colás",
+    "name": "Oscar Col\u00e1s",
     "team": "CWS",
     "position": "RF",
     "manager": null,
@@ -30089,7 +30089,7 @@
     "fypd": false
   },
   {
-    "name": "Yoelqui Céspedes",
+    "name": "Yoelqui C\u00e9spedes",
     "team": "",
     "position": "OF",
     "manager": "",
@@ -31859,7 +31859,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Sixto Sánchez",
+    "name": "Sixto S\u00e1nchez",
     "team": "MIA",
     "position": "P",
     "manager": null,
@@ -32516,7 +32516,7 @@
     "mlb_primary_position": "3B"
   },
   {
-    "name": "Joel Díaz",
+    "name": "Joel D\u00edaz",
     "team": "NYM",
     "position": "SP",
     "manager": "",
@@ -32603,7 +32603,7 @@
     "fypd": false
   },
   {
-    "name": "Yoendrys Gómez",
+    "name": "Yoendrys G\u00f3mez",
     "team": "NYY",
     "position": "SP,RP",
     "manager": "",
@@ -33354,7 +33354,7 @@
     "mlb_primary_position": "CF"
   },
   {
-    "name": "Malcom Nuñez",
+    "name": "Malcom Nu\u00f1ez",
     "team": "PIT",
     "position": "1B",
     "manager": "",
@@ -36090,7 +36090,7 @@
     "debuted": false
   },
   {
-    "name": "Nazier Mulé",
+    "name": "Nazier Mul\u00e9",
     "team": "CHC",
     "position": "SP",
     "manager": "",
@@ -36325,7 +36325,7 @@
     "throws": "R"
   },
   {
-    "name": "Moisés Gómez",
+    "name": "Mois\u00e9s G\u00f3mez",
     "team": "",
     "position": "OF",
     "manager": null,
@@ -36847,7 +36847,7 @@
     "fypd": false
   },
   {
-    "name": "Seranthony Domínguez",
+    "name": "Seranthony Dom\u00ednguez",
     "team": "BAL",
     "position": "RP",
     "manager": "Andromedans",
@@ -37029,7 +37029,7 @@
     "fypd": false
   },
   {
-    "name": "José Ureña",
+    "name": "Jos\u00e9 Ure\u00f1a",
     "team": "TEX",
     "position": "SP,RP",
     "manager": null,
@@ -37324,7 +37324,7 @@
     "fypd": false
   },
   {
-    "name": "Dany Jiménez",
+    "name": "Dany Jim\u00e9nez",
     "team": "ATH",
     "position": "P",
     "manager": null,
@@ -37886,7 +37886,7 @@
     "fypd": false
   },
   {
-    "name": "Jhonathan Díaz",
+    "name": "Jhonathan D\u00edaz",
     "team": "SEA",
     "position": "RP",
     "manager": null,
@@ -39444,7 +39444,7 @@
     "fypd": false
   },
   {
-    "name": "Adrián Martínez",
+    "name": "Adri\u00e1n Mart\u00ednez",
     "team": "ATH",
     "position": "P",
     "manager": null,
@@ -39510,7 +39510,7 @@
     "throws": "R"
   },
   {
-    "name": "José Marte",
+    "name": "Jos\u00e9 Marte",
     "team": "LAA",
     "position": "RP",
     "manager": null,
@@ -39751,7 +39751,7 @@
     "mlb_primary_position": "C"
   },
   {
-    "name": "Adrián Sugastey",
+    "name": "Adri\u00e1n Sugastey",
     "team": "SF",
     "position": "C",
     "manager": null,
@@ -39935,7 +39935,7 @@
     "debuted": false
   },
   {
-    "name": "Jeremy Peña",
+    "name": "Jeremy Pe\u00f1a",
     "team": "HOU",
     "position": "SS",
     "manager": "La Flama Blanca",
@@ -40540,7 +40540,7 @@
     "fypd": false
   },
   {
-    "name": "José Azocar",
+    "name": "Jos\u00e9 Azocar",
     "team": "NYM",
     "position": "LF",
     "manager": null,
@@ -40895,7 +40895,7 @@
     "fypd": false
   },
   {
-    "name": "Nelson Velázquez",
+    "name": "Nelson Vel\u00e1zquez",
     "team": "KC",
     "position": "OF",
     "manager": null,
@@ -40961,7 +40961,7 @@
     "fypd": false
   },
   {
-    "name": "René Pinto",
+    "name": "Ren\u00e9 Pinto",
     "team": "AZ",
     "position": "C",
     "manager": null,
@@ -41027,7 +41027,7 @@
     "fypd": false
   },
   {
-    "name": "Simón Muzziotti",
+    "name": "Sim\u00f3n Muzziotti",
     "team": "PHI",
     "position": "OF",
     "manager": "",
@@ -41253,7 +41253,7 @@
     "fypd": false
   },
   {
-    "name": "Jerar Encarnación",
+    "name": "Jerar Encarnaci\u00f3n",
     "team": "SF",
     "position": "OF",
     "manager": null,
@@ -41432,7 +41432,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Pérez",
+    "name": "Carlos P\u00e9rez",
     "team": "CWS",
     "position": "C",
     "manager": null,
@@ -41534,7 +41534,7 @@
     "fypd": false
   },
   {
-    "name": "Vidal Bruján",
+    "name": "Vidal Bruj\u00e1n",
     "team": "CHC",
     "position": "3B,SS,OF",
     "manager": null,
@@ -41819,7 +41819,7 @@
     "fypd": false
   },
   {
-    "name": "Ali Sánchez",
+    "name": "Ali S\u00e1nchez",
     "team": "PIT",
     "position": "C",
     "manager": null,
@@ -42023,7 +42023,7 @@
     "mlb_primary_position": "3B"
   },
   {
-    "name": "Wilderd Patiño",
+    "name": "Wilderd Pati\u00f1o",
     "team": "AZ",
     "position": "OF",
     "manager": "",
@@ -42261,7 +42261,7 @@
     "fypd": false
   },
   {
-    "name": "Albert Suárez",
+    "name": "Albert Su\u00e1rez",
     "team": "BAL",
     "position": "SP, RP",
     "manager": null,
@@ -44504,15 +44504,15 @@
     "name": "Troy Melton",
     "team": "DET",
     "position": "SP,RP",
-    "manager": "",
+    "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "60175",
     "upid": "4665",
     "mlb_id": 675512,
-    "FBP_Team": "",
+    "FBP_Team": "SAD",
     "fypd": false,
     "rank": 2106,
     "debut_date": null,
@@ -47007,7 +47007,7 @@
     "throws": "L"
   },
   {
-    "name": "José Caballero",
+    "name": "Jos\u00e9 Caballero",
     "team": "TB",
     "position": "2B,3B,SS,OF",
     "manager": null,
@@ -48725,7 +48725,7 @@
     "mlb_primary_position": "2B"
   },
   {
-    "name": "César Salazar",
+    "name": "C\u00e9sar Salazar",
     "team": "HOU",
     "position": "C",
     "manager": "",
@@ -52263,7 +52263,7 @@
     "fypd": false
   },
   {
-    "name": "Melvin Adón",
+    "name": "Melvin Ad\u00f3n",
     "team": "COL",
     "position": "RHP",
     "manager": "",
@@ -52338,7 +52338,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "José Soriano",
+    "name": "Jos\u00e9 Soriano",
     "team": "LAA",
     "position": "SP",
     "manager": null,
@@ -52595,7 +52595,7 @@
     "fypd": false
   },
   {
-    "name": "Dedniel Núñez",
+    "name": "Dedniel N\u00fa\u00f1ez",
     "team": "",
     "position": "RP",
     "manager": "",
@@ -52951,7 +52951,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Bermúdez",
+    "name": "Jonathan Berm\u00fadez",
     "team": "MIA",
     "position": "SP",
     "manager": null,
@@ -53374,7 +53374,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Guillermo Zuñiga",
+    "name": "Guillermo Zu\u00f1iga",
     "team": "LAA",
     "position": "RP",
     "manager": "",
@@ -53827,7 +53827,7 @@
     "throws": "R"
   },
   {
-    "name": "José Tena",
+    "name": "Jos\u00e9 Tena",
     "team": "WSH",
     "position": "2B,3B",
     "manager": null,
@@ -53874,7 +53874,7 @@
     "throws": "R"
   },
   {
-    "name": "José Fermín",
+    "name": "Jos\u00e9 Ferm\u00edn",
     "team": "STL",
     "position": "2B",
     "manager": null,
@@ -54626,7 +54626,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "6555",
     "mlb_id": 805300,
@@ -54742,7 +54742,7 @@
     "position": "OF",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64967",
@@ -56575,7 +56575,7 @@
     "debuted": false
   },
   {
-    "name": "Juan Nuñez",
+    "name": "Juan Nu\u00f1ez",
     "team": "",
     "position": "",
     "manager": "",
@@ -56593,7 +56593,7 @@
     "debuted": false
   },
   {
-    "name": "Nasim Nuñez",
+    "name": "Nasim Nu\u00f1ez",
     "team": "",
     "position": "OF",
     "manager": "",
@@ -57449,9 +57449,9 @@
     "position": "SP",
     "manager": "Country Fried Lamb",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "63028",
     "upid": "6725",
     "mlb_id": 694393,
@@ -57924,7 +57924,7 @@
     "throws": "R"
   },
   {
-    "name": "José Cruz",
+    "name": "Jos\u00e9 Cruz",
     "team": "",
     "position": "",
     "manager": "",
@@ -60027,7 +60027,7 @@
     "debuted": false
   },
   {
-    "name": "Marcos Castañon",
+    "name": "Marcos Casta\u00f1on",
     "team": "SD",
     "position": "3B",
     "manager": "",
@@ -61154,7 +61154,7 @@
     "position": "SP",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Blue Chip Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "62935",
@@ -61780,7 +61780,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "63611",
     "upid": "6938",
     "mlb_id": 801739,
@@ -66038,7 +66038,7 @@
     "throws": "L"
   },
   {
-    "name": "Nerwilian Cedeño",
+    "name": "Nerwilian Cede\u00f1o",
     "team": "SD",
     "position": "C",
     "manager": "",
@@ -66186,7 +66186,7 @@
     "player_type": "Farm",
     "contract_type": "Purchased Contract",
     "status": "[7] P",
-    "years_simple": "PC",
+    "years_simple": "P",
     "yahoo_id": "",
     "upid": "7156",
     "mlb_id": 696070,
@@ -66373,7 +66373,7 @@
     "fypd": false
   },
   {
-    "name": "Luis De León",
+    "name": "Luis De Le\u00f3n",
     "team": "BAL",
     "position": "SP",
     "manager": "",
@@ -69929,7 +69929,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Daysbel Hernández",
+    "name": "Daysbel Hern\u00e1ndez",
     "team": "ATL",
     "position": "RP",
     "manager": null,
@@ -71035,15 +71035,15 @@
     "name": "Cam Schlittler",
     "team": "NYY",
     "position": "SP",
-    "manager": "",
+    "manager": "Rick Vaughn",
     "player_type": "Farm",
-    "contract_type": "",
+    "contract_type": "Purchased Contract",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64985",
     "upid": "7568",
     "mlb_id": 693645,
-    "FBP_Team": "",
+    "FBP_Team": "RV",
     "fypd": false,
     "rank": 1113,
     "debut_date": null,
@@ -71082,7 +71082,7 @@
     "debuted": false
   },
   {
-    "name": "Alex Ramírez",
+    "name": "Alex Ram\u00edrez",
     "team": "STL",
     "position": "C",
     "manager": "",
@@ -71125,7 +71125,7 @@
     "throws": "R"
   },
   {
-    "name": "Pedro León",
+    "name": "Pedro Le\u00f3n",
     "team": "AZ",
     "position": "RHP",
     "manager": "",
@@ -71926,7 +71926,7 @@
     "position": "C",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64916",
@@ -72718,7 +72718,7 @@
     "position": "SP",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "",
@@ -72793,7 +72793,7 @@
     "position": "3B,SS",
     "manager": "not much of a donkey",
     "player_type": "Farm",
-    "contract_type": "Purchased Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
     "years_simple": "P",
     "yahoo_id": "64370",
@@ -73517,7 +73517,7 @@
     "mlb_primary_position": "P"
   },
   {
-    "name": "Guillo Zuñiga",
+    "name": "Guillo Zu\u00f1iga",
     "team": "PHI",
     "position": "RP",
     "manager": null,
@@ -73583,7 +73583,7 @@
     "mlb_primary_position": "CF"
   },
   {
-    "name": "José Butto",
+    "name": "Jos\u00e9 Butto",
     "team": "WSH",
     "position": "SS",
     "manager": "",
@@ -73808,7 +73808,7 @@
     "debuted": false
   },
   {
-    "name": "Griff O’Ferrall",
+    "name": "Griff O\u2019Ferrall",
     "team": "BAL",
     "position": "SS",
     "manager": "",
@@ -74822,7 +74822,7 @@
     "debuted": false
   },
   {
-    "name": "Jose Luis Peña",
+    "name": "Jose Luis Pe\u00f1a",
     "team": "BAL",
     "position": "SS",
     "manager": "",
@@ -74915,7 +74915,7 @@
     "debuted": false
   },
   {
-    "name": "Warren Calcaño",
+    "name": "Warren Calca\u00f1o",
     "team": "KC",
     "position": "SS",
     "manager": "",
@@ -76880,9 +76880,9 @@
     "position": "2B",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
-    "contract_type": "Development Contract",
+    "contract_type": "Development Cont.",
     "status": "[7] P",
-    "years_simple": "DC",
+    "years_simple": "P",
     "yahoo_id": "65447",
     "upid": "7896",
     "mlb_id": 815304,
@@ -77662,7 +77662,7 @@
     "debuted": false
   },
   {
-    "name": "Sean Paul Liñan",
+    "name": "Sean Paul Li\u00f1an",
     "team": "LAD",
     "position": "P",
     "manager": "",
@@ -78051,7 +78051,7 @@
     "fypd": false
   },
   {
-    "name": "Yonny Hernández",
+    "name": "Yonny Hern\u00e1ndez",
     "team": "NYM",
     "position": "SS",
     "manager": null,
@@ -78268,7 +78268,7 @@
     "fypd": false
   },
   {
-    "name": "Richard Rodríguez",
+    "name": "Richard Rodr\u00edguez",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -78305,7 +78305,7 @@
     "fypd": false
   },
   {
-    "name": "José Álvarez",
+    "name": "Jos\u00e9 \u00c1lvarez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -78567,7 +78567,7 @@
     "fypd": false
   },
   {
-    "name": "Leury García",
+    "name": "Leury Garc\u00eda",
     "team": "ATL",
     "position": "OF",
     "manager": null,
@@ -78741,7 +78741,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Martínez",
+    "name": "Carlos Mart\u00ednez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -78898,7 +78898,7 @@
     "fypd": false
   },
   {
-    "name": "Alex Colomé",
+    "name": "Alex Colom\u00e9",
     "team": "WSH",
     "position": "P",
     "manager": null,
@@ -84817,7 +84817,7 @@
     "debuted": false
   },
   {
-    "name": "AngelNuñez Jr.",
+    "name": "AngelNu\u00f1ez Jr.",
     "team": "CIN",
     "position": "CF",
     "manager": null,
@@ -85401,7 +85401,7 @@
     "debuted": false
   },
   {
-    "name": "Jose Mañon",
+    "name": "Jose Ma\u00f1on",
     "team": "ATL",
     "position": "SS",
     "manager": null,
@@ -85458,7 +85458,7 @@
     "debuted": false
   },
   {
-    "name": "Kendri Faña",
+    "name": "Kendri Fa\u00f1a",
     "team": "LAA",
     "position": "RHP",
     "manager": null,
@@ -85534,7 +85534,7 @@
     "debuted": false
   },
   {
-    "name": "Ronny Muñoz Aleman",
+    "name": "Ronny Mu\u00f1oz Aleman",
     "team": "MIA",
     "position": "3B",
     "manager": null,
@@ -85693,7 +85693,7 @@
     "debuted": false
   },
   {
-    "name": "Yadier Muñoz",
+    "name": "Yadier Mu\u00f1oz",
     "team": "CHC",
     "position": "SS",
     "manager": null,
@@ -86712,7 +86712,7 @@
     "fypd": false
   },
   {
-    "name": "Adrián Hernández",
+    "name": "Adri\u00e1n Hern\u00e1ndez",
     "team": "NYM",
     "position": "CF",
     "manager": null,
@@ -86778,7 +86778,7 @@
     "fypd": false
   },
   {
-    "name": "Adrián Sanchez",
+    "name": "Adri\u00e1n Sanchez",
     "team": "WSH",
     "position": "2B",
     "manager": null,
@@ -87636,7 +87636,7 @@
     "fypd": false
   },
   {
-    "name": "Alex Colomé",
+    "name": "Alex Colom\u00e9",
     "team": "COL",
     "position": "P",
     "manager": null,
@@ -89440,7 +89440,7 @@
     "fypd": false
   },
   {
-    "name": "Angel Rondón",
+    "name": "Angel Rond\u00f3n",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -89506,7 +89506,7 @@
     "fypd": false
   },
   {
-    "name": "Aníbal Sánchez",
+    "name": "An\u00edbal S\u00e1nchez",
     "team": "WSH",
     "position": "P",
     "manager": null,
@@ -90123,7 +90123,7 @@
     "fypd": false
   },
   {
-    "name": "Arodys Vizcaíno",
+    "name": "Arodys Vizca\u00edno",
     "team": "KC",
     "position": "P",
     "manager": null,
@@ -90321,7 +90321,7 @@
     "fypd": false
   },
   {
-    "name": "Asdrúbal Cabrera",
+    "name": "Asdr\u00fabal Cabrera",
     "team": "AZ",
     "position": "3B,SS",
     "manager": null,
@@ -95035,7 +95035,7 @@
     "fypd": false
   },
   {
-    "name": "Carlos Rodríguez",
+    "name": "Carlos Rodr\u00edguez",
     "team": "ATL",
     "position": "RF",
     "manager": null,
@@ -95607,7 +95607,7 @@
     "fypd": false
   },
   {
-    "name": "César Hernández",
+    "name": "C\u00e9sar Hern\u00e1ndez",
     "team": "DET",
     "position": "2B,3B,OF",
     "manager": null,
@@ -95695,7 +95695,7 @@
     "fypd": false
   },
   {
-    "name": "César Puello",
+    "name": "C\u00e9sar Puello",
     "team": "BOS",
     "position": "OF",
     "manager": null,
@@ -95717,7 +95717,7 @@
     "fypd": false
   },
   {
-    "name": "César Valdez",
+    "name": "C\u00e9sar Valdez",
     "team": "LAA",
     "position": "P",
     "manager": null,
@@ -96179,7 +96179,7 @@
     "fypd": false
   },
   {
-    "name": "Chi Chi González",
+    "name": "Chi Chi Gonz\u00e1lez",
     "team": "MIA",
     "position": "P",
     "manager": null,
@@ -98867,7 +98867,7 @@
     "fypd": false
   },
   {
-    "name": "D’Shawn Knowles",
+    "name": "D\u2019Shawn Knowles",
     "team": "",
     "position": "",
     "manager": null,
@@ -99153,7 +99153,7 @@
     "fypd": false
   },
   {
-    "name": "Daniel Álvarez",
+    "name": "Daniel \u00c1lvarez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -99791,7 +99791,7 @@
     "fypd": false
   },
   {
-    "name": "Darien Núñez",
+    "name": "Darien N\u00fa\u00f1ez",
     "team": "SF",
     "position": "P",
     "manager": null,
@@ -100979,7 +100979,7 @@
     "fypd": false
   },
   {
-    "name": "Dereck Rodríguez",
+    "name": "Dereck Rodr\u00edguez",
     "team": "MIN",
     "position": "P",
     "manager": null,
@@ -101816,7 +101816,7 @@
     "fypd": false
   },
   {
-    "name": "Dom Nuñez",
+    "name": "Dom Nu\u00f1ez",
     "team": "CHC",
     "position": "C",
     "manager": null,
@@ -102830,7 +102830,7 @@
     "fypd": false
   },
   {
-    "name": "Edgar García",
+    "name": "Edgar Garc\u00eda",
     "team": "MIN",
     "position": "P",
     "manager": null,
@@ -103842,7 +103842,7 @@
     "fypd": false
   },
   {
-    "name": "Enrique Hernández",
+    "name": "Enrique Hern\u00e1ndez",
     "team": "BOS",
     "position": "",
     "manager": null,
@@ -104306,7 +104306,7 @@
     "fypd": false
   },
   {
-    "name": "Erick Peña",
+    "name": "Erick Pe\u00f1a",
     "team": "KC",
     "position": "CF",
     "manager": null,
@@ -104372,7 +104372,7 @@
     "fypd": false
   },
   {
-    "name": "Erik González",
+    "name": "Erik Gonz\u00e1lez",
     "team": "CWS",
     "position": "Util",
     "manager": null,
@@ -104746,7 +104746,7 @@
     "fypd": false
   },
   {
-    "name": "Ethan O’Donnell",
+    "name": "Ethan O\u2019Donnell",
     "team": "",
     "position": "",
     "manager": null,
@@ -105121,7 +105121,7 @@
     "fypd": false
   },
   {
-    "name": "Félix Peña",
+    "name": "F\u00e9lix Pe\u00f1a",
     "team": "NYM",
     "position": "P",
     "manager": null,
@@ -105583,7 +105583,7 @@
     "fypd": false
   },
   {
-    "name": "Francisco Mejía",
+    "name": "Francisco Mej\u00eda",
     "team": "TB",
     "position": "C",
     "manager": null,
@@ -105869,7 +105869,7 @@
     "fypd": false
   },
   {
-    "name": "Franklin Pérez",
+    "name": "Franklin P\u00e9rez",
     "team": "DET",
     "position": "P",
     "manager": null,
@@ -105913,7 +105913,7 @@
     "fypd": false
   },
   {
-    "name": "Franklyn Kilomé",
+    "name": "Franklyn Kilom\u00e9",
     "team": "NYM",
     "position": "P",
     "manager": null,
@@ -107852,7 +107852,7 @@
     "fypd": false
   },
   {
-    "name": "Héctor Noesí",
+    "name": "H\u00e9ctor Noes\u00ed",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -107874,7 +107874,7 @@
     "fypd": false
   },
   {
-    "name": "Héctor Pérez",
+    "name": "H\u00e9ctor P\u00e9rez",
     "team": "TB",
     "position": "P",
     "manager": null,
@@ -107896,7 +107896,7 @@
     "fypd": false
   },
   {
-    "name": "Héctor Santiago",
+    "name": "H\u00e9ctor Santiago",
     "team": "SEA",
     "position": "P",
     "manager": null,
@@ -108028,7 +108028,7 @@
     "fypd": false
   },
   {
-    "name": "Hernán Pérez",
+    "name": "Hern\u00e1n P\u00e9rez",
     "team": "MIL",
     "position": "2B,3B",
     "manager": null,
@@ -108226,7 +108226,7 @@
     "fypd": false
   },
   {
-    "name": "Humberto Mejía",
+    "name": "Humberto Mej\u00eda",
     "team": "AZ",
     "position": "P",
     "manager": null,
@@ -108733,7 +108733,7 @@
     "fypd": false
   },
   {
-    "name": "Isan Díaz",
+    "name": "Isan D\u00edaz",
     "team": "SF",
     "position": "2B,3B",
     "manager": null,
@@ -108843,7 +108843,7 @@
     "fypd": false
   },
   {
-    "name": "Iván Castillo",
+    "name": "Iv\u00e1n Castillo",
     "team": "KC",
     "position": "2B,3B",
     "manager": null,
@@ -109041,7 +109041,7 @@
     "fypd": false
   },
   {
-    "name": "J.C. Mejía",
+    "name": "J.C. Mej\u00eda",
     "team": "MIL",
     "position": "P",
     "manager": null,
@@ -110075,7 +110075,7 @@
     "fypd": false
   },
   {
-    "name": "Jaime Barría",
+    "name": "Jaime Barr\u00eda",
     "team": "LAA",
     "position": "P",
     "manager": null,
@@ -111461,7 +111461,7 @@
     "fypd": false
   },
   {
-    "name": "Jarlín García",
+    "name": "Jarl\u00edn Garc\u00eda",
     "team": "PIT",
     "position": "P",
     "manager": null,
@@ -112277,7 +112277,7 @@
     "fypd": false
   },
   {
-    "name": "JC Ramírez",
+    "name": "JC Ram\u00edrez",
     "team": "LAA",
     "position": "P",
     "manager": null,
@@ -113091,7 +113091,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Aguilar",
+    "name": "Jes\u00fas Aguilar",
     "team": "OAK",
     "position": "1B",
     "manager": null,
@@ -113267,7 +113267,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Cruz",
+    "name": "Jes\u00fas Cruz",
     "team": "PHI",
     "position": "P",
     "manager": null,
@@ -113399,7 +113399,7 @@
     "fypd": false
   },
   {
-    "name": "Jesús Palacios",
+    "name": "Jes\u00fas Palacios",
     "team": "",
     "position": "",
     "manager": null,
@@ -113729,7 +113729,7 @@
     "fypd": false
   },
   {
-    "name": "Jhoulys Chacín",
+    "name": "Jhoulys Chac\u00edn",
     "team": "COL",
     "position": "P",
     "manager": null,
@@ -115117,7 +115117,7 @@
     "fypd": false
   },
   {
-    "name": "Jonathan Araúz",
+    "name": "Jonathan Ara\u00faz",
     "team": "NYM",
     "position": "3B",
     "manager": null,
@@ -116129,7 +116129,7 @@
     "fypd": false
   },
   {
-    "name": "José Briceño",
+    "name": "Jos\u00e9 Brice\u00f1o",
     "team": "KC",
     "position": "C",
     "manager": null,
@@ -116173,7 +116173,7 @@
     "fypd": false
   },
   {
-    "name": "José Castillo",
+    "name": "Jos\u00e9 Castillo",
     "team": "SD",
     "position": "P",
     "manager": null,
@@ -116305,7 +116305,7 @@
     "fypd": false
   },
   {
-    "name": "José De León",
+    "name": "Jos\u00e9 De Le\u00f3n",
     "team": "TOR",
     "position": "P",
     "manager": null,
@@ -116481,7 +116481,7 @@
     "fypd": false
   },
   {
-    "name": "José Godoy",
+    "name": "Jos\u00e9 Godoy",
     "team": "LAA",
     "position": "C",
     "manager": null,
@@ -116657,7 +116657,7 @@
     "fypd": false
   },
   {
-    "name": "José Mujica",
+    "name": "Jos\u00e9 Mujica",
     "team": "NYY",
     "position": "P",
     "manager": null,
@@ -116723,7 +116723,7 @@
     "fypd": false
   },
   {
-    "name": "José Peraza",
+    "name": "Jos\u00e9 Peraza",
     "team": "NYM",
     "position": "2B,SS",
     "manager": null,
@@ -116877,7 +116877,7 @@
     "fypd": false
   },
   {
-    "name": "José Rodríguez",
+    "name": "Jos\u00e9 Rodr\u00edguez",
     "team": "SEA",
     "position": "P",
     "manager": null,
@@ -116943,7 +116943,7 @@
     "fypd": false
   },
   {
-    "name": "José Rondón",
+    "name": "Jos\u00e9 Rond\u00f3n",
     "team": "STL",
     "position": "OF",
     "manager": null,
@@ -118109,7 +118109,7 @@
     "fypd": false
   },
   {
-    "name": "Julian Fernández",
+    "name": "Julian Fern\u00e1ndez",
     "team": "TOR",
     "position": "P",
     "manager": null,
@@ -118264,7 +118264,7 @@
     "fypd": false
   },
   {
-    "name": "Julio Rodríguez",
+    "name": "Julio Rodr\u00edguez",
     "team": "DET",
     "position": "C",
     "manager": null,
@@ -118352,7 +118352,7 @@
     "fypd": false
   },
   {
-    "name": "Junior Fernández",
+    "name": "Junior Fern\u00e1ndez",
     "team": "TOR",
     "position": "P",
     "manager": null,
@@ -119387,7 +119387,7 @@
     "fypd": false
   },
   {
-    "name": "Kelvin Gutiérrez",
+    "name": "Kelvin Guti\u00e9rrez",
     "team": "BAL",
     "position": "3B",
     "manager": null,
@@ -121567,7 +121567,7 @@
     "fypd": false
   },
   {
-    "name": "Lewin Díaz",
+    "name": "Lewin D\u00edaz",
     "team": "BAL",
     "position": "1B",
     "manager": null,
@@ -122206,7 +122206,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Avilán",
+    "name": "Luis Avil\u00e1n",
     "team": "WSH",
     "position": "P",
     "manager": null,
@@ -122250,7 +122250,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Básabe",
+    "name": "Luis B\u00e1sabe",
     "team": "CWS",
     "position": "CF",
     "manager": null,
@@ -122448,7 +122448,7 @@
     "fypd": false
   },
   {
-    "name": "Luis García",
+    "name": "Luis Garc\u00eda",
     "team": "DET",
     "position": "SS",
     "manager": null,
@@ -122492,7 +122492,7 @@
     "fypd": false
   },
   {
-    "name": "Luis González",
+    "name": "Luis Gonz\u00e1lez",
     "team": "SF",
     "position": "CF",
     "manager": null,
@@ -122602,7 +122602,7 @@
     "fypd": false
   },
   {
-    "name": "Luís Madero",
+    "name": "Lu\u00eds Madero",
     "team": "MIA",
     "position": "P",
     "manager": null,
@@ -122624,7 +122624,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Marté",
+    "name": "Luis Mart\u00e9",
     "team": "MIA",
     "position": "SS",
     "manager": null,
@@ -123526,7 +123526,7 @@
     "fypd": false
   },
   {
-    "name": "Malcolm Nuñez",
+    "name": "Malcolm Nu\u00f1ez",
     "team": "STL",
     "position": "3B",
     "manager": null,
@@ -123592,7 +123592,7 @@
     "fypd": false
   },
   {
-    "name": "Manny Bañuelos",
+    "name": "Manny Ba\u00f1uelos",
     "team": "",
     "position": "",
     "manager": null,
@@ -123636,7 +123636,7 @@
     "fypd": false
   },
   {
-    "name": "Manny Piña",
+    "name": "Manny Pi\u00f1a",
     "team": "ATL",
     "position": "C",
     "manager": null,
@@ -123746,7 +123746,7 @@
     "fypd": false
   },
   {
-    "name": "Manuel Peña",
+    "name": "Manuel Pe\u00f1a",
     "team": "AZ",
     "position": "3B",
     "manager": null,
@@ -123834,7 +123834,7 @@
     "fypd": false
   },
   {
-    "name": "Marco Hernández",
+    "name": "Marco Hern\u00e1ndez",
     "team": "CWS",
     "position": "2B,3B",
     "manager": null,
@@ -123922,7 +123922,7 @@
     "fypd": false
   },
   {
-    "name": "Marcos Diplán",
+    "name": "Marcos Dipl\u00e1n",
     "team": "BAL",
     "position": "P",
     "manager": null,
@@ -126211,7 +126211,7 @@
     "fypd": false
   },
   {
-    "name": "Michel Báez",
+    "name": "Michel B\u00e1ez",
     "team": "SD",
     "position": "P",
     "manager": null,
@@ -126541,7 +126541,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Sánchez",
+    "name": "Miguel S\u00e1nchez",
     "team": "MIL",
     "position": "P",
     "manager": null,
@@ -127730,7 +127730,7 @@
     "fypd": false
   },
   {
-    "name": "Neftalí Feliz",
+    "name": "Neftal\u00ed Feliz",
     "team": "LAD",
     "position": "P",
     "manager": null,
@@ -128875,7 +128875,7 @@
     "fypd": false
   },
   {
-    "name": "Noé Ramírez",
+    "name": "No\u00e9 Ram\u00edrez",
     "team": "AZ",
     "position": "P",
     "manager": null,
@@ -129029,7 +129029,7 @@
     "fypd": false
   },
   {
-    "name": "Odúbel Herrera",
+    "name": "Od\u00fabel Herrera",
     "team": "PHI",
     "position": "CF",
     "manager": null,
@@ -129095,7 +129095,7 @@
     "fypd": false
   },
   {
-    "name": "Oliver Pérez",
+    "name": "Oliver P\u00e9rez",
     "team": "AZ",
     "position": "",
     "manager": null,
@@ -130173,7 +130173,7 @@
     "fypd": false
   },
   {
-    "name": "Pedro Báez",
+    "name": "Pedro B\u00e1ez",
     "team": "HOU",
     "position": "P",
     "manager": null,
@@ -130569,7 +130569,7 @@
     "fypd": false
   },
   {
-    "name": "Phillips Valdéz",
+    "name": "Phillips Vald\u00e9z",
     "team": "COL",
     "position": "P",
     "manager": null,
@@ -131142,7 +131142,7 @@
     "fypd": false
   },
   {
-    "name": "Rainer Nuñez",
+    "name": "Rainer Nu\u00f1ez",
     "team": "TOR",
     "position": "1B",
     "manager": null,
@@ -131296,7 +131296,7 @@
     "fypd": false
   },
   {
-    "name": "Ramón Rosso",
+    "name": "Ram\u00f3n Rosso",
     "team": "DET",
     "position": "P",
     "manager": null,
@@ -131737,7 +131737,7 @@
     "debuted": true
   },
   {
-    "name": "René Rivera",
+    "name": "Ren\u00e9 Rivera",
     "team": "WSH",
     "position": "C",
     "manager": null,
@@ -131980,7 +131980,7 @@
     "fypd": false
   },
   {
-    "name": "Ricardo Sánchez",
+    "name": "Ricardo S\u00e1nchez",
     "team": "CWS",
     "position": "P",
     "manager": null,
@@ -132090,7 +132090,7 @@
     "fypd": false
   },
   {
-    "name": "Richard Ureña",
+    "name": "Richard Ure\u00f1a",
     "team": "WSH",
     "position": "SS",
     "manager": null,
@@ -132487,7 +132487,7 @@
     "fypd": false
   },
   {
-    "name": "Robel García",
+    "name": "Robel Garc\u00eda",
     "team": "CHC",
     "position": "2B,3B,SS",
     "manager": null,
@@ -132773,7 +132773,7 @@
     "fypd": false
   },
   {
-    "name": "Robinson Canó",
+    "name": "Robinson Can\u00f3",
     "team": "NYM",
     "position": "2B",
     "manager": null,
@@ -132993,7 +132993,7 @@
     "fypd": false
   },
   {
-    "name": "Roel Ramírez",
+    "name": "Roel Ram\u00edrez",
     "team": "ATL",
     "position": "P",
     "manager": null,
@@ -133015,7 +133015,7 @@
     "fypd": false
   },
   {
-    "name": "Roenis Elías",
+    "name": "Roenis El\u00edas",
     "team": "CHC",
     "position": "P",
     "manager": null,
@@ -133147,7 +133147,7 @@
     "fypd": false
   },
   {
-    "name": "Ronald Bolaños",
+    "name": "Ronald Bola\u00f1os",
     "team": "KC",
     "position": "P",
     "manager": null,
@@ -133169,7 +133169,7 @@
     "fypd": false
   },
   {
-    "name": "Ronald Guzmán",
+    "name": "Ronald Guzm\u00e1n",
     "team": "SF",
     "position": "1B",
     "manager": null,
@@ -133433,7 +133433,7 @@
     "fypd": false
   },
   {
-    "name": "Rony García",
+    "name": "Rony Garc\u00eda",
     "team": "DET",
     "position": "P",
     "manager": null,
@@ -133653,7 +133653,7 @@
     "fypd": false
   },
   {
-    "name": "Rubén Tejada",
+    "name": "Rub\u00e9n Tejada",
     "team": "TOR",
     "position": "3B,SS",
     "manager": null,
@@ -135458,7 +135458,7 @@
     "fypd": false
   },
   {
-    "name": "Sergio Alcántara",
+    "name": "Sergio Alc\u00e1ntara",
     "team": "CHC",
     "position": "2B,3B,SS",
     "manager": null,
@@ -138010,7 +138010,7 @@
     "fypd": false
   },
   {
-    "name": "Tomás Telis",
+    "name": "Tom\u00e1s Telis",
     "team": "LAD",
     "position": "C",
     "manager": null,
@@ -140278,7 +140278,7 @@
     "fypd": false
   },
   {
-    "name": "Vimael Machín",
+    "name": "Vimael Mach\u00edn",
     "team": "PHI",
     "position": "3B",
     "manager": null,
@@ -141600,7 +141600,7 @@
     "fypd": false
   },
   {
-    "name": "Xavier Cedeño",
+    "name": "Xavier Cede\u00f1o",
     "team": "CHC",
     "position": "P",
     "manager": null,
@@ -141732,7 +141732,7 @@
     "fypd": false
   },
   {
-    "name": "Yadier Álvarez",
+    "name": "Yadier \u00c1lvarez",
     "team": "LAD",
     "position": "P",
     "manager": null,
@@ -141776,7 +141776,7 @@
     "fypd": false
   },
   {
-    "name": "Yairo Muñoz",
+    "name": "Yairo Mu\u00f1oz",
     "team": "PHI",
     "position": "2B",
     "manager": null,
@@ -141842,7 +141842,7 @@
     "fypd": false
   },
   {
-    "name": "Yasmany Tomás",
+    "name": "Yasmany Tom\u00e1s",
     "team": "WSH",
     "position": "OF",
     "manager": null,
@@ -142018,7 +142018,7 @@
     "fypd": false
   },
   {
-    "name": "Yennsy Díaz",
+    "name": "Yennsy D\u00edaz",
     "team": "NYM",
     "position": "P",
     "manager": null,
@@ -142084,7 +142084,7 @@
     "fypd": false
   },
   {
-    "name": "Yermín Mercedes",
+    "name": "Yerm\u00edn Mercedes",
     "team": "SF",
     "position": "OF",
     "manager": null,
@@ -142195,7 +142195,7 @@
     "fypd": false
   },
   {
-    "name": "Yoán Aybar",
+    "name": "Yo\u00e1n Aybar",
     "team": "CWS",
     "position": "P",
     "manager": null,
@@ -142283,7 +142283,7 @@
     "fypd": false
   },
   {
-    "name": "Yoenis Céspedes",
+    "name": "Yoenis C\u00e9spedes",
     "team": "NYM",
     "position": "CF",
     "manager": null,
@@ -142394,7 +142394,7 @@
     "fypd": false
   },
   {
-    "name": "Yolmer Sánchez",
+    "name": "Yolmer S\u00e1nchez",
     "team": "BOS",
     "position": "",
     "manager": null,
@@ -143736,7 +143736,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Manuel León",
+    "name": "Luis Manuel Le\u00f3n",
     "team": "STL",
     "position": "SS",
     "manager": null,
@@ -144220,7 +144220,7 @@
     "fypd": false
   },
   {
-    "name": "Zach Dueñas",
+    "name": "Zach Due\u00f1as",
     "team": "",
     "position": "SP",
     "manager": null,
@@ -145188,7 +145188,7 @@
     "fypd": false
   },
   {
-    "name": "Elmer Rodríguez",
+    "name": "Elmer Rodr\u00edguez",
     "team": "RHP",
     "position": "NYY",
     "manager": null,
@@ -145496,7 +145496,7 @@
     "fypd": false
   },
   {
-    "name": "Hiverson López",
+    "name": "Hiverson L\u00f3pez",
     "team": "C",
     "position": "",
     "manager": null,
@@ -145562,7 +145562,7 @@
     "fypd": false
   },
   {
-    "name": "José Peña",
+    "name": "Jos\u00e9 Pe\u00f1a",
     "team": "SS",
     "position": "",
     "manager": null,
@@ -145628,7 +145628,7 @@
     "fypd": false
   },
   {
-    "name": "Luis Hernández",
+    "name": "Luis Hern\u00e1ndez",
     "team": "SS",
     "position": "",
     "manager": null,
@@ -145650,7 +145650,7 @@
     "fypd": false
   },
   {
-    "name": "Angel Nuñez",
+    "name": "Angel Nu\u00f1ez",
     "team": "OF",
     "position": "",
     "manager": null,
@@ -145760,7 +145760,7 @@
     "fypd": false
   },
   {
-    "name": "Ronny Muñoz",
+    "name": "Ronny Mu\u00f1oz",
     "team": "SS",
     "position": "",
     "manager": null,
@@ -145892,7 +145892,7 @@
     "fypd": false
   },
   {
-    "name": "Adrián Lunar",
+    "name": "Adri\u00e1n Lunar",
     "team": "C",
     "position": "",
     "manager": null,
@@ -147457,7 +147457,7 @@
     "fypd": false
   },
   {
-    "name": "Miguel Rodríguez",
+    "name": "Miguel Rodr\u00edguez",
     "team": "BAL",
     "position": "C",
     "manager": null,
