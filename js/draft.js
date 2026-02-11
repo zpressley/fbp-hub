@@ -26,7 +26,7 @@ let DRAFT_STATE = {
  * Initialize draft page
  */
 async function initDraft() {
-    // Redirect to draft-preview if no active draft
+    // Redirect to draft-preview if no active draft (manual master switch).
     if (!ACTIVE_DRAFT) {
         window.location.href = 'draft-preview.html';
         return;
@@ -56,23 +56,30 @@ async function initDraft() {
     // Load draft data for current mode
     await loadDraftData(DRAFT_STATE.mode);
 
-    // Populate initial draft pool list
+    // Populate initial draft pool list (uses FBPHub.data + draft state)
     displayDraftPool();
 
-    // If no data, show inactive state
+    // Always show the main draft UI; use the inactive banner only as a
+    // status indicator when there is no active draft payload.
+    const inactiveEl = document.getElementById('draftInactive');
+    const contentEl = document.getElementById('draftContent');
+    if (contentEl) contentEl.style.display = 'block';
+    if (inactiveEl) inactiveEl.style.display = DRAFT_STATE.draftData ? 'none' : 'flex';
+
+    // If we don't have live draft data yet, stop here. The page will show
+    // the shell UI with "No Active Draft" messaging, but without timers
+    // or recent-picks content wired up.
     if (!DRAFT_STATE.draftData) {
         if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
         if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
-        const inactiveEl = document.getElementById('draftInactive');
-        const contentEl = document.getElementById('draftContent');
-        if (inactiveEl) inactiveEl.style.display = 'flex';
-        if (contentEl) contentEl.style.display = 'none';
+        // Clear clock UI to a neutral state.
+        updateOnTheClock();
+        setupViewToggle();
         return;
     }
     
-    // Show active draft container and hide inactive banner (if present)
-    const inactiveEl = document.getElementById('draftInactive');
-    const contentEl = document.getElementById('draftContent');
+    // We have an active draft payload – hide the inactive banner (if
+    // present) and fully initialize the live tracker.
     if (inactiveEl) inactiveEl.style.display = 'none';
     if (contentEl) contentEl.style.display = 'block';
     
@@ -174,14 +181,17 @@ async function refreshDraftData() {
     
     await loadDraftData(DRAFT_STATE.mode);
     
-    // If draft ended or no longer active, flip UI and stop timers.
+    // If draft ended or no longer active, stop timers but keep the main
+    // UI visible so managers can still see the layout and static data.
     if (!DRAFT_STATE.draftData) {
         if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
         if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
         const inactiveEl = document.getElementById('draftInactive');
         const contentEl = document.getElementById('draftContent');
         if (inactiveEl) inactiveEl.style.display = 'flex';
-        if (contentEl) contentEl.style.display = 'none';
+        if (contentEl) contentEl.style.display = 'block';
+        // Reset clock to neutral state.
+        updateOnTheClock();
         return;
     }
     

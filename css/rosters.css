@@ -394,7 +394,7 @@
 }
 
 .contract-group {
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
 }
 
 .contract-group .position-group-header {
