@@ -89,6 +89,7 @@ async function initDraft() {
     displayRecentPicks();
     displayUpcomingPicks();
     setupViewToggle();
+    setupPicksTabs();
     
     // Start auto-refresh (every 5 seconds)
     DRAFT_STATE.updateInterval = setInterval(refreshDraftData, 5000);
@@ -374,51 +375,153 @@ function startPickTimer() {
 }
 
 /**
- * Display recent picks
+ * Display draft picks view (delegates to All Picks / My Picks renderers).
  */
 function displayRecentPicks() {
+    renderAllPicks();
+    renderMyPicks();
+}
+
+/**
+ * Render "All Picks" grouped by round (with FYPD/DC labels).
+ */
+function renderAllPicks() {
+    const container = document.getElementById('allPicksList');
+    const countEl = document.getElementById('picksCount');
     const draft = DRAFT_STATE.draftData;
-    const picks = [...draft.picks].reverse().slice(0, 20); // Last 20 picks
-    
-    const container = document.getElementById('recentPicksList');
-    const totalPicks = draft.picks.length;
-    const maxPicks = draft.total_rounds * 12;
-    
-    document.getElementById('picksCount').textContent = `${totalPicks} / ${maxPicks}`;
-    
-    container.innerHTML = picks.map(pick => {
-        const teamColors = FBPHub.data?.teamColors?.[pick.team];
-        const teamBadgeStyle = teamColors 
-            ? `background: linear-gradient(135deg, ${teamColors.primary}, ${teamColors.secondary}); color: white;`
-            : '';
-        
-        return `
-            <div class="pick-card">
-                <div class="pick-number-display">
-                    <div class="pick-round">RD ${pick.round}</div>
-                    <div class="pick-overall">${pick.pick_number}</div>
-                </div>
-                <div class="pick-player-info">
-                    <div class="pick-player-name">${pick.player_name}</div>
-                    <div class="pick-player-meta">
-                        <span>${pick.position}</span>
-                        <span>${pick.mlb_team}</span>
-                        <span>${formatTimeAgo(pick.picked_at)}</span>
-                    </div>
-                </div>
-                <div class="pick-team-info">
-                    <div class="pick-team-name" style="${teamBadgeStyle || `color: var(--primary-red);`}">
-                        ${pick.team}
-                    </div>
-                    <div class="pick-timestamp">${formatTime(pick.picked_at)}</div>
-                </div>
+
+    if (!container || !countEl) return;
+
+    if (!draft || !Array.isArray(draft.picks) || draft.picks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-hourglass-start"></i>
+                <p>No picks have been made yet</p>
             </div>
         `;
-    }).join('');
+        countEl.textContent = '0 picks';
+        return;
+    }
+
+    const picks = draft.picks;
+    const perRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
+    const totalPicks = picks.length;
+    const maxPicks = draft.total_rounds && perRound ? draft.total_rounds * perRound : null;
+
+    countEl.textContent = maxPicks ? `${totalPicks} / ${maxPicks}` : `${totalPicks} picks`;
+
+    // Group by round
+    const byRound = {};
+    picks.forEach(pick => {
+        const rd = pick.round || 1;
+        if (!byRound[rd]) byRound[rd] = [];
+        byRound[rd].push(pick);
+    });
+
+    let html = '';
+    Object.keys(byRound).map(Number).sort((a, b) => a - b).forEach(rd => {
+        const roundPicks = byRound[rd];
+        if (!roundPicks || roundPicks.length === 0) return;
+
+        const rawType = roundPicks[0]?.round_type || (rd <= 2 ? 'fypd' : 'dc');
+        const roundType = rawType === 'fypd' ? 'FYPD' : 'DC';
+        const roundTypeClass = rawType === 'fypd' ? 'fypd' : 'dc';
+
+        html += `
+            <div class="round-header">
+                <span>Round ${rd}</span>
+                <span class="round-type-badge ${roundTypeClass}">${roundType}</span>
+            </div>
+        `;
+
+        const myTeamAbbr = DRAFT_STATE.userTeam?.abbreviation;
+
+        roundPicks
+            .slice()
+            .sort((a, b) => (a.pick_number || 0) - (b.pick_number || 0))
+            .forEach(pick => {
+                const isMyPick = myTeamAbbr && pick.team === myTeamAbbr;
+                html += `
+                    <div class="pick-result-card ${isMyPick ? 'my-pick' : ''}">
+                        <div class="pick-result-number">${rd}.${pick.pick_number}</div>
+                        <div class="pick-result-team">${pick.team}</div>
+                        <div class="pick-result-player">${pick.player_name}</div>
+                        <div class="pick-result-type">${roundType}</div>
+                    </div>
+                `;
+            });
+    });
+
+    container.innerHTML = html;
+}
+
+/**
+ * Render "My Picks" list for the authenticated manager.
+ */
+function renderMyPicks() {
+    const container = document.getElementById('myPicksList');
+    const draft = DRAFT_STATE.draftData;
+
+    if (!container) return;
+
+    if (!draft || !Array.isArray(draft.picks)) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-hourglass-start"></i>
+                <p>No active draft data available</p>
+            </div>
+        `;
+        return;
+    }
+
+    const myTeam = DRAFT_STATE.userTeam?.abbreviation;
+    if (!myTeam) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-user-circle"></i>
+                <p>Log in to see your picks</p>
+            </div>
+        `;
+        return;
+    }
+
+    const myPicks = draft.picks.filter(p => p.team === myTeam);
+
+    if (myPicks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-clipboard"></i>
+                <p>${myTeam} hasn't made any picks yet</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = myPicks
+        .slice()
+        .sort((a, b) => (a.pick_number || 0) - (b.pick_number || 0))
+        .map(pick => {
+            const rawType = pick.round_type || (pick.round <= 2 ? 'fypd' : 'dc');
+            const roundType = rawType === 'fypd' ? 'FYPD' : 'DC';
+            return `
+                <div class="pick-result-card my-pick">
+                    <div class="pick-result-number">Rd ${pick.round}, Pk ${pick.pick_number}</div>
+                    <div class="pick-result-player">${pick.player_name}</div>
+                    <div class="pick-result-team">${pick.team}</div>
+                    <div class="pick-result-type">${roundType}</div>
+                </div>
+            `;
+        })
+        .join('');
 }
 
 /**
  * Setup view toggle
+ */
+function setupViewToggle() {
+
+/**
+ * Setup main view toggle (Pool / Picks / Grid / Order)
  */
 function setupViewToggle() {
     const viewBtns = document.querySelectorAll('.view-btn');
@@ -441,6 +544,36 @@ function setupViewToggle() {
                 displayDraftGrid();
             } else if (targetView === 'order') {
                 displayDraftOrder();
+            } else if (targetView === 'recent') {
+                displayRecentPicks();
+            }
+        });
+    });
+}
+
+/**
+ * Setup picks sub-tabs (All Picks / My Picks)
+ */
+function setupPicksTabs() {
+    const tabButtons = document.querySelectorAll('.picks-tab-btn');
+    const allList = document.getElementById('allPicksList');
+    const myList = document.getElementById('myPicksList');
+
+    if (!tabButtons.length || !allList || !myList) return;
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.dataset.picksView;
+
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (view === 'my') {
+                myList.classList.add('active');
+                allList.classList.remove('active');
+            } else {
+                allList.classList.add('active');
+                myList.classList.remove('active');
             }
         });
     });
@@ -650,7 +783,7 @@ function displayDraftPool() {
     const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
 
     const currentRound = draft.current_round || 1;
-    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only rules-wise
+    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only by rule
 
     // Build a set of drafted player names (case-insensitive) so we can
     // hide anyone already taken during this draft.
@@ -663,8 +796,7 @@ function displayDraftPool() {
     );
 
     // Base filter: entire eligible draft pool = Farm prospects, unowned,
-    // no prospect contract. We always show the full pool; FYPD players
-    // are highlighted and sorted to the top in early rounds.
+    // no prospect contract.
     let available = FBPHub.data.players.filter(p =>
         p.player_type === 'Farm' &&
         !p.manager &&
@@ -672,6 +804,11 @@ function displayDraftPool() {
         !(p.contract_type || '').trim() &&
         !draftedNames.has((p.name || '').toLowerCase())
     );
+
+    // Enforce FYPD-only requirement in Rounds 1–2.
+    if (isFypdRound) {
+        available = available.filter(p => !!p.fypd);
+    }
 
     // Apply search
     if (searchTerm) {
@@ -683,14 +820,10 @@ function displayDraftPool() {
     }
 
     // Sort:
-    // - In FYPD rounds, FYPD players first ordered by fypd_rank,
-    //   then remaining prospects by global rank.
+    // - In FYPD rounds, FYPD players ordered by fypd_rank (then global rank).
     // - In later rounds, sort purely by global rank.
     available.sort((a, b) => {
         if (isFypdRound) {
-            const aIsF = !!a.fypd;
-            const bIsF = !!b.fypd;
-            if (aIsF !== bIsF) return aIsF ? -1 : 1; // FYPD first
             const ar = typeof a.fypd_rank === 'number' ? a.fypd_rank : (typeof a.rank === 'number' ? a.rank : 99999);
             const br = typeof b.fypd_rank === 'number' ? b.fypd_rank : (typeof b.rank === 'number' ? b.rank : 99999);
             if (ar !== br) return ar - br;
@@ -745,7 +878,7 @@ function displayDraftPool() {
                     ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
                 </div>
                 <div class="preview-row-stats">
-                    Age ${age}  b7 Level ${level}  b7 Team Rank ${teamRank}
+                    Age ${age} · Level ${level} · Team Rank ${teamRank}
                 </div>
             </div>
         `;

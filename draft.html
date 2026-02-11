@@ -232,13 +232,24 @@
                 <div class="draft-pool-list" id="draftPoolList"></div>
             </div>
 
-            <!-- Recent Picks View -->
+            <!-- Picks View (My Picks / All Picks) -->
             <div class="draft-view" id="recent-view">
                 <div class="recent-picks-header">
-                    <h3>Recent Picks</h3>
-                    <span class="picks-count" id="picksCount">50 / 312</span>
+                    <h3>Draft Picks</h3>
+                    <div class="picks-tabs">
+                        <button class="picks-tab-btn active" data-picks-view="all" type="button">
+                            <i class="fas fa-list"></i>
+                            <span>All Picks</span>
+                        </button>
+                        <button class="picks-tab-btn" data-picks-view="my" type="button">
+                            <i class="fas fa-user-circle"></i>
+                            <span>My Picks</span>
+                        </button>
+                    </div>
+                    <span class="picks-count" id="picksCount"></span>
                 </div>
-                <div class="recent-picks-list" id="recentPicksList"></div>
+                <div class="picks-list active" id="allPicksList"></div>
+                <div class="picks-list" id="myPicksList"></div>
             </div>
 
             <!-- Full Grid View -->
