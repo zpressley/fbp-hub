@@ -229,6 +229,11 @@ body.draft-preview-page .pick-number {
     color: #FFFFFF;
 }
 
+/* Insert a small hyphen between round and pick values on desktop */
+.clock-center-values span + span::before {
+    content: ' - ';
+}
+
 .clock-right {
     display: flex;
     flex-direction: column;
@@ -775,7 +780,7 @@ body.draft-preview-page .pick-number {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-xs);
 }
 
 .draft-pool-count {
@@ -788,8 +793,6 @@ body.draft-preview-page .pick-number {
     background-color: var(--bg-charcoal);
     border: var(--border-width) solid var(--primary-red);
     border-radius: var(--radius-lg);
-    max-height: 520px;
-    overflow-y: auto;
 }
 
 /* Draft Order */
@@ -1612,8 +1615,23 @@ body.draft-preview-page .pick-number {
 
 /* Prospect table responsive */
 @media (max-width: 767px) {
+    .prospect-filters-section {
+        padding: var(--space-sm);
+        margin-bottom: var(--space-sm);
+    }
+
+    .filters-title {
+        margin-bottom: var(--space-xs);
+        font-size: var(--text-sm);
+    }
+
     .prospect-filters-grid {
         grid-template-columns: repeat(2, 1fr);
+        row-gap: var(--space-xs);
+    }
+
+    .filter-group {
+        gap: 2px;
     }
     
     .prospect-table-container {
@@ -1751,3 +1769,401 @@ body.draft-preview-page .pick-number {
         display: none;
     }
 }
+
+/* ============================================
+   Draft Mobile Fixes + New Features (appended)
+   ============================================ */
+/* ---- FIX 1: Draft page horizontal overflow ---- */
+.container-draft {
+    overflow-x: hidden;
+}
+
+/* ---- FIX 2: Draft header + mode toggle stacking on mobile ---- */
+@media (max-width: 767px) {
+    .draft-top-row {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .draft-header {
+        width: 100%;
+        flex-direction: column;
+        text-align: center;
+        padding: var(--space-md);
+    }
+
+    .draft-title-section {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+
+    .draft-header h2 {
+        font-size: var(--text-xl);
+        text-align: center;
+        width: 100%;
+    }
+
+    .draft-mode-toggle {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .mode-btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--text-xs);
+    }
+}
+
+/* ---- FIX 3: Clock banner overflow on mobile ---- */
+@media (max-width: 767px) {
+    .clock-banner {
+        padding: var(--space-xs) var(--space-md);
+    }
+
+    /* Make the center line slightly smaller on mobile */
+    .clock-center-values {
+        font-size: var(--text-lg);
+    }
+
+    /* Hide standalone timer text; timer is in the R/P line */
+    .clock-time-value {
+        display: none;
+    }
+
+    /* Hide separate abbrev; we show name + abbrev inline */
+    .clock-team {
+        display: none;
+    }
+
+    .clock-main-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+        text-align: center;
+    }
+
+    .clock-left {
+        align-items: center;
+    }
+
+    .clock-team-name {
+        font-size: var(--text-xl);
+    }
+
+    .clock-center {
+        display: flex;
+        gap: var(--space-lg);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .clock-center-labels,
+    .clock-center-values {
+        gap: var(--space-md);
+    }
+
+    .clock-center-values {
+        font-size: var(--text-xl);
+    }
+
+    .clock-right {
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        gap: var(--space-md);
+        flex-wrap: wrap;
+    }
+
+    /* On mobile, drop the horizontal timer bar to save vertical space */
+    .timer-bar-container {
+        display: none;
+    }
+
+    .clock-next {
+        font-size: var(--text-sm);
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ---- FIX 4: View toggle buttons overflow on mobile ---- */
+@media (max-width: 767px) {
+    .view-toggle {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        padding-bottom: 0;
+        gap: var(--space-xs);
+    }
+
+    .view-btn {
+        flex: 1 1 calc(50% - var(--space-xs));
+        padding: var(--space-xs) var(--space-md);
+        font-size: var(--text-xs);
+        white-space: nowrap;
+    }
+
+    .view-btn i {
+        font-size: var(--text-xs);
+    }
+}
+
+/* ---- FIX 5: Draft pool search bar on mobile ---- */
+@media (max-width: 767px) {
+    .draft-pool-header {
+        flex-direction: column;
+        gap: var(--space-sm);
+        align-items: stretch;
+    }
+
+    .search-bar-inline {
+        width: 100%;
+    }
+
+    .search-bar-inline input {
+        width: 100%;
+    }
+}
+
+/* ---- FIX 6: Draft schedule text overflow ---- */
+@media (max-width: 767px) {
+    .draft-schedule {
+        font-size: var(--text-xs);
+        text-align: center;
+        padding: var(--space-xs) var(--space-sm);
+        word-break: break-word;
+    }
+}
+
+/* ---- FIX 7: Quick pick section on mobile ---- */
+@media (max-width: 767px) {
+    .quick-pick-section {
+        padding: var(--space-md);
+    }
+
+    .quick-pick-controls {
+        flex-direction: column;
+    }
+
+    .btn-draft-pick {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Player slide-in panel draft actions (header buttons) */
+.player-detail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.player-detail-actions .btn-profile-accent,
+.player-detail-actions .btn-draft-player-header,
+.player-detail-actions .btn-add-to-board-header {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-draft-player-header {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all var(--transition-fast);
+}
+
+.btn-draft-player-header:hover:not(:disabled) {
+    background-color: #45a049;
+    box-shadow: 0 4px 12px rgba(69, 160, 73, 0.4);
+}
+
+.btn-draft-player-header:disabled {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-gray);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-add-to-board-header {
+    background-color: transparent;
+    color: var(--accent-yellow);
+    border: var(--border-width) solid var(--accent-yellow);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all var(--transition-fast);
+}
+
+.btn-add-to-board-header:hover {
+    background-color: rgba(255, 182, 18, 0.15);
+}
+
+/* Draft Board inline tab */
+.draft-board-inline {
+    padding: var(--space-md);
+}
+
+.board-inline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--primary-red);
+}
+
+.board-inline-header h3 {
+    font-family: var(--font-title);
+    font-size: var(--text-xl);
+    color: var(--text-white);
+    letter-spacing: 1px;
+}
+
+.board-inline-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+}
+
+.board-inline-empty {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--text-gray);
+}
+
+.board-inline-empty i {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-md);
+    display: block;
+    opacity: 0.4;
+}
+
+.board-inline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.board-inline-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background-color var(--transition-fast);
+    cursor: pointer;
+}
+
+.board-inline-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.board-inline-item.board-item-drafted {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.board-inline-rank {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    min-width: 28px;
+    text-align: center;
+    font-size: var(--text-sm);
+}
+
+.board-inline-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-white);
+    font-size: var(--text-sm);
+}
+
+.board-inline-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+}
+
+.board-inline-drafted-by {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--primary-red);
+}
+
+.board-login-prompt {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--text-gray);
+}
+
+.board-login-prompt i {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-md);
+    display: block;
+}
+
+.board-login-prompt a {
+    color: var(--accent-yellow);
+}
+
+/* Picks sub-tabs responsive adjustments */
+@media (max-width: 767px) {
+    .recent-picks-header {
+        flex-direction: column;
+        gap: var(--space-sm);
+        align-items: stretch;
+    }
+
+    .picks-tabs {
+        align-self: flex-start;
+    }
+
+    .pick-result-card {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+
+    .pick-result-number {
+        min-width: 36px;
+        font-size: 10px;
+    }
+
+    .pick-result-team {
+        min-width: 32px;
+        font-size: var(--text-xs);
+    }
+
+    .pick-result-player {
+        font-size: var(--text-sm);
+    }
+}
+
+/* Draft pool row clickable indicator (card-style preview rows) */
+.preview-player-row {
+    cursor: pointer;
+}
+
+.preview-player-row:hover {
+    background-color: rgba(239, 62, 66, 0.06);
+}
+
+.preview-player-row:active {
+    background-color: rgba(239, 62, 66, 0.12);
+}
+

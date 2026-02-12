@@ -13,6 +13,7 @@
     <meta name="theme-color" content="#EF3E42">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/draft.css">
+    <link rel="stylesheet" href="css/players.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -168,17 +169,13 @@
                             <div class="clock-team" id="clockTeam">HAM</div>
                         </div>
                         <div class="clock-center">
-                            <div class="clock-center-labels">
-                                <span>ROUND</span>
-                                <span>PICK</span>
-                            </div>
                             <div class="clock-center-values">
                                 <span id="clockRound">-</span>
                                 <span id="clockPickOverall">-</span>
                             </div>
                         </div>
                         <div class="clock-right">
-                            <div class="clock-time-value" id="timerDisplay">1:45</div>
+                            <div class="clock-time-value" id="timerDisplay">--:--</div>
                             <div class="timer-bar-container">
                                 <div class="timer-bar" id="timerBar"></div>
                             </div>
@@ -223,13 +220,97 @@
             <div class="draft-view active" id="pool-view">
                 <div class="draft-pool-header">
                     <h3>Draft Pool</h3>
-                    <span class="draft-pool-count" id="draftPoolCount"></span>
+                    <span class="draft-pool-count">&nbsp;</span>
                 </div>
-                <div class="search-bar-inline">
-                    <i class="fas fa-search"></i>
-                    <input id="draftPoolSearch" type="text" placeholder="Search player, team, or position...">
+
+                <!-- Filters block: mimic draft-preview prospect filters -->
+                <div class="prospect-filters-section">
+                    <h4 class="filters-title">Choose Your Filters</h4>
+                    <div class="prospect-filters-grid">
+                        <div class="filter-group">
+                            <label for="poolFvYear">FV Year</label>
+                            <select id="poolFvYear" class="prospect-filter-select">
+                                <option value="2024" selected>2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="poolStatusFilter">Status</label>
+                            <select id="poolStatusFilter" class="prospect-filter-select">
+                                <option value="any" selected>Any Prospect</option>
+                                <option value="fypd">FYPD</option>
+                                <option value="int_signee">Int Signee</option>
+                                <option value="debuted">Debuted</option>
+                                <option value="dropped">Dropped</option>
+                                <option value="standard">Standard</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="poolPositionFilter">Position</label>
+                            <select id="poolPositionFilter" class="prospect-filter-select">
+                                <option value="any" selected>Any</option>
+                                <option value="P">P</option>
+                                <option value="RHP">RHP</option>
+                                <option value="LHP">LHP</option>
+                                <option value="INF">INF</option>
+                                <option value="OF">OF</option>
+                                <option value="C">C</option>
+                                <option value="1B">1B</option>
+                                <option value="2B">2B</option>
+                                <option value="3B">3B</option>
+                                <option value="SS">SS</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="poolBadgeFilter">Badge Type</label>
+                            <select id="poolBadgeFilter" class="prospect-filter-select">
+                                <option value="any" selected>Any</option>
+                                <optgroup label="Top 100">
+                                    <option value="2026 Top 100">2026 Top 100</option>
+                                    <option value="2025 Top 100">2025 Top 100</option>
+                                    <option value="2024 Top 100">2024 Top 100</option>
+                                </optgroup>
+                                <optgroup label="Org Top 10">
+                                    <option value="2026 Org Top 10">2026 Org Top 10</option>
+                                    <option value="2025 Org Top 10">2025 Org Top 10</option>
+                                    <option value="2024 Org Top 10">2024 Org Top 10</option>
+                                </optgroup>
+                                <optgroup label="FYPD Top 20">
+                                    <option value="2025 FYPD Top 20">2025 FYPD Top 20</option>
+                                    <option value="2024 FYPD Top 20">2024 FYPD Top 20</option>
+                                </optgroup>
+                                <optgroup label="INT Top 10">
+                                    <option value="2026 INT Top 10">2026 INT Top 10</option>
+                                    <option value="2025 INT Top 10">2025 INT Top 10</option>
+                                </optgroup>
+                                <optgroup label="POS Top 10">
+                                    <option value="2026 POS Top 10">2026 POS Top 10</option>
+                                    <option value="2025 POS Top 10">2025 POS Top 10</option>
+                                    <option value="2024 POS Top 10">2024 POS Top 10</option>
+                                </optgroup>
+                                <optgroup label="MLB Futures">
+                                    <option value="2025 MLB Futures">2025 MLB Futures</option>
+                                    <option value="2024 MLB Futures">2024 MLB Futures</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="draft-pool-list" id="draftPoolList"></div>
+
+                <!-- Search + count row (matches draft-preview layout) -->
+                <div class="prospect-search-row">
+                    <div class="search-bar-inline">
+                        <i class="fas fa-search"></i>
+                        <input id="draftPoolSearch" type="text" placeholder="Search player, team, or position...">
+                    </div>
+                    <span class="picks-count" id="draftPoolCount">0 players</span>
+                </div>
+
+                <!-- Prospect-style table container for the live pool -->
+                <div class="prospect-table-container draft-pool-table-container">
+                    <div class="draft-pool-list" id="draftPoolList"></div>
+                </div>
             </div>
 
             <!-- Picks View (My Picks / All Picks) -->
@@ -270,6 +351,14 @@
                 <div class="draft-order-list" id="draftOrderList"></div>
             </div>
         </div>
+
+        <!-- Player Detail Panel (Slides in from right on click) -->
+        <div class="player-detail-panel" id="playerDetailPanel">
+            <div class="detail-placeholder">
+                <i class="fas fa-hand-pointer"></i>
+                <p>Click a player to view details</p>
+            </div>
+        </div>
     </main>
 
     <!-- Bottom Navigation (mobile) -->
@@ -304,5 +393,6 @@
     <script src="js/auth.js"></script>
     <script src="js/player-profile.js"></script>
     <script src="js/draft.js"></script>
+    <script src="js/draft-enhancements.js"></script>
 </body>
 </html>

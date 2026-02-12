@@ -19,7 +19,16 @@ let DRAFT_STATE = {
     // draft, and draft.html will switch to keeper if FBPHub.draftInitialMode
     // is set to 'keeper' by the preflight script.
     mode: 'prospect', // 'keeper' or 'prospect'
-    initializedFromHint: false
+    initializedFromHint: false,
+    // Enriched prospect data for the Draft Pool (from prospect_tags.json)
+    tagsByUpid: {},
+    prospectTagsLoaded: false,
+    // Prospect PAD drop detection (aligned with draft-preview logic)
+    droppedUpids: new Set(),
+    // Guard so we only wire clock sticky behavior once
+    clockStickyInitialized: false,
+    // Draft pool sort state (mirrors draft-preview defaults)
+    poolSort: { field: 'rank', direction: 'asc' }
 };
 
 /**
@@ -56,7 +65,10 @@ async function initDraft() {
     // Load draft data for current mode
     await loadDraftData(DRAFT_STATE.mode);
 
-    // Populate initial draft pool list (uses FBPHub.data + draft state)
+    // Load prospect tags + PAD drop data, then wire pool filters and render.
+    await loadProspectTagsForDraft();
+    await loadDroppedProspectsForDraft();
+    setupDraftPoolFilters();
     displayDraftPool();
 
     // Always show the main draft UI; use the inactive banner only as a
@@ -96,6 +108,9 @@ async function initDraft() {
     
     // Start timer countdown
     startPickTimer();
+
+    // Set up sticky clock banner once
+    setupClockSticky();
 }
 
 /**
@@ -284,10 +299,13 @@ function updateOnTheClock() {
     const clockTeam = draft.current_team;
     const teamName = TEAM_NAMES[clockTeam] || clockTeam;
 
+    // Desktop: abbrev still available via #clockTeam; on mobile we hide it via CSS
     if (teamEl) teamEl.textContent = clockTeam;
-    if (nameEl) nameEl.textContent = teamName;
-    if (clockRoundEl) clockRoundEl.textContent = draft.current_round ?? '-';
-    if (clockPickEl) clockPickEl.textContent = draft.current_pick ?? '-';
+    // Show full name + abbreviation on a single line
+    if (nameEl) nameEl.textContent = `${teamName} (${clockTeam})`;
+    // Use compact R#/P# format so it fits better in constrained layouts
+    if (clockRoundEl) clockRoundEl.textContent = draft.current_round != null ? `R${draft.current_round}` : '-';
+    if (clockPickEl) clockPickEl.textContent = draft.current_pick != null ? `P${draft.current_pick}` : '-';
 
     // Compute next pick for on-tile summary
     if (clockNextEl && Array.isArray(draft.draft_order) && draft.total_rounds) {
@@ -338,10 +356,15 @@ function startPickTimer() {
     
     const draft = DRAFT_STATE.draftData;
     if (!draft || !draft.clock_started_at || draft.status !== 'active_draft') {
-        return; // Only run timer while draft is active and we have a clock start
+        // No active timer - show placeholder
+        const timerEl = document.getElementById('timerDisplay');
+        const timerBar = document.getElementById('timerBar');
+        if (timerEl) timerEl.textContent = '--:--';
+        if (timerBar) timerBar.style.width = '0%';
+        return;
     }
     const clockStarted = new Date(draft.clock_started_at);
-    const timeLimit = draft.pick_clock_seconds || 120;
+    const timeLimit = draft.pick_clock_seconds || 240; // 4 minutes to match Discord bot
     
     DRAFT_STATE.timerInterval = setInterval(() => {
         const now = new Date();
@@ -351,8 +374,20 @@ function startPickTimer() {
         // Update timer display
         const minutes = Math.floor(remaining / 60);
         const seconds = remaining % 60;
-        document.getElementById('timerDisplay').textContent = 
-            `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        const timeLabel = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        const timerEl = document.getElementById('timerDisplay');
+        if (timerEl) timerEl.textContent = timeLabel;
+
+        // On narrow/mobile layouts, show "R# - P# - timer" on a single line
+        if (window.innerWidth <= 767) {
+            const clockRoundEl = document.getElementById('clockRound');
+            const clockPickEl = document.getElementById('clockPickOverall');
+            if (clockRoundEl && clockPickEl && draft?.current_round != null && draft.current_pick != null) {
+                // Hide separate round value; everything goes into the pick span
+                clockRoundEl.textContent = '';
+                clockPickEl.textContent = `R${draft.current_round} - P${draft.current_pick} - ${timeLabel}`;
+            }
+        }
         
         // Update timer bar
         const percentage = (remaining / timeLimit) * 100;
@@ -585,20 +620,25 @@ function displayDraftGrid() {
     const selector = document.getElementById('roundSelector');
     if (!selector) return;
 
-    // Group picks that have actually been made by round so the grid
-    // reflects real draft history rather than a theoretical order.
-    const picksByRound = new Map();
+    // Index existing picks by (round, pick_in_round) so we can overlay them
+    // onto the full theoretical grid of picks, including future picks.
+    const picksBySlot = new Map();
     (draft.picks || []).forEach(p => {
         const r = p.round || 0;
-        if (!r) return;
-        if (!picksByRound.has(r)) picksByRound.set(r, []);
-        picksByRound.get(r).push(p);
+        const pk = p.pick_number || 0;
+        if (!r || !pk) return;
+        picksBySlot.set(`${r}:${pk}`, p);
     });
 
-    // Build round selector options based on rounds that have at least
-    // one pick, falling back to total_rounds if we have no picks yet.
+    const perRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
+
+    // Build round selector options based on total_rounds when available,
+    // falling back to however many rounds have any picks at all.
     selector.innerHTML = '';
-    const maxRound = draft.total_rounds || Math.max(...Array.from(picksByRound.keys(), Number), 0) || 1;
+    const maxRound = draft.total_rounds || Math.max(
+        ...Array.from((draft.picks || []).map(p => p.round || 0)),
+        1
+    );
     for (let i = 1; i <= maxRound; i++) {
         const option = document.createElement('option');
         option.value = i;
@@ -615,29 +655,30 @@ function displayDraftGrid() {
 
     let gridHTML = '';
     for (let round = 1; round <= maxRound; round++) {
-        const roundPicks = (picksByRound.get(round) || []).slice().sort((a, b) => {
-            return (a.pick_number || 0) - (b.pick_number || 0);
-        });
+        const picksHTML = (perRound ? Array.from({ length: perRound }) : [null]).map((_, idx) => {
+            const pickInRound = idx + 1;
+            const overallPick = perRound ? (round - 1) * perRound + pickInRound : null;
+            const key = `${round}:${pickInRound}`;
+            const pick = picksBySlot.get(key) || null;
 
-        if (!roundPicks.length && round > (draft.current_round || 1)) {
-            continue; // skip completely empty future rounds
-        }
+            const isCurrent = !!pick && pick.round === draft.current_round && pick.pick_number === draft.current_pick;
+            const teamDefault = Array.isArray(draft.draft_order) ? draft.draft_order[idx] : null;
+            const team = pick ? pick.team : teamDefault;
+            const playerName = pick ? pick.player_name : '—';
+            const metaParts = [];
+            if (overallPick != null) metaParts.push(`Pick ${overallPick}`);
+            if (pick?.position) metaParts.push(pick.position);
+            if (pick?.mlb_team) metaParts.push(pick.mlb_team);
+            const meta = metaParts.join(' • ');
 
-        const picksHTML = roundPicks.map(pick => {
-            const isCurrent = pick.pick_number === draft.current_pick;
-            const team = pick.team;
             return `
                 <div class="grid-pick ${isCurrent ? 'current' : ''}">
-                    <div class="grid-pick-team">${team}</div>
-                    <div class="grid-pick-player">${pick.player_name}</div>
-                    <div class="grid-pick-meta">${pick.position}  b7 ${pick.mlb_team}</div>
+                    <div class="grid-pick-team">${team || ''}</div>
+                    <div class="grid-pick-player">${playerName}</div>
+                    <div class="grid-pick-meta">${meta}</div>
                 </div>
             `;
-        }).join('') || `
-            <div class="grid-pick">
-                <div class="grid-pick-player">No picks yet</div>
-            </div>
-        `;
+        }).join('');
 
         gridHTML += `
             <div class="draft-round" id="round-${round}">
@@ -754,7 +795,387 @@ function scrollToRound(roundNum) {
 }
 
 /**
- * Display draft pool (live view)
+ * Helper: position matching for draft pool filters (same semantics as
+ * draft-preview: supports composite roles like P/INF/OF/LHP/RHP).
+ */
+function draftPoolMatchesPosition(playerPos, filterPos) {
+    if (!playerPos) return false;
+    const pos = playerPos.toUpperCase();
+    const filter = filterPos.toUpperCase();
+    const posParts = pos.split(/[,/]/).map(p => p.trim());
+
+    if (posParts.includes(filter)) return true;
+
+    if (filter === 'P') {
+        return posParts.some(p => ['SP', 'RP', 'LHP', 'RHP', 'SHP', 'P', 'MIRP', 'SIRP'].includes(p));
+    }
+    if (filter === 'LHP') return posParts.some(p => p === 'LHP' || p.includes('LHP'));
+    if (filter === 'RHP') return posParts.some(p => ['RHP', 'SHP', 'SIRP', 'MIRP'].includes(p) || p.includes('RHP'));
+    if (filter === 'INF') return posParts.some(p => ['1B', '2B', '3B', 'SS', 'IF', 'INF'].includes(p));
+    if (filter === 'OF') return posParts.some(p => ['OF', 'LF', 'CF', 'RF'].includes(p));
+    if (filter === 'C') return posParts.includes('C');
+
+    return posParts.includes(filter);
+}
+
+/**
+ * Sort draft pool prospects in-place using the same semantics as
+ * draft-preview (rank/name/org/pos/FV/badges/status) but driven by
+ * DRAFT_STATE.poolSort.
+ */
+function sortDraftPoolProspects(prospects, fvYear, isFypdRound) {
+    const sort = DRAFT_STATE.poolSort || { field: 'rank', direction: 'asc' };
+    const { field } = sort;
+    let { direction } = sort;
+
+    // In FYPD rounds, default rank sort should respect FYPD rank first
+    if (!direction) direction = field === 'rank' ? 'asc' : 'desc';
+    const mult = direction === 'asc' ? 1 : -1;
+
+    prospects.sort((a, b) => {
+        let aVal, bVal;
+
+        switch (field) {
+            case 'rank': {
+                // Prioritize: fypd_rank > rank > large number (unranked last)
+                const aRank = isFypdRound ? (a.fypd_rank || a.rank || 99999) : (a.rank || 99999);
+                const bRank = isFypdRound ? (b.fypd_rank || b.rank || 99999) : (b.rank || 99999);
+                return mult * (aRank - bRank);
+            }
+            case 'name':
+                return mult * (a.name || '').localeCompare(b.name || '');
+            case 'org':
+                return mult * (a.org || '').localeCompare(b.org || '');
+            case 'position':
+                return mult * (a.position || '').localeCompare(b.position || '');
+            case 'fv':
+                aVal = a.fv?.[fvYear] || 0;
+                bVal = b.fv?.[fvYear] || 0;
+                // Match draft-preview behavior: higher FV first when "ascending"
+                return mult * (bVal - aVal);
+            case 'badges':
+                aVal = a.badges?.length || 0;
+                bVal = b.badges?.length || 0;
+                // Match draft-preview behavior: more badges first when "ascending"
+                return mult * (bVal - aVal);
+            case 'status':
+                aVal = draftPoolPrimaryStatus(a.status);
+                bVal = draftPoolPrimaryStatus(b.status);
+                return mult * aVal.localeCompare(bVal);
+            default:
+                return 0;
+        }
+    });
+}
+
+/**
+ * Map a status array to a primary label for sorting priority.
+ */
+function draftPoolPrimaryStatus(statusArr) {
+    if (!statusArr || statusArr.length === 0) return 'Standard';
+    if (statusArr.includes('dropped')) return 'Dropped';
+    if (statusArr.includes('debuted')) return 'Debuted';
+    if (statusArr.includes('fypd')) return 'FYPD';
+    if (statusArr.includes('int_signee')) return 'INT';
+    return 'Standard';
+}
+
+/**
+ * Attach click handlers to sortable headers in the live draft pool.
+ */
+function setupDraftPoolSorting() {
+    const headers = document.querySelectorAll('#draftPoolList .prospect-table th.sortable');
+    if (!headers.length) return;
+
+    headers.forEach(header => {
+        header.onclick = null; // clear any existing inline listeners on re-render
+        header.addEventListener('click', () => {
+            const field = header.dataset.sort;
+            const sort = DRAFT_STATE.poolSort || { field: 'rank', direction: 'asc' };
+
+            if (sort.field === field) {
+                sort.direction = sort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sort.field = field;
+                sort.direction = field === 'rank' ? 'asc' : 'desc';
+            }
+
+            DRAFT_STATE.poolSort = sort;
+            displayDraftPool();
+        });
+    });
+}
+
+/**
+ * Update sort icons / visual state on the live draft pool headers.
+ */
+function updateDraftPoolSortIndicators() {
+    const headers = document.querySelectorAll('#draftPoolList .prospect-table th.sortable');
+    if (!headers.length) return;
+
+    const sort = DRAFT_STATE.poolSort || { field: 'rank', direction: 'asc' };
+
+    headers.forEach(header => {
+        const field = header.dataset.sort;
+        const icon = header.querySelector('i');
+        if (!icon) return;
+
+        if (field === sort.field) {
+            icon.className = sort.direction === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            header.classList.add('sorted');
+        } else {
+            icon.className = 'fas fa-sort';
+            header.classList.remove('sorted');
+        }
+    });
+}
+
+/**
+ * Make the On The Clock banner behave like a sticky bar, similar to the
+ * PAD WizBucks sticky bar. We fall back to JS-driven fixed positioning so
+ * it works reliably across browsers and nested scroll containers.
+ */
+function setupClockSticky() {
+    if (DRAFT_STATE.clockStickyInitialized) return;
+    const banner = document.getElementById('clockBanner');
+    if (!banner) return;
+
+    DRAFT_STATE.clockStickyInitialized = true;
+
+    const nav = document.querySelector('.mobile-nav');
+    const getOffsetTop = () => {
+        if (!nav) return 0;
+        const rect = nav.getBoundingClientRect();
+        return (rect.height || 0) + 8; // small gap below nav
+    };
+
+    // Capture the banner's original document Y offset so we know
+    // when we've scrolled "past" it and when we've scrolled back above it.
+    const initialRect = banner.getBoundingClientRect();
+    const initialDocTop = initialRect.top + window.scrollY;
+
+    // Spacer div to prevent layout jump when the banner is taken out of flow
+    const placeholder = document.createElement('div');
+    placeholder.style.width = '100%';
+    placeholder.style.height = `${initialRect.height}px`;
+    placeholder.style.display = 'none';
+    banner.parentNode.insertBefore(placeholder, banner.nextSibling);
+
+    let isFixed = false;
+    let fixedLeft = null;
+    let fixedWidth = null;
+
+    const onScroll = () => {
+        const offset = getOffsetTop();
+        const scrollTop = window.scrollY || window.pageYOffset || 0;
+        const shouldStick = scrollTop + offset >= initialDocTop;
+
+        // Keep spacer height in sync with the banner in case fonts/layout change
+        placeholder.style.height = `${banner.offsetHeight}px`;
+
+        if (shouldStick && !isFixed) {
+            // Capture geometry before fixing
+            const rect = banner.getBoundingClientRect();
+            fixedLeft = rect.left + window.scrollX;
+            fixedWidth = rect.width;
+            placeholder.style.display = 'block';
+            banner.style.position = 'fixed';
+            banner.style.top = `${offset}px`;
+            banner.style.left = `${fixedLeft}px`;
+            banner.style.width = `${fixedWidth}px`;
+            banner.style.zIndex = '110';
+            isFixed = true;
+        } else if (!shouldStick && isFixed) {
+            banner.style.position = '';
+            banner.style.top = '';
+            banner.style.left = '';
+            banner.style.width = '';
+            banner.style.zIndex = '';
+            placeholder.style.display = 'none';
+            isFixed = false;
+        }
+    };
+
+    window.addEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll);
+    // Run once to initialize state
+    onScroll();
+}
+
+/**
+ * Load prospect_tags.json into DRAFT_STATE.tagsByUpid for enriched FV /
+ * badge / status info in the draft pool. Safe no-op if the file is missing.
+ */
+async function loadProspectTagsForDraft() {
+    try {
+        const response = await fetch('data/prospect_tags.json');
+        if (!response.ok) {
+            console.warn('No prospect_tags.json available for draft pool');
+            return;
+        }
+        const data = await response.json();
+        const players = data.players || (Array.isArray(data) ? data : []);
+
+        DRAFT_STATE.tagsByUpid = {};
+        players.forEach(p => {
+            if (p.upid) {
+                DRAFT_STATE.tagsByUpid[String(p.upid)] = p;
+            }
+        });
+        DRAFT_STATE.prospectTagsLoaded = true;
+        console.log(`✅ Draft pool: loaded ${players.length} prospect tags`);
+    } catch (e) {
+        console.warn('Could not load prospect_tags.json for draft pool:', e);
+    }
+}
+
+/**
+ * Load player_log.json and compute the set of prospects dropped during PAD
+ * (same heuristic as draft-preview). Used to tag prospects with 'dropped'
+ * status in the live draft pool.
+ */
+async function loadDroppedProspectsForDraft() {
+    try {
+        const response = await fetch('data/player_log.json');
+        if (!response.ok) {
+            console.log('No player_log.json available for draft pool');
+            return;
+        }
+        const log = await response.json();
+        const currentYear = new Date().getFullYear();
+        const dropped = new Set();
+
+        log.forEach(entry => {
+            const entryDate = entry.date || entry.timestamp || '';
+            const ts = entryDate ? new Date(entryDate) : null;
+            if (!ts || !entry.upid) return;
+
+            const entryYear = ts.getFullYear();
+            const entryMonth = ts.getMonth() + 1; // 1-12
+            const isPADPeriod = entryYear === currentYear && entryMonth === 2; // February
+
+            const eventStr = (entry.event || '').toLowerCase();
+            const typeStr = (entry.type || '').toLowerCase();
+            const updateStr = (entry.update_type || '').toLowerCase();
+
+            const isDropped = eventStr.includes('drop') ||
+                              typeStr.includes('drop') ||
+                              updateStr.includes('drop') ||
+                              (((entry.contract_type === '' || entry.contract_type == null)
+                                 && entry.player_type === 'Farm'));
+
+            if (isPADPeriod && isDropped) {
+                dropped.add(String(entry.upid));
+            }
+        });
+
+        DRAFT_STATE.droppedUpids = dropped;
+        console.log(`✅ Draft pool: loaded ${dropped.size} dropped prospects from player_log.json`);
+    } catch (e) {
+        console.log('No player_log.json available for draft pool (draft page)');
+    }
+}
+
+/**
+ * Build the base eligible prospect pool from FBPHub.data.players, applying
+ * only hard eligibility rules (Farm, unowned, no contract, undrafted).
+ *
+ * All constitution-level rules are enforced here. View-specific filters
+ * (status/position/badges/search) are layered on top in displayDraftPool().
+ */
+function buildDraftPoolProspects() {
+    const draft = DRAFT_STATE.draftData;
+    if (!FBPHub?.data?.players) return [];
+
+    const draftedNames = new Set(
+        Array.isArray(draft?.picks)
+            ? draft.picks.map(p => (p.player_name || '').toLowerCase()).filter(Boolean)
+            : []
+    );
+
+    const prospects = [];
+    const processedUpids = new Set();
+
+    FBPHub.data.players.forEach(player => {
+        if (player.player_type !== 'Farm') return;
+
+        // Skip OWNED prospects (has a manager or FBP_Team)
+        const hasManager = player.manager && player.manager !== 'None' && (player.manager || '').trim();
+        const hasFbpTeam = player.FBP_Team && player.FBP_Team !== 'None' && (player.FBP_Team || '').trim();
+        if (hasManager || hasFbpTeam) return;
+
+        // Extra safety: skip anyone with an active prospect contract. In
+        // theory these should only exist on owned players, but this guard
+        // keeps eligibility aligned with the bot's rules.
+        const hasContract = (player.contract_type || '').trim();
+        if (hasContract) return;
+
+        // Skip already drafted in this draft
+        if (draftedNames.has((player.name || '').toLowerCase())) return;
+
+        const upid = String(player.upid || '');
+        if (!upid || processedUpids.has(upid)) return;
+        processedUpids.add(upid);
+
+        const tagData = DRAFT_STATE.tagsByUpid?.[upid] || {};
+        const badges = tagData.badges || [];
+
+        let statusArr = [];
+        if (player.fypd === true) statusArr.push('fypd');
+        if (player.debuted === true) statusArr.push('debuted');
+        if (badges.some(b => (b.type || '').includes('INT Signee'))) statusArr.push('int_signee');
+        if (badges.some(b => (b.type || '').includes('INT Top'))) statusArr.push('int_signee');
+        if (DRAFT_STATE.droppedUpids && DRAFT_STATE.droppedUpids.has(upid)) statusArr.push('dropped');
+
+        prospects.push({
+            upid: player.upid,
+            name: player.name,
+            org: player.team || tagData.org || '-',
+            position: player.position || tagData.position || '-',
+            fv: tagData.fv || {},
+            badges: badges,
+            badgeCount: badges.length,
+            status: statusArr,
+            rank: tagData.rank || player.rank,
+            fypd_rank: player.fypd_rank,
+            age: tagData.age || player.age,
+            fypd: player.fypd,
+            // For slide-in panel + ownership context
+            team: player.team,
+            player_type: player.player_type,
+            manager: player.manager,
+            contract_type: player.contract_type,
+            years_simple: player.years_simple,
+            level: player.level || player.mlb_level
+        });
+    });
+
+    return prospects;
+}
+
+/**
+ * Render status badges based on the merged status array for a prospect.
+ */
+function renderDraftPoolStatusBadges(statusArr) {
+    if (!statusArr || statusArr.length === 0) {
+        return '<span class="status-badge status-standard">STND</span>';
+    }
+    const badgeMap = {
+        'fypd': { cls: 'status-fypd', label: 'FYPD' },
+        'int_signee': { cls: 'status-int', label: 'INT' },
+        'debuted': { cls: 'status-debuted', label: 'DEBU' },
+        'dropped': { cls: 'status-dropped', label: 'DROP' }
+    };
+    return statusArr.map(s => {
+        const b = badgeMap[s] || { cls: 'status-standard', label: s };
+        return `<span class="status-badge ${b.cls}">${b.label}</span>`;
+    }).join(' ');
+}
+
+/**
+ * Display draft pool (live view) with enriched filters + FYPD-only rounds
+ * 1–2. This keeps the underlying eligibility identical to the previous
+ * implementation while upgrading the UX.
  */
 function displayDraftPool() {
     const draft = DRAFT_STATE.draftData;
@@ -763,121 +1184,134 @@ function displayDraftPool() {
 
     if (!poolList || !countEl) return;
 
-    // Keeper mode: we don't yet have a keeper draft pool wired up; avoid
-    // showing prospect pool when Keeper is selected.
+    // Keeper mode: not wired yet; avoid showing prospect pool here.
     if (DRAFT_STATE.mode === 'keeper') {
         countEl.textContent = '0 players';
         poolList.innerHTML = '<div class="empty-state">Keeper draft pool view is not available yet.</div>';
         return;
     }
 
-    if (!draft || !FBPHub || !FBPHub.data || !Array.isArray(FBPHub.data.players)) {
-        return;
-    }
+    if (!FBPHub?.data?.players) return;
 
     const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
+    const fvYear = document.getElementById('poolFvYear')?.value || '2024';
+    const statusFilter = document.getElementById('poolStatusFilter')?.value || 'any';
+    const posFilter = document.getElementById('poolPositionFilter')?.value || 'any';
+    const badgeFilter = document.getElementById('poolBadgeFilter')?.value || 'any';
 
-    const currentRound = draft.current_round || 1;
-    const isFypdRound = currentRound <= 2; // Rounds 1–2 are FYPD-only by rule
+    const currentRound = draft?.current_round || 1;
+    const isFypdRound = currentRound <= 2;
 
-    // Build a set of drafted player names (case-insensitive) so we can
-    // hide anyone already taken during this draft.
-    const draftedNames = new Set(
-        Array.isArray(draft.picks)
-            ? draft.picks
-                  .map(p => (p.player_name || '').toLowerCase())
-                  .filter(Boolean)
-            : []
-    );
+    let available = buildDraftPoolProspects();
 
-    // Base filter: entire eligible draft pool = Farm prospects, unowned,
-    // no prospect contract.
-    let available = FBPHub.data.players.filter(p =>
-        p.player_type === 'Farm' &&
-        !p.manager &&
-        !p.FBP_Team &&
-        !(p.contract_type || '').trim() &&
-        !draftedNames.has((p.name || '').toLowerCase())
-    );
-
-    // Enforce FYPD-only requirement in Rounds 1–2.
+    // Enforce FYPD-only in Rounds 1–2 (constitution rule).
     if (isFypdRound) {
         available = available.filter(p => !!p.fypd);
     }
 
-    // Apply search
-    if (searchTerm) {
+    // Status filter
+    if (statusFilter !== 'any') {
+        available = available.filter(p => {
+            const arr = p.status || [];
+            if (statusFilter === 'standard') return !arr.includes('dropped');
+            return arr.includes(statusFilter);
+        });
+    }
+
+    // Position filter
+    if (posFilter !== 'any') {
+        available = available.filter(p => draftPoolMatchesPosition(p.position, posFilter));
+    }
+
+    // Badge filter (matches exact badge type from prospect_tags.json)
+    if (badgeFilter !== 'any') {
         available = available.filter(p =>
-            p.name.toLowerCase().includes(searchTerm) ||
-            (p.position || '').toLowerCase().includes(searchTerm) ||
-            (p.team || '').toLowerCase().includes(searchTerm)
+            p.badges?.some(b => b.type === badgeFilter)
         );
     }
 
-    // Sort:
-    // - In FYPD rounds, FYPD players ordered by fypd_rank (then global rank).
-    // - In later rounds, sort purely by global rank.
-    available.sort((a, b) => {
-        if (isFypdRound) {
-            const ar = typeof a.fypd_rank === 'number' ? a.fypd_rank : (typeof a.rank === 'number' ? a.rank : 99999);
-            const br = typeof b.fypd_rank === 'number' ? b.fypd_rank : (typeof b.rank === 'number' ? b.rank : 99999);
-            if (ar !== br) return ar - br;
-            return a.name.localeCompare(b.name);
-        }
-        const ar = typeof a.rank === 'number' ? a.rank : 99999;
-        const br = typeof b.rank === 'number' ? b.rank : 99999;
-        if (ar !== br) return ar - br;
-        return a.name.localeCompare(b.name);
-    });
+    // Text search
+    if (searchTerm) {
+        available = available.filter(p =>
+            (p.name || '').toLowerCase().includes(searchTerm) ||
+            (p.org || '').toLowerCase().includes(searchTerm) ||
+            (p.position || '').toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Sorting: delegate to shared sorter so behavior matches draft-preview.
+    sortDraftPoolProspects(available, fvYear, isFypdRound);
 
     countEl.textContent = `${available.length} players`;
 
     if (!available.length) {
-        poolList.innerHTML = '<div class="empty-state">No eligible players available</div>';
+        poolList.innerHTML = '<div class="empty-state">No eligible players match your filters</div>';
         return;
     }
 
-    // Reuse preview list styling but surface richer prospect info: Name,
-    // MLB team, position, Age, Level, org Team Rank.
-    poolList.innerHTML = available.map((player, idx) => {
-        const isFypd = !!player.fypd;
-        const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(player) : '#';
+    // Render as table; rows keep the preview-player-row structure so
+    // draft-enhancements.js can keep wiring click handlers.
+    const tableHTML = `
+        <table class="prospect-table draft-pool-table">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="rank">RK <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="name">PROSPECT <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="org">ORG <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="fv">FV <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="badges"># <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="status">STATUS <i class="fas fa-sort"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${available.map((p, idx) => {
+                    const rank = (isFypdRound ? (p.fypd_rank || p.rank) : p.rank) || idx + 1;
+                    const fv = p.fv?.[fvYear] || '-';
+                    const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(p) : '#';
+                    const isFypd = !!p.fypd;
 
-        let rank;
-        if (isFypdRound) {
-            if (typeof player.fypd_rank === 'number') {
-                rank = player.fypd_rank;
-            } else if (typeof player.rank === 'number') {
-                rank = player.rank;
-            } else {
-                rank = idx + 1;
-            }
-        } else {
-            rank = typeof player.rank === 'number' ? player.rank : idx + 1;
-        }
+                    return `
+                        <tr class="prospect-row${isFypd ? ' prospect-row-fypd' : ''}"
+                            data-player-id="${p.upid || ''}" data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
+                            <td class="prospect-rank">${rank}</td>
+                            <td class="prospect-name">
+                                <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
+                            </td>
+                            <td class="prospect-org">${p.org || '-'}</td>
+                            <td class="prospect-pos">${p.position || '-'}</td>
+                            <td class="prospect-fv">${fv}</td>
+                            <td class="prospect-badges">${p.badgeCount || 0}</td>
+                            <td class="prospect-status">
+                                <div class="status-wrapper">${renderDraftPoolStatusBadges(p.status)}</div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
 
-        const age = typeof player.age === 'number' ? player.age : '—';
-        const level = player.level || player.mlb_level || '—';
-        const teamRank =
-            typeof player.team_rank === 'number'
-                ? player.team_rank
-                : (typeof player.org_rank === 'number' ? player.org_rank : '—');
+    poolList.innerHTML = tableHTML;
 
-        return `
-            <div class="preview-player-row${isFypd ? ' preview-player-row-fypd' : ''}">
-                <div class="preview-row-main">
-                    <span class="preview-rank">#${rank}</span>
-                    <a href="${profileLink}" class="preview-name-link">${player.name}</a>
-                    <span class="preview-team">${player.team || 'FA'}</span>
-                    <span class="preview-pos">${player.position || ''}</span>
-                    ${isFypd ? '<span class="preview-fypd-tag">FYPD</span>' : ''}
-                </div>
-                <div class="preview-row-stats">
-                    Age ${age} · Level ${level} · Team Rank ${teamRank}
-                </div>
-            </div>
-        `;
-    }).join('');
+    // Wire sorting and update sort indicators on each render
+    setupDraftPoolSorting();
+    updateDraftPoolSortIndicators();
+}
+
+/**
+ * Wire up the dropdown filters so any change re-renders the pool.
+ */
+function setupDraftPoolFilters() {
+    ['poolFvYear', 'poolStatusFilter', 'poolPositionFilter', 'poolBadgeFilter'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => displayDraftPool());
+    });
+
+    const searchInput = document.getElementById('draftPoolSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => displayDraftPool());
+    }
 }
 
 /**
