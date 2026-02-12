@@ -504,6 +504,10 @@ function addUserMenu() {
                 <i class="fas fa-sliders-h"></i>
                 Settings
             </a>
+            <a href="draft-board.html">
+                <i class="fas fa-clipboard-list"></i>
+                Draft Board
+            </a>
             ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>
@@ -516,10 +520,6 @@ function addUserMenu() {
                 <a href="draft.html">
                     <i class="fas fa-table-list"></i>
                     Draft
-                </a>
-                <a href="draft-board.html">
-                    <i class="fas fa-clipboard-list"></i>
-                    Draft Board
                 </a>
                 <a href="draft-picks.html">
                     <i class="fas fa-list-ol"></i>

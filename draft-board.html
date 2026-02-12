@@ -152,6 +152,27 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Discord board helpers -->
+                    <div class="board-help">
+                        <p style="font-size: 13px; color: var(--text-gray); margin-top: 12px;">
+                            Changes you make here are saved locally as you edit. When you click
+                            <strong>Save Board</strong>, your list is pushed to the bot repo so
+                            Discord <code>/board</code> and this page stay in sync. That sync may
+                            take a short delay (Git commit + deploy) before it shows up everywhere.
+                        </p>
+                        <div style="margin-top: 8px; font-size: 13px;">
+                            <strong>Discord commands for managing your board:</strong>
+                            <ul style="margin: 6px 0 0 18px; padding: 0; list-style: disc;">
+                                <li><code>/board</code> – View your current draft board (DM the bot).</li>
+                                <li><code>/add &lt;player&gt;</code> – Add a single prospect to your board (with fuzzy matching).</li>
+                                <li><code>/addmany &lt;players&gt;</code> – Bulk add prospects (comma‑separated list).</li>
+                                <li><code>/remove &lt;player&gt;</code> – Remove a player from your board.</li>
+                                <li><code>/move &lt;player&gt; &lt;position&gt;</code> – Move a player to a specific rank.</li>
+                                <li><code>/clear</code> – Clear your entire board.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right: Available Players -->

@@ -14,6 +14,7 @@ let BOARD_STATE = {
     draftStatus: 'pre'
 };
 
+
 /**
  * Initialize draft board
  */
@@ -135,13 +136,21 @@ async function loadAvailablePlayers() {
     let pool = [];
 
     if (BOARD_STATE.draftType === 'prospect') {
-        // Prospect draft: all prospects without DC/PC/BC contracts
+        // Prospect draft: mirror live draft pool eligibility as closely as
+        // possible using combined_players data:
+        //   - Farm prospects only
+        //   - Unowned (no manager / FBP_Team)
+        //   - No active prospect contract (BC/DC/PC)
         pool = players.filter(p => p.player_type === 'Farm');
         pool = pool.filter(p => {
-            const yearsSimple = p.years_simple || '';
-            const match = yearsSimple.match(/^([A-Z]+)/);
-            const contractCode = match ? match[1] : '';
-            return contractCode !== 'DC' && contractCode !== 'PC' && contractCode !== 'BC';
+            const manager = (p.manager || '').trim();
+            const fbpTeam = (p.FBP_Team || '').trim();
+            const hasManager = manager && manager.toLowerCase() !== 'none';
+            const hasFbpTeam = fbpTeam && fbpTeam.toLowerCase() !== 'none';
+            if (hasManager || hasFbpTeam) return false;
+
+            const hasContract = (p.contract_type || '').trim();
+            return !hasContract;
         });
     } else {
         // Keeper draft: MLB players not currently on an FBP roster
@@ -418,7 +427,7 @@ function confirmAddPlayer() {
     
     closeAddPlayerModal();
     displayTargets();
-    saveBoard();
+    persistBoardLocal();
 }
 
 /**
@@ -453,7 +462,7 @@ function quickAddToBoard(upid) {
     });
     
     displayTargets();
-    saveBoard();
+    persistBoardLocal();
 }
 
 /**
@@ -463,7 +472,7 @@ function removeTarget(index) {
     if (confirm(`Remove ${BOARD_STATE.targets[index].player_name} from board?`)) {
         BOARD_STATE.targets.splice(index, 1);
         displayTargets();
-        saveBoard();
+        persistBoardLocal();
     }
 }
 
@@ -473,28 +482,22 @@ function removeTarget(index) {
 function removeFromWatch(index) {
     BOARD_STATE.watchList.splice(index, 1);
     displayWatchList();
-    saveBoard();
+    persistBoardLocal();
 }
 
 /**
- * Save board
+ * Save board (explicit Save button)
+ *
+ * - Persists the latest state locally.
+ * - Pushes the canonical board (names only) to the bot API immediately so
+ *   Discord /board and the website can stay in sync.
  */
 function saveBoard() {
     const teamAbbr = BOARD_STATE.userTeam.abbreviation;
 
-    const boardData = {
-        team: teamAbbr,
-        draft_id: 'fbp_keeper_draft_2026',
-        last_updated: new Date().toISOString(),
-        targets: BOARD_STATE.targets,
-        watch_list: BOARD_STATE.watchList
-    };
+    // Always persist locally first
+    persistBoardLocal();
 
-    // Save to localStorage for client-side persistence (watch list, notes, etc.).
-    localStorage.setItem(`draft_board_${teamAbbr}`, JSON.stringify(boardData));
-
-    // Also push the canonical board (names only) to the bot API so that
-    // data/manager_boards_2026.json in FBPTradeBot stays authoritative.
     const apiBase = (typeof FBPHub !== 'undefined' && FBPHub.config?.apiBase)
         ? FBPHub.config.apiBase
         : null;
@@ -511,8 +514,27 @@ function saveBoard() {
         });
     }
 
-    console.log('💾 Board saved');
-    showToast('Draft board saved!', 'success');
+    console.log('💾 Board saved + synced to bot');
+    showToast('Draft board saved! Discord /board may take a moment to update.', 'success');
+}
+
+/**
+ * Persist the current board state locally only (no API call).
+ * This is used for auto-saves when editing the board so we avoid
+ * triggering a Git-backed sync on every small change.
+ */
+function persistBoardLocal() {
+    const teamAbbr = BOARD_STATE.userTeam.abbreviation;
+
+    const boardData = {
+        team: teamAbbr,
+        draft_id: 'fbp_keeper_draft_2026',
+        last_updated: new Date().toISOString(),
+        targets: BOARD_STATE.targets,
+        watch_list: BOARD_STATE.watchList
+    };
+
+    localStorage.setItem(`draft_board_${teamAbbr}`, JSON.stringify(boardData));
 }
 
 /**
@@ -524,7 +546,7 @@ function clearBoard() {
         BOARD_STATE.watchList = [];
         displayTargets();
         displayWatchList();
-        saveBoard();
+        persistBoardLocal();
     }
 }
 
