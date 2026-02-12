@@ -838,6 +838,63 @@ function showToast(message, duration = 3000) {
     }, duration);
 }
 
+/**
+ * Calculate relative luminance of a color (WCAG standard)
+ * @param {string} color - Hex color (e.g., '#FFFFFF') or RGB string
+ * @returns {number} - Luminance value between 0 and 1
+ */
+function getColorLuminance(color) {
+    // Convert hex to RGB if needed
+    let r, g, b;
+    
+    if (color.startsWith('#')) {
+        const hex = color.replace('#', '');
+        if (hex.length === 3) {
+            r = parseInt(hex[0] + hex[0], 16);
+            g = parseInt(hex[1] + hex[1], 16);
+            b = parseInt(hex[2] + hex[2], 16);
+        } else {
+            r = parseInt(hex.substr(0, 2), 16);
+            g = parseInt(hex.substr(2, 2), 16);
+            b = parseInt(hex.substr(4, 2), 16);
+        }
+    } else if (color.startsWith('rgb')) {
+        const matches = color.match(/\d+/g);
+        if (matches && matches.length >= 3) {
+            r = parseInt(matches[0]);
+            g = parseInt(matches[1]);
+            b = parseInt(matches[2]);
+        } else {
+            return 0.5; // default to mid-range if can't parse
+        }
+    } else {
+        return 0.5; // default to mid-range for unknown format
+    }
+    
+    // Convert to 0-1 range and apply gamma correction
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    
+    r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+    g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+    b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+    
+    // Calculate relative luminance
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Get appropriate text color (black or white) for a given background color
+ * @param {string} backgroundColor - Hex color or RGB string
+ * @returns {string} - '#000000' for dark text, '#FFFFFF' for light text
+ */
+function getContrastTextColor(backgroundColor) {
+    const luminance = getColorLuminance(backgroundColor);
+    // WCAG recommends 0.5 threshold; use 0.6 for better readability on colored backgrounds
+    return luminance > 0.6 ? '#000000' : '#FFFFFF';
+}
+
 // Export for use in other scripts
 window.FBPHub = FBPHub;
 window.formatDate = formatDate;
@@ -850,3 +907,5 @@ window.createContractBadge = createContractBadge;
 window.filterPlayers = filterPlayers;
 window.getUniqueValues = getUniqueValues;
 window.debounce = debounce;
+window.getColorLuminance = getColorLuminance;
+window.getContrastTextColor = getContrastTextColor;

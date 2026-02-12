@@ -68,7 +68,7 @@ function openDraftPlayerDetail(playerId) {
                     <i class="fas fa-user"></i> View Full Profile
                 </a>
                 ${isAvailable && isMyTurn ? `
-                    <button class="btn-draft-player-header" onclick="requestWebPick('${player.name.replace(/'/g, "\\'")}")">
+                    <button class="btn-draft-player-header" data-draft-player="${encodeURIComponent(player.name)}">
                         <i class="fas fa-gavel"></i> Draft
                     </button>
                 ` : isAvailable && !isMyTurn ? `
@@ -80,7 +80,7 @@ function openDraftPlayerDetail(playerId) {
                         <i class="fas fa-lock"></i> Not Available
                     </button>
                 `}
-                <button class="btn-add-to-board-header" onclick="addToBoardFromPanel('${player.name.replace(/'/g, "\\'")}")">
+                <button class="btn-add-to-board-header" data-add-to-board="${encodeURIComponent(player.name)}">
                     <i class="fas fa-clipboard-list"></i> Add to Draft Board
                 </button>
             </div>
@@ -344,7 +344,7 @@ function displayDraftBoard() {
 
         html += `
             <div class="board-inline-item ${isDrafted ? 'board-item-drafted' : ''}"
-                 onclick="openDraftPlayerDetail('${name.replace(/'/g, "\\'")}')">
+                 data-open-player="${encodeURIComponent(name)}">
                 <span class="board-inline-rank">${idx + 1}</span>
                 <span class="board-inline-name">${name}</span>
                 <span class="board-inline-meta">${pos} ${team}</span>
@@ -514,6 +514,38 @@ function showDraftToast(message, type = 'success') {
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 4000);
 }
+
+// ============================================
+// EVENT DELEGATION FOR DRAFT BUTTONS
+// ============================================
+
+// Use event delegation to handle draft/board buttons with data attributes
+// This avoids inline onclick handlers that can break with special characters
+document.addEventListener('click', (e) => {
+    // Handle draft player button
+    const draftBtn = e.target.closest('[data-draft-player]');
+    if (draftBtn && !draftBtn.disabled) {
+        const playerName = decodeURIComponent(draftBtn.dataset.draftPlayer);
+        requestWebPick(playerName);
+        return;
+    }
+    
+    // Handle add to board button
+    const boardBtn = e.target.closest('[data-add-to-board]');
+    if (boardBtn) {
+        const playerName = decodeURIComponent(boardBtn.dataset.addToBoard);
+        addToBoardFromPanel(playerName);
+        return;
+    }
+    
+    // Handle board item click to open player detail
+    const boardItem = e.target.closest('[data-open-player]');
+    if (boardItem) {
+        const playerName = decodeURIComponent(boardItem.dataset.openPlayer);
+        openDraftPlayerDetail(playerName);
+        return;
+    }
+});
 
 // Expose globals
 window.openDraftPlayerDetail = openDraftPlayerDetail;

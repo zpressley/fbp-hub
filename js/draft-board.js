@@ -55,15 +55,61 @@ async function initDraftBoard() {
  * Load board data
  */
 async function loadBoardData() {
+    const teamAbbr = BOARD_STATE.userTeam?.abbreviation;
+    const apiBase = (typeof FBPHub !== 'undefined' && FBPHub.config?.apiBase)
+        ? FBPHub.config.apiBase
+        : null;
+
+    // Prefer live board from bot API so Discord /board and web stay in sync.
+    if (apiBase && teamAbbr) {
+        try {
+            const url = new URL(`/api/draft/boards/${teamAbbr}`, apiBase);
+            const response = await fetch(url.toString(), {
+                headers: { 'Content-Type': 'application/json' },
+                cache: 'no-store',
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const names = data.board || [];
+
+                // Map plain names -> rich target objects using combined_players.
+                const players = (FBPHub.data && FBPHub.data.players) || [];
+                BOARD_STATE.targets = names.map((name, idx) => {
+                    const player = players.find(p => (p.name || '').toLowerCase() === String(name).toLowerCase()) || {};
+                    return {
+                        rank: idx + 1,
+                        player_name: name,
+                        upid: player.upid,
+                        position: player.position,
+                        mlb_team: player.team,
+                        target_round: null,
+                        notes: '',
+                        taken: false,
+                    };
+                });
+
+                // Watch list remains client-only for now; load from localStorage if present.
+                const saved = localStorage.getItem(`draft_board_${teamAbbr}`);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    BOARD_STATE.watchList = parsed.watch_list || [];
+                }
+                return;
+            }
+        } catch (e) {
+            console.warn('Failed to load board from API, falling back to local data', e);
+        }
+    }
+
+    // Fallback: legacy static JSON/localStorage-only behavior.
     try {
-        const response = await fetch(`data/draft_boards/${BOARD_STATE.userTeam.abbreviation}.json`);
+        const response = await fetch(`data/draft_boards/${teamAbbr}.json`);
         if (response.ok) {
             const data = await response.json();
             BOARD_STATE.targets = data.targets || [];
             BOARD_STATE.watchList = data.watch_list || [];
         } else {
-            // Load from localStorage
-            const saved = localStorage.getItem(`draft_board_${BOARD_STATE.userTeam.abbreviation}`);
+            const saved = localStorage.getItem(`draft_board_${teamAbbr}`);
             if (saved) {
                 const data = JSON.parse(saved);
                 BOARD_STATE.targets = data.targets || [];
@@ -434,20 +480,38 @@ function removeFromWatch(index) {
  * Save board
  */
 function saveBoard() {
+    const teamAbbr = BOARD_STATE.userTeam.abbreviation;
+
     const boardData = {
-        team: BOARD_STATE.userTeam.abbreviation,
+        team: teamAbbr,
         draft_id: 'fbp_keeper_draft_2026',
         last_updated: new Date().toISOString(),
         targets: BOARD_STATE.targets,
         watch_list: BOARD_STATE.watchList
     };
-    
-    // Save to localStorage
-    localStorage.setItem(`draft_board_${BOARD_STATE.userTeam.abbreviation}`, JSON.stringify(boardData));
-    
-    // In production: POST to /api/draft/save-board
+
+    // Save to localStorage for client-side persistence (watch list, notes, etc.).
+    localStorage.setItem(`draft_board_${teamAbbr}`, JSON.stringify(boardData));
+
+    // Also push the canonical board (names only) to the bot API so that
+    // data/manager_boards_2026.json in FBPTradeBot stays authoritative.
+    const apiBase = (typeof FBPHub !== 'undefined' && FBPHub.config?.apiBase)
+        ? FBPHub.config.apiBase
+        : null;
+
+    if (apiBase) {
+        const url = new URL(`/api/draft/boards/${teamAbbr}`, apiBase);
+        const names = BOARD_STATE.targets.map(t => t.player_name);
+        fetch(url.toString(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ team: teamAbbr, board: names }),
+        }).catch(err => {
+            console.warn('Failed to sync board to API:', err);
+        });
+    }
+
     console.log('💾 Board saved');
-    
     showToast('Draft board saved!', 'success');
 }
 

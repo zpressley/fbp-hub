@@ -12,6 +12,7 @@ const ACTIVE_DRAFT = true;
 let DRAFT_STATE = {
     draftData: null,
     draftPool: null,
+    draftOrder: null, // Loaded from draft_order_2026.json
     userTeam: null,
     updateInterval: null,
     timerInterval: null,
@@ -62,6 +63,9 @@ async function initDraft() {
     // Load schedule/config if API is available (for labels under toggle)
     await loadDraftConfig();
     
+    // Load draft order from static JSON file
+    await loadDraftOrder();
+    
     // Load draft data for current mode
     await loadDraftData(DRAFT_STATE.mode);
 
@@ -111,6 +115,24 @@ async function initDraft() {
 
     // Set up sticky clock banner once
     setupClockSticky();
+}
+
+/**
+ * Load draft order from draft_order_2026.json
+ */
+async function loadDraftOrder() {
+    try {
+        const response = await fetch('data/draft_order_2026.json');
+        if (response.ok) {
+            const data = await response.json();
+            DRAFT_STATE.draftOrder = data;
+            console.log('✅ Loaded draft order:', data.length, 'total picks');
+        } else {
+            console.warn('Could not load draft_order_2026.json');
+        }
+    } catch (e) {
+        console.error('Error loading draft order:', e);
+    }
 }
 
 /**
@@ -331,6 +353,17 @@ function updateOnTheClock() {
         const border = tc && tc.secondary ? tc.secondary : background;
         banner.style.background = background;
         banner.style.borderColor = border;
+        
+        // Auto-adjust text color based on background luminance
+        if (typeof getContrastTextColor === 'function') {
+            const textColor = getContrastTextColor(background);
+            banner.style.color = textColor;
+            // Also update all text elements within the banner
+            const textElements = banner.querySelectorAll('.clock-label, .clock-team-name, .clock-team, .clock-center-labels, .clock-center-values span, .clock-time-value, .clock-next');
+            textElements.forEach(el => {
+                el.style.color = textColor;
+            });
+        }
     }
 
     // Show quick pick if it's user's turn
@@ -363,13 +396,36 @@ function startPickTimer() {
         if (timerBar) timerBar.style.width = '0%';
         return;
     }
-    const clockStarted = new Date(draft.clock_started_at);
+    let clockStarted = new Date(draft.clock_started_at);
     const timeLimit = draft.pick_clock_seconds || 240; // 4 minutes to match Discord bot
+    
+    // If clock started in the future, use current time instead
+    const now = new Date();
+    if (clockStarted > now) {
+        console.warn('⚠️ Clock started in future! Using current time instead. Bot sent:', draft.clock_started_at);
+        clockStarted = now;
+    }
+    
+    // Debug logging
+    console.log('⏱️ Timer starting:', {
+        clock_started_at: draft.clock_started_at,
+        clockStarted: clockStarted,
+        pick_clock_seconds: draft.pick_clock_seconds,
+        timeLimit: timeLimit,
+        now: now
+    });
     
     DRAFT_STATE.timerInterval = setInterval(() => {
         const now = new Date();
-        const elapsed = Math.floor((now - clockStarted) / 1000);
-        const remaining = Math.max(0, timeLimit - elapsed);
+        let elapsed = Math.floor((now - clockStarted) / 1000);
+        
+        let remaining = Math.max(0, timeLimit - elapsed);
+        
+        // Cap at 59:59 maximum display (shouldn't happen with 4min limit)
+        if (remaining > 3599) {
+            console.error('Timer showing invalid time:', remaining, 'seconds. Resetting to limit.');
+            remaining = timeLimit;
+        }
         
         // Update timer display
         const minutes = Math.floor(remaining / 60);
@@ -611,39 +667,62 @@ function setupPicksTabs() {
 
 /**
  * Display full draft grid
+ * Uses draft_order_2026.json as the source of truth for grid layout
  */
 function displayDraftGrid() {
     const draft = DRAFT_STATE.draftData;
     const container = document.getElementById('draftGrid');
-    if (!draft || !container) return;
+    if (!container) return;
 
     const selector = document.getElementById('roundSelector');
     if (!selector) return;
 
-    // Index existing picks by (round, pick_in_round) so we can overlay them
-    // onto the full theoretical grid of picks, including future picks.
-    const picksBySlot = new Map();
-    (draft.picks || []).forEach(p => {
-        const r = p.round || 0;
-        const pk = p.pick_number || 0;
-        if (!r || !pk) return;
-        picksBySlot.set(`${r}:${pk}`, p);
+    // Must have draft order loaded from draft_order_2026.json
+    if (!DRAFT_STATE.draftOrder || DRAFT_STATE.draftOrder.length === 0) {
+        container.innerHTML = '<div class="empty-state">Draft order not loaded. Please ensure draft_order_2026.json exists.</div>';
+        return;
+    }
+
+    // Build a map of made picks by overall pick index for easy lookup
+    // The draft order file defines the canonical sequence
+    const picksByIndex = new Map();
+    if (draft && Array.isArray(draft.picks)) {
+        draft.picks.forEach(p => {
+            // Match by player name to the draft order slot
+            // This handles any mismatch in pick numbering schemes
+            const playerName = (p.player_name || '').toLowerCase();
+            if (playerName) {
+                // Find the matching slot in draft order by team + round
+                for (let i = 0; i < DRAFT_STATE.draftOrder.length; i++) {
+                    const slot = DRAFT_STATE.draftOrder[i];
+                    if (slot.round === p.round && slot.team === p.team) {
+                        picksByIndex.set(i, p);
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    // Group draft order by round
+    const orderByRound = {};
+    let globalIdx = 0;
+    DRAFT_STATE.draftOrder.forEach((slot, idx) => {
+        const r = slot.round;
+        if (!orderByRound[r]) orderByRound[r] = [];
+        orderByRound[r].push({ ...slot, globalIndex: idx });
     });
 
-    const perRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
+    const rounds = Object.keys(orderByRound).map(Number).sort((a, b) => a - b);
+    const maxRound = Math.max(...rounds);
 
-    // Build round selector options based on total_rounds when available,
-    // falling back to however many rounds have any picks at all.
+    // Build round selector
     selector.innerHTML = '';
-    const maxRound = draft.total_rounds || Math.max(
-        ...Array.from((draft.picks || []).map(p => p.round || 0)),
-        1
-    );
     for (let i = 1; i <= maxRound; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.textContent = `Round ${i}`;
-        if (i === draft.current_round) option.selected = true;
+        if (draft && i === draft.current_round) option.selected = true;
         selector.appendChild(option);
     }
 
@@ -653,26 +732,32 @@ function displayDraftGrid() {
         scrollToRound(roundNum);
     };
 
-    let gridHTML = '';
-    for (let round = 1; round <= maxRound; round++) {
-        const picksHTML = (perRound ? Array.from({ length: perRound }) : [null]).map((_, idx) => {
-            const pickInRound = idx + 1;
-            const overallPick = perRound ? (round - 1) * perRound + pickInRound : null;
-            const key = `${round}:${pickInRound}`;
-            const pick = picksBySlot.get(key) || null;
+    // Determine current pick index for highlighting
+    const currentPickIndex = draft ? (draft.current_pick ? draft.current_pick - 1 : DRAFT_STATE.draftOrder.length) : -1;
 
-            const isCurrent = !!pick && pick.round === draft.current_round && pick.pick_number === draft.current_pick;
-            const teamDefault = Array.isArray(draft.draft_order) ? draft.draft_order[idx] : null;
-            const team = pick ? pick.team : teamDefault;
+    // Build grid HTML using draft order as the source of truth
+    let gridHTML = '';
+    rounds.forEach(round => {
+        const roundSlots = orderByRound[round] || [];
+        const roundType = roundSlots[0]?.round_type === 'fypd' ? 'FYPD' : 'DC';
+        
+        const picksHTML = roundSlots.map(slot => {
+            const team = slot.team;
+            const overallPick = slot.globalIndex + 1;
+            const pick = picksByIndex.get(slot.globalIndex) || null;
+            
+            // Check if this slot is the current pick
+            const isCurrent = slot.globalIndex === currentPickIndex;
+            const isPicked = !!pick;
             const playerName = pick ? pick.player_name : '—';
-            const metaParts = [];
-            if (overallPick != null) metaParts.push(`Pick ${overallPick}`);
+            
+            const metaParts = [`#${overallPick}`];
             if (pick?.position) metaParts.push(pick.position);
             if (pick?.mlb_team) metaParts.push(pick.mlb_team);
             const meta = metaParts.join(' • ');
 
             return `
-                <div class="grid-pick ${isCurrent ? 'current' : ''}">
+                <div class="grid-pick ${isCurrent ? 'current' : ''} ${isPicked ? 'picked' : ''}">
                     <div class="grid-pick-team">${team || ''}</div>
                     <div class="grid-pick-player">${playerName}</div>
                     <div class="grid-pick-meta">${meta}</div>
@@ -683,14 +768,14 @@ function displayDraftGrid() {
         gridHTML += `
             <div class="draft-round" id="round-${round}">
                 <div class="draft-round-header">
-                    <div class="draft-round-title">Round ${round}</div>
+                    <div class="draft-round-title">Round ${round} — ${roundType} (${roundSlots.length} picks)</div>
                 </div>
                 <div class="draft-round-picks">
                     ${picksHTML}
                 </div>
             </div>
         `;
-    }
+    });
 
     container.innerHTML = gridHTML;
 }
@@ -1398,7 +1483,7 @@ function showPickNotification() {
 }
 
 /**
- * Submit quick pick
+ * Submit quick pick - delegates to requestWebPick if available
  */
 function submitQuickPick() {
     const playerName = document.getElementById('quickPickSearch').value.trim();
@@ -1408,11 +1493,12 @@ function submitQuickPick() {
         return;
     }
     
-    // In production: POST to /api/draft/pick
-    console.log('📝 Submitting pick:', playerName);
-    
-    // Mock: Record pick locally
-    alert(`Pick submitted: ${playerName}\n\nIn production, this would notify Discord bot and update draft_active.json`);
+    // Use the web pick request flow from draft-enhancements.js
+    if (typeof requestWebPick === 'function') {
+        requestWebPick(playerName);
+    } else {
+        alert('Draft pick submission not available. Please use Discord.');
+    }
 }
 
 /**
