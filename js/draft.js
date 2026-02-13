@@ -177,6 +177,8 @@ async function loadDraftData(draftType) {
             // Prefer live API via Cloudflare Worker → Render → health.py
             const url = new URL('/api/draft/active', apiBase);
             url.searchParams.set('draft_type', draftType || 'keeper');
+            // Cache-bust to avoid any intermediate caching (Worker/CDN/etc.)
+            url.searchParams.set('_ts', String(Date.now()));
 
             const response = await fetch(url.toString(), { cache: 'no-store' });
             if (response.ok) {
