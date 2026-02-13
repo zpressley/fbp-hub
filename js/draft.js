@@ -157,7 +157,7 @@ async function loadDraftConfig() {
 
         function fmt(d) {
             if (!d) return 'TBD';
-            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: ET_TZ });
         }
 
         el.textContent = `Keeper Draft: ${fmt(keeperDate)}  •  Prospect Draft: ${fmt(prospectDate)}`;
@@ -269,7 +269,7 @@ function updateDraftHeader() {
         let label = 'PRE-DRAFT';
         switch (draft.status) {
             case 'active_draft':
-                label = 'ACTIVE DRAFT';
+                label = (draft.raw_status === 'paused') ? 'PAUSED' : 'ACTIVE DRAFT';
                 break;
             case 'draft_day':
                 label = 'DRAFT DAY';
@@ -330,16 +330,14 @@ function updateOnTheClock() {
     if (clockPickEl) clockPickEl.textContent = draft.current_pick != null ? `P${draft.current_pick}` : '-';
 
     // Compute next pick for on-tile summary
-    if (clockNextEl && Array.isArray(draft.draft_order) && draft.total_rounds) {
-        const perRound = draft.draft_order.length;
-        const totalPicks = draft.total_rounds * perRound;
+    if (clockNextEl && Array.isArray(draft.draft_order)) {
+        // draft.draft_order is the full pick-by-pick team sequence.
+        const totalPicks = draft.draft_order.length;
         const nextPickNum = (draft.current_pick || 0) + 1;
-        if (nextPickNum <= totalPicks) {
-            const nextRound = Math.floor((nextPickNum - 1) / perRound) + 1;
-            const idxInRound = (nextPickNum - 1) % perRound;
-            const nextTeam = draft.draft_order[idxInRound];
+        if (nextPickNum >= 1 && nextPickNum <= totalPicks) {
+            const nextTeam = draft.draft_order[nextPickNum - 1];
             const nextName = TEAM_NAMES[nextTeam] || nextTeam;
-            clockNextEl.textContent = `Next Pick: ${nextName} (RD ${nextRound} / PK ${nextPickNum})`;
+            clockNextEl.textContent = `Next Pick: ${nextName} (PK ${nextPickNum})`;
         } else {
             clockNextEl.textContent = 'Next Pick: —';
         }
@@ -388,7 +386,8 @@ function startPickTimer() {
     }
     
     const draft = DRAFT_STATE.draftData;
-    if (!draft || !draft.clock_started_at || draft.status !== 'active_draft') {
+    // Only run countdown when the draft is truly active (not paused).
+    if (!draft || !draft.clock_started_at || draft.status !== 'active_draft' || draft.raw_status !== 'active') {
         // No active timer - show placeholder
         const timerEl = document.getElementById('timerDisplay');
         const timerBar = document.getElementById('timerBar');
@@ -1417,10 +1416,8 @@ function displayUpcomingPicks() {
     const maxUpcoming = 6;
     const items = [];
     for (let pk = currentPick + 1; pk <= Math.min(currentPick + maxUpcoming, totalPicks); pk++) {
-        const round = Math.floor((pk - 1) / totalPerRound) + 1;
-        const indexInRound = (pk - 1) % totalPerRound;
-        const team = draft.draft_order[indexInRound];
-        items.push({ round, pick: pk, team });
+        const team = draft.draft_order[pk - 1];
+        items.push({ pick: pk, team });
     }
 
     listEl.innerHTML = items.map(item => {
@@ -1433,7 +1430,7 @@ function displayUpcomingPicks() {
                         <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-gray);">${item.team}</div>
                     </div>
                     <div style="text-align:right; font-family: var(--font-mono); font-size: var(--text-sm);">
-                        RD ${item.round}<br>PK ${item.pick}
+                        PK ${item.pick}
                     </div>
                 </div>
             </div>
@@ -1502,9 +1499,11 @@ function submitQuickPick() {
 /**
  * Helper functions
  */
+const ET_TZ = 'America/New_York';
+
 function formatTime(isoString) {
     const date = new Date(isoString);
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: ET_TZ });
 }
 
 function formatTimeAgo(isoString) {
