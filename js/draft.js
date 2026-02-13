@@ -1344,7 +1344,7 @@ function displayDraftPool() {
                     <th class="sortable" data-sort="org">ORG <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="fv">FV <i class="fas fa-sort"></i></th>
-                    <th class="sortable" data-sort="badges"># <i class="fas fa-sort"></i></th>
+                    <th class="sortable" data-sort="badges">BADGES <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="status">STATUS <i class="fas fa-sort"></i></th>
                 </tr>
             </thead>

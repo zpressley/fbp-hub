@@ -560,7 +560,7 @@ function displayProspectPreview() {
     if (displayed.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="empty-state">No prospects match your filters</td>
+                <td colspan="6" class="empty-state">No prospects match your filters</td>
             </tr>
         `;
         document.getElementById('prospectLoadMore').style.display = 'none';
@@ -712,7 +712,6 @@ function renderProspectTableRow(player, fvYear) {
     
     return `
         <tr class="prospect-row${isDropped ? ' prospect-dropped' : ''}">
-            <td class="prospect-rank">${rank}</td>
             <td class="prospect-name">
                 <a href="${profileLink}" class="prospect-name-link">${player.name || 'Unknown'}</a>
             </td>
