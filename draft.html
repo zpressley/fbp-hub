@@ -389,6 +389,51 @@
         <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
     </footer>
 
+    <!-- Draft Pick Confirmation Modal -->
+    <div class="draft-confirm-modal" id="draftConfirmModal">
+        <div class="draft-confirm-backdrop" onclick="closeDraftConfirmModal()"></div>
+        <div class="draft-confirm-content">
+            <div class="draft-confirm-header">
+                <i class="fas fa-gavel"></i>
+                <h3>Confirm Your Pick</h3>
+            </div>
+            <div class="draft-confirm-body">
+                <div class="confirm-player-name" id="confirmPlayerName">Player Name</div>
+                <div class="confirm-player-info" id="confirmPlayerInfo">
+                    <span class="confirm-position"></span>
+                    <span class="confirm-team"></span>
+                    <span class="confirm-rank"></span>
+                </div>
+                <div class="confirm-pick-info">
+                    <div class="confirm-pick-detail">
+                        <span class="label">Round</span>
+                        <span class="value" id="confirmRound">1</span>
+                    </div>
+                    <div class="confirm-pick-detail">
+                        <span class="label">Pick</span>
+                        <span class="value" id="confirmPick">1</span>
+                    </div>
+                    <div class="confirm-pick-detail">
+                        <span class="label">Type</span>
+                        <span class="value" id="confirmRoundType">FYPD</span>
+                    </div>
+                </div>
+                <div class="confirm-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This action cannot be undone
+                </div>
+            </div>
+            <div class="draft-confirm-actions">
+                <button class="btn-confirm-cancel" onclick="closeDraftConfirmModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-confirm-pick" id="confirmPickBtn" onclick="confirmDraftPick()">
+                    <i class="fas fa-check"></i> Confirm Pick
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/player-profile.js"></script>

@@ -407,6 +407,9 @@ async function addToBoardFromPanel(playerName) {
 // WEB-INITIATED DRAFT PICK REQUEST
 // ============================================
 
+// Store pending pick data for the confirmation modal
+let pendingPickData = null;
+
 async function requestWebPick(playerName) {
     const team = DRAFT_STATE?.userTeam?.abbreviation;
     if (!team) {
@@ -425,23 +428,15 @@ async function requestWebPick(playerName) {
         return;
     }
 
-    const confirmed = confirm(
-        `Draft ${playerName}?\n\n` +
-        `Round ${draft.current_round}, Pick ${draft.current_pick}\n\n` +
-        `A confirmation message will be sent to your Discord DMs. ` +
-        `You must confirm in Discord to lock in the pick.`
-    );
-
-    if (!confirmed) return;
-
     const apiBase = FBPHub?.config?.apiBase;
     if (!apiBase) {
         alert('API not configured');
         return;
     }
 
+    // First validate the pick and get player data
     try {
-        const res = await fetch(`${apiBase}/api/draft/prospect/pick-request`, {
+        const res = await fetch(`${apiBase}/api/draft/prospect/validate-pick`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ team, player_name: playerName }),
@@ -449,13 +444,126 @@ async function requestWebPick(playerName) {
 
         const data = await res.json();
 
+        if (!res.ok) {
+            alert(data.detail || 'Invalid pick');
+            return;
+        }
+
+        // Show confirmation modal with player data
+        showDraftConfirmModal(data.player, data.pick_info, team);
+
+    } catch (e) {
+        alert('Network error: ' + e.message);
+    }
+}
+
+/**
+ * Show the draft confirmation modal with player and pick details
+ */
+function showDraftConfirmModal(player, pickInfo, team) {
+    // Store the pending pick data for when user confirms
+    pendingPickData = {
+        team: team,
+        player_name: player.name,
+        player: player,
+        pick_info: pickInfo,
+    };
+
+    // Populate modal
+    const modal = document.getElementById('draftConfirmModal');
+    if (!modal) return;
+
+    document.getElementById('confirmPlayerName').textContent = player.name;
+
+    // Player info badges
+    const infoEl = document.getElementById('confirmPlayerInfo');
+    const posSpan = infoEl.querySelector('.confirm-position');
+    const teamSpan = infoEl.querySelector('.confirm-team');
+    const rankSpan = infoEl.querySelector('.confirm-rank');
+
+    posSpan.textContent = (player.position && player.position !== '?') ? player.position : '';
+    teamSpan.textContent = (player.team && player.team !== '?') ? player.team : '';
+    rankSpan.textContent = (player.rank && player.rank !== '?') ? `#${player.rank}` : '';
+
+    // Pick info
+    document.getElementById('confirmRound').textContent = pickInfo.round;
+    document.getElementById('confirmPick').textContent = pickInfo.pick;
+    document.getElementById('confirmRoundType').textContent = (pickInfo.round_type || 'DC').toUpperCase();
+
+    // Reset button state
+    const confirmBtn = document.getElementById('confirmPickBtn');
+    confirmBtn.disabled = false;
+    confirmBtn.classList.remove('loading');
+    confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Pick';
+
+    // Show modal
+    modal.classList.add('active');
+}
+
+/**
+ * Close the draft confirmation modal
+ */
+function closeDraftConfirmModal() {
+    const modal = document.getElementById('draftConfirmModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    pendingPickData = null;
+}
+
+/**
+ * Confirm the draft pick (called when user clicks Confirm in modal)
+ */
+async function confirmDraftPick() {
+    if (!pendingPickData) {
+        closeDraftConfirmModal();
+        return;
+    }
+
+    const apiBase = FBPHub?.config?.apiBase;
+    if (!apiBase) {
+        alert('API not configured');
+        return;
+    }
+
+    // Update button to loading state
+    const confirmBtn = document.getElementById('confirmPickBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.classList.add('loading');
+    confirmBtn.innerHTML = '<i class="fas fa-spinner"></i> Confirming...';
+
+    try {
+        const res = await fetch(`${apiBase}/api/draft/prospect/pick-confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                team: pendingPickData.team,
+                player_name: pendingPickData.player_name,
+            }),
+        });
+
+        const data = await res.json();
+
         if (res.ok && data.success) {
-            showDraftToast('Check your Discord DMs to confirm the pick!', 'success');
+            closeDraftConfirmModal();
             closeDraftPlayerDetail();
+            showDraftToast(`${pendingPickData.player_name} drafted!`, 'success');
+            
+            // The draft state will auto-refresh from the polling interval
         } else {
-            alert(data.detail || data.error || 'Pick request failed');
+            // Reset button
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('loading');
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Pick';
+            
+            alert(data.detail || data.error || 'Pick confirmation failed');
         }
     } catch (e) {
+        // Reset button
+        confirmBtn.disabled = false;
+        confirmBtn.classList.remove('loading');
+        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Pick';
+        
         alert('Network error: ' + e.message);
     }
 }
@@ -553,3 +661,6 @@ window.closeDraftPlayerDetail = closeDraftPlayerDetail;
 window.addToBoardFromPanel = addToBoardFromPanel;
 window.requestWebPick = requestWebPick;
 window.displayDraftBoard = displayDraftBoard;
+window.showDraftConfirmModal = showDraftConfirmModal;
+window.closeDraftConfirmModal = closeDraftConfirmModal;
+window.confirmDraftPick = confirmDraftPick;
