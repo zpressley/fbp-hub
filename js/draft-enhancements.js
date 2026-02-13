@@ -411,6 +411,9 @@ async function addToBoardFromPanel(playerName) {
 let pendingPickData = null;
 
 async function requestWebPick(playerName) {
+    // Clear any previous suggestions
+    hidePickSuggestions();
+    
     const team = DRAFT_STATE?.userTeam?.abbreviation;
     if (!team) {
         alert('Please log in to make a pick');
@@ -445,7 +448,13 @@ async function requestWebPick(playerName) {
         const data = await res.json();
 
         if (!res.ok) {
-            alert(data.detail || 'Invalid pick');
+            // Check if error contains "Did you mean" suggestions
+            const errorMsg = data.detail || 'Invalid pick';
+            if (errorMsg.includes('Did you mean')) {
+                showPickSuggestions(errorMsg);
+            } else {
+                showPickError(errorMsg);
+            }
             return;
         }
 
@@ -453,8 +462,102 @@ async function requestWebPick(playerName) {
         showDraftConfirmModal(data.player, data.pick_info, team);
 
     } catch (e) {
-        alert('Network error: ' + e.message);
+        showPickError('Network error: ' + e.message);
     }
+}
+
+/**
+ * Show "Did you mean" suggestions inline below the quick pick input
+ */
+function showPickSuggestions(errorMsg) {
+    const container = document.getElementById('quickPickSuggestions');
+    if (!container) return;
+    
+    // Parse the error message to extract suggestions
+    // Format: "Player not found. Did you mean: 1. Name One, 2. Name Two, ..."
+    const didYouMeanIndex = errorMsg.indexOf('Did you mean:');
+    const mainError = didYouMeanIndex > 0 ? errorMsg.substring(0, didYouMeanIndex).trim() : 'Player not found.';
+    const suggestionsText = didYouMeanIndex > 0 ? errorMsg.substring(didYouMeanIndex + 13).trim() : '';
+    
+    // Parse numbered suggestions (e.g., "1. Luis Hernández, 2. Alexis Hernandez")
+    const suggestions = [];
+    const regex = /\d+\.\s*([^,]+)/g;
+    let match;
+    while ((match = regex.exec(suggestionsText)) !== null) {
+        suggestions.push(match[1].trim());
+    }
+    
+    let html = `
+        <div class="pick-suggestions-box">
+            <div class="pick-suggestions-error">
+                <i class="fas fa-exclamation-circle"></i> ${mainError}
+            </div>
+            <div class="pick-suggestions-label">Did you mean:</div>
+            <div class="pick-suggestions-list">
+    `;
+    
+    suggestions.forEach((name, idx) => {
+        html += `
+            <button class="pick-suggestion-btn" onclick="selectSuggestion('${name.replace(/'/g, "\\'")}')"> 
+                ${name}
+            </button>
+        `;
+    });
+    
+    html += `
+            </div>
+            <button class="pick-suggestions-dismiss" onclick="hidePickSuggestions()">
+                <i class="fas fa-times"></i> Dismiss
+            </button>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    container.style.display = 'block';
+}
+
+/**
+ * Show a general error below the quick pick input
+ */
+function showPickError(errorMsg) {
+    const container = document.getElementById('quickPickSuggestions');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="pick-suggestions-box pick-error-box">
+            <div class="pick-suggestions-error">
+                <i class="fas fa-exclamation-circle"></i> ${errorMsg}
+            </div>
+            <button class="pick-suggestions-dismiss" onclick="hidePickSuggestions()">
+                <i class="fas fa-times"></i> Dismiss
+            </button>
+        </div>
+    `;
+    container.style.display = 'block';
+}
+
+/**
+ * Hide the suggestions box
+ */
+function hidePickSuggestions() {
+    const container = document.getElementById('quickPickSuggestions');
+    if (container) {
+        container.innerHTML = '';
+        container.style.display = 'none';
+    }
+}
+
+/**
+ * Select a suggestion and populate the input
+ */
+function selectSuggestion(playerName) {
+    const input = document.getElementById('quickPickSearch');
+    if (input) {
+        input.value = playerName;
+    }
+    hidePickSuggestions();
+    // Optionally auto-submit
+    // requestWebPick(playerName);
 }
 
 /**
@@ -664,3 +767,7 @@ window.displayDraftBoard = displayDraftBoard;
 window.showDraftConfirmModal = showDraftConfirmModal;
 window.closeDraftConfirmModal = closeDraftConfirmModal;
 window.confirmDraftPick = confirmDraftPick;
+window.showPickSuggestions = showPickSuggestions;
+window.showPickError = showPickError;
+window.hidePickSuggestions = hidePickSuggestions;
+window.selectSuggestion = selectSuggestion;

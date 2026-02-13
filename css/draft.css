@@ -2400,3 +2400,92 @@ body.draft-preview-page .pick-number {
     to { transform: rotate(360deg); }
 }
 
+/* ============================================
+   Pick Suggestions / Did You Mean
+   ============================================ */
+
+.quick-pick-suggestions {
+    display: none;
+    margin-top: var(--space-md);
+}
+
+.pick-suggestions-box {
+    background: var(--bg-charcoal);
+    border: 2px solid var(--primary-red);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.pick-error-box {
+    border-color: var(--primary-red);
+}
+
+.pick-suggestions-error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--primary-red);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+}
+
+.pick-suggestions-error i {
+    font-size: var(--text-lg);
+}
+
+.pick-suggestions-label {
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+}
+
+.pick-suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.pick-suggestion-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 182, 18, 0.1);
+    border: 2px solid var(--accent-yellow);
+    border-radius: var(--radius-sm);
+    color: var(--accent-yellow);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.pick-suggestion-btn:hover {
+    background: rgba(255, 182, 18, 0.25);
+    transform: translateX(4px);
+}
+
+.pick-suggestions-dismiss {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: var(--text-gray);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.pick-suggestions-dismiss:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-white);
+}
+
