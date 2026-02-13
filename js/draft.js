@@ -1340,7 +1340,6 @@ function displayDraftPool() {
         <table class="prospect-table draft-pool-table">
             <thead>
                 <tr>
-                    <th class="sortable" data-sort="rank">RK <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="name">PROSPECT <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="org">ORG <i class="fas fa-sort"></i></th>
                     <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
@@ -1359,7 +1358,6 @@ function displayDraftPool() {
                     return `
                         <tr class="prospect-row${isFypd ? ' prospect-row-fypd' : ''}"
                             data-player-id="${p.upid || ''}" data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
-                            <td class="prospect-rank">${rank}</td>
                             <td class="prospect-name">
                                 <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
                             </td>
