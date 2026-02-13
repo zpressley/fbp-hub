@@ -458,6 +458,12 @@ async function requestWebPick(playerName) {
             return;
         }
 
+        // Validate response has required data
+        if (!data.player || !data.pick_info) {
+            showPickError('Invalid response from server');
+            return;
+        }
+
         // Show confirmation modal with player data
         showDraftConfirmModal(data.player, data.pick_info, team);
 
@@ -648,9 +654,10 @@ async function confirmDraftPick() {
         const data = await res.json();
 
         if (res.ok && data.success) {
+            const playerName = pendingPickData.player_name; // Save before nulling
             closeDraftConfirmModal();
             closeDraftPlayerDetail();
-            showDraftToast(`${pendingPickData.player_name} drafted!`, 'success');
+            showDraftToast(`${playerName} drafted!`, 'success');
             
             // The draft state will auto-refresh from the polling interval
         } else {
