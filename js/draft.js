@@ -1255,12 +1255,13 @@ function renderDraftPoolStatusBadges(statusArr) {
         'fypd': { cls: 'status-fypd', label: 'FYPD' },
         'int_signee': { cls: 'status-int', label: 'INT' },
         'debuted': { cls: 'status-debuted', label: 'DEBU' },
-        'dropped': { cls: 'status-dropped', label: 'DROP' }
+        'dropped': { cls: 'status-dropped', label: 'DROP' },
+        'standard': { cls: 'status-standard', label: 'STND' }
     };
     return statusArr.map(s => {
-        const b = badgeMap[s] || { cls: 'status-standard', label: s };
+        const b = badgeMap[s] || { cls: 'status-standard', label: 'STND' };
         return `<span class="status-badge ${b.cls}">${b.label}</span>`;
-    }).join(' ');
+    }).join('');
 }
 
 /**

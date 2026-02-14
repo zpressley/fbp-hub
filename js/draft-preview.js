@@ -728,13 +728,14 @@ function renderStatusBadges(statusArr) {
         'fypd': { class: 'status-fypd', label: 'FYPD' },
         'int_signee': { class: 'status-int', label: 'INT' },
         'debuted': { class: 'status-debuted', label: 'DEBU' },
-        'dropped': { class: 'status-dropped', label: 'DROP' }
+        'dropped': { class: 'status-dropped', label: 'DROP' },
+        'standard': { class: 'status-standard', label: 'STND' }
     };
     
     return statusArr.map(s => {
-        const badge = badgeMap[s] || { class: 'status-standard', label: s };
+        const badge = badgeMap[s] || { class: 'status-standard', label: 'STND' };
         return `<span class="status-badge ${badge.class}">${badge.label}</span>`;
-    }).join(' ');
+    }).join('');
 }
 
 /**
