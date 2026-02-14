@@ -436,27 +436,17 @@ function mergeProspectData() {
         const tagData = PREVIEW_STATE.tagsByUpid[upid] || {};
         const badges = tagData.badges || [];
         
-        // Build status array from combined_players and prospect_tags data
-        let statusArr = [];
+        // Use status array from prospect_tags.json (primary source of truth)
+        // Falls back to computing from combined_players if not available
+        let statusArr = tagData.status || [];
         
-        // FYPD: from combined_players.json
-        if (player.fypd === true) {
-            statusArr.push('fypd');
-        }
-        
-        // Debuted: from combined_players.json
-        if (player.debuted === true) {
-            statusArr.push('debuted');
-        }
-        
-        // Int Signee: any player with an INT Signee badge from prospect_tags.json
-        if (badges.some(b => (b.type || '').includes('INT Signee'))) {
-            statusArr.push('int_signee');
-        }
-        
-        // Dropped: from player_log.json
-        if (PREVIEW_STATE.droppedUpids.has(upid)) {
-            statusArr.push('dropped');
+        // If no status from tags, build it from combined_players (fallback)
+        if (!statusArr.length) {
+            if (player.fypd === true) statusArr.push('fypd');
+            if (player.debuted === true) statusArr.push('debuted');
+            if (badges.some(b => (b.type || '').includes('INT'))) statusArr.push('int_signee');
+            if (PREVIEW_STATE.droppedUpids.has(upid)) statusArr.push('dropped');
+            if (!statusArr.length) statusArr.push('standard');
         }
         
         // Merge data

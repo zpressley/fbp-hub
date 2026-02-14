@@ -134,6 +134,8 @@ function openDraftPlayerDetail(playerId) {
                     ` : ''}
                 </div>
             </div>
+            
+            ${renderProspectBadgesSection(player)}
         </div>
     `;
 
@@ -153,6 +155,84 @@ function createContractBadgeForDraft(contractStr) {
     else if (contract.includes('PC')) badgeClass = 'pc';
     else if (contract.includes('DC')) badgeClass = 'dc';
     return `<span class="contract-badge ${badgeClass}">${contractStr}</span>`;
+}
+
+/**
+ * Render prospect badges section for slide-out panel
+ * Fetches badges from prospect_tags.json via DRAFT_STATE.tagsByUpid
+ */
+function renderProspectBadgesSection(player) {
+    const upid = String(player.upid || '');
+    const tagData = (typeof DRAFT_STATE !== 'undefined' && DRAFT_STATE.tagsByUpid?.[upid]) ||
+                   (typeof PREVIEW_STATE !== 'undefined' && PREVIEW_STATE.tagsByUpid?.[upid]) || {};
+    const badges = tagData.badges || [];
+    const fv = tagData.fv || {};
+    
+    if (!badges.length && !fv['2024'] && !fv['2025'] && !fv['2026']) {
+        return ''; // No badges or FV data to show
+    }
+    
+    // Group badges by category
+    const badgeCategories = {
+        'Top 100': [],
+        'Org Top 10': [],
+        'POS Top 10': [],
+        'FYPD Top 20': [],
+        'INT Top 10': [],
+        'MLB Futures': []
+    };
+    
+    badges.forEach(badge => {
+        const type = badge.type || '';
+        for (const category of Object.keys(badgeCategories)) {
+            if (type.includes(category)) {
+                badgeCategories[category].push(badge);
+                break;
+            }
+        }
+    });
+    
+    // Build FV display
+    const fvItems = [];
+    if (fv['2026']) fvItems.push(`<span class="fv-item"><span class="fv-year">26</span> ${fv['2026']}</span>`);
+    if (fv['2025']) fvItems.push(`<span class="fv-item"><span class="fv-year">25</span> ${fv['2025']}</span>`);
+    if (fv['2024']) fvItems.push(`<span class="fv-item"><span class="fv-year">24</span> ${fv['2024']}</span>`);
+    
+    // Build badge display
+    let badgeHTML = '';
+    for (const [category, categoryBadges] of Object.entries(badgeCategories)) {
+        if (categoryBadges.length === 0) continue;
+        
+        const badgeItems = categoryBadges.map(b => {
+            const year = (b.type || '').match(/^(\d{4})/)?.[1] || '';
+            const rank = b.rank ? `#${b.rank}` : '';
+            return `<span class="prospect-badge-item">${year.slice(2)} ${rank}</span>`;
+        }).join('');
+        
+        badgeHTML += `
+            <div class="badge-category">
+                <div class="badge-category-label">${category}</div>
+                <div class="badge-category-items">${badgeItems}</div>
+            </div>
+        `;
+    }
+    
+    return `
+        <div class="detail-section prospect-badges-section">
+            <h3>PROSPECT GRADES & RANKINGS</h3>
+            ${fvItems.length ? `
+                <div class="fv-grades">
+                    <div class="fv-label">Future Value</div>
+                    <div class="fv-values">${fvItems.join('')}</div>
+                </div>
+            ` : ''}
+            ${badgeHTML ? `
+                <div class="prospect-badges-grid">
+                    ${badgeHTML}
+                </div>
+            ` : ''}
+        </div>
+    `;
 }
 
 // ============================================

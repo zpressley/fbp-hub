@@ -29,7 +29,7 @@ let DRAFT_STATE = {
     // Guard so we only wire clock sticky behavior once
     clockStickyInitialized: false,
     // Draft pool sort state (mirrors draft-preview defaults)
-    poolSort: { field: 'rank', direction: 'asc' }
+    poolSort: { field: 'fv', direction: 'asc' }
 };
 
 /**
@@ -1206,12 +1206,17 @@ function buildDraftPoolProspects() {
         const tagData = DRAFT_STATE.tagsByUpid?.[upid] || {};
         const badges = tagData.badges || [];
 
-        let statusArr = [];
-        if (player.fypd === true) statusArr.push('fypd');
-        if (player.debuted === true) statusArr.push('debuted');
-        if (badges.some(b => (b.type || '').includes('INT Signee'))) statusArr.push('int_signee');
-        if (badges.some(b => (b.type || '').includes('INT Top'))) statusArr.push('int_signee');
-        if (DRAFT_STATE.droppedUpids && DRAFT_STATE.droppedUpids.has(upid)) statusArr.push('dropped');
+        // Use status array from prospect_tags.json (primary source of truth)
+        let statusArr = tagData.status || [];
+        
+        // Fallback: compute status if not in prospect_tags
+        if (!statusArr.length) {
+            if (player.fypd === true) statusArr.push('fypd');
+            if (player.debuted === true) statusArr.push('debuted');
+            if (badges.some(b => (b.type || '').includes('INT'))) statusArr.push('int_signee');
+            if (DRAFT_STATE.droppedUpids && DRAFT_STATE.droppedUpids.has(upid)) statusArr.push('dropped');
+            if (!statusArr.length) statusArr.push('standard');
+        }
 
         prospects.push({
             upid: player.upid,

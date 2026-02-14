@@ -1651,23 +1651,19 @@ body.draft-preview-page .pick-number {
         font-size: var(--text-sm);
     }
     
-    /* Hide rank column on mobile to save space */
+    /* Column widths for mobile (6 visible columns: Name, Org, Pos, FV, Badges, Status) */
     .prospect-table th:nth-child(1),
-    .prospect-table td:nth-child(1) { display: none; } /* Rank hidden on mobile */
-    
-    /* Column widths for mobile (adjusted for 6 visible columns) */
+    .prospect-table td:nth-child(1) { width: 28%; } /* Name */
     .prospect-table th:nth-child(2),
-    .prospect-table td:nth-child(2) { width: 28%; } /* Name */
+    .prospect-table td:nth-child(2) { width: 11%; } /* Org */
     .prospect-table th:nth-child(3),
-    .prospect-table td:nth-child(3) { width: 11%; } /* Org */
+    .prospect-table td:nth-child(3) { width: 11%; } /* Pos */
     .prospect-table th:nth-child(4),
-    .prospect-table td:nth-child(4) { width: 11%; } /* Pos */
+    .prospect-table td:nth-child(4) { width: 9%; } /* FV */
     .prospect-table th:nth-child(5),
-    .prospect-table td:nth-child(5) { width: 9%; } /* FV */
+    .prospect-table td:nth-child(5) { width: 13%; } /* Badges */
     .prospect-table th:nth-child(6),
-    .prospect-table td:nth-child(6) { width: 13%; } /* Badges */
-    .prospect-table th:nth-child(7),
-    .prospect-table td:nth-child(7) { 
+    .prospect-table td:nth-child(6) { 
         width: 28%; /* Status */
         text-align: center;
     }
@@ -1864,6 +1860,11 @@ body.draft-preview-page .pick-number {
 
     .clock-center-values {
         font-size: var(--text-xl);
+    }
+
+    /* Hide the leading dash when clockRound is emptied on mobile */
+    .clock-center-values span + span::before {
+        content: none;
     }
 
     .clock-right {
@@ -2489,3 +2490,106 @@ body.draft-preview-page .pick-number {
     color: var(--text-white);
 }
 
+
+/* ============================================
+   SLIDE-OUT PANEL PROSPECT BADGES
+   ============================================ */
+.prospect-badges-section {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prospect-badges-section h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--text-white);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-md);
+    letter-spacing: 1px;
+}
+
+/* FV Grades in slide-out */
+.fv-grades {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.fv-grades .fv-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+    margin-bottom: var(--space-sm);
+}
+
+.fv-grades .fv-values {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.fv-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+.fv-item .fv-year {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+}
+
+.fv-item:not(.fv-year) {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--accent-yellow);
+}
+
+/* Badge categories in slide-out */
+.prospect-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+}
+
+.badge-category {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+}
+
+.badge-category-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.badge-category-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.prospect-badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background-color: rgba(239, 62, 66, 0.15);
+    border: 1px solid var(--primary-red);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--primary-red);
+    font-weight: 600;
+}

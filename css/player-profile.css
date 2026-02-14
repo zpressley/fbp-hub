@@ -718,6 +718,153 @@
 }
 
 /* ============================================
+   PROSPECT BADGES & RANKINGS
+   ============================================ */
+.prospect-rankings-section h3 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--text-white);
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-lg);
+    letter-spacing: 1px;
+}
+
+/* Status badges (FYPD, INT, Debuted, Dropped) */
+.profile-status-badges {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+}
+
+.profile-status-badge {
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.profile-status-badge.status-fypd {
+    background-color: rgba(100, 181, 246, 0.2);
+    color: #64B5F6;
+    border: 1px solid #64B5F6;
+}
+
+.profile-status-badge.status-int {
+    background-color: rgba(129, 199, 132, 0.2);
+    color: #81C784;
+    border: 1px solid #81C784;
+}
+
+.profile-status-badge.status-debuted {
+    background-color: rgba(255, 182, 18, 0.2);
+    color: var(--accent-yellow);
+    border: 1px solid var(--accent-yellow);
+}
+
+.profile-status-badge.status-dropped {
+    background-color: rgba(239, 62, 66, 0.2);
+    color: var(--primary-red);
+    border: 1px solid var(--primary-red);
+}
+
+/* FV Grades section */
+.profile-fv-section {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.profile-fv-section .fv-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+    margin-bottom: var(--space-sm);
+}
+
+.profile-fv-section .fv-items {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.profile-fv-section .fv-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+.profile-fv-section .fv-year {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+}
+
+.profile-fv-section .fv-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--accent-yellow);
+}
+
+/* Badges grid by category */
+.profile-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-md);
+}
+
+.profile-badge-category {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.profile-badge-category .badge-category-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-sm);
+}
+
+.profile-badge-category .badge-category-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.profile-badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(239, 62, 66, 0.15);
+    border: 1px solid var(--primary-red);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+}
+
+.profile-badge-item .badge-year {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+}
+
+.profile-badge-item .badge-rank {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 767px) {

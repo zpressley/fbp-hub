@@ -9,7 +9,9 @@ let PLAYER_DATA = {
     // stats: { seasons: [...], hasBatting: bool, hasPitching: bool }
     stats: null,
     // unified timeline of events from player_log.json + transactions_history.json
-    history: []
+    history: [],
+    // Prospect tags data (badges, FV, status) from prospect_tags.json
+    prospectTags: null
 };
 
 /**
@@ -103,6 +105,21 @@ async function loadPlayerData(upid, playerName) {
         }
     } catch (e) {
         console.log('No player_stats.json available for player profile');
+    }
+
+    // Load prospect tags (badges, FV, status) from prospect_tags.json
+    PLAYER_DATA.prospectTags = null;
+    try {
+        const tagsResponse = await fetch('./data/prospect_tags.json');
+        if (tagsResponse.ok) {
+            const tagsData = await tagsResponse.json();
+            const players = tagsData.players || [];
+            PLAYER_DATA.prospectTags = players.find(p => 
+                String(p.upid) === String(PLAYER_DATA.upid)
+            ) || null;
+        }
+    } catch (e) {
+        console.log('No prospect_tags.json available for player profile');
     }
 
     // Load unified player history from transactions_history.json + player_log.json
@@ -313,8 +330,110 @@ function displayOverview() {
     `;
     document.getElementById('contractDetails').innerHTML = contractHTML;
     
+    // Prospect badges and rankings (for Farm players)
+    displayProspectBadges();
+    
     // Ownership timeline
     displayOwnershipTimeline();
+}
+
+/**
+ * Display prospect badges and FV grades from prospect_tags.json
+ */
+function displayProspectBadges() {
+    const container = document.getElementById('prospectBadges');
+    if (!container) return;
+    
+    const tagData = PLAYER_DATA.prospectTags;
+    if (!tagData) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    const badges = tagData.badges || [];
+    const fv = tagData.fv || {};
+    const status = tagData.status || [];
+    
+    // Don't show section if no meaningful data
+    if (!badges.length && !fv['2024'] && !fv['2025'] && !fv['2026']) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'block';
+    
+    // Group badges by category
+    const badgeCategories = {
+        'Top 100': [],
+        'Org Top 10': [],
+        'POS Top 10': [],
+        'FYPD Top 20': [],
+        'INT Top 10': [],
+        'MLB Futures': []
+    };
+    
+    badges.forEach(badge => {
+        const type = badge.type || '';
+        for (const category of Object.keys(badgeCategories)) {
+            if (type.includes(category)) {
+                badgeCategories[category].push(badge);
+                break;
+            }
+        }
+    });
+    
+    // Build FV display
+    const fvItems = [];
+    if (fv['2026']) fvItems.push(`<span class="fv-item"><span class="fv-year">2026</span><span class="fv-value">${fv['2026']}</span></span>`);
+    if (fv['2025']) fvItems.push(`<span class="fv-item"><span class="fv-year">2025</span><span class="fv-value">${fv['2025']}</span></span>`);
+    if (fv['2024']) fvItems.push(`<span class="fv-item"><span class="fv-year">2024</span><span class="fv-value">${fv['2024']}</span></span>`);
+    
+    // Build status badges
+    const statusMap = {
+        'fypd': { class: 'status-fypd', label: 'FYPD' },
+        'int_signee': { class: 'status-int', label: 'INT Signee' },
+        'debuted': { class: 'status-debuted', label: 'Debuted' },
+        'dropped': { class: 'status-dropped', label: 'Dropped' }
+    };
+    
+    const statusBadges = status
+        .filter(s => statusMap[s])
+        .map(s => `<span class="profile-status-badge ${statusMap[s].class}">${statusMap[s].label}</span>`)
+        .join('');
+    
+    // Build badge display by category
+    let badgeHTML = '';
+    for (const [category, categoryBadges] of Object.entries(badgeCategories)) {
+        if (categoryBadges.length === 0) continue;
+        
+        const badgeItems = categoryBadges.map(b => {
+            const year = (b.type || '').match(/^(\d{4})/)?.[1] || '';
+            const rank = b.rank ? `#${b.rank}` : '';
+            return `<span class="profile-badge-item">
+                <span class="badge-year">${year}</span>
+                <span class="badge-rank">${rank}</span>
+            </span>`;
+        }).join('');
+        
+        badgeHTML += `
+            <div class="profile-badge-category">
+                <div class="badge-category-label">${category}</div>
+                <div class="badge-category-items">${badgeItems}</div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = `
+        <h3>Prospect Rankings</h3>
+        ${statusBadges ? `<div class="profile-status-badges">${statusBadges}</div>` : ''}
+        ${fvItems.length ? `
+            <div class="profile-fv-section">
+                <div class="fv-label">Future Value (FV)</div>
+                <div class="fv-items">${fvItems.join('')}</div>
+            </div>
+        ` : ''}
+        ${badgeHTML ? `<div class="profile-badges-grid">${badgeHTML}</div>` : ''}
+    `;
 }
 
 /**
