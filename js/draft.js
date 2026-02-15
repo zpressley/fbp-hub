@@ -1361,7 +1361,7 @@ function displayDraftPool() {
     if (!FBPHub?.data?.players) return;
 
     const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
-    const fvYear = document.getElementById('poolFvYear')?.value || '2024';
+    const fvYear = document.getElementById('poolFvYear')?.value || '2025';
     const statusFilter = document.getElementById('poolStatusFilter')?.value || 'any';
     const posFilter = document.getElementById('poolPositionFilter')?.value || 'any';
     const badgeFilter = document.getElementById('poolBadgeFilter')?.value || 'any';
