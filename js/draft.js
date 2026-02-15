@@ -4,10 +4,11 @@
  */
 
 // ============================================
-// MANUAL TOGGLE: Set to true when draft is live
-// When false, redirects all visitors to draft-preview.html
+// Draft page behavior
+// - This page is accessible to everyone.
+// - If there is no active draft payload from the API, we still render the
+//   draft page in "planning" mode so managers can prep (pool/grid/order).
 // ============================================
-const ACTIVE_DRAFT = true;
 
 let DRAFT_STATE = {
     draftData: null,
@@ -28,20 +29,73 @@ let DRAFT_STATE = {
     droppedUpids: new Set(),
     // Guard so we only wire clock sticky behavior once
     clockStickyInitialized: false,
+    // Guard so we don't duplicate event listeners when re-running initDraft()
+    viewToggleInitialized: false,
+    picksTabsInitialized: false,
+    poolFiltersInitialized: false,
     // Draft pool sort state (mirrors draft-preview defaults)
     poolSort: { field: 'fv', direction: 'asc' }
 };
 
 /**
+ * Return the draft-order slots to use for the current mode.
+ *
+ * draft_order_2026.json entries include a "draft" field (e.g. "prospect");
+ * if it matches the current mode, we filter to it. Otherwise we fall back
+ * to the full list.
+ */
+function getDraftOrderSlotsForMode() {
+    const slots = Array.isArray(DRAFT_STATE.draftOrder) ? DRAFT_STATE.draftOrder : [];
+    const mode = (DRAFT_STATE.mode || '').toLowerCase();
+    if (!mode) return slots;
+
+    // If the JSON includes a "draft" field, treat it as authoritative and
+    // return an empty list when the selected mode has no entries.
+    const hasDraftField = slots.some(s => (s.draft || '').trim());
+    if (!hasDraftField) return slots;
+
+    return slots.filter(s => (s.draft || '').toLowerCase() === mode);
+}
+
+/**
+ * Build a minimal "planning" draft payload so the draft page can render
+ * (pool/grid/order/upcoming) even when the API has no active draft.
+ */
+function buildPlanningDraftData() {
+    const season = new Date().getFullYear();
+    const slots = getDraftOrderSlotsForMode();
+    const order = slots.map(s => s.team).filter(Boolean);
+    const totalRounds = slots.reduce((max, s) => Math.max(max, s.round || 0), 0);
+
+    return {
+        _planning: true,
+        status: 'pre_draft',
+        raw_status: 'planning',
+        draft_type: DRAFT_STATE.mode || 'prospect',
+        season: season,
+        current_round: 1,
+        current_pick: 0,
+        current_team: null,
+        picks: [],
+        draft_order: order,
+        total_rounds: totalRounds,
+        pick_clock_seconds: 240
+    };
+}
+
+function ensureDraftData() {
+    if (DRAFT_STATE.draftData) return;
+    DRAFT_STATE.draftData = buildPlanningDraftData();
+}
+
+function isActiveDraftPayload(draft) {
+    return !!draft && draft.status === 'active_draft';
+}
+
+/**
  * Initialize draft page
  */
 async function initDraft() {
-    // Redirect to draft-preview if no active draft (manual master switch).
-    if (!ACTIVE_DRAFT) {
-        window.location.href = 'draft-preview.html';
-        return;
-    }
-    
     // If backend pre-detected an active draft type, honor it on first load
     // only. After that, allow managers to switch views locally.
     if (!DRAFT_STATE.initializedFromHint && window.FBPHub && FBPHub.draftInitialMode && (FBPHub.draftInitialMode === 'keeper' || FBPHub.draftInitialMode === 'prospect')) {
@@ -54,7 +108,11 @@ async function initDraft() {
     updateDraftModeUI();
 
     console.log('🎯 Initializing draft tracker...', DRAFT_STATE.mode);
-    
+
+    // Clear any previous polling/timer loops (initDraft can be re-run via setDraftMode)
+    if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
+    if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
+
     // Get user team (optional - can view draft without auth)
     if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
         DRAFT_STATE.userTeam = authManager.getTeam();
@@ -62,55 +120,52 @@ async function initDraft() {
 
     // Load schedule/config if API is available (for labels under toggle)
     await loadDraftConfig();
-    
+
     // Load draft order from static JSON file
     await loadDraftOrder();
-    
-    // Load draft data for current mode
+
+    // Load draft data for current mode (may be null if there is no active draft)
     await loadDraftData(DRAFT_STATE.mode);
+    ensureDraftData();
 
     // Load prospect tags + PAD drop data, then wire pool filters and render.
     await loadProspectTagsForDraft();
     await loadDroppedProspectsForDraft();
-    setupDraftPoolFilters();
+
+    if (!DRAFT_STATE.poolFiltersInitialized) {
+        setupDraftPoolFilters();
+        DRAFT_STATE.poolFiltersInitialized = true;
+    }
+
     displayDraftPool();
 
-    // Always show the main draft UI; use the inactive banner only as a
-    // status indicator when there is no active draft payload.
+    // Always show the main draft UI; we keep the draft page usable even when
+    // the API has no active draft so managers can plan ahead.
     const inactiveEl = document.getElementById('draftInactive');
     const contentEl = document.getElementById('draftContent');
     if (contentEl) contentEl.style.display = 'block';
-    if (inactiveEl) inactiveEl.style.display = DRAFT_STATE.draftData ? 'none' : 'flex';
-
-    // If we don't have live draft data yet, stop here. The page will show
-    // the shell UI with "No Active Draft" messaging, but without timers
-    // or recent-picks content wired up.
-    if (!DRAFT_STATE.draftData) {
-        if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
-        if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
-        // Clear clock UI to a neutral state.
-        updateOnTheClock();
-        setupViewToggle();
-        return;
-    }
-    
-    // We have an active draft payload – hide the inactive banner (if
-    // present) and fully initialize the live tracker.
     if (inactiveEl) inactiveEl.style.display = 'none';
-    if (contentEl) contentEl.style.display = 'block';
-    
-    // Initialize display
+
+    // Initialize display (works for both planning + active drafts)
     updateDraftHeader();
     updateOnTheClock();
     displayRecentPicks();
     displayUpcomingPicks();
-    setupViewToggle();
-    setupPicksTabs();
-    
-    // Start auto-refresh (every 5 seconds)
+
+    if (!DRAFT_STATE.viewToggleInitialized) {
+        setupViewToggle();
+        DRAFT_STATE.viewToggleInitialized = true;
+    }
+    if (!DRAFT_STATE.picksTabsInitialized) {
+        setupPicksTabs();
+        DRAFT_STATE.picksTabsInitialized = true;
+    }
+
+    // Poll for updates so the page can transition from planning → active when
+    // the backend draft actually starts.
     DRAFT_STATE.updateInterval = setInterval(refreshDraftData, 5000);
-    
-    // Start timer countdown
+
+    // Start timer countdown (no-op unless status=active_draft and raw_status=active)
     startPickTimer();
 
     // Set up sticky clock banner once
@@ -218,39 +273,55 @@ async function loadDraftData(draftType) {
  */
 async function refreshDraftData() {
     const oldPick = DRAFT_STATE.draftData?.current_pick;
-    
+    const oldStatus = DRAFT_STATE.draftData?.status;
+
     await loadDraftData(DRAFT_STATE.mode);
-    
-    // If draft ended or no longer active, stop timers but keep the main
-    // UI visible so managers can still see the layout and static data.
+
+    // If the API doesn't have an active draft, stay in planning mode.
     if (!DRAFT_STATE.draftData) {
-        if (DRAFT_STATE.updateInterval) clearInterval(DRAFT_STATE.updateInterval);
-        if (DRAFT_STATE.timerInterval) clearInterval(DRAFT_STATE.timerInterval);
-        const inactiveEl = document.getElementById('draftInactive');
-        const contentEl = document.getElementById('draftContent');
-        if (inactiveEl) inactiveEl.style.display = 'flex';
-        if (contentEl) contentEl.style.display = 'block';
-        // Reset clock to neutral state.
+        ensureDraftData();
+    }
+
+    const draft = DRAFT_STATE.draftData;
+
+    // No timers in planning mode.
+    if (!isActiveDraftPayload(draft)) {
+        if (DRAFT_STATE.timerInterval) {
+            clearInterval(DRAFT_STATE.timerInterval);
+            DRAFT_STATE.timerInterval = null;
+        }
+        updateDraftHeader();
         updateOnTheClock();
+        displayUpcomingPicks();
         return;
     }
-    
-    const newPick = DRAFT_STATE.draftData?.current_pick;
-    
+
+    // Transition planning → active: refresh everything once.
+    if (oldStatus !== 'active_draft' && draft.status === 'active_draft') {
+        updateDraftHeader();
+        updateOnTheClock();
+        displayRecentPicks();
+        displayUpcomingPicks();
+        startPickTimer();
+        return;
+    }
+
+    const newPick = draft.current_pick;
+
     // Check if pick changed
-        if (oldPick !== newPick) {
-            console.log('📢 New pick detected!');
-            updateDraftHeader();
-            updateOnTheClock();
-            displayRecentPicks();
-            displayUpcomingPicks();
-            
-            // Show notification
-            showPickNotification();
-        } else {
-            // Even if pick didn't change, keep upcoming list fresh
-            displayUpcomingPicks();
-        }
+    if (oldPick !== newPick) {
+        console.log('📢 New pick detected!');
+        updateDraftHeader();
+        updateOnTheClock();
+        displayRecentPicks();
+        displayUpcomingPicks();
+
+        // Show notification
+        showPickNotification();
+    } else {
+        // Even if pick didn't change, keep upcoming list fresh
+        displayUpcomingPicks();
+    }
 }
 
 /**
@@ -684,22 +755,26 @@ function displayDraftGrid() {
         return;
     }
 
-    // Build a map of made picks by overall pick index for easy lookup
-    // The draft order file defines the canonical sequence
+    const orderSlots = getDraftOrderSlotsForMode();
+    if (!orderSlots.length) {
+        container.innerHTML = '<div class="empty-state">Draft order not available for this draft type.</div>';
+        return;
+    }
+
+    // Build a map of made picks by overall pick index for easy lookup.
+    // The draft order file defines the canonical sequence.
     const picksByIndex = new Map();
     if (draft && Array.isArray(draft.picks)) {
         draft.picks.forEach(p => {
-            // Match by player name to the draft order slot
-            // This handles any mismatch in pick numbering schemes
             const playerName = (p.player_name || '').toLowerCase();
-            if (playerName) {
-                // Find the matching slot in draft order by team + round
-                for (let i = 0; i < DRAFT_STATE.draftOrder.length; i++) {
-                    const slot = DRAFT_STATE.draftOrder[i];
-                    if (slot.round === p.round && slot.team === p.team) {
-                        picksByIndex.set(i, p);
-                        break;
-                    }
+            if (!playerName) return;
+
+            // Find the matching slot in draft order by team + round.
+            for (let i = 0; i < orderSlots.length; i++) {
+                const slot = orderSlots[i];
+                if (slot.round === p.round && slot.team === p.team) {
+                    picksByIndex.set(i, p);
+                    break;
                 }
             }
         });
@@ -707,8 +782,7 @@ function displayDraftGrid() {
 
     // Group draft order by round
     const orderByRound = {};
-    let globalIdx = 0;
-    DRAFT_STATE.draftOrder.forEach((slot, idx) => {
+    orderSlots.forEach((slot, idx) => {
         const r = slot.round;
         if (!orderByRound[r]) orderByRound[r] = [];
         orderByRound[r].push({ ...slot, globalIndex: idx });
@@ -733,25 +807,26 @@ function displayDraftGrid() {
         scrollToRound(roundNum);
     };
 
-    // Determine current pick index for highlighting
-    const currentPickIndex = draft ? (draft.current_pick ? draft.current_pick - 1 : DRAFT_STATE.draftOrder.length) : -1;
+    // Determine current pick index for highlighting (only meaningful when active)
+    const currentPickIndex = (draft && draft.current_pick && draft.current_pick > 0)
+        ? draft.current_pick - 1
+        : -1;
 
     // Build grid HTML using draft order as the source of truth
     let gridHTML = '';
     rounds.forEach(round => {
         const roundSlots = orderByRound[round] || [];
         const roundType = roundSlots[0]?.round_type === 'fypd' ? 'FYPD' : 'DC';
-        
+
         const picksHTML = roundSlots.map(slot => {
             const team = slot.team;
             const overallPick = slot.globalIndex + 1;
             const pick = picksByIndex.get(slot.globalIndex) || null;
-            
-            // Check if this slot is the current pick
+
             const isCurrent = slot.globalIndex === currentPickIndex;
             const isPicked = !!pick;
             const playerName = pick ? pick.player_name : '—';
-            
+
             const metaParts = [`#${overallPick}`];
             if (pick?.position) metaParts.push(pick.position);
             if (pick?.mlb_team) metaParts.push(pick.mlb_team);
@@ -1292,7 +1367,7 @@ function displayDraftPool() {
     const badgeFilter = document.getElementById('poolBadgeFilter')?.value || 'any';
 
     const currentRound = draft?.current_round || 1;
-    const isFypdRound = currentRound <= 2;
+    const isFypdRound = isActiveDraftPayload(draft) && currentRound <= 2;
 
     let available = buildDraftPoolProspects();
 

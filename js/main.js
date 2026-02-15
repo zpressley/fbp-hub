@@ -179,6 +179,10 @@ function updateUserMenuForAuth() {
             <i class="fas fa-cog"></i>
             Settings
         </a>
+        <a href="draft.html">
+            <i class="fas fa-table-list"></i>
+            Draft
+        </a>
         <a href="draft-board.html">
             <i class="fas fa-clipboard-list"></i>
             Draft Board
@@ -191,10 +195,6 @@ function updateUserMenuForAuth() {
             <a href="auction.html">
                 <i class="fas fa-gavel"></i>
                 Auction
-            </a>
-            <a href="draft.html">
-                <i class="fas fa-table-list"></i>
-                Draft
             </a>
             <a href="draft-picks.html">
                 <i class="fas fa-list-ol"></i>

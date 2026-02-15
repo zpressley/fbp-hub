@@ -394,6 +394,15 @@ a:hover {
     display: flex;
 }
 
+/* Ensure consistent nav ordering across pages (7 buttons with Draft centered) */
+.nav-menu a[href="index.html"] { order: 1; }
+.nav-menu a[href="constitution.html"] { order: 2; }
+.nav-menu a[href="players.html"] { order: 3; }
+.nav-menu a[href="draft.html"] { order: 4; }
+.nav-menu a[href="rosters.html"] { order: 5; }
+.nav-menu a[href="player-log.html"] { order: 6; }
+.nav-menu a[href="wizbucks.html"] { order: 7; }
+
 .nav-link {
     display: flex;
     align-items: center;
