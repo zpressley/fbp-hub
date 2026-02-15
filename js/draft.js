@@ -1366,7 +1366,7 @@ function displayDraftPool() {
                         <tr class="prospect-row${isFypd ? ' prospect-row-fypd' : ''}"
                             data-player-id="${p.upid || ''}" data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
                             <td class="prospect-name">
-                                <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
+                                <a href="${profileLink}" class="prospect-name-link${(p.name || '').length > 16 ? ' long-name' : ''}">${p.name || 'Unknown'}</a>
                             </td>
                             <td class="prospect-org">${p.org || '-'}</td>
                             <td class="prospect-pos">${p.position || '-'}</td>

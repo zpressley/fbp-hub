@@ -703,7 +703,7 @@ function renderProspectTableRow(player, fvYear) {
     return `
         <tr class="prospect-row${isDropped ? ' prospect-dropped' : ''}">
             <td class="prospect-name">
-                <a href="${profileLink}" class="prospect-name-link">${player.name || 'Unknown'}</a>
+                <a href="${profileLink}" class="prospect-name-link${(player.name || '').length > 16 ? ' long-name' : ''}">${player.name || 'Unknown'}</a>
             </td>
             <td class="prospect-org">${player.org || '-'}</td>
             <td class="prospect-pos">${player.position || '-'}</td>
