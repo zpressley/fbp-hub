@@ -92,6 +92,26 @@ function isActiveDraftPayload(draft) {
     return !!draft && draft.status === 'active_draft';
 }
 
+function getCurrentPickIndex(draft) {
+    if (!draft) return null;
+    if (Number.isInteger(draft.current_pick_index)) return draft.current_pick_index;
+
+    // Fallback: DraftManager.current_pick_index tracks how many picks have
+    // been made, which matches draft.picks.length for a well-formed payload.
+    if (Array.isArray(draft.picks)) return draft.picks.length;
+    return null;
+}
+
+function getCurrentOverallPickNumber(draft) {
+    if (!draft) return null;
+    if (Number.isInteger(draft.current_pick_overall)) return draft.current_pick_overall;
+    const idx = getCurrentPickIndex(draft);
+    if (idx != null) return idx + 1;
+
+    // Legacy fallback (may be per-round pick number, not overall)
+    return (draft.current_pick != null) ? draft.current_pick : null;
+}
+
 /**
  * Initialize draft page
  */
@@ -200,7 +220,10 @@ async function loadDraftConfig() {
 
     try {
         const url = new URL('/api/draft/config', apiBase);
-        const response = await fetch(url.toString(), { cache: 'no-store' });
+        const response = await fetch(url.toString(), {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' },
+        });
         if (!response.ok) return;
         const cfg = await response.json();
 
@@ -235,7 +258,10 @@ async function loadDraftData(draftType) {
             // Cache-bust to avoid any intermediate caching (Worker/CDN/etc.)
             url.searchParams.set('_ts', String(Date.now()));
 
-            const response = await fetch(url.toString(), { cache: 'no-store' });
+            const response = await fetch(url.toString(), {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' },
+            });
             if (response.ok) {
                 const data = await response.json();
                 DRAFT_STATE.draftData = data || null;
@@ -248,7 +274,10 @@ async function loadDraftData(draftType) {
             const basePath = (typeof FBPHub !== 'undefined' && FBPHub.config?.dataPath)
                 ? FBPHub.config.dataPath
                 : './data/';
-            const response = await fetch(`${basePath}draft_active.json`, { cache: 'no-store' });
+            const response = await fetch(`${basePath}draft_active.json`, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' },
+            });
             if (response.ok) {
                 const data = await response.json();
                 DRAFT_STATE.draftData = data || null;
@@ -272,8 +301,10 @@ async function loadDraftData(draftType) {
  * Refresh draft data
  */
 async function refreshDraftData() {
-    const oldPick = DRAFT_STATE.draftData?.current_pick;
-    const oldStatus = DRAFT_STATE.draftData?.status;
+    const oldDraft = DRAFT_STATE.draftData;
+    const oldStatus = oldDraft?.status;
+    const oldPickIndex = getCurrentPickIndex(oldDraft);
+    const oldClock = oldDraft?.clock_started_at;
 
     await loadDraftData(DRAFT_STATE.mode);
 
@@ -306,10 +337,13 @@ async function refreshDraftData() {
         return;
     }
 
-    const newPick = draft.current_pick;
+    const newPickIndex = getCurrentPickIndex(draft);
+    const newClock = draft.clock_started_at;
 
-    // Check if pick changed
-    if (oldPick !== newPick) {
+    const pickChanged = oldPickIndex !== newPickIndex;
+    const clockChanged = oldClock !== newClock;
+
+    if (pickChanged) {
         console.log('📢 New pick detected!');
         updateDraftHeader();
         updateOnTheClock();
@@ -318,10 +352,17 @@ async function refreshDraftData() {
 
         // Show notification
         showPickNotification();
-    } else {
-        // Even if pick didn't change, keep upcoming list fresh
-        displayUpcomingPicks();
+        return;
     }
+
+    // If the clock was restarted (pause/resume/forklift toggle/etc.), refresh
+    // the banner so the countdown syncs even without a new pick.
+    if (clockChanged) {
+        updateOnTheClock();
+    }
+
+    // Keep upcoming list fresh regardless.
+    displayUpcomingPicks();
 }
 
 /**
@@ -398,19 +439,21 @@ function updateOnTheClock() {
     if (teamEl) teamEl.textContent = clockTeam;
     // Show full name + abbreviation on a single line
     if (nameEl) nameEl.textContent = `${teamName} (${clockTeam})`;
-    // Use compact R#/P# format so it fits better in constrained layouts
+    // Use compact R# / PK# format so it fits better in constrained layouts
+    const overall = getCurrentOverallPickNumber(draft);
     if (clockRoundEl) clockRoundEl.textContent = draft.current_round != null ? `R${draft.current_round}` : '-';
-    if (clockPickEl) clockPickEl.textContent = draft.current_pick != null ? `P${draft.current_pick}` : '-';
+    if (clockPickEl) clockPickEl.textContent = overall != null ? `PK ${overall}` : '-';
 
     // Compute next pick for on-tile summary
     if (clockNextEl && Array.isArray(draft.draft_order)) {
-        // draft.draft_order is the full pick-by-pick team sequence.
-        const totalPicks = draft.draft_order.length;
-        const nextPickNum = (draft.current_pick || 0) + 1;
-        if (nextPickNum >= 1 && nextPickNum <= totalPicks) {
-            const nextTeam = draft.draft_order[nextPickNum - 1];
+        const order = draft.draft_order;
+        const currentIndex = getCurrentPickIndex(draft);
+        const nextIndex = (currentIndex != null) ? currentIndex + 1 : null;
+
+        if (nextIndex != null && nextIndex >= 0 && nextIndex < order.length) {
+            const nextTeam = order[nextIndex];
             const nextName = TEAM_NAMES[nextTeam] || nextTeam;
-            clockNextEl.textContent = `Next Pick: ${nextName} (PK ${nextPickNum})`;
+            clockNextEl.textContent = `Next Pick: ${nextName} (PK ${nextIndex + 1})`;
         } else {
             clockNextEl.textContent = 'Next Pick: —';
         }
@@ -513,7 +556,9 @@ function startPickTimer() {
             if (clockRoundEl && clockPickEl && draft?.current_round != null && draft.current_pick != null) {
                 // Hide separate round value; everything goes into the pick span
                 clockRoundEl.textContent = '';
-                clockPickEl.textContent = `R${draft.current_round} - P${draft.current_pick} - ${timeLabel}`;
+                const overall = getCurrentOverallPickNumber(draft);
+                const overallLabel = overall != null ? `PK ${overall}` : `P${draft.current_pick}`;
+                clockPickEl.textContent = `R${draft.current_round} - ${overallLabel} - ${timeLabel}`;
             }
         }
         
@@ -567,9 +612,8 @@ function renderAllPicks() {
     }
 
     const picks = draft.picks;
-    const perRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
     const totalPicks = picks.length;
-    const maxPicks = draft.total_rounds && perRound ? draft.total_rounds * perRound : null;
+    const maxPicks = Array.isArray(draft.draft_order) ? draft.draft_order.length : null;
 
     countEl.textContent = maxPicks ? `${totalPicks} / ${maxPicks}` : `${totalPicks} picks`;
 
@@ -662,13 +706,29 @@ function renderMyPicks() {
 
     container.innerHTML = myPicks
         .slice()
-        .sort((a, b) => (a.pick_number || 0) - (b.pick_number || 0))
+        .sort((a, b) => {
+            const ai = Number.isInteger(a.pick_index) ? a.pick_index : null;
+            const bi = Number.isInteger(b.pick_index) ? b.pick_index : null;
+            if (ai != null && bi != null) return ai - bi;
+
+            const ar = a.round || 0;
+            const br = b.round || 0;
+            if (ar !== br) return ar - br;
+
+            return (a.pick_number || 0) - (b.pick_number || 0);
+        })
         .map(pick => {
             const rawType = pick.round_type || (pick.round <= 2 ? 'fypd' : 'dc');
             const roundType = rawType === 'fypd' ? 'FYPD' : 'DC';
+
+            const overall = Number.isInteger(pick.pick_index) ? (pick.pick_index + 1) : null;
+            const label = overall != null
+                ? `PK ${overall} (Rd ${pick.round}, Pk ${pick.pick_number})`
+                : `Rd ${pick.round}, Pk ${pick.pick_number}`;
+
             return `
                 <div class="pick-result-card my-pick">
-                    <div class="pick-result-number">Rd ${pick.round}, Pk ${pick.pick_number}</div>
+                    <div class="pick-result-number">${label}</div>
                     <div class="pick-result-player">${pick.player_name}</div>
                     <div class="pick-result-team">${pick.team}</div>
                     <div class="pick-result-type">${roundType}</div>
@@ -1487,20 +1547,19 @@ function displayUpcomingPicks() {
     const listEl = document.getElementById('upcomingList');
     if (!draft || !listEl) return;
 
-    const totalPerRound = Array.isArray(draft.draft_order) ? draft.draft_order.length : 0;
-    const totalPicks = (draft.total_rounds || 0) * totalPerRound;
-    const currentPick = draft.current_pick || 0;
+    const order = Array.isArray(draft.draft_order) ? draft.draft_order : [];
+    const currentIndex = getCurrentPickIndex(draft);
 
-    if (!totalPerRound || !totalPicks || currentPick >= totalPicks) {
+    if (!order.length || currentIndex == null || currentIndex >= order.length) {
         listEl.innerHTML = '<div class="upcoming-pick">No upcoming picks.</div>';
         return;
     }
 
     const maxUpcoming = 6;
     const items = [];
-    for (let pk = currentPick + 1; pk <= Math.min(currentPick + maxUpcoming, totalPicks); pk++) {
-        const team = draft.draft_order[pk - 1];
-        items.push({ pick: pk, team });
+    for (let idx = currentIndex + 1; idx <= Math.min(currentIndex + maxUpcoming, order.length - 1); idx++) {
+        const team = order[idx];
+        items.push({ pick: idx + 1, team });
     }
 
     listEl.innerHTML = items.map(item => {
