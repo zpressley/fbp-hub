@@ -413,7 +413,8 @@ function groupPlayersByPosition(players) {
         'Catcher': [],
         'Infield': [],
         'Outfield': [],
-        'DH': []
+        'DH': [],
+        'Utility': []
     };
     
     const pitchers = {
@@ -441,6 +442,8 @@ function groupPlayersByPosition(players) {
             batters['Infield'].push(player);
         } else if (normalizedTokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
             batters['Outfield'].push(player);
+        } else if (normalizedTokens.includes('UTIL')) {
+            batters['Utility'].push(player);
         }
         
         // Pitchers

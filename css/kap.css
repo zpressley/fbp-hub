@@ -40,15 +40,14 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* Base (mobile-first) layout: 2x2 grid of metrics with Tax Bracket centered underneath */
+/* Base (mobile-first) layout: 3x2 grid - Remaining/Salary/Keepers on top, Taxable and Tax Bracket on bottom */
 .kap-bar-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-areas:
-        "remaining taxable"
-        "salary keepers"
-        "tax tax";
-    gap: var(--space-lg);
+        "remaining salary keepers"
+        "taxable tax tax";
+    gap: var(--space-md);
     align-items: center;
 }
 
@@ -77,7 +76,7 @@
 
 .kap-bar-value {
     font-family: var(--font-mono);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     font-weight: 700;
     line-height: 1.1;
 }
@@ -108,7 +107,7 @@
 .kap-tax-value {
     font-family: var(--font-mono);
     color: #FF9800;
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
 }
 
 .kap-bar-sublabel {
@@ -1098,26 +1097,20 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 767px) {
-    .kap-bar-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: var(--space-md);
-    }
-    
-    .kap-bar-divider {
-        display: none;
-    }
-    
     .kap-bar-label {
-        font-size: var(--text-sm);
+        font-size: var(--text-xs);
     }
     
     .kap-bar-value {
-        font-size: var(--text-2xl);
+        font-size: var(--text-lg);
     }
     
-    /* Place tax bracket centered below the 1x4 row */
-    .kap-bar-item:last-child {
-        grid-column: 1 / -1;
+    .kap-tax-label {
+        font-size: var(--text-xs);
+    }
+    
+    .kap-tax-value {
+        font-size: var(--text-base);
     }
     
     .progress-line {

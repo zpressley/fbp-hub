@@ -265,7 +265,8 @@ function groupPlayersForDashboard(players) {
         'Catcher': [],
         'Infield': [],
         'Outfield': [],
-        'DH': []
+        'DH': [],
+        'Utility': []
     };
     
     const pitchers = {
@@ -291,6 +292,8 @@ function groupPlayersForDashboard(players) {
             batters['Infield'].push(player);
         } else if (normalizedTokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
             batters['Outfield'].push(player);
+        } else if (normalizedTokens.includes('UTIL')) {
+            batters['Utility'].push(player);
         }
         
         // Pitchers (handle SP/RP/P plus RHP/LHP styles)
