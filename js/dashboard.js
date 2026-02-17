@@ -136,8 +136,10 @@ async function loadTeamStats(team) {
     const statsGrid = document.getElementById('teamStats');
     if (!statsGrid || !team) return;
     
-    // Filter players for this team using FBP_Team abbreviation
-    const teamPlayers = FBPHub.data.players.filter(p => p.FBP_Team === team.abbreviation);
+    // Filter players for this team - FBP_Team uses abbreviations, manager uses full team names
+    const teamPlayers = FBPHub.data.players.filter(p => 
+        p.FBP_Team === team.abbreviation || p.manager === team.name
+    );
     const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
@@ -228,7 +230,10 @@ function loadRosterPreview(team) {
     const preview = document.getElementById('rosterPreview');
     if (!preview || !team) return;
     
-    const teamPlayers = FBPHub.data.players.filter(p => p.FBP_Team === team.abbreviation);
+    // FBP_Team uses abbreviations, manager uses full team names - check both
+    const teamPlayers = FBPHub.data.players.filter(p => 
+        p.FBP_Team === team.abbreviation || p.manager === team.name
+    );
     const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
@@ -527,7 +532,10 @@ function applyDashboardTeamTheme(team) {
  * Self-service allows upgrading FROM DC to PC/BC, or FROM PC to BC
  */
 function getEligibleContractUpgrades(team) {
-    const teamPlayers = FBPHub.data.players.filter(p => p.FBP_Team === team.abbreviation);
+    // FBP_Team uses abbreviations, manager uses full team names - check both
+    const teamPlayers = FBPHub.data.players.filter(p => 
+        p.FBP_Team === team.abbreviation || p.manager === team.name
+    );
     const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
     
     const eligible = [];
@@ -787,25 +795,18 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
     
     const currentSeason = new Date().getFullYear();
     
-    // Build admin payload for contract update + WizBucks deduction
+    // Manager self-service contract purchase payload
+    // Server computes cost and validates the upgrade path.
     const payload = {
         season: currentSeason,
-        admin: team.abbreviation, // Manager's team as admin ID
+        team: team.abbreviation,
         upid: upid,
-        changes: {
-            contract_type: newContract,
-            years_simple: 'P'
-        },
-        log_event: `${currentSeason} ${upgradeType}`,
-        log_source: 'Dashboard Self-Service',
-        update_type: 'Purchase',
-        // WizBucks deduction
-        wizbucks_team: team.abbreviation,
-        wizbucks_delta: -cost  // Negative for deduction
+        new_contract_type: newContract,
+        log_source: 'Dashboard Self-Service'
     };
     
     try {
-        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/update-player`, {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/manager/contract-purchase`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -832,13 +833,23 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
         }
         
         const result = await res.json();
+        const chargedCost = (result.cost !== null && result.cost !== undefined) ? result.cost : cost;
+        
+        // Validate response structure - backend should return { player, wizbucks_balance }
+        if (!result.player) {
+            console.error('Contract purchase: unexpected response', result);
+            showToast(`Contract purchase failed: Invalid response from server`, 'error');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Purchase for $' + chargedCost;
+            }
+            return;
+        }
         
         // Update local player data
-        if (result.player) {
-            const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
-            if (idx !== -1) {
-                FBPHub.data.players[idx] = result.player;
-            }
+        const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
+        if (idx !== -1) {
+            FBPHub.data.players[idx] = result.player;
         }
         
         // Update WizBucks balance locally
@@ -856,7 +867,7 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
         
         // Show success
         const contractName = newContract === 'Purchased Contract' ? 'PC' : 'BC';
-        showToast(`✅ ${player.name} - ${contractName} purchased! -$${cost} WB`, 'success');
+        showToast(`✅ ${player.name} - ${contractName} purchased! -$${chargedCost} WB`, 'success');
         
         // Refresh dashboard
         loadTeamStats(team);

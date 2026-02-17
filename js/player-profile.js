@@ -858,8 +858,9 @@ async function checkContractPurchaseEligibility() {
     if (!userTeam) return;
     
     // Check if player belongs to user's team
+    // FBP_Team uses abbreviations, manager uses full team names
     const playerOwner = player.FBP_Team || player.manager || '';
-    if (playerOwner !== userTeam.abbreviation) {
+    if (playerOwner !== userTeam.abbreviation && playerOwner !== userTeam.name) {
         return; // Not the user's player
     }
     
@@ -1087,24 +1088,18 @@ async function confirmPlayerContractPurchase(upid, upgradeType, cost, newContrac
     
     const currentSeason = new Date().getFullYear();
     
-    // Build admin payload for contract update + WizBucks deduction
+    // Manager self-service contract purchase payload
+    // Server computes cost and validates the upgrade path.
     const payload = {
         season: currentSeason,
-        admin: team.abbreviation,
+        team: team.abbreviation,
         upid: upid,
-        changes: {
-            contract_type: newContract,
-            years_simple: 'P'
-        },
-        log_event: `${currentSeason} ${upgradeType}`,
-        log_source: 'Player Profile Self-Service',
-        update_type: 'Purchase',
-        wizbucks_team: team.abbreviation,
-        wizbucks_delta: -cost
+        new_contract_type: newContract,
+        log_source: 'Player Profile Self-Service'
     };
     
     try {
-        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/update-player`, {
+        const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/manager/contract-purchase`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1131,14 +1126,24 @@ async function confirmPlayerContractPurchase(upid, upgradeType, cost, newContrac
         }
         
         const result = await res.json();
+        const chargedCost = (result.cost !== null && result.cost !== undefined) ? result.cost : cost;
+        
+        // Validate response structure - backend should return { player, wizbucks_balance }
+        if (!result.player) {
+            console.error('Contract purchase: unexpected response', result);
+            showProfileToast(`Contract purchase failed: Invalid response from server`, 'error');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Purchase for $' + chargedCost;
+            }
+            return;
+        }
         
         // Update local player data
-        if (result.player) {
-            PLAYER_DATA.player = result.player;
-            const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
-            if (idx !== -1) {
-                FBPHub.data.players[idx] = result.player;
-            }
+        PLAYER_DATA.player = result.player;
+        const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
+        if (idx !== -1) {
+            FBPHub.data.players[idx] = result.player;
         }
         
         // Update WizBucks balance locally
@@ -1156,7 +1161,7 @@ async function confirmPlayerContractPurchase(upid, upgradeType, cost, newContrac
         
         // Show success
         const contractName = newContract === 'Purchased Contract' ? 'PC' : 'BC';
-        showProfileToast(`✅ ${player.name} - ${contractName} purchased! -$${cost} WB`, 'success');
+        showProfileToast(`✅ ${player.name} - ${contractName} purchased! -$${chargedCost} WB`, 'success');
         
         // Refresh player profile display
         displayPlayerHeader();
