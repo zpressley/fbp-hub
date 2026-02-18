@@ -1,5 +1,22 @@
 # KAP Draft Pick Calculation System
 
+## ⚠️ Important: This is Preview/Calculation Only
+
+This system provides **preview and validation** during the KAP process. No changes are made until the manager clicks "Submit KAP" at the end.
+
+**Staged Actions (Preview Only):**
+- Draft pick calculation and preview
+- Tax bracket validation
+- Roster math and display
+- Warning messages
+
+**When Changes Actually Happen:**
+- ✅ "Submit KAP" button → Backend updates `draft_order_2026.json`
+- ✅ Backend sets `taxed_out: true` for taxed picks
+- ✅ Backend finalizes keeper list and spending
+
+**Exception:** Buy-in purchases (R1, R2, R3) happen immediately with their own confirmation modal. See `KAP_BUYIN_INTEGRATION.md`.
+
 ## Complete Calculation Flow
 
 ### Step-by-Step Process

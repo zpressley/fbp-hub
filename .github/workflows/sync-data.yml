@@ -16,6 +16,10 @@ on:
 permissions:
   contents: write  # Allow pushing commits
 
+concurrency:
+  group: sync-data-main
+  cancel-in-progress: true
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -25,6 +29,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
       
       - name: Log trigger information
         run: |
@@ -195,9 +200,13 @@ jobs:
         run: |
           git config user.name "FBP Data Sync Bot"
           git config user.email "bot@fbp.local"
-          
+
+          # Rebase onto latest remote main to avoid non-fast-forward push failures
+          git fetch origin main
+          git rebase -X ours origin/main || (git rebase --abort && git reset --hard origin/main)
+
           git add data/
-          
+
           # Create commit message based on trigger type
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             COMMIT_MSG="🔄 Auto-sync: Data updated from bot repo"
@@ -206,10 +215,17 @@ jobs:
             COMMIT_MSG="⏰ Scheduled sync: Data updated"
             COMMIT_BODY="Automatic 15-minute sync"
           fi
-          
+
           git commit -m "$COMMIT_MSG" -m "$COMMIT_BODY" -m "Synced at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push
-          
+
+          # Push with a single retry (remote may advance between fetch and push)
+          git push || (
+            echo "⚠️ Push rejected; rebasing and retrying..." &&
+            git fetch origin main &&
+            git rebase -X ours origin/main &&
+            git push
+          )
+
           echo "✅ Changes committed and pushed to website repo"
       
       - name: No changes needed
