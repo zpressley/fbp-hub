@@ -553,6 +553,22 @@
     max-width: 800px;
 }
 
+.player-picker-actions {
+    margin-top: var(--space-lg);
+}
+
+.player-result-select {
+    display: flex;
+    align-items: center;
+    padding-right: var(--space-md);
+}
+
+.player-select-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-yellow);
+}
+
 .picker-filters {
     display: flex;
     gap: var(--space-md);

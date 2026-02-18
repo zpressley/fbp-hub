@@ -924,3 +924,32 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/* ============================================
+   Add to Trade button
+   ============================================ */
+#addToTradeContainer {
+    margin-top: var(--space-md);
+}
+
+.btn-add-to-trade {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    border: var(--border-width) solid var(--team-primary, var(--primary-red));
+    background-color: rgba(239, 62, 66, 0.08);
+    color: var(--text-white);
+    font-family: var(--font-body);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.btn-add-to-trade:hover {
+    background-color: var(--team-primary, var(--primary-red));
+    border-color: var(--team-primary, var(--primary-red));
+}

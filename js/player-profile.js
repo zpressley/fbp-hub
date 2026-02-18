@@ -244,6 +244,112 @@ function displayPlayerHeader() {
     }
 
     // Service-time based progress has been deprecated; keep the service card hidden for now.
+
+    renderAddToTradeButton();
+}
+
+function renderAddToTradeButton() {
+    const container = document.getElementById('addToTradeContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (typeof authManager === 'undefined' || !authManager.isAuthenticated()) {
+        return;
+    }
+
+    const userTeam = authManager.getTeam();
+    if (!userTeam?.abbreviation) {
+        return;
+    }
+
+    const player = PLAYER_DATA.player;
+    const upid = player?.upid;
+    if (!upid) {
+        return;
+    }
+
+    // Only allow for rostered players (owned by an FBP team)
+    const ownerAbbr = String(player.FBP_Team || '').toUpperCase();
+    if (!ownerAbbr) {
+        return;
+    }
+
+    container.innerHTML = `
+        <button type="button" class="btn-add-to-trade" onclick="addPlayerToTradeFromProfile()">
+            <i class="fas fa-handshake"></i>
+            <span>ADD TO TRADE</span>
+        </button>
+    `;
+}
+
+function addPlayerToTradeFromProfile() {
+    try {
+        const player = PLAYER_DATA.player;
+        const upid = player?.upid;
+        if (!upid) return;
+
+        if (typeof authManager === 'undefined' || !authManager.isAuthenticated()) {
+            showProfileToast('Please log in first', 'error');
+            return;
+        }
+
+        const userTeam = authManager.getTeam();
+        const userAbbr = String(userTeam?.abbreviation || '').toUpperCase();
+        if (!userAbbr) {
+            showProfileToast('Could not determine your team', 'error');
+            return;
+        }
+
+        const ownerAbbr = String(player.FBP_Team || '').toUpperCase();
+        if (!ownerAbbr) {
+            showProfileToast('Cannot determine player owner', 'error');
+            return;
+        }
+
+        let fromTeam = ownerAbbr;
+        let toTeam = userAbbr;
+        let teams = [userAbbr, ownerAbbr];
+
+        // If the player is owned by the current user, ask who should receive.
+        if (ownerAbbr === userAbbr) {
+            const mapping = (typeof MANAGER_MAPPING !== 'undefined') ? MANAGER_MAPPING : {};
+            const allTeams = Array.from(new Set(Object.values(mapping).map((t) => String(t).toUpperCase())));
+
+            const recipient = String(prompt(`Send ${player.name} to which team? (e.g. HAM)`, '') || '').trim().toUpperCase();
+            if (!recipient) return;
+            if (recipient === userAbbr) {
+                showProfileToast('Recipient must be a different team', 'error');
+                return;
+            }
+            if (allTeams.length && !allTeams.includes(recipient)) {
+                showProfileToast('Unknown team abbreviation', 'error');
+                return;
+            }
+
+            fromTeam = userAbbr;
+            toTeam = recipient;
+            teams = [userAbbr, recipient];
+        }
+
+        const prefill = {
+            teams,
+            transfers: [
+                {
+                    type: 'player',
+                    upid: String(upid),
+                    from_team: fromTeam,
+                    to_team: toTeam,
+                },
+            ],
+        };
+
+        localStorage.setItem('fbp_trade_prefill_v1', JSON.stringify(prefill));
+        window.location.href = 'trade.html';
+    } catch (e) {
+        console.error('Add to trade failed', e);
+        showProfileToast('Failed to add to trade', 'error');
+    }
 }
 
 /**
@@ -1225,3 +1331,4 @@ window.closePlayerContractModal = closePlayerContractModal;
 window.selectPlayerContractUpgrade = selectPlayerContractUpgrade;
 window.closePlayerConfirmModal = closePlayerConfirmModal;
 window.confirmPlayerContractPurchase = confirmPlayerContractPurchase;
+window.addPlayerToTradeFromProfile = addPlayerToTradeFromProfile;

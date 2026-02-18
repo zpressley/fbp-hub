@@ -7,6 +7,8 @@
  *   to the bot API as X-Manager-Team (clients cannot spoof teams).
  */
 
+const TRADE_PREFILL_KEY = 'fbp_trade_prefill_v1';
+
 let TRADE_STATE = {
   userTeam: null,
   teamCount: 2,
@@ -23,6 +25,7 @@ let TRADE_STATE = {
 
 let MANAGERS_CONFIG = null; // loaded from config/managers.json
 let PLAYER_PICKER_ROSTER = [];
+let PLAYER_PICKER_SELECTED = new Set();
 
 function teamKeyToAbbr(teamKey) {
   return TRADE_STATE.teams[teamKey] || null;
@@ -149,14 +152,89 @@ function populateTeamSelectors() {
   const userAbbr = TRADE_STATE.userTeam?.abbreviation;
 
   const options = getTeamOptions([userAbbr]).map((t) => {
-    return `<option value="${t.abbr}">${t.abbr} - ${t.name}</option>`;
+    return `<option value=\"${t.abbr}\">${t.abbr} - ${t.name}</option>`;
   }).join('');
 
   const team2Select = document.getElementById('team2Select');
-  if (team2Select) team2Select.innerHTML = '<option value="">Select Team...</option>' + options;
+  if (team2Select) team2Select.innerHTML = '<option value=\"\">Select Team...</option>' + options;
 
   const team3Select = document.getElementById('team3Select');
-  if (team3Select) team3Select.innerHTML = '<option value="">Select Team...</option>' + options;
+  if (team3Select) team3Select.innerHTML = '<option value=\"\">Select Team...</option>' + options;
+}
+
+function setTeamSelectionDirect(teamKey, abbr) {
+  const normalized = (abbr || '').toUpperCase();
+  const selectEl = document.getElementById(`${teamKey}Select`);
+  if (selectEl) {
+    selectEl.value = normalized;
+  }
+
+  TRADE_STATE.teams[teamKey] = normalized || null;
+
+  const addPlayerBtn = document.getElementById(`${teamKey}AddPlayer`);
+  const addWBBtn = document.getElementById(`${teamKey}AddWB`);
+  if (addPlayerBtn) addPlayerBtn.disabled = !TRADE_STATE.teams[teamKey];
+  if (addWBBtn) addWBBtn.disabled = !TRADE_STATE.teams[teamKey];
+}
+
+function applyTradePrefillFromStorage() {
+  if (!TRADE_STATE.userTeam?.abbreviation) return;
+
+  let raw = null;
+  try {
+    raw = localStorage.getItem(TRADE_PREFILL_KEY);
+  } catch (e) {
+    return;
+  }
+
+  if (!raw) return;
+
+  let prefill = null;
+  try {
+    prefill = JSON.parse(raw);
+  } catch (e) {
+    localStorage.removeItem(TRADE_PREFILL_KEY);
+    return;
+  }
+
+  // Always clear so a broken prefill doesn't keep reapplying
+  localStorage.removeItem(TRADE_PREFILL_KEY);
+
+  const user = TRADE_STATE.userTeam.abbreviation.toUpperCase();
+  let teams = Array.isArray(prefill?.teams) ? prefill.teams.map((t) => String(t || '').toUpperCase()).filter(Boolean) : [];
+  const transfers = Array.isArray(prefill?.transfers) ? prefill.transfers : [];
+
+  // Normalize to [USER, other...] and max 3 teams
+  teams = [user, ...teams.filter((t) => t !== user)];
+  teams = Array.from(new Set(teams)).slice(0, 3);
+
+  if (teams.length < 2 || transfers.length < 1) {
+    return;
+  }
+
+  // Set count first (this will hide/show the 3rd column)
+  setTeamCount(teams.length === 3 ? 3 : 2);
+
+  // Directly set team2/team3 selections
+  setTeamSelectionDirect('team2', teams[1]);
+  if (teams.length === 3) {
+    setTeamSelectionDirect('team3', teams[2]);
+  }
+
+  // Apply transfers + filter to selected teams
+  const activeTeams = activeTeamKeys().map((k) => teamKeyToAbbr(k)).filter(Boolean);
+  TRADE_STATE.transfers = transfers
+    .map((t) => ({
+      ...t,
+      type: t.type,
+      upid: t.upid ? String(t.upid) : undefined,
+      from_team: t.from_team ? String(t.from_team).toUpperCase() : undefined,
+      to_team: t.to_team ? String(t.to_team).toUpperCase() : undefined,
+    }))
+    .filter((t) => t && t.type && t.from_team && t.to_team && activeTeams.includes(t.from_team) && activeTeams.includes(t.to_team));
+
+  displayTradeBuilder();
+  showToast('Added player to trade. Review and submit when ready.', 'success');
 }
 
 function handleTeamSelect(teamKey) {
@@ -199,10 +277,36 @@ function updateSubmitButton() {
   if (btn) btn.disabled = !canSubmit;
 }
 
+function contractTagForPlayer(p) {
+  const type = String(p?.player_type || '').toLowerCase();
+  if (type === 'farm') {
+    const raw = String(p?.contract_type || 'Development Cont.').toLowerCase();
+    if (raw.includes('blue') && raw.includes('chip')) return 'BC';
+    if (raw.includes('purchased')) return 'PC';
+    return 'DC';
+  }
+  return p?.years_simple || 'N/A';
+}
+
+function formatPlayerLabel(p) {
+  return `${p.position || 'N/A'} ${p.name} [${p.team || 'FA'}] [${contractTagForPlayer(p)}]`;
+}
+
+function formatTransferLabel(t) {
+  if (t.type === 'player') {
+    const p = FBPHub.data.players.find((x) => String(x.upid) === String(t.upid));
+    return p ? formatPlayerLabel(p) : `UPID ${t.upid}`;
+  }
+  if (t.type === 'wizbucks') {
+    return `$${t.amount} WB → ${t.to_team} (from ${t.from_team})`;
+  }
+  return '';
+}
+
 function renderTransferItem(t, idx, showRemove = true) {
   if (t.type === 'player') {
     const p = FBPHub.data.players.find((x) => String(x.upid) === String(t.upid));
-    const label = p ? `${p.position || 'N/A'} ${p.name} [${p.team || 'FA'}] [${p.years_simple || 'N/A'}]` : `UPID ${t.upid}`;
+    const label = p ? formatPlayerLabel(p) : `UPID ${t.upid}`;
     return `
       <div class="trade-asset-card">
         <div class="trade-asset-info">
@@ -274,6 +378,7 @@ function showPlayerPicker(toTeamKey) {
   }
 
   TRADE_STATE.currentToTeamKey = toTeamKey;
+  PLAYER_PICKER_SELECTED = new Set();
 
   const fromOptions = getFromTeamOptionsFor(toTeamAbbr);
   const fromSelect = document.getElementById('playerPickerFromTeam');
@@ -298,8 +403,10 @@ function showPlayerPicker(toTeamKey) {
 function onPlayerPickerFromTeamChange() {
   const el = document.getElementById('playerPickerFromTeam');
   TRADE_STATE.currentFromTeam = el ? String(el.value || '').toUpperCase() : null;
+  PLAYER_PICKER_SELECTED = new Set();
   loadPlayerPickerRoster();
   filterPlayerPicker();
+  updatePlayerPickerAddButton();
 }
 
 function loadPlayerPickerRoster() {
@@ -317,6 +424,8 @@ function loadPlayerPickerRoster() {
 
 function closePlayerPicker() {
   document.getElementById('playerPickerModal').classList.remove('active');
+  PLAYER_PICKER_SELECTED = new Set();
+  updatePlayerPickerAddButton();
 }
 
 function filterPlayerPicker() {
@@ -350,26 +459,71 @@ function displayPlayerPickerResults(players = PLAYER_PICKER_ROSTER) {
 
   if (!players.length) {
     container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No players found</p></div>';
+    updatePlayerPickerAddButton();
     return;
   }
 
   container.innerHTML = players.map((p) => {
+    const upid = String(p.upid);
+    const alreadyInTrade = TRADE_STATE.transfers.some((t) => t.type === 'player' && String(t.upid) === upid);
+    const isChecked = PLAYER_PICKER_SELECTED.has(upid);
+    const contract = contractTagForPlayer(p);
+
     return `
-      <div class="player-result-card" onclick="selectPlayer('${p.upid}')">
+      <div class="player-result-card" onclick="selectPlayer('${upid}')">
+        <div class="player-result-select">
+          <input
+            type="checkbox"
+            class="player-select-checkbox"
+            data-upid="${upid}"
+            ${alreadyInTrade ? 'disabled' : ''}
+            ${isChecked ? 'checked' : ''}
+            onclick="togglePlayerSelection(event, '${upid}')"
+          />
+        </div>
         <div class="player-result-info">
           <div class="player-result-name">${p.name}</div>
           <div class="player-result-meta">
             <span>${p.position || 'N/A'}</span>
             <span>${p.team || 'FA'}</span>
-            <span>${p.years_simple || 'N/A'}</span>
+            <span>${contract}</span>
           </div>
         </div>
       </div>
     `;
   }).join('');
+
+  updatePlayerPickerAddButton();
 }
 
-function selectPlayer(upid) {
+function togglePlayerSelection(evt, upid) {
+  try { evt.stopPropagation(); } catch (e) {}
+  const key = String(upid);
+
+  // Don't allow selecting players already in trade.
+  if (TRADE_STATE.transfers.some((t) => t.type === 'player' && String(t.upid) === key)) {
+    return;
+  }
+
+  if (PLAYER_PICKER_SELECTED.has(key)) {
+    PLAYER_PICKER_SELECTED.delete(key);
+  } else {
+    PLAYER_PICKER_SELECTED.add(key);
+  }
+
+  updatePlayerPickerAddButton();
+}
+
+function updatePlayerPickerAddButton() {
+  const btn = document.getElementById('playerPickerAddSelectedBtn');
+  if (!btn) return;
+
+  const count = PLAYER_PICKER_SELECTED.size;
+  btn.disabled = count === 0;
+  btn.innerHTML = `<i class="fas fa-check"></i> Add Selected${count ? ` (${count})` : ''}`;
+}
+
+function confirmSelectedPlayers() {
   const toTeamAbbr = teamKeyToAbbr(TRADE_STATE.currentToTeamKey);
   const fromTeam = TRADE_STATE.currentFromTeam;
 
@@ -378,22 +532,55 @@ function selectPlayer(upid) {
     return;
   }
 
-  // unique player
-  if (TRADE_STATE.transfers.some((t) => t.type === 'player' && String(t.upid) === String(upid))) {
+  const selected = Array.from(PLAYER_PICKER_SELECTED);
+  if (!selected.length) {
+    showToast('No players selected', 'warning');
+    return;
+  }
+
+  let added = 0;
+  for (const upid of selected) {
+    if (TRADE_STATE.transfers.some((t) => t.type === 'player' && String(t.upid) === String(upid))) {
+      continue;
+    }
+    TRADE_STATE.transfers.push({
+      type: 'player',
+      upid: String(upid),
+      from_team: fromTeam,
+      to_team: toTeamAbbr,
+    });
+    added += 1;
+  }
+
+  PLAYER_PICKER_SELECTED = new Set();
+  closePlayerPicker();
+  displayTradeBuilder();
+  showToast(added ? `Added ${added} player${added === 1 ? '' : 's'}` : 'No players added', added ? 'success' : 'warning');
+}
+
+function selectPlayer(upid) {
+  // Row click toggles selection for multi-add.
+  const key = String(upid);
+
+  // Don't allow selecting players already in trade.
+  if (TRADE_STATE.transfers.some((t) => t.type === 'player' && String(t.upid) === key)) {
     showToast('Player already included in this trade', 'warning');
     return;
   }
 
-  TRADE_STATE.transfers.push({
-    type: 'player',
-    upid: String(upid),
-    from_team: fromTeam,
-    to_team: toTeamAbbr,
-  });
+  if (PLAYER_PICKER_SELECTED.has(key)) {
+    PLAYER_PICKER_SELECTED.delete(key);
+  } else {
+    PLAYER_PICKER_SELECTED.add(key);
+  }
 
-  closePlayerPicker();
-  displayTradeBuilder();
-  showToast('Player added', 'success');
+  // Keep checkbox UI in sync without re-rendering the list.
+  const cb = document.querySelector(`input.player-select-checkbox[data-upid="${key}"]`);
+  if (cb && !cb.disabled) {
+    cb.checked = PLAYER_PICKER_SELECTED.has(key);
+  }
+
+  updatePlayerPickerAddButton();
 }
 
 function showWBPicker(toTeamKey) {
@@ -486,8 +673,7 @@ function buildPreviewReceives() {
 
     if (t.type === 'player') {
       const p = FBPHub.data.players.find((x) => String(x.upid) === String(t.upid));
-      const label = p ? `${p.position || 'N/A'} ${p.name} [${p.team || 'FA'}] [${p.years_simple || 'N/A'}]` : `UPID ${t.upid}`;
-      receives[t.to_team].push(label);
+      receives[t.to_team].push(p ? formatPlayerLabel(p) : `UPID ${t.upid}`);
     } else if (t.type === 'wizbucks') {
       receives[t.to_team].push(`$${t.amount} WB via ${t.from_team}`);
     }
@@ -506,7 +692,7 @@ function previewTrade() {
       <div class="trade-preview-column">
         <h4>${abbr} - ${getTeamName(abbr)}</h4>
         <div class="trade-preview-section get">
-          <h5><i class="fas fa-arrow-left"></i> GET</h5>
+          <h5><i class="fas fa-arrow-left"></i> RECEIVE</h5>
           <ul>
             ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
           </ul>
@@ -533,7 +719,7 @@ function closePreview() {
 async function submitTrade() {
   const btn = document.getElementById('confirmSubmitBtn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
   try {
     const teams = activeTeamKeys().map((k) => teamKeyToAbbr(k)).filter(Boolean);
@@ -564,7 +750,7 @@ async function submitTrade() {
     }
 
     closePreview();
-    showToast('✅ Trade submitted! Check Discord for approval thread.', 'success');
+    showToast('✅ Trade sent! Check Discord for the approval thread.', 'success');
 
     resetTradeStateButKeepTeams();
     displayTradeBuilder();
@@ -575,7 +761,7 @@ async function submitTrade() {
     showToast(`Submission failed: ${e.message}`, 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit to Discord';
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
   }
 }
 
@@ -667,7 +853,7 @@ function renderReceivesBlocks(receives) {
     const lines = receives[abbr] || [];
     return `
       <div class="trade-card-team">
-        <h4>${abbr} gets:</h4>
+        <h4>${abbr} receives:</h4>
         <ul>
           ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
         </ul>
@@ -768,16 +954,14 @@ function displayTradeInbox(trades) {
         </div>
         <div class="trade-card-body">
           <div class="trade-card-team">
-            <h4>You get:</h4>
+            <h4>You receive (preview):</h4>
             <ul>
               ${myReceives.length ? myReceives.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
             </ul>
           </div>
         </div>
         <div class="trade-card-actions">
-          <button class="btn-danger btn-sm" onclick="quickRejectTrade('${trade.trade_id}')"><i class="fas fa-times"></i> Reject</button>
           <button class="btn-secondary btn-sm" onclick="viewInboxTrade('${trade.trade_id}')"><i class="fas fa-eye"></i> Review</button>
-          <button class="btn-primary btn-sm" onclick="quickAcceptTrade('${trade.trade_id}')"><i class="fas fa-check"></i> Accept</button>
         </div>
       </div>
     `;
@@ -812,7 +996,7 @@ async function viewInboxTrade(tradeId) {
         <div class="trade-preview-column">
           <h4>${abbr} - ${getTeamName(abbr)}</h4>
           <div class="trade-preview-section get">
-            <h5><i class="fas fa-arrow-left"></i> GET</h5>
+            <h5><i class="fas fa-arrow-left"></i> RECEIVE</h5>
             <ul>
               ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
             </ul>
@@ -843,13 +1027,25 @@ function acceptInboxTrade() {
 
   const trade = TRADE_STATE.currentInboxTrade;
   const myTeam = TRADE_STATE.userTeam.abbreviation;
-  const myReceives = (trade.receives && trade.receives[myTeam]) ? trade.receives[myTeam] : [];
+
+  const transfers = trade.transfers || [];
+  const youReceive = transfers.filter((t) => String(t.to_team || '').toUpperCase() === myTeam);
+  const youSend = transfers.filter((t) => String(t.from_team || '').toUpperCase() === myTeam);
+
+  const receiveLines = youReceive.map((t) => formatTransferLabel(t)).filter(Boolean);
+  const sendLines = youSend.map((t) => formatTransferLabel(t)).filter(Boolean);
 
   document.getElementById('acceptConfirmSummary').innerHTML = `
     <div class="trade-preview-section get">
-      <h5>You will get:</h5>
+      <h5>You will receive:</h5>
       <ul>
-        ${myReceives.length ? myReceives.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
+        ${receiveLines.length ? receiveLines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
+      </ul>
+    </div>
+    <div class="trade-preview-section give">
+      <h5>You will send:</h5>
+      <ul>
+        ${sendLines.length ? sendLines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
       </ul>
     </div>
   `;
@@ -1078,6 +1274,7 @@ async function initTradePage() {
   document.getElementById('team1Badge').textContent = TRADE_STATE.userTeam.abbreviation;
 
   populateTeamSelectors();
+  applyTradePrefillFromStorage();
 
   await Promise.all([
     loadTradeData(),
@@ -1102,6 +1299,8 @@ window.showPlayerPicker = showPlayerPicker;
 window.closePlayerPicker = closePlayerPicker;
 window.filterPlayerPicker = filterPlayerPicker;
 window.selectPlayer = selectPlayer;
+window.togglePlayerSelection = togglePlayerSelection;
+window.confirmSelectedPlayers = confirmSelectedPlayers;
 window.onPlayerPickerFromTeamChange = onPlayerPickerFromTeamChange;
 window.showWBPicker = showWBPicker;
 window.closeWBPicker = closeWBPicker;

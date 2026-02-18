@@ -162,7 +162,7 @@
                         
                         <div class="trade-section">
                             <div class="trade-section-title get">
-                                <i class="fas fa-arrow-left"></i> YOU GET
+                                <i class="fas fa-arrow-left"></i> YOU RECEIVE
                             </div>
                             <div class="trade-receives-list" id="team1ReceiveList">
                                 <div class="empty-trade-list">Add players or WizBucks...</div>
@@ -189,7 +189,7 @@
                         
                         <div class="trade-section">
                             <div class="trade-section-title get">
-                                <i class="fas fa-arrow-left"></i> TEAM 2 GETS
+                                <i class="fas fa-arrow-left"></i> TEAM 2 RECEIVES
                             </div>
                             <div class="trade-receives-list" id="team2ReceiveList">
                                 <div class="empty-trade-list">Select team first...</div>
@@ -216,7 +216,7 @@
                         
                         <div class="trade-section">
                             <div class="trade-section-title get">
-                                <i class="fas fa-arrow-left"></i> TEAM 3 GETS
+                                <i class="fas fa-arrow-left"></i> TEAM 3 RECEIVES
                             </div>
                             <div class="trade-receives-list" id="team3ReceiveList">
                                 <div class="empty-trade-list">Select team first...</div>
@@ -239,7 +239,7 @@
                         <i class="fas fa-trash"></i> Clear Trade
                     </button>
                     <button class="btn-primary btn-lg" onclick="previewTrade()" id="submitTradeBtn" disabled>
-                        <i class="fas fa-paper-plane"></i> Submit Trade
+                        <i class="fas fa-eye"></i> Review Trade
                     </button>
                 </div>
             </div>
@@ -327,6 +327,11 @@
                     </select>
                 </div>
                 <div class="player-picker-results" id="playerPickerResults"></div>
+                <div class="player-picker-actions">
+                    <button class="btn-primary btn-full" onclick="confirmSelectedPlayers()" id="playerPickerAddSelectedBtn" disabled>
+                        <i class="fas fa-check"></i> Add Selected
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -365,7 +370,7 @@
         <div class="confirmation-content trade-preview-content">
             <div class="confirmation-header">
                 <h2>Confirm Trade</h2>
-                <p>Review before submitting to Discord</p>
+                <p>Review before sending to Discord</p>
             </div>
             
             <div class="trade-preview-grid" id="tradePreviewGrid"></div>
@@ -385,8 +390,8 @@
                 <button class="btn-secondary" onclick="closePreview()">
                     <i class="fas fa-times"></i> Cancel
                 </button>
-                <button class="btn-primary" onclick="submitTrade()" id="confirmSubmitBtn">
-                    <i class="fas fa-paper-plane"></i> Submit to Discord
+                <button class="btn-primary btn-lg" onclick="submitTrade()" id="confirmSubmitBtn">
+                    <i class="fas fa-paper-plane"></i> Send
                 </button>
             </div>
         </div>
