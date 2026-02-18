@@ -69,9 +69,12 @@ function displayBuyinCards() {
         const statusEl = document.getElementById(`buyin${round}Status`);
         const btnEl = document.getElementById(`buyin${round}Btn`);
         const cardEl = btnEl?.closest('.buyin-card');
-        
+
         if (!statusEl || !btnEl) return;
-        
+
+        // Ensure these never behave like form submits
+        try { btnEl.type = 'button'; } catch (e) {}
+
         if (status.purchased) {
             statusEl.textContent = 'Already Purchased';
             statusEl.classList.add('active');
@@ -79,6 +82,7 @@ function displayBuyinCards() {
             btnEl.disabled = true;
             btnEl.innerHTML = '<i class="fas fa-check-circle"></i> Purchased';
             cardEl?.classList.add('purchased');
+            btnEl.onclick = null;
         } else {
             statusEl.textContent = 'Not Purchased';
             statusEl.classList.remove('active');
@@ -86,9 +90,15 @@ function displayBuyinCards() {
             btnEl.disabled = false;
             btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
             cardEl?.classList.remove('purchased');
-            
+
             // Attach click handler
-            btnEl.onclick = () => purchaseBuyinFromKAP(round, status.cost);
+            btnEl.onclick = (e) => {
+                try { e?.preventDefault?.(); } catch (err) {}
+                try { e?.stopPropagation?.(); } catch (err) {}
+                if (typeof window.purchaseBuyinFromKAP === 'function') {
+                    window.purchaseBuyinFromKAP(round, status.cost);
+                }
+            };
         }
     });
 }
@@ -96,10 +106,46 @@ function displayBuyinCards() {
 /**
  * Purchase buy-in from KAP page
  */
+function _buyinAuthHeaders() {
+    const headers = {};
+
+    // Prefer Discord auth token (Cloudflare Worker allows Authorization header).
+    try {
+        const session = (typeof authManager !== 'undefined' && authManager.getSession)
+            ? authManager.getSession()
+            : null;
+        if (session?.token) {
+            headers['Authorization'] = `Bearer ${session.token}`;
+        }
+    } catch (e) {}
+
+    // Local dev fallback: allow direct-to-bot key usage when running on localhost.
+    try {
+        const host = (window.location.hostname || '').toLowerCase();
+        const isLocal = host === 'localhost' || host === '127.0.0.1';
+        if (isLocal && FBPHub?.config?.apiKey) {
+            headers['X-API-Key'] = FBPHub.config.apiKey;
+        }
+    } catch (e) {}
+
+    return headers;
+}
+
+function getKAPPurchaseBalance() {
+    // Buy-in API validates against managers.json KAP balance (allotments.KAP.total)
+    try {
+        if (typeof KAP_STATE !== 'undefined' && typeof KAP_STATE.kapAllotment === 'number') {
+            return KAP_STATE.kapAllotment;
+        }
+    } catch (e) {}
+
+    return getKAPBalance();
+}
+
 window.purchaseBuyinFromKAP = async function(round, cost) {
     // Get current KAP balance
-    const kapBalance = getKAPBalance();
-    
+    const kapBalance = getKAPPurchaseBalance();
+
     // Show confirmation modal
     showBuyinConfirmationModal(round, cost, kapBalance);
 };
@@ -126,7 +172,7 @@ function showBuyinConfirmationModal(round, cost, kapBalance) {
                 <div class="modal-info">
                     <p><strong>Round ${round} Buy-In</strong></p>
                     <p>Cost: <strong>$${cost}</strong> (taxable)</p>
-                    <p>Your WizBucks Balance: <strong>$${kapBalance}</strong></p>
+                    <p>Your KAP Balance: <strong>$${kapBalance}</strong></p>
                     <p>Remaining After Purchase: <strong>$${kapBalance - cost}</strong></p>
                 </div>
                 
@@ -172,7 +218,7 @@ window.confirmBuyinPurchase = async function(round, cost) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-API-Key': FBPHub.config.apiKey
+                ..._buyinAuthHeaders(),
             },
             body: JSON.stringify({
                 team: currentTeam,
@@ -187,23 +233,39 @@ window.confirmBuyinPurchase = async function(round, cost) {
             throw new Error(error.detail || 'Purchase failed');
         }
         
+        const result = await response.json();
+
         // Success! Update local state
         buyinStatus[round].purchased = true;
-        
+
+        // If KAP page state is present, reflect new backend balance immediately.
+        try {
+            if (typeof KAP_STATE !== 'undefined') {
+                if (typeof result?.new_balance === 'number') {
+                    KAP_STATE.kapAllotment = result.new_balance;
+                    KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + (KAP_STATE.rolloverFromPAD || 0);
+                }
+                if (KAP_STATE.buyIns && typeof KAP_STATE.buyIns === 'object') {
+                    KAP_STATE.buyIns[round] = true;
+                }
+            }
+        } catch (e) {}
+
         // Close modal
         closeBuyinModal();
-        
-        // Refresh display
-        displayBuyinCards();
-        
-        // Update taxable spend display
-        updateTaxableSpendFromBuyins();
-        
-        // Show success message
-        showSuccessToast(`Round ${round} buy-in purchased successfully!`);
-        
+
         // Reload draft order data for preview calculations
         await loadBuyinStatus();
+
+        // Refresh display
+        displayBuyinCards();
+
+        // Refresh KAP UI displays
+        updateTaxableSpendFromBuyins();
+        try { if (typeof saveDraft === 'function') saveDraft(); } catch (e) {}
+
+        // Show success message
+        showSuccessToast(`Round ${round} buy-in purchased successfully!`);
         
     } catch (error) {
         console.error('Buy-in purchase error:', error);
@@ -238,19 +300,19 @@ function getTotalBuyinSpend() {
  * Update taxable spend display to include buy-ins
  */
 function updateTaxableSpendFromBuyins() {
-    const buyinSpend = getTotalBuyinSpend();
-    
-    // Update the taxable spend counter at top of KAP page
-    const taxableElement = document.getElementById('taxableSpend');
-    if (taxableElement) {
-        // Get other taxable items
-        const otherTaxable = calculateOtherTaxableSpend(); // from main KAP form
-        const total = buyinSpend + otherTaxable;
-        
-        taxableElement.textContent = `$${total}`;
-        
-        // Update tax bracket display
-        updateTaxBracketDisplay(total);
+    // KAP page derives taxable spend via calculateTaxableSpend(), which calls
+    // getTotalBuyinSpend() from this integration file.
+    try {
+        if (typeof updateKAPBudgetDisplay === 'function') {
+            updateKAPBudgetDisplay();
+        }
+
+        // If user is on the review step, refresh the summary too.
+        if (typeof KAP_STATE !== 'undefined' && KAP_STATE.currentStep === 3 && typeof updateSummary === 'function') {
+            updateSummary();
+        }
+    } catch (e) {
+        console.warn('Failed to refresh KAP totals after buy-in update:', e);
     }
 }
 

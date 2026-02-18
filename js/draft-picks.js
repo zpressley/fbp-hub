@@ -303,17 +303,20 @@ async function confirmBuyinPurchase(round, cost, team) {
         closeBuyinModal();
         
         // Call backend API
+        const session = (typeof authManager !== 'undefined' && authManager.getSession) ? authManager.getSession() : null;
+        const authHeader = session?.token ? { 'Authorization': `Bearer ${session.token}` } : {};
+
         const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/purchase`, {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                'X-API-Key': FBPHub.config.apiKey || ''
+                ...authHeader,
             },
-            body: JSON.stringify({ 
-                team, 
-                round, 
+            body: JSON.stringify({
+                team,
+                round,
                 cost,
-                purchased_by: currentUser 
+                purchased_by: currentUser
             })
         });
         
@@ -397,16 +400,19 @@ async function confirmRefund(round, team, cost) {
         closeRefundModal();
         
         // Call backend API
+        const session = (typeof authManager !== 'undefined' && authManager.getSession) ? authManager.getSession() : null;
+        const authHeader = session?.token ? { 'Authorization': `Bearer ${session.token}` } : {};
+
         const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/refund`, {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                'X-API-Key': FBPHub.config.apiKey || ''
+                ...authHeader,
             },
-            body: JSON.stringify({ 
-                team, 
+            body: JSON.stringify({
+                team,
                 round,
-                admin_user: currentUser 
+                admin_user: currentUser
             })
         });
         
