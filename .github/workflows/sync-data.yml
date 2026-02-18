@@ -201,11 +201,12 @@ jobs:
           git config user.name "FBP Data Sync Bot"
           git config user.email "bot@fbp.local"
 
+          # Stage changes first
+          git add data/
+
           # Rebase onto latest remote main to avoid non-fast-forward push failures
           git fetch origin main
-          git rebase -X ours origin/main || (git rebase --abort && git reset --hard origin/main)
-
-          git add data/
+          git rebase -X ours origin/main || (git rebase --abort && git reset --hard origin/main && git add data/)
 
           # Create commit message based on trigger type
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
