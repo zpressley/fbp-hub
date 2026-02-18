@@ -228,12 +228,19 @@ function displayPlayerHeader() {
     document.getElementById('playerYears').textContent = player.years_simple || 'N/A';
     document.getElementById('playerType').textContent = player.player_type || 'Unknown';
     
-    // Show contract salary if keeper
+    // Show contract salary only for MLB keepers (hide for Farm/prospects)
+    const contractSublabel = document.getElementById('contractSublabel');
     if (player.player_type === 'MLB' && player.contract_type) {
         const salary = getKeeperSalary(player.contract_type);
         if (salary) {
-            document.getElementById('contractSublabel').textContent = `$${salary} salary`;
+            contractSublabel.textContent = `$${salary} salary`;
+            contractSublabel.style.display = '';
+        } else {
+            contractSublabel.style.display = 'none';
         }
+    } else {
+        // Hide salary for Farm players (prospects don't have a keeper salary)
+        contractSublabel.style.display = 'none';
     }
 
     // Service-time based progress has been deprecated; keep the service card hidden for now.
@@ -305,7 +312,10 @@ function displayOverview() {
         currentStatsContainer.innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>No stats available</p></div>';
     }
 
-    // Contract details
+    // Contract details - only show Keeper Salary for MLB players (not Farm/prospects)
+    const keeperSalary = getKeeperSalary(player.contract_type);
+    const showKeeperSalary = player.player_type === 'MLB' && player.contract_type && keeperSalary;
+    
     const contractHTML = `
         <div class="info-card">
             <div class="info-row">
@@ -320,10 +330,10 @@ function displayOverview() {
                 <span class="info-label">Player Type</span>
                 <span class="info-value">${player.player_type || 'Unknown'}</span>
             </div>
-            ${player.player_type === 'MLB' && player.contract_type ? `
+            ${showKeeperSalary ? `
                 <div class="info-row">
                     <span class="info-label">Keeper Salary</span>
-                    <span class="info-value">$${getKeeperSalary(player.contract_type) || '?'}</span>
+                    <span class="info-value">$${keeperSalary}</span>
                 </div>
             ` : ''}
         </div>

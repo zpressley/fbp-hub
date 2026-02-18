@@ -268,6 +268,7 @@ async function enrichPlayerData() {
         if (data.team && !team) {
             document.getElementById('addPlayerTeam').value = data.team;
         }
+        if (data.age) document.getElementById('addPlayerAge').value = data.age;
         
     } catch (err) {
         console.error('Enrichment error:', err);
@@ -290,6 +291,7 @@ function displayEnrichedData(data) {
         { label: 'MLB ID', value: data.mlb_id, icon: 'fa-baseball' },
         { label: 'Yahoo ID', value: data.yahoo_id, icon: 'fa-y' },
         { label: 'Birth Date', value: data.birth_date, icon: 'fa-birthday-cake' },
+        { label: 'Age', value: data.age, icon: 'fa-calendar' },
         { label: 'Debut', value: data.debut_date, icon: 'fa-star' },
         { label: 'Bats', value: data.bats, icon: 'fa-hand-rock' },
         { label: 'Throws', value: data.throws, icon: 'fa-hand-paper' },

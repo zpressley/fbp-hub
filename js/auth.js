@@ -408,7 +408,7 @@ const DevAuth = {
                 discriminator: '0',
                 avatar: null
             },
-            token: 'dev_token_' + Date.now(),
+            token: `dev_token_${teamAbbr}_${Date.now()}`,
             refreshToken: null,
             expiresAt: Date.now() + AUTH_CONFIG.sessionDuration
         };
@@ -491,6 +491,10 @@ function addUserMenu() {
             <a href="rosters.html?team=${team?.abbreviation || ''}">
                 <i class="fas fa-baseball-ball"></i>
                 My Roster
+            </a>
+            <a href="trade.html">
+                <i class="fas fa-handshake"></i>
+                Trade Portal
             </a>
             <a href="pad.html">
                 <i class="fas fa-receipt"></i>

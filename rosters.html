@@ -66,10 +66,29 @@
                 <i class="fas fa-coins"></i>
                 <span>WizBucks</span>
             </a>
-            <a href="draft.html" class="nav-link">
-                <i class="fas fa-table-list"></i>
-                <span>Draft</span>
-            </a>
+            <div class="nav-item-dropdown">
+                <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+                    <span>
+                        <i class="fas fa-table-list"></i>
+                        <span>Draft</span>
+                    </span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="draftDropdownMenu">
+                    <a href="draft.html" class="nav-dropdown-item">
+                        <i class="fas fa-list-ol"></i>
+                        <span>Live Draft</span>
+                    </a>
+                    <a href="draft-preview.html" class="nav-dropdown-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Draft Preview</span>
+                    </a>
+                    <a href="draft-picks.html" class="nav-dropdown-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Draft Picks</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 

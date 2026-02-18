@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Portal - FBP Hub</title>
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#EF3E42">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/trade.css">
+    <link rel="stylesheet" href="css/players.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="login.html">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="constitution.html" class="nav-link">
+                <i class="fas fa-scroll"></i>
+                <span>Constitution</span>
+            </a>
+            <a href="players.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Players</span>
+            </a>
+            <a href="rosters.html" class="nav-link">
+                <i class="fas fa-baseball-ball"></i>
+                <span>Rosters</span>
+            </a>
+            <a href="player-log.html" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Player Log</span>
+            </a>
+            <a href="wizbucks.html" class="nav-link">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <div class="nav-item-dropdown">
+                <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+                    <span>
+                        <i class="fas fa-table-list"></i>
+                        <span>Draft</span>
+                    </span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="draftDropdownMenu">
+                    <a href="draft.html" class="nav-dropdown-item">
+                        <i class="fas fa-list-ol"></i>
+                        <span>Live Draft</span>
+                    </a>
+                    <a href="draft-preview.html" class="nav-dropdown-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Draft Preview</span>
+                    </a>
+                    <a href="draft-picks.html" class="nav-dropdown-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Draft Picks</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Required -->
+        <div class="auth-required" id="authRequired" style="display: none;">
+            <i class="fas fa-lock"></i>
+            <p>Please log in to access Trade Portal</p>
+            <a href="login.html" class="btn-primary">LOGIN WITH DISCORD</a>
+        </div>
+
+        <!-- Trade Content -->
+        <div id="tradeContent" style="display: none;">
+            <div class="page-header">
+                <h2>TRADE PORTAL</h2>
+                <p class="page-subtitle">Build and manage multi-team trades</p>
+            </div>
+
+            <!-- Trade Inbox Alert (if any pending) -->
+            <div class="trade-inbox-alert" id="tradeInboxAlert" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <span>You have <strong id="inboxCount">0</strong> pending trade offer(s)</span>
+                <button class="btn-view-inbox" onclick="scrollToInbox()">
+                    <i class="fas fa-arrow-down"></i> View
+                </button>
+            </div>
+
+            <!-- Sticky Trade Info Bar -->
+            <div class="trade-sticky-bar" id="tradeStickyBar">
+                <div class="trade-info-grid">
+                    <div class="trade-info-item">
+                        <span class="trade-info-label">Your WizBucks</span>
+                        <span class="trade-info-value" id="yourWB">$0</span>
+                    </div>
+                    <div class="trade-info-item">
+                        <span class="trade-info-label">Trade Window</span>
+                        <span class="trade-info-value" id="tradeWindow">CHECKING...</span>
+                    </div>
+                    <div class="trade-info-item">
+                        <span class="trade-info-label">Next Processing</span>
+                        <span class="trade-info-value" id="nextProcessing">--</span>
+                    </div>
+                    <div class="trade-info-item">
+                        <span class="trade-info-label">Sent Trades</span>
+                        <span class="trade-info-value" id="sentTradesCount">0/12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Trade Builder -->
+            <div class="trade-builder-section">
+                <div class="trade-builder-header">
+                    <h3><i class="fas fa-handshake"></i> New Trade Proposal</h3>
+                    <div class="team-count-toggle">
+                        <button class="team-count-btn active" data-count="2" onclick="setTeamCount(2)">
+                            2 Teams
+                        </button>
+                        <button class="team-count-btn" data-count="3" onclick="setTeamCount(3)">
+                            3 Teams
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Trade Builder Grid -->
+                <div class="trade-builder-grid two-team" id="tradeBuilderGrid">
+                    <!-- Team 1 (User's team) -->
+                    <div class="trade-column">
+                        <div class="trade-column-header your-team">
+                            <h4>YOUR TEAM</h4>
+                            <span class="team-badge-trade" id="team1Badge">WIZ</span>
+                        </div>
+                        
+                        <div class="trade-section">
+                            <div class="trade-section-title get">
+                                <i class="fas fa-arrow-left"></i> YOU RECEIVE
+                            </div>
+                            <div class="trade-receives-list" id="team1ReceiveList">
+                                <div class="empty-trade-list">Add players or WizBucks...</div>
+                            </div>
+                            <div class="trade-add-buttons">
+                                <button class="btn-add-asset" onclick="showPlayerPicker('team1')" id="team1AddPlayer">
+                                    <i class="fas fa-plus"></i> Add Player
+                                </button>
+                                <button class="btn-add-asset" onclick="showWBPicker('team1')" id="team1AddWB">
+                                    <i class="fas fa-coins"></i> Add WB
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team 2 -->
+                    <div class="trade-column">
+                        <div class="trade-column-header">
+                            <h4>TEAM 2</h4>
+                            <select id="team2Select" class="team-select" onchange="handleTeamSelect('team2')">
+                                <option value="">Select Team...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="trade-section">
+                            <div class="trade-section-title get">
+                                <i class="fas fa-arrow-left"></i> TEAM 2 RECEIVES
+                            </div>
+                            <div class="trade-receives-list" id="team2ReceiveList">
+                                <div class="empty-trade-list">Select team first...</div>
+                            </div>
+                            <div class="trade-add-buttons">
+                                <button class="btn-add-asset" onclick="showPlayerPicker('team2')" disabled id="team2AddPlayer">
+                                    <i class="fas fa-plus"></i> Add Player
+                                </button>
+                                <button class="btn-add-asset" onclick="showWBPicker('team2')" disabled id="team2AddWB">
+                                    <i class="fas fa-coins"></i> Add WB
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team 3 (Optional) -->
+                    <div class="trade-column" id="team3Column" style="display: none;">
+                        <div class="trade-column-header">
+                            <h4>TEAM 3</h4>
+                            <select id="team3Select" class="team-select" onchange="handleTeamSelect('team3')">
+                                <option value="">Select Team...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="trade-section">
+                            <div class="trade-section-title get">
+                                <i class="fas fa-arrow-left"></i> TEAM 3 RECEIVES
+                            </div>
+                            <div class="trade-receives-list" id="team3ReceiveList">
+                                <div class="empty-trade-list">Select team first...</div>
+                            </div>
+                            <div class="trade-add-buttons">
+                                <button class="btn-add-asset" onclick="showPlayerPicker('team3')" disabled id="team3AddPlayer">
+                                    <i class="fas fa-plus"></i> Add Player
+                                </button>
+                                <button class="btn-add-asset" onclick="showWBPicker('team3')" disabled id="team3AddWB">
+                                    <i class="fas fa-coins"></i> Add WB
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trade Actions -->
+                <div class="trade-actions">
+                    <button class="btn-secondary btn-lg" onclick="clearTrade()">
+                        <i class="fas fa-trash"></i> Clear Trade
+                    </button>
+                    <button class="btn-primary btn-lg" onclick="previewTrade()" id="submitTradeBtn" disabled>
+                        <i class="fas fa-paper-plane"></i> Submit Trade
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trade Inbox -->
+            <div class="trade-inbox-section" id="tradeInboxSection">
+                <div class="section-header">
+                    <h3><i class="fas fa-inbox"></i> TRADE INBOX</h3>
+                    <span class="inbox-count-badge" id="inboxCountBadge">0 offers</span>
+                </div>
+                <div id="tradeInboxList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No pending trade offers</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sent Trades Queue -->
+            <div class="trade-queue-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-paper-plane"></i> SENT TRADES</h3>
+                    <span class="queue-count-badge" id="queueCountBadge">0/12</span>
+                </div>
+                <div id="tradeQueueList">
+                    <div class="empty-state">
+                        <i class="fas fa-paper-plane"></i>
+                        <p>No sent trades</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade History -->
+            <div class="trade-history-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> TRADE HISTORY</h3>
+                    <button class="btn-secondary btn-sm" onclick="loadTradeHistory()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+                <div id="tradeHistoryList">
+                    <div class="loading-message">
+                        <div class="spinner"></div>
+                        <p>Loading trade history...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Player Picker Modal -->
+    <div class="modal" id="playerPickerModal">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h3>Select Player</h3>
+                <button class="modal-close" onclick="closePlayerPicker()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>From Team</label>
+                    <select id="playerPickerFromTeam" class="team-select" onchange="onPlayerPickerFromTeamChange()"></select>
+                </div>
+                <div class="search-bar-inline">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="playerPickerSearch" placeholder="Search roster...">
+                </div>
+                <div class="picker-filters">
+                    <select id="playerPickerTypeFilter" class="filter-select" onchange="filterPlayerPicker()">
+                        <option value="all">All Players</option>
+                        <option value="MLB">MLB Only</option>
+                        <option value="Farm">Prospects Only</option>
+                    </select>
+                    <select id="playerPickerPosFilter" class="filter-select" onchange="filterPlayerPicker()">
+                        <option value="all">All Positions</option>
+                        <option value="C">C</option>
+                        <option value="1B">1B</option>
+                        <option value="2B">2B</option>
+                        <option value="SS">SS</option>
+                        <option value="3B">3B</option>
+                        <option value="OF">OF</option>
+                        <option value="SP">SP</option>
+                        <option value="RP">RP</option>
+                    </select>
+                </div>
+                <div class="player-picker-results" id="playerPickerResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WizBucks Picker Modal -->
+    <div class="modal" id="wbPickerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add WizBucks</h3>
+                <button class="modal-close" onclick="closeWBPicker()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>From Team</label>
+                    <select id="wbFromTeam" class="team-select" onchange="onWBFromTeamChange()"></select>
+                </div>
+                <div class="wb-picker-info">
+                    <span>Team Balance:</span>
+                    <strong id="wbPickerAvailable">$0</strong>
+                </div>
+                <div class="form-group">
+                    <label>Amount (must be $5 increments)</label>
+                    <input type="number" id="wbAmount" class="form-input" min="5" step="5" placeholder="Enter amount...">
+                </div>
+                <button class="btn-primary btn-full" onclick="confirmWB()">
+                    <i class="fas fa-check"></i> Add WizBucks
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Preview Modal -->
+    <div class="confirmation-modal" id="tradePreviewModal">
+        <div class="confirmation-content trade-preview-content">
+            <div class="confirmation-header">
+                <h2>Confirm Trade</h2>
+                <p>Review before submitting to Discord</p>
+            </div>
+            
+            <div class="trade-preview-grid" id="tradePreviewGrid"></div>
+            
+            <div class="confirmation-warning">
+                <i class="fas fa-discord"></i>
+                <strong>This will create a private thread in Discord</strong>
+                <p>All involved managers will be added to the thread for approval</p>
+            </div>
+            
+            <div class="trade-preview-note">
+                <i class="fas fa-info-circle"></i>
+                <p>Trade will be sent to <strong id="previewRecipients"></strong> for review</p>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="closePreview()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" onclick="submitTrade()" id="confirmSubmitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit to Discord
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inbox Trade Detail Modal -->
+    <div class="confirmation-modal" id="inboxTradeModal">
+        <div class="confirmation-content trade-detail-content">
+            <div class="confirmation-header">
+                <h2>Trade Offer</h2>
+                <p id="inboxTradeFrom">From: ---</p>
+            </div>
+            
+            <div class="trade-preview-grid" id="inboxTradePreview"></div>
+            
+            <div class="inbox-trade-meta">
+                <div class="inbox-meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="inboxTradeTime">---</span>
+                </div>
+                <div class="inbox-meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span id="inboxTradeExpires">Expires: ---</span>
+                </div>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-danger" onclick="rejectInboxTrade()" id="rejectInboxBtn">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+                <button class="btn-secondary" onclick="closeInboxTradeModal()">
+                    <i class="fas fa-eye"></i> Review Later
+                </button>
+                <button class="btn-primary" onclick="acceptInboxTrade()" id="acceptInboxBtn">
+                    <i class="fas fa-check"></i> Accept Trade
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accept Confirmation Modal -->
+    <div class="confirmation-modal" id="acceptConfirmModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Confirm Acceptance</h2>
+                <p>Are you sure you want to accept this trade?</p>
+            </div>
+            
+            <div class="confirmation-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>This moves the trade to admin review</strong>
+                <p>Once accepted, the trade goes to commissioners for final approval</p>
+            </div>
+            
+            <div id="acceptConfirmSummary"></div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="closeAcceptConfirm()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-primary" onclick="confirmAcceptTrade()" id="confirmAcceptBtn">
+                    <i class="fas fa-check"></i> Confirm Accept
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div class="confirmation-modal" id="rejectReasonModal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h2>Reject Trade</h2>
+                <p>Please provide a reason</p>
+            </div>
+            
+            <div class="form-group">
+                <label>Reason for Rejection (Required)</label>
+                <textarea id="rejectReason" class="form-textarea" placeholder="Explain why you're rejecting this trade..." rows="4" required></textarea>
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="btn-secondary" onclick="closeRejectModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-danger" onclick="confirmRejectTrade()" id="confirmRejectBtn">
+                    <i class="fas fa-ban"></i> Confirm Reject
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Detail Panel (slide-in from right) -->
+    <div class="player-detail-panel" id="playerDetailPanel">
+        <button class="panel-close" onclick="closePlayerPanel()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="playerDetailContent">
+            <div class="detail-placeholder">
+                <i class="fas fa-hand-pointer"></i>
+                <p>Click a player to view details</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="players.html" class="bottom-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="rosters.html" class="bottom-nav-item">
+            <i class="fas fa-baseball-ball"></i>
+            <span>Rosters</span>
+        </a>
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012-2025</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/player-profile.js"></script>
+    <script src="js/trade.js"></script>
+</body>
+</html>

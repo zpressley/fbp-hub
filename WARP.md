@@ -201,7 +201,13 @@ On `DOMContentLoaded`, `auth.js` also injects a user menu into the navigation (a
 - `dashboard.html` + `js/dashboard.js`:
   - Uses `AuthUI.requireAuth()` to ensure only authenticated users can access the page.
 
-Cloudflare Worker code and environment variable setup are described in `PHASE2_SETUP.md`. The worker itself is not currently present in this repo; it is assumed to be configured separately in your Cloudflare account.
+Cloudflare Worker code and environment variable setup are described in `PHASE2_SETUP.md`.
+
+For auditability, this repo also keeps a reference snapshot of the deployed Worker routing code:
+- `docs/CLOUDFLARE_WORKER_REFERENCE.md`
+- `docs/cloudflare_worker/worker.js`
+
+The Worker is still deployed/configured separately in your Cloudflare account; the snapshot is not executed from this repo.
 
 ## Deployment Model
 

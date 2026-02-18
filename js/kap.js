@@ -307,7 +307,27 @@ async function loadKAPData() {
         KAP_STATE.mlbPlayers = getMockMLBPlayers();
     }
     
-    // Load saved draft
+    // Load purchased buy-ins from draft order (permanent purchases)
+    try {
+        const draftRes = await fetch('./data/draft_order_2026.json');
+        if (draftRes.ok) {
+            const draftData = await draftRes.json();
+            const keeperPicks = draftData.filter(p => p.draft === 'keeper' && p.current_owner === KAP_STATE.team);
+            
+            // Check which buy-ins have been permanently purchased
+            [1, 2, 3].forEach(round => {
+                const pick = keeperPicks.find(p => p.round === round);
+                if (pick && pick.buyin_purchased) {
+                    KAP_STATE.buyIns[round] = true;
+                    console.log(`✅ Round ${round} buy-in already purchased`);
+                }
+            });
+        }
+    } catch (e) {
+        console.warn('Could not load draft order for buy-ins:', e);
+    }
+    
+    // Load saved draft (will not override purchased buy-ins)
     const savedDraft = localStorage.getItem(`kap_draft_${KAP_STATE.team}_2026`);
     if (savedDraft) {
         try {
@@ -318,7 +338,13 @@ async function loadKAPData() {
                 .filter(keeperUPID => KAP_STATE.mlbPlayers.some(p => p.upid === keeperUPID));
             KAP_STATE.ilTags = draft.ilTags || { TC: null, VC: null, FC: null };
             KAP_STATE.ratApplications = draft.ratApplications || [];
-            KAP_STATE.buyIns = draft.buyIns || { 1: false, 2: false, 3: false };
+            // Merge localStorage buy-ins with permanent purchases (permanent takes precedence)
+            const localBuyIns = draft.buyIns || { 1: false, 2: false, 3: false };
+            [1, 2, 3].forEach(round => {
+                if (!KAP_STATE.buyIns[round]) {
+                    KAP_STATE.buyIns[round] = localBuyIns[round];
+                }
+            });
             
             // Restore keeper flags
             KAP_STATE.selectedKeepers.forEach(keeperUPID => {

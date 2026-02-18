@@ -177,6 +177,7 @@
 1. Teams may choose to hold a prospect’s graduation to a Keeper Contract until they surpass FBP Prospect Limits \- defined below:  
    1. 350 PA  
    2. 100 IP \- or \- 30 Pitching Appearances  
+   3. 26 Years of age  
 2. Prospects are able to remain prospects in season until the prospect graduation deadline (MLB All-Star Break).  At this point if they exceed FBP Prospect Limits, they will cease to be eligible for prospect status and must be rostered on the 26-man Yahoo Roster.  (NA or IL are acceptable slots if applicable)  
    1. Contracted Prospects that do not graduate in-season at the deadline may remain a prospect through the remainder of the year.
 
@@ -259,7 +260,7 @@
    3. FBP Keeper Draft Picks  
       1. To successfully trade Picks in RDs 1-3, both managers must be bought into the RD they are trading/receiving.  These WBs are still taxed.  
          1. Teams will not pay for multiple picks they have in these RDs.  They pay one time for entry no matter how many picks they have acquired.  
-      2. Teams are permitted to trade picks in RDs that are taxable.  
+      2. Teams are permitted to trade picks in RDs that are taxable through RD 15  
          1. If a team does not have a pick in a taxable RD, they are not permitted to spend within said Tax Bracket.  Does not have to be the team’s original pick to qualify.  
    4. WizBucks  
       1. No Limitations to WB trading, however the limitations to spending & rolling over WBs during KAP are reminded below:  
@@ -349,6 +350,7 @@
 ## **Section 03: Roster Regulations**
 
 1. Yahoo Rosters hold up to 26 active spots (Does not include IL & NA)  
+   1. At least 1 active Catcher must be on the Yahoo Roster at all time  
 2. FBP enforced positional limitations on the active 26 will exist outside of Yahoo rostering limitations:  
    1. 8 SP eligible players maximum; this rises to 9 if you have 1 or more SP/RP eligible players  
    2. 14 Pitcher maximum  

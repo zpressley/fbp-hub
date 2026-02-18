@@ -1,347 +1,449 @@
 /**
  * FBP Hub - Draft Picks Tracker
- * Displays draft pick ownership and buy-in status
+ * Displays keeper draft pick ownership and buy-in status with purchase functionality
  */
 
 // Constants
-const TOTAL_ROUNDS = 26; // 26-round draft
-const BUY_IN_ROUNDS = {
+const BUY_IN_COSTS = {
     1: 55,
     2: 35,
     3: 10
 };
 
-// Page state
-let draftPicks = [];
-let buyIns = {};
-let currentView = 'grid';
-let currentTeam = null;
-let draftOrder = []; // Loaded from draft_order.json
+// Discord webhook is handled by backend API
+
+// State
+let draftData = [];
+let keeperPicks = [];
+let managersData = null;
+let currentUser = null;
+let isAdmin = false;
+
+/**
+ * Get team color fallback
+ */
+function getTeamColor(teamAbbr) {
+    const teamColors = {
+        'WIZ': '#FF8C42',
+        'B2J': '#4ECDC4',
+        'CFL': '#95E1D3',
+        'HAM': '#F38181',
+        'JEP': '#AA96DA',
+        'LFB': '#FCBAD3',
+        'DMN': '#A8E6CF',
+        'SAD': '#FFD3B6',
+        'DRO': '#FFAAA5',
+        'RV': '#FF8B94',
+        'TBB': '#A8E6CF',
+        'WAR': '#C7CEEA'
+    };
+    return teamColors[teamAbbr] || '#FF8C42';
+}
 
 /**
  * Initialize draft picks page
  */
-function initDraftPicksPage() {
+async function initDraftPicksPage() {
     console.log('🎯 Initializing draft picks page...');
     
-    // Load draft pick data
-    loadDraftPicks();
+    // Load data first (needed to check admin role)
+    await loadDraftData();
     
-    // Setup view toggle
-    setupViewToggle();
+    // Check auth status
+    if (typeof authManager !== 'undefined') {
+        currentUser = authManager.isAuthenticated() ? authManager.getTeam()?.abbreviation : null;
+        
+        // Check if current user has admin role from managers.json
+        if (currentUser && managersData?.teams?.[currentUser]) {
+            isAdmin = managersData.teams[currentUser].role === 'admin';
+        }
+    }
     
-    // Display based on view
-    displayDraftPicks();
+    // Display keeper draft
+    displayKeeperDraft();
 }
 
 /**
- * Load draft pick data
+ * Load draft order data
  */
-async function loadDraftPicks() {
+async function loadDraftData() {
     try {
-        // FIRST: Load draft order from draft_order.json
-        const orderResponse = await fetch('./data/draft_order.json');
-        if (orderResponse.ok) {
-            const orderData = await orderResponse.json();
-            draftOrder = orderData.order || [];
-            console.log(`✅ Loaded draft order:`, draftOrder);
-        } else {
-            console.warn('⚠️ No draft_order.json found, using fallback order');
-            draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'DMN', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
+        // Load draft order (contains both prospect and keeper drafts)
+        const draftRes = await fetch('./data/draft_order_2026.json');
+        if (draftRes.ok) {
+            draftData = await draftRes.json();
+            keeperPicks = draftData.filter(pick => pick.draft === 'keeper');
+            console.log(`✅ Loaded ${keeperPicks.length} keeper draft picks`);
         }
         
-        // THEN: Try to load actual picks/trades from draft_picks.json
-        const response = await fetch('./data/draft_picks.json');
-        
-        if (response.ok) {
-            const data = await response.json();
-            draftPicks = data.picks || [];
-            buyIns = data.buyins || {};
-        } else {
-            // Generate default picks using draft order (STRAIGHT, not snake)
-            draftPicks = generateDefaultPicks();
-            buyIns = {};
+        // Load managers data for team info and KAP balances
+        const managersRes = await fetch('./config/managers.json');
+        if (managersRes.ok) {
+            managersData = await managersRes.json();
+            console.log('✅ Loaded managers data');
         }
-        
-        console.log(`✅ Loaded ${draftPicks.length} draft picks`);
-        
     } catch (error) {
-        console.error('Error loading draft picks:', error);
-        // Fallback to default order
-        draftOrder = ['HAM', 'RV', 'B2J', 'CFL', 'DMN', 'LFB', 'JEP', 'TBB', 'WIZ', 'DRO', 'SAD', 'WAR'];
-        draftPicks = generateDefaultPicks();
-        buyIns = {};
+        console.error('Error loading draft data:', error);
     }
 }
 
 /**
- * Generate default draft picks (STRAIGHT order, not snake)
- * Based on draft_order.json (2024 final standings)
+ * Get full manager display name
  */
-function generateDefaultPicks() {
-    const picks = [];
-    let pickNumber = 1;
-    
-    // Straight draft: same order every round
-    for (let round = 1; round <= TOTAL_ROUNDS; round++) {
-        draftOrder.forEach(team => {
-            picks.push({
-                round: round,
-                pick: pickNumber,
-                originalOwner: team,
-                currentOwner: team,
-                traded: false
-            });
-            pickNumber++;
-        });
+function getManagerName(teamAbbr) {
+    const teamData = managersData?.teams?.[teamAbbr];
+    if (teamData?.name) {
+        return `${teamData.name} (${teamAbbr})`;
     }
-    
-    console.log(`📋 Generated ${picks.length} picks (straight draft, not snake)`);
-    return picks;
+    return teamAbbr;
 }
 
 /**
- * Setup view toggle
+ * Display keeper draft as list view with team colors
  */
-function setupViewToggle() {
-    const gridBtn = document.getElementById('gridViewBtn');
-    const listBtn = document.getElementById('listViewBtn');
-    
-    if (!gridBtn || !listBtn) return;
-    
-    gridBtn.addEventListener('click', () => {
-        currentView = 'grid';
-        gridBtn.classList.add('active');
-        listBtn.classList.remove('active');
-        displayDraftPicks();
-    });
-    
-    listBtn.addEventListener('click', () => {
-        currentView = 'list';
-        listBtn.classList.add('active');
-        gridBtn.classList.remove('active');
-        displayDraftPicks();
-    });
-}
-
-/**
- * Display draft picks based on current view
- */
-function displayDraftPicks() {
-    if (currentView === 'grid') {
-        showGridView();
-        document.getElementById('gridView').style.display = 'block';
-        document.getElementById('listView').style.display = 'none';
-    } else {
-        showListView();
-        document.getElementById('gridView').style.display = 'none';
-        document.getElementById('listView').style.display = 'block';
-    }
-}
-
-/**
- * Show grid view (all teams, all rounds)
- */
-function showGridView() {
+function displayKeeperDraft() {
     const container = document.getElementById('draftGridContainer');
     if (!container) return;
     
-    let html = '';
-    
-    // Group by round
-    for (let round = 1; round <= TOTAL_ROUNDS; round++) {
-        const roundPicks = draftPicks.filter(p => p.round === round);
-        
-        if (roundPicks.length === 0) continue;
-        
-        const isBuyInRound = BUY_IN_ROUNDS[round] !== undefined;
-        const buyInCost = BUY_IN_ROUNDS[round] || 0;
-        
-        html += `
-            <div class="round-section">
-                <div class="round-header">
-                    <h3>Round ${round}</h3>
-                    ${isBuyInRound ? `
-                        <span class="buy-in-badge">
-                            <i class="fas fa-dollar-sign"></i>
-                            Buy-In: $${buyInCost}
-                        </span>
-                    ` : ''}
-                </div>
-                <div class="picks-grid">
-                    ${roundPicks.map(pick => createPickCard(pick)).join('')}
-                </div>
-            </div>
-        `;
-    }
-    
-    container.innerHTML = html;
-}
-
-/**
- * Create pick card HTML
- */
-function createPickCard(pick) {
-    const traded = pick.currentOwner !== pick.originalOwner;
-    const isBuyInRound = BUY_IN_ROUNDS[pick.round] !== undefined;
-    const boughtIn = buyIns[pick.currentOwner]?.includes(pick.round) || false;
-    
-    let statusBadge = '';
-    if (isBuyInRound) {
-        if (boughtIn) {
-            statusBadge = '<span class="status-badge bought-in"><i class="fas fa-check"></i></span>';
-        } else {
-            statusBadge = `<span class="status-badge not-bought-in">$${BUY_IN_ROUNDS[pick.round]}</span>`;
-        }
-    }
-    
-    return `
-        <div class="pick-card ${traded ? 'traded-pick' : ''}">
-            <div class="pick-number">
-                ${pick.pick}
-                ${traded ? '<span class="pick-badge traded"><i class="fas fa-exchange-alt"></i></span>' : ''}
-            </div>
-            <div class="pick-owner">
-                ${createTeamBadge(pick.currentOwner)}
-            </div>
-            ${traded ? `
-                <div class="pick-original">
-                    from ${pick.originalOwner}
-                </div>
-            ` : ''}
-            ${statusBadge}
-        </div>
-    `;
-}
-
-/**
- * Show list view (your picks only)
- */
-function showListView() {
-    const container = document.getElementById('myPicksContainer');
-    
-    // Get current user's team
-    let userTeam = null;
-    if (typeof authManager !== 'undefined' && authManager.isAuthenticated()) {
-        userTeam = authManager.getTeam()?.abbreviation;
-    }
-    
-    if (!userTeam) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-sign-in-alt"></i>
-                <p>Please log in to view your draft picks</p>
-                <a href="login.html" class="btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login with Discord
-                </a>
-            </div>
-        `;
-        return;
-    }
-    
-    currentTeam = userTeam;
-    
-    // Get this team's picks
-    const myPicks = draftPicks.filter(p => p.currentOwner === userTeam);
-    
-    if (myPicks.length === 0) {
+    if (!keeperPicks || keeperPicks.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p>You have no draft picks! (This shouldn't happen)</p>
+                <p>No keeper draft data available</p>
             </div>
         `;
         return;
     }
     
-    // Update summary
-    const totalPicks = myPicks.length;
-    const buyInsComplete = Object.keys(BUY_IN_ROUNDS).filter(round => 
-        buyIns[userTeam]?.includes(parseInt(round))
-    ).length;
+    // Sort all picks by round and pick number
+    const allPicks = [...keeperPicks].sort((a, b) => {
+        if (a.round !== b.round) return a.round - b.round;
+        return a.pick - b.pick;
+    });
     
-    document.getElementById('totalPicksCount').textContent = `${totalPicks} picks`;
-    document.getElementById('buyInStatus').textContent = `${buyInsComplete} / 3 buy-ins`;
+    console.log(`📊 Displaying ${allPicks.length} keeper picks across ${new Set(allPicks.map(p => p.round)).size} rounds`);
+    
+    let html = '<div class="draft-picks-list">';
     
     // Group by round
-    let html = '';
-    
-    // Buy-in rounds first
-    [1, 2, 3].forEach(round => {
-        const roundPicks = myPicks.filter(p => p.round === round);
-        if (roundPicks.length > 0) {
-            html += createRoundSection(round, roundPicks, userTeam);
+    for (let round = 1; round <= 29; round++) {
+        const roundPicks = allPicks.filter(p => p.round === round);
+        if (roundPicks.length === 0) {
+            console.warn(`⚠️ Round ${round} has no picks`);
+            continue;
         }
-    });
+        console.log(`✅ Round ${round}: ${roundPicks.length} picks`);
+        
+        const buyInCost = BUY_IN_COSTS[round];
+        
+        html += `
+            <div class="round-group">
+                <div class="round-header">
+                    <span class="round-title">Round ${round}</span>
+                    ${buyInCost ? `<span class="round-buyin">Buy-In: $${buyInCost}</span>` : ''}
+                </div>
+                <div class="round-picks">
+                    ${roundPicks.map(pick => createPickRow(pick)).join('')}
+                </div>
+            </div>
+        `;
+    }
     
-    // Other rounds
-    const otherPicks = myPicks.filter(p => p.round > 3);
-    const roundGroups = {};
-    otherPicks.forEach(pick => {
-        if (!roundGroups[pick.round]) roundGroups[pick.round] = [];
-        roundGroups[pick.round].push(pick);
-    });
-    
-    Object.keys(roundGroups).sort((a, b) => a - b).forEach(round => {
-        html += createRoundSection(parseInt(round), roundGroups[round], userTeam);
-    });
-    
+    html += '</div>';
     container.innerHTML = html;
 }
 
+
 /**
- * Create round section for list view
+ * Create pick row HTML with website colors and team tag
  */
-function createRoundSection(round, picks, userTeam) {
-    const isBuyInRound = BUY_IN_ROUNDS[round] !== undefined;
-    const buyInCost = BUY_IN_ROUNDS[round] || 0;
-    const boughtIn = buyIns[userTeam]?.includes(round) || false;
+function createPickRow(pick) {
+    const team = pick.current_owner;
+    const round = pick.round;
+    const purchased = pick.buyin_purchased || false;
+    const traded = team !== pick.original_owner;
+    const isUserTeam = currentUser && team === currentUser;
+    const canPurchase = isUserTeam && !purchased && round <= 3;
+    
+    // Use taxed_out field from data
+    const isEliminated = pick.taxed_out || false;
+    
+    // Get team colors for tag only
+    const teamColors = FBPHub?.data?.teamColors?.[team];
+    const teamColor = teamColors?.primary || getTeamColor(team);
+    
+    // Determine row state classes
+    let rowClass = 'pick-row';
+    if (isEliminated) rowClass += ' eliminated';
+    if (!purchased && round <= 3) rowClass += ' not-purchased';
+    if (purchased) rowClass += ' purchased';
+    if (traded) rowClass += ' traded';
+    
+    // Build action/status HTML
+    let actionHTML = '';
+    
+    if (isEliminated) {
+        actionHTML = '<span class="pick-status eliminated"><i class="fas fa-ban"></i> Eliminated</span>';
+    } else if (round <= 3) {
+        if (purchased) {
+            actionHTML = '<span class="pick-status purchased"><i class="fas fa-check-circle"></i> Purchased</span>';
+            if (isAdmin) {
+                actionHTML += `
+                    <button class="refund-btn" onclick="showRefundModal(${round}, '${team}')">
+                        <i class="fas fa-undo"></i> Refund
+                    </button>
+                `;
+            }
+        } else if (canPurchase) {
+            actionHTML = `
+                <button class="buyin-btn" onclick="showBuyinModal(${round}, ${pick.buyin_cost}, '${team}')">
+                    <i class="fas fa-shopping-cart"></i> Purchase ($${pick.buyin_cost})
+                </button>
+            `;
+        } else if (!purchased) {
+            actionHTML = '<span class="pick-status not-purchased"><i class="fas fa-lock"></i> Not Purchased</span>';
+        }
+    }
+    
+    const managerName = managersData?.teams?.[team]?.name || team;
+    const originalOwnerName = managersData?.teams?.[pick.original_owner]?.name || pick.original_owner;
+    const pickLabel = `R${round} - P${pick.pick} - ${managerName}`;
+    const teamTag = `<span class="team-tag" style="background-color: ${teamColor};">${team}</span>`;
+    
+    // Build traded info with crossed out original owner
+    let tradedHTML = '';
+    if (traded) {
+        tradedHTML = `
+            <span class="pick-traded">
+                <i class="fas fa-exchange-alt"></i> 
+                <span class="original-owner">${originalOwnerName}</span> → ${managerName}
+            </span>
+        `;
+    }
     
     return `
-        <div class="my-round-section">
-            <div class="my-round-header">
-                <h4>Round ${round}</h4>
-                ${isBuyInRound ? `
-                    <div class="buy-in-status">
-                        ${boughtIn ? `
-                            <span class="status-badge bought-in">
-                                <i class="fas fa-check-circle"></i>
-                                Bought In ($${buyInCost})
-                            </span>
-                        ` : `
-                            <span class="status-badge not-bought-in">
-                                <i class="fas fa-dollar-sign"></i>
-                                Buy-In Required: $${buyInCost}
-                            </span>
-                        `}
-                    </div>
-                ` : ''}
+        <div class="${rowClass}">
+            <div class="pick-info">
+                <span class="pick-label">${pickLabel} ${teamTag}</span>
+                ${tradedHTML}
+                ${isEliminated ? '<span class="pick-tax-label">Tax Penalty</span>' : ''}
             </div>
-            <div class="my-picks-list">
-                ${picks.map(pick => {
-                    const traded = pick.currentOwner !== pick.originalOwner;
-                    return `
-                        <div class="my-pick-card">
-                            <div class="my-pick-info">
-                                <span class="my-pick-number">Pick ${pick.pick}</span>
-                                ${traded ? `
-                                    <span class="my-pick-origin">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Acquired from ${pick.originalOwner}
-                                    </span>
-                                ` : `
-                                    <span class="my-pick-origin text-muted">
-                                        Original pick
-                                    </span>
-                                `}
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
+            <div class="pick-actions">
+                ${actionHTML}
             </div>
         </div>
     `;
+}
+
+/**
+ * Show buy-in purchase modal
+ */
+window.showBuyinModal = function(round, cost, team) {
+    if (!currentUser) {
+        alert('Please log in to purchase buy-ins');
+        return;
+    }
+    
+    // Get team's KAP balance
+    const teamData = managersData?.teams?.[team];
+    const kapBalance = teamData?.wizbucks?.['2026']?.allotments?.KAP?.total || 0;
+    
+    const modalBody = document.getElementById('buyinModalBody');
+    modalBody.innerHTML = `
+        <div class="modal-warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> This purchase is NON-REFUNDABLE</strong>
+            <p>Once purchased, Round ${round} buy-in cannot be undone except by commissioner action.</p>
+        </div>
+        
+        <div class="modal-info">
+            <p><strong>Round ${round} Buy-In</strong></p>
+            <p>Cost: <strong>$${cost}</strong> (taxable)</p>
+            <p>Your KAP Balance: <strong>$${kapBalance}</strong></p>
+            <p>Remaining After Purchase: <strong>$${kapBalance - cost}</strong></p>
+        </div>
+        
+        <p>This buy-in is required to trade picks in Round ${round}. The cost will be deducted from your KAP allotment and counts toward your taxable spend.</p>
+    `;
+    
+    // Validate funds
+    const confirmBtn = document.getElementById('confirmBuyinBtn');
+    if (kapBalance < cost) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-times"></i> Insufficient Funds';
+        modalBody.innerHTML += `
+            <div class="modal-warning">
+                <strong>Insufficient KAP Balance</strong>
+                <p>You need $${cost} but only have $${kapBalance} available.</p>
+            </div>
+        `;
+    } else {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Purchase';
+        confirmBtn.onclick = () => confirmBuyinPurchase(round, cost, team);
+    }
+    
+    document.getElementById('buyinModal').classList.add('active');
+};
+
+/**
+ * Close buy-in modal
+ */
+window.closeBuyinModal = function() {
+    document.getElementById('buyinModal').classList.remove('active');
+};
+
+/**
+ * Confirm buy-in purchase
+ */
+async function confirmBuyinPurchase(round, cost, team) {
+    try {
+        console.log(`Processing buy-in purchase: Round ${round}, Team ${team}, Cost $${cost}`);
+        
+        // Close modal
+        closeBuyinModal();
+        
+        // Call backend API
+        const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/purchase`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-API-Key': FBPHub.config.apiKey || ''
+            },
+            body: JSON.stringify({ 
+                team, 
+                round, 
+                cost,
+                purchased_by: currentUser 
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Purchase failed');
+        }
+        
+        const result = await response.json();
+        
+        // Show success message
+        if (typeof showToast === 'function') {
+            showToast(`Round ${round} buy-in purchased successfully!`, 'success');
+        } else {
+            alert(`Round ${round} buy-in purchased for $${cost}!`);
+        }
+        
+        // Reload data to reflect changes from backend
+        await loadDraftData();
+        displayKeeperDraft();
+        
+    } catch (error) {
+        console.error('Error processing buy-in:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+/**
+ * Show refund modal (admin only)
+ */
+window.showRefundModal = function(round, team) {
+    if (!isAdmin) {
+        alert('Admin access required');
+        return;
+    }
+    
+    const pick = keeperPicks.find(p => p.round === round && p.current_owner === team);
+    if (!pick || !pick.buyin_purchased) {
+        alert('This buy-in has not been purchased');
+        return;
+    }
+    
+    const cost = BUY_IN_COSTS[round];
+    
+    const modalBody = document.getElementById('refundModalBody');
+    modalBody.innerHTML = `
+        <div class="modal-info">
+            <p><strong>Refund Round ${round} Buy-In</strong></p>
+            <p>Team: <strong>${team}</strong></p>
+            <p>Refund Amount: <strong>$${cost}</strong></p>
+            ${pick.buyin_purchased_at ? `<p>Purchased: ${formatDate(pick.buyin_purchased_at)}</p>` : ''}
+        </div>
+        
+        <div class="modal-warning">
+            <strong>Administrator Action</strong>
+            <p>This will reverse the buy-in purchase and restore $${cost} to ${team}'s KAP balance.</p>
+        </div>
+    `;
+    
+    const confirmBtn = document.getElementById('confirmRefundBtn');
+    confirmBtn.onclick = () => confirmRefund(round, team, cost);
+    
+    document.getElementById('refundModal').classList.add('active');
+};
+
+/**
+ * Close refund modal
+ */
+window.closeRefundModal = function() {
+    document.getElementById('refundModal').classList.remove('active');
+};
+
+/**
+ * Confirm refund
+ */
+async function confirmRefund(round, team, cost) {
+    try {
+        console.log(`Processing refund: Round ${round}, Team ${team}, Amount $${cost}`);
+        
+        // Close modal
+        closeRefundModal();
+        
+        // Call backend API
+        const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/refund`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-API-Key': FBPHub.config.apiKey || ''
+            },
+            body: JSON.stringify({ 
+                team, 
+                round,
+                admin_user: currentUser 
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Refund failed');
+        }
+        
+        const result = await response.json();
+        
+        // Show success
+        if (typeof showToast === 'function') {
+            showToast(`Round ${round} buy-in refunded for ${team}`, 'success');
+        } else {
+            alert(`Refund processed: $${cost} restored to ${team}`);
+        }
+        
+        // Reload data to reflect changes from backend
+        await loadDraftData();
+        displayKeeperDraft();
+        
+    } catch (error) {
+        console.error('Error processing refund:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+
+/**
+ * Format date helper
+ */
+function formatDate(dateStr) {
+    if (typeof window.formatDate === 'function') {
+        return window.formatDate(dateStr);
+    }
+    const date = new Date(dateStr);
+    return date.toLocaleDateString();
 }
 
 // Make function available globally

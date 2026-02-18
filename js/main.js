@@ -18,7 +18,9 @@ const FBPHub = {
         githubRaw: 'https://raw.githubusercontent.com/zpressley/fbp-hub/main/data/',
         // Base URL for dynamic APIs (Cloudflare Worker → bot FastAPI)
         // Used by draft.html and js/draft.js for /api/draft/* endpoints.
-        apiBase: 'https://fbp-auth.zpressley.workers.dev'
+        apiBase: 'https://fbp-auth.zpressley.workers.dev',
+        // API key for backend authentication (should match BOT_API_KEY in fbp-trade-bot)
+        apiKey: 'tRXTQC42CJQNnKNPOyqzb5jQrVFq3S-7kTey9CgL8QQ'
     },
     cache: {
         lastUpdate: null
@@ -100,6 +102,9 @@ function setupNavigation() {
     // Setup user menu
     setupUserMenu();
     
+    // Setup draft dropdown
+    setupDraftDropdown();
+    
     // Highlight active page
     highlightActivePage();
 
@@ -167,6 +172,10 @@ function updateUserMenuForAuth() {
             <i class="fas fa-baseball-ball"></i>
             My Roster
         </a>
+        <a href="trade.html">
+            <i class="fas fa-handshake"></i>
+            Trade Portal
+        </a>
         <a href="pad.html">
             <i class="fas fa-receipt"></i>
             PAD
@@ -178,10 +187,6 @@ function updateUserMenuForAuth() {
         <a href="settings.html">
             <i class="fas fa-cog"></i>
             Settings
-        </a>
-        <a href="draft.html">
-            <i class="fas fa-table-list"></i>
-            Draft
         </a>
         <a href="draft-board.html">
             <i class="fas fa-clipboard-list"></i>
@@ -196,9 +201,9 @@ function updateUserMenuForAuth() {
                 <i class="fas fa-gavel"></i>
                 Auction
             </a>
-            <a href="draft-picks.html">
-                <i class="fas fa-list-ol"></i>
-                Draft Picks
+            <a href="season-dates.html">
+                <i class="fas fa-calendar-alt"></i>
+                Season Dates
             </a>
         ` : ''}
         <a href="#" id="headerLogout">
@@ -217,13 +222,43 @@ function updateUserMenuForAuth() {
 }
 
 /**
+ * Setup draft dropdown navigation
+ */
+function setupDraftDropdown() {
+    const dropdownToggle = document.getElementById('draftDropdownToggle');
+    const dropdownMenu = document.getElementById('draftDropdownMenu');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (!dropdownToggle || !dropdownMenu) return;
+    
+    // Toggle dropdown
+    dropdownToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownToggle.classList.toggle('open');
+        dropdownMenu.classList.toggle('active');
+    });
+    
+    // Close dropdown when clicking menu items on mobile
+    const dropdownItems = dropdownMenu.querySelectorAll('.nav-dropdown-item');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth < 768 && navMenu) {
+                navMenu.classList.remove('active');
+            }
+        });
+    });
+}
+
+/**
  * Highlight the active navigation link
  */
 function highlightActivePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link');
+    const draftPages = ['draft.html', 'draft-preview.html', 'draft-picks.html', 'draft-board.html'];
     const effectiveCurrent = currentPage === 'draft-board.html' ? 'draft.html' : currentPage;
     
+    // Handle regular nav links
     navLinks.forEach(link => {
         const linkPage = link.getAttribute('href').split('?')[0];
         link.classList.remove('active');
@@ -233,6 +268,24 @@ function highlightActivePage() {
             link.classList.add('active');
         }
     });
+    
+    // Handle draft dropdown items
+    const dropdownItems = document.querySelectorAll('.nav-dropdown-item');
+    const dropdownToggle = document.getElementById('draftDropdownToggle');
+    
+    dropdownItems.forEach(item => {
+        const itemPage = item.getAttribute('href').split('?')[0];
+        item.classList.remove('active');
+        
+        if (itemPage === currentPage) {
+            item.classList.add('active');
+        }
+    });
+    
+    // Mark dropdown toggle as active if on any draft page
+    if (dropdownToggle && draftPages.includes(currentPage)) {
+        dropdownToggle.classList.add('active');
+    }
 }
 
 /**
@@ -428,6 +481,11 @@ function initializePage(pageName) {
         case 'wizbucks':  // ADD THIS!
             if (typeof initWizBucksPage === 'function') {
                 initWizBucksPage();
+            }
+            break;
+        case 'trade':
+            if (typeof initTradePage === 'function') {
+                initTradePage();
             }
             break;
         case 'dashboard':
