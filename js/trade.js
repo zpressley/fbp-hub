@@ -17,7 +17,7 @@ let TRADE_STATE = {
     team2: null,
     team3: null,
   },
-  transfers: [], // {type:'player', upid, from_team, to_team} | {type:'wizbucks', amount, from_team, to_team}
+  transfers: [], // {type:'player', upid, from_team, to_team} | {type:'draft_pick', draft:'keeper', round, pick, from_team, to_team} | {type:'wizbucks', amount, from_team, to_team}
   currentToTeamKey: null,
   currentFromTeam: null,
   currentInboxTrade: null,
@@ -26,6 +26,11 @@ let TRADE_STATE = {
 let MANAGERS_CONFIG = null; // loaded from config/managers.json
 let PLAYER_PICKER_ROSTER = [];
 let PLAYER_PICKER_SELECTED = new Set();
+
+let DRAFT_ORDER_2026 = null;
+let KEEPER_PICKS = [];
+let PICK_PICKER_PICKS = [];
+let PICK_PICKER_SELECTED = new Set();
 
 function teamKeyToAbbr(teamKey) {
   return TRADE_STATE.teams[teamKey] || null;
@@ -63,6 +68,28 @@ async function loadManagersConfig() {
     MANAGERS_CONFIG = { teams: {} };
   }
   return MANAGERS_CONFIG;
+}
+
+async function loadDraftOrder2026() {
+  if (DRAFT_ORDER_2026) return DRAFT_ORDER_2026;
+
+  try {
+    let resp = await fetch('./data/draft_order_2026.json', { cache: 'no-store' });
+    if (!resp.ok && window.FBPHub?.config?.githubRaw) {
+      resp = await fetch(`${FBPHub.config.githubRaw}draft_order_2026.json`, { cache: 'no-store' });
+    }
+    if (!resp.ok) throw new Error('Failed to load data/draft_order_2026.json');
+
+    const json = await resp.json();
+    DRAFT_ORDER_2026 = Array.isArray(json) ? json : [];
+    KEEPER_PICKS = DRAFT_ORDER_2026.filter((p) => p && p.draft === 'keeper');
+  } catch (e) {
+    console.warn('Trade Portal: draft_order_2026.json unavailable; pick trading disabled until data is synced', e);
+    DRAFT_ORDER_2026 = [];
+    KEEPER_PICKS = [];
+  }
+
+  return DRAFT_ORDER_2026;
 }
 
 function getTeamName(teamAbbr) {
@@ -172,8 +199,10 @@ function setTeamSelectionDirect(teamKey, abbr) {
   TRADE_STATE.teams[teamKey] = normalized || null;
 
   const addPlayerBtn = document.getElementById(`${teamKey}AddPlayer`);
+  const addPickBtn = document.getElementById(`${teamKey}AddPick`);
   const addWBBtn = document.getElementById(`${teamKey}AddWB`);
   if (addPlayerBtn) addPlayerBtn.disabled = !TRADE_STATE.teams[teamKey];
+  if (addPickBtn) addPickBtn.disabled = !TRADE_STATE.teams[teamKey];
   if (addWBBtn) addWBBtn.disabled = !TRADE_STATE.teams[teamKey];
 }
 
@@ -228,6 +257,10 @@ function applyTradePrefillFromStorage() {
       ...t,
       type: t.type,
       upid: t.upid ? String(t.upid) : undefined,
+      amount: (t.amount !== undefined && t.amount !== null) ? parseInt(t.amount, 10) : undefined,
+      draft: t.draft,
+      round: (t.round !== undefined && t.round !== null) ? parseInt(t.round, 10) : undefined,
+      pick: (t.pick !== undefined && t.pick !== null) ? parseInt(t.pick, 10) : undefined,
       from_team: t.from_team ? String(t.from_team).toUpperCase() : undefined,
       to_team: t.to_team ? String(t.to_team).toUpperCase() : undefined,
     }))
@@ -255,8 +288,10 @@ function handleTeamSelect(teamKey) {
 
   // enable buttons
   const addPlayerBtn = document.getElementById(`${teamKey}AddPlayer`);
+  const addPickBtn = document.getElementById(`${teamKey}AddPick`);
   const addWBBtn = document.getElementById(`${teamKey}AddWB`);
   if (addPlayerBtn) addPlayerBtn.disabled = !TRADE_STATE.teams[teamKey];
+  if (addPickBtn) addPickBtn.disabled = !TRADE_STATE.teams[teamKey];
   if (addWBBtn) addWBBtn.disabled = !TRADE_STATE.teams[teamKey];
 
   // remove transfers for unselected teams
@@ -297,6 +332,11 @@ function formatTransferLabel(t) {
     const p = FBPHub.data.players.find((x) => String(x.upid) === String(t.upid));
     return p ? formatPlayerLabel(p) : `UPID ${t.upid}`;
   }
+  if (t.type === 'draft_pick') {
+    const r = parseInt(t.round, 10);
+    const k = parseInt(t.pick, 10);
+    return `Keeper Pick R${r} P${k} → ${t.to_team} (from ${t.from_team})`;
+  }
   if (t.type === 'wizbucks') {
     return `$${t.amount} WB → ${t.to_team} (from ${t.from_team})`;
   }
@@ -311,6 +351,20 @@ function renderTransferItem(t, idx, showRemove = true) {
       <div class="trade-asset-card">
         <div class="trade-asset-info">
           <div class="trade-asset-name">${label}</div>
+          <div class="trade-asset-meta"><span>from ${t.from_team}</span></div>
+        </div>
+        ${showRemove ? `<button class="btn-remove-asset" onclick="removeTransfer(${idx})"><i class="fas fa-times"></i></button>` : ''}
+      </div>
+    `;
+  }
+
+  if (t.type === 'draft_pick') {
+    const r = parseInt(t.round, 10);
+    const k = parseInt(t.pick, 10);
+    return `
+      <div class="trade-asset-card">
+        <div class="trade-asset-info">
+          <div class="trade-asset-name">Keeper Pick R${r} P${k}</div>
           <div class="trade-asset-meta"><span>from ${t.from_team}</span></div>
         </div>
         ${showRemove ? `<button class="btn-remove-asset" onclick="removeTransfer(${idx})"><i class="fas fa-times"></i></button>` : ''}
@@ -355,7 +409,7 @@ function displayTradeBuilder() {
       .filter(({ t }) => t.to_team === abbr);
 
     if (items.length === 0) {
-      list.innerHTML = '<div class="empty-trade-list">Add players or WizBucks...</div>';
+      list.innerHTML = '<div class="empty-trade-list">Add players, picks, or WizBucks...</div>';
       continue;
     }
 
@@ -588,6 +642,266 @@ function selectPlayer(upid) {
   updatePlayerPickerAddButton();
 }
 
+function pickKey(round, pick) {
+  return `${parseInt(round, 10)}:${parseInt(pick, 10)}`;
+}
+
+function loadPickPickerPicks() {
+  const fromTeam = TRADE_STATE.currentFromTeam;
+  if (!fromTeam) {
+    PICK_PICKER_PICKS = [];
+    return;
+  }
+
+  const upper = String(fromTeam).toUpperCase();
+  PICK_PICKER_PICKS = (KEEPER_PICKS || [])
+    .filter((p) => p && String(p.current_owner || '').toUpperCase() === upper)
+    .filter((p) => {
+      const r = parseInt(p.round, 10);
+      return r >= 1 && r <= 15;
+    })
+    .filter((p) => !p.taxed_out)
+    .filter((p) => !p.result)
+    .sort((a, b) => (parseInt(a.round, 10) - parseInt(b.round, 10)) || (parseInt(a.pick, 10) - parseInt(b.pick, 10)));
+}
+
+function showPickPicker(toTeamKey) {
+  const toTeamAbbr = teamKeyToAbbr(toTeamKey);
+  if (!toTeamAbbr) {
+    showToast('Select team first', 'error');
+    return;
+  }
+
+  if (!Array.isArray(KEEPER_PICKS) || KEEPER_PICKS.length === 0) {
+    showToast('Draft pick data not available yet. Sync draft_order_2026.json and refresh.', 'error');
+    return;
+  }
+
+  TRADE_STATE.currentToTeamKey = toTeamKey;
+  PICK_PICKER_SELECTED = new Set();
+
+  const fromOptions = getFromTeamOptionsFor(toTeamAbbr);
+  if (!fromOptions.length) {
+    showToast('Select another team first', 'error');
+    return;
+  }
+
+  const fromSelect = document.getElementById('pickPickerFromTeam');
+  if (!fromSelect) return;
+
+  fromSelect.innerHTML = fromOptions.map((abbr) => `<option value="${abbr}">${abbr} - ${getTeamName(abbr)}</option>`).join('');
+
+  // default from-team
+  TRADE_STATE.currentFromTeam = fromOptions[0] || null;
+  fromSelect.value = TRADE_STATE.currentFromTeam || '';
+
+  loadPickPickerPicks();
+
+  document.getElementById('pickPickerModal').classList.add('active');
+  document.getElementById('pickPickerSearch').value = '';
+  document.getElementById('pickPickerRoundFilter').value = 'all';
+  document.getElementById('pickPickerBuyinFilter').value = 'all';
+  displayPickPickerResults();
+  document.getElementById('pickPickerSearch').oninput = filterPickPicker;
+}
+
+function onPickPickerFromTeamChange() {
+  const el = document.getElementById('pickPickerFromTeam');
+  TRADE_STATE.currentFromTeam = el ? String(el.value || '').toUpperCase() : null;
+  PICK_PICKER_SELECTED = new Set();
+  loadPickPickerPicks();
+  filterPickPicker();
+  updatePickPickerAddButton();
+}
+
+function closePickPicker() {
+  document.getElementById('pickPickerModal').classList.remove('active');
+  PICK_PICKER_SELECTED = new Set();
+  updatePickPickerAddButton();
+}
+
+function filterPickPicker() {
+  const query = (document.getElementById('pickPickerSearch').value || '').toLowerCase().trim();
+  const roundFilter = document.getElementById('pickPickerRoundFilter').value;
+  const buyinFilter = document.getElementById('pickPickerBuyinFilter').value;
+
+  let filtered = PICK_PICKER_PICKS;
+
+  if (query) {
+    filtered = filtered.filter((p) => {
+      const r = parseInt(p.round, 10);
+      const k = parseInt(p.pick, 10);
+      const key = `r${r} p${k}`;
+      return key.includes(query) || String(r).includes(query) || String(k).includes(query);
+    });
+  }
+
+  if (roundFilter !== 'all') {
+    filtered = filtered.filter((p) => parseInt(p.round, 10) === parseInt(roundFilter, 10));
+  }
+
+  if (buyinFilter !== 'all') {
+    filtered = filtered.filter((p) => {
+      const r = parseInt(p.round, 10);
+      const purchased = !!p.buyin_purchased;
+      const required = !!p.buyin_required;
+
+      if (buyinFilter === 'needs_buyin') return r <= 3 && required && !purchased;
+      if (buyinFilter === 'buyin_purchased') return r <= 3 && required && purchased;
+      if (buyinFilter === 'no_buyin') return r > 3 || !required;
+      return true;
+    });
+  }
+
+  displayPickPickerResults(filtered);
+}
+
+function displayPickPickerResults(picks = PICK_PICKER_PICKS) {
+  const container = document.getElementById('pickPickerResults');
+  if (!container) return;
+
+  if (!picks.length) {
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No picks found</p></div>';
+    updatePickPickerAddButton();
+    return;
+  }
+
+  container.innerHTML = picks.map((p) => {
+    const r = parseInt(p.round, 10);
+    const k = parseInt(p.pick, 10);
+    const key = pickKey(r, k);
+
+    const alreadyInTrade = TRADE_STATE.transfers.some((t) => t.type === 'draft_pick' && parseInt(t.round, 10) === r && parseInt(t.pick, 10) === k);
+    const isChecked = PICK_PICKER_SELECTED.has(key);
+
+    const required = !!p.buyin_required;
+    const purchased = !!p.buyin_purchased;
+    const cost = p.buyin_cost;
+
+    let buyinTag = `<span class="pick-tag no-buyin">No Buy-In</span>`;
+    if (r <= 3 && required && !purchased) buyinTag = `<span class="pick-tag buyin-needed">Needs Buy-In ($${cost})</span>`;
+    if (r <= 3 && required && purchased) buyinTag = `<span class="pick-tag buyin-purchased">Buy-In Purchased</span>`;
+
+    const traded = !!p.traded || String(p.original_owner || '').toUpperCase() !== String(p.current_owner || '').toUpperCase();
+    const tradedTag = traded ? `<span class="pick-tag traded">Traded</span>` : '';
+
+    return `
+      <div class="pick-result-card ${alreadyInTrade ? 'disabled' : ''}" onclick="selectPick(${r}, ${k})">
+        <div class="pick-result-select">
+          <input
+            type="checkbox"
+            class="pick-select-checkbox"
+            data-pickkey="${key}"
+            ${alreadyInTrade ? 'disabled' : ''}
+            ${isChecked ? 'checked' : ''}
+            onclick="togglePickSelection(event, ${r}, ${k})"
+          />
+        </div>
+        <div class="pick-result-info">
+          <div class="pick-result-name">Keeper Pick R${r} P${k}</div>
+          <div class="pick-result-meta">
+            ${buyinTag}
+            ${tradedTag}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  updatePickPickerAddButton();
+}
+
+function togglePickSelection(evt, round, pick) {
+  try { evt.stopPropagation(); } catch (e) {}
+
+  const key = pickKey(round, pick);
+  if (TRADE_STATE.transfers.some((t) => t.type === 'draft_pick' && pickKey(t.round, t.pick) === key)) {
+    return;
+  }
+
+  if (PICK_PICKER_SELECTED.has(key)) {
+    PICK_PICKER_SELECTED.delete(key);
+  } else {
+    PICK_PICKER_SELECTED.add(key);
+  }
+
+  updatePickPickerAddButton();
+}
+
+function updatePickPickerAddButton() {
+  const btn = document.getElementById('pickPickerAddSelectedBtn');
+  if (!btn) return;
+
+  const count = PICK_PICKER_SELECTED.size;
+  btn.disabled = count === 0;
+  btn.innerHTML = `<i class="fas fa-check"></i> Add Selected${count ? ` (${count})` : ''}`;
+}
+
+function confirmSelectedPicks() {
+  const toTeamAbbr = teamKeyToAbbr(TRADE_STATE.currentToTeamKey);
+  const fromTeam = TRADE_STATE.currentFromTeam;
+
+  if (!toTeamAbbr || !fromTeam) {
+    showToast('Missing from/to team', 'error');
+    return;
+  }
+
+  const selected = Array.from(PICK_PICKER_SELECTED);
+  if (!selected.length) {
+    showToast('No picks selected', 'warning');
+    return;
+  }
+
+  let added = 0;
+  for (const key of selected) {
+    const parts = String(key).split(':');
+    const r = parseInt(parts[0], 10);
+    const k = parseInt(parts[1], 10);
+
+    if (TRADE_STATE.transfers.some((t) => t.type === 'draft_pick' && parseInt(t.round, 10) === r && parseInt(t.pick, 10) === k)) {
+      continue;
+    }
+
+    TRADE_STATE.transfers.push({
+      type: 'draft_pick',
+      draft: 'keeper',
+      round: r,
+      pick: k,
+      from_team: fromTeam,
+      to_team: toTeamAbbr,
+    });
+
+    added += 1;
+  }
+
+  PICK_PICKER_SELECTED = new Set();
+  closePickPicker();
+  displayTradeBuilder();
+  showToast(added ? `Added ${added} pick${added === 1 ? '' : 's'}` : 'No picks added', added ? 'success' : 'warning');
+}
+
+function selectPick(round, pick) {
+  const key = pickKey(round, pick);
+
+  if (TRADE_STATE.transfers.some((t) => t.type === 'draft_pick' && pickKey(t.round, t.pick) === key)) {
+    showToast('Pick already included in this trade', 'warning');
+    return;
+  }
+
+  if (PICK_PICKER_SELECTED.has(key)) {
+    PICK_PICKER_SELECTED.delete(key);
+  } else {
+    PICK_PICKER_SELECTED.add(key);
+  }
+
+  const cb = document.querySelector(`input.pick-select-checkbox[data-pickkey="${key}"]`);
+  if (cb && !cb.disabled) {
+    cb.checked = PICK_PICKER_SELECTED.has(key);
+  }
+
+  updatePickPickerAddButton();
+}
+
 function showWBPicker(toTeamKey) {
   const toTeamAbbr = teamKeyToAbbr(toTeamKey);
   if (!toTeamAbbr) {
@@ -684,6 +998,8 @@ function buildPreviewReceives() {
     if (t.type === 'player') {
       const p = FBPHub.data.players.find((x) => String(x.upid) === String(t.upid));
       receives[t.to_team].push(p ? formatPlayerLabel(p) : `UPID ${t.upid}`);
+    } else if (t.type === 'draft_pick') {
+      receives[t.to_team].push(`Keeper Pick R${parseInt(t.round, 10)} P${parseInt(t.pick, 10)} via ${t.from_team}`);
     } else if (t.type === 'wizbucks') {
       receives[t.to_team].push(`$${t.amount} WB via ${t.from_team}`);
     }
@@ -741,6 +1057,16 @@ async function submitTrade() {
       transfers: TRADE_STATE.transfers.map((t) => {
         if (t.type === 'player') {
           return { type: 'player', upid: t.upid, from_team: t.from_team, to_team: t.to_team };
+        }
+        if (t.type === 'draft_pick') {
+          return {
+            type: 'draft_pick',
+            draft: 'keeper',
+            round: parseInt(t.round, 10),
+            pick: parseInt(t.pick, 10),
+            from_team: t.from_team,
+            to_team: t.to_team,
+          };
         }
         return { type: 'wizbucks', amount: t.amount, from_team: t.from_team, to_team: t.to_team };
       }),
@@ -1298,6 +1624,7 @@ async function initTradePage() {
 
   await loadManagersConfig();
   await waitForHubReady();
+  await loadDraftOrder2026();
 
   TRADE_STATE.userTeam = authManager.getTeam();
   TRADE_STATE.teams.team1 = TRADE_STATE.userTeam.abbreviation;
@@ -1334,6 +1661,13 @@ window.selectPlayer = selectPlayer;
 window.togglePlayerSelection = togglePlayerSelection;
 window.confirmSelectedPlayers = confirmSelectedPlayers;
 window.onPlayerPickerFromTeamChange = onPlayerPickerFromTeamChange;
+window.showPickPicker = showPickPicker;
+window.closePickPicker = closePickPicker;
+window.filterPickPicker = filterPickPicker;
+window.selectPick = selectPick;
+window.togglePickSelection = togglePickSelection;
+window.confirmSelectedPicks = confirmSelectedPicks;
+window.onPickPickerFromTeamChange = onPickPickerFromTeamChange;
 window.showWBPicker = showWBPicker;
 window.closeWBPicker = closeWBPicker;
 window.confirmWB = confirmWB;

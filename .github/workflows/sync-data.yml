@@ -146,6 +146,8 @@ jobs:
           download_file "auction_current.json" || FAILED=$((FAILED + 1))
           download_file "yahoo_players.json" || FAILED=$((FAILED + 1))
           download_file "player_log.json" || FAILED=$((FAILED + 1))
+          # Draft order (prospect + keeper), required for Draft Picks page and Trade Portal pick trading
+          download_file "draft_order_2026.json" || FAILED=$((FAILED + 1))
           # Per-player season stats used by player-profile page
           download_file "player_stats.json" || FAILED=$((FAILED + 1))
 

@@ -562,6 +562,124 @@
     margin-top: var(--space-lg);
 }
 
+/* Pick Picker */
+.pick-picker-hint {
+    margin: var(--space-md) 0 var(--space-lg);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: var(--border-width) solid rgba(255, 182, 18, 0.35);
+    background: linear-gradient(135deg, rgba(255, 182, 18, 0.10), transparent);
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+    color: var(--text-white);
+}
+
+.pick-picker-hint i {
+    color: var(--accent-yellow);
+    margin-top: 2px;
+}
+
+.pick-picker-hint p {
+    margin: 0;
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+    line-height: 1.35;
+}
+
+.pick-picker-results {
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.pick-result-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pick-result-card:hover {
+    border-color: var(--primary-red);
+    background-color: rgba(239, 62, 66, 0.05);
+    transform: translateX(4px);
+}
+
+.pick-result-card.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.pick-result-select {
+    display: flex;
+    align-items: center;
+    padding-right: var(--space-md);
+}
+
+.pick-select-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-yellow);
+}
+
+.pick-result-info {
+    flex: 1;
+}
+
+.pick-result-name {
+    font-weight: 700;
+    color: var(--text-white);
+    margin-bottom: var(--space-xs);
+}
+
+.pick-result-meta {
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.pick-result-meta span {
+    padding: 2px 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+}
+
+.pick-tag {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pick-tag.buyin-needed {
+    border-color: rgba(255, 182, 18, 0.65);
+    color: var(--accent-yellow);
+}
+
+.pick-tag.buyin-purchased {
+    border-color: rgba(76, 175, 80, 0.65);
+    color: #4caf50;
+}
+
+.pick-tag.no-buyin {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-gray);
+}
+
+.pick-tag.traded {
+    border-color: rgba(239, 62, 66, 0.55);
+    color: var(--primary-red);
+}
+
 .player-result-select {
     display: flex;
     align-items: center;

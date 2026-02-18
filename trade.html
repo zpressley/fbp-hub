@@ -165,11 +165,14 @@
                                 <i class="fas fa-arrow-left"></i> YOU RECEIVE
                             </div>
                             <div class="trade-receives-list" id="team1ReceiveList">
-                                <div class="empty-trade-list">Add players or WizBucks...</div>
+                                <div class="empty-trade-list">Add players, picks, or WizBucks...</div>
                             </div>
                             <div class="trade-add-buttons">
                                 <button class="btn-add-asset" onclick="showPlayerPicker('team1')" id="team1AddPlayer">
                                     <i class="fas fa-plus"></i> Add Player
+                                </button>
+                                <button class="btn-add-asset" onclick="showPickPicker('team1')" id="team1AddPick">
+                                    <i class="fas fa-list-ol"></i> Add Pick
                                 </button>
                                 <button class="btn-add-asset" onclick="showWBPicker('team1')" id="team1AddWB">
                                     <i class="fas fa-coins"></i> Add WB
@@ -198,6 +201,9 @@
                                 <button class="btn-add-asset" onclick="showPlayerPicker('team2')" disabled id="team2AddPlayer">
                                     <i class="fas fa-plus"></i> Add Player
                                 </button>
+                                <button class="btn-add-asset" onclick="showPickPicker('team2')" disabled id="team2AddPick">
+                                    <i class="fas fa-list-ol"></i> Add Pick
+                                </button>
                                 <button class="btn-add-asset" onclick="showWBPicker('team2')" disabled id="team2AddWB">
                                     <i class="fas fa-coins"></i> Add WB
                                 </button>
@@ -224,6 +230,9 @@
                             <div class="trade-add-buttons">
                                 <button class="btn-add-asset" onclick="showPlayerPicker('team3')" disabled id="team3AddPlayer">
                                     <i class="fas fa-plus"></i> Add Player
+                                </button>
+                                <button class="btn-add-asset" onclick="showPickPicker('team3')" disabled id="team3AddPick">
+                                    <i class="fas fa-list-ol"></i> Add Pick
                                 </button>
                                 <button class="btn-add-asset" onclick="showWBPicker('team3')" disabled id="team3AddWB">
                                     <i class="fas fa-coins"></i> Add WB
@@ -361,6 +370,64 @@
                 <button class="btn-primary btn-full" onclick="confirmWB()">
                     <i class="fas fa-check"></i> Add WizBucks
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pick Picker Modal -->
+    <div class="modal" id="pickPickerModal">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h3>Select Keeper Picks</h3>
+                <button class="modal-close" onclick="closePickPicker()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>From Team</label>
+                    <select id="pickPickerFromTeam" class="team-select" onchange="onPickPickerFromTeamChange()"></select>
+                </div>
+                <div class="search-bar-inline">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="pickPickerSearch" placeholder="Search picks (e.g. R1, P5)...">
+                </div>
+                <div class="picker-filters">
+                    <select id="pickPickerRoundFilter" class="filter-select" onchange="filterPickPicker()">
+                        <option value="all">All Rounds (1–15)</option>
+                        <option value="1">Round 1</option>
+                        <option value="2">Round 2</option>
+                        <option value="3">Round 3</option>
+                        <option value="4">Round 4</option>
+                        <option value="5">Round 5</option>
+                        <option value="6">Round 6</option>
+                        <option value="7">Round 7</option>
+                        <option value="8">Round 8</option>
+                        <option value="9">Round 9</option>
+                        <option value="10">Round 10</option>
+                        <option value="11">Round 11</option>
+                        <option value="12">Round 12</option>
+                        <option value="13">Round 13</option>
+                        <option value="14">Round 14</option>
+                        <option value="15">Round 15</option>
+                    </select>
+                    <select id="pickPickerBuyinFilter" class="filter-select" onchange="filterPickPicker()">
+                        <option value="all">All Picks</option>
+                        <option value="needs_buyin">Needs Buy-In (R1–3)</option>
+                        <option value="buyin_purchased">Buy-In Purchased (R1–3)</option>
+                        <option value="no_buyin">No Buy-In (R4–15)</option>
+                    </select>
+                </div>
+                <div class="pick-picker-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Rounds 1–3 require buy-in. If the pick is traded away without buy-in, the sending team will be auto-charged at admin approval.</p>
+                </div>
+                <div class="pick-picker-results" id="pickPickerResults"></div>
+                <div class="player-picker-actions">
+                    <button class="btn-primary btn-full" onclick="confirmSelectedPicks()" id="pickPickerAddSelectedBtn" disabled>
+                        <i class="fas fa-check"></i> Add Selected
+                    </button>
+                </div>
             </div>
         </div>
     </div>
