@@ -57,13 +57,30 @@ const taxable = buyinSpend + freeAgentSpend + contractSpend + ...;
 
 ## Buy-In Purchase Flow
 
+### ⚠️ Buy-Ins = Only Immediate KAP Purchase
+Buy-ins are the **ONLY** KAP action that causes an immediate wallet deduction. All other KAP spending (keeper selections, tax calculations, draft preview) is staged until final "Submit KAP" button.
+
+**Buy-In Flow:**
+1. Manager clicks "Purchase" on buy-in card
+2. Confirmation modal appears with warnings
+3. "This is immediate and NON-REFUNDABLE"
+4. Manager confirms → **Wallet deducted immediately**
+5. Backend updates all data files
+6. Discord notification posted
+7. Success toast shown
+
+**Everything Else in KAP:**
+- Preview and calculate only
+- No wallet changes until "Submit KAP"
+- Managers can adjust freely
+
 ### Before Purchase
 ```
 Wallet Balance: $375
 Buy-In Cost: $55
 ```
 
-### After Purchase
+### After Purchase (Immediate)
 ```
 Wallet Balance: $320 (375 - 55)
 Taxable Spend: +$55
@@ -99,9 +116,9 @@ Taxable Spend: +$55
 }
 ```
 
-## KAP Submission
+## KAP Submission (Final "Submit KAP" Button)
 
-When a manager submits their KAP:
+When a manager clicks the final **"Submit KAP"** button:
 
 1. **Validate spending**
    - Check if remaining balance ≥ 0
@@ -109,24 +126,29 @@ When a manager submits their KAP:
    - Check if they have required draft picks
 
 2. **Apply transactions**
-   - All purchases already deducted from wallet
-   - No additional balance changes needed
-   - Just mark draft picks as taxed
+   - **Buy-in purchases already deducted** (happened earlier)
+   - No additional balance changes needed for buy-ins
+   - Finalize keeper selections
+   - Apply any other staged changes
 
 3. **Finalize**
    - Lock KAP submission
    - Update draft_order_2026.json with taxed picks
    - Log final state
+   - Mark KAP as complete
+
+**Note:** By the time they click "Submit KAP", buy-ins have already been paid for. This button just finalizes everything else.
 
 ## Transaction Types
 
 All transactions deduct from the same wallet:
 
-### Buy-Ins (Taxable)
+### Buy-Ins (Taxable) - IMMEDIATE in KAP
 ```
 Amount: -$55, -$35, or -$10
 Type: "draft_pick_buyin"
-Effect: Immediate deduction
+Effect: Immediate deduction with confirmation modal
+Timing: During KAP, independent of "Submit KAP" button
 ```
 
 ### Free Agent Signings (Taxable)
@@ -249,10 +271,14 @@ Error: "Could not load WizBucks balance. Please refresh."
 
 ## Summary
 
-✅ **One wallet** - data/wizbucks.json
-✅ **Immediate deductions** - all purchases happen now  
+✅ **One wallet** - data/wizbucks.json  
+✅ **Buy-ins = only immediate KAP purchase** - with confirmation modal protection  
+✅ **Everything else staged** - preview/calculate until "Submit KAP"  
 ✅ **Taxable vs Non-Taxable** - calculated separately  
 ✅ **Manual management** - commissioners edit JSON directly  
 ✅ **Transaction log** - optional but recommended for transparency  
 
-**Key Point:** KAP doesn't have its own currency system. It's just a UI for spending WizBucks during a specific period (Keeper Allocation Period).
+**Key Points:**
+- KAP doesn't have its own currency system - it's just a UI for spending WizBucks during the Keeper Allocation Period
+- Buy-ins are the ONLY mid-stream purchase with confirmation modal
+- All other KAP actions are staged/preview until final submission
