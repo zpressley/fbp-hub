@@ -61,41 +61,36 @@ async function loadBuyinStatus() {
 }
 
 /**
- * Display buy-in cards
+ * Display buy-in cards - Updates existing HTML elements
  */
 function displayBuyinCards() {
-    const container = document.getElementById('buyinCardsContainer');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
     [1, 2, 3].forEach(round => {
         const status = buyinStatus[round];
-        const card = createBuyinCard(round, status);
-        container.appendChild(card);
-    });
-}
-
-/**
- * Create buy-in card
- */
-function createBuyinCard(round, status) {
-    const card = document.createElement('div');
-    card.className = 'buyin-card';
-    
-    card.innerHTML = `
-        <h3>Round ${round}</h3>
-        <div class="buyin-cost">$${status.cost}</div>
-        <div class="buyin-status">${status.purchased ? 'Already Purchased' : 'Not Purchased'}</div>
-        ${status.purchased ? 
-            '<button class="buyin-btn purchased" disabled><i class="fas fa-check-circle"></i> Purchased</button>' :
-            `<button class="buyin-btn" onclick="purchaseBuyinFromKAP(${round}, ${status.cost})">
-                <i class="fas fa-shopping-cart"></i> Purchase
-            </button>`
+        const statusEl = document.getElementById(`buyin${round}Status`);
+        const btnEl = document.getElementById(`buyin${round}Btn`);
+        const cardEl = btnEl?.closest('.buyin-card');
+        
+        if (!statusEl || !btnEl) return;
+        
+        if (status.purchased) {
+            statusEl.textContent = 'Already Purchased';
+            statusEl.classList.add('active');
+            btnEl.classList.add('purchased');
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<i class="fas fa-check-circle"></i> Purchased';
+            cardEl?.classList.add('purchased');
+        } else {
+            statusEl.textContent = 'Not Purchased';
+            statusEl.classList.remove('active');
+            btnEl.classList.remove('purchased');
+            btnEl.disabled = false;
+            btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
+            cardEl?.classList.remove('purchased');
+            
+            // Attach click handler
+            btnEl.onclick = () => purchaseBuyinFromKAP(round, status.cost);
         }
-    `;
-    
-    return card;
+    });
 }
 
 /**
@@ -263,7 +258,11 @@ function updateTaxableSpendFromBuyins() {
  * Get WizBucks balance from wallet
  */
 function getKAPBalance() {
-    // Get current WizBucks from manager's wallet
+    // Try to get from KAP_STATE first
+    if (typeof KAP_STATE !== 'undefined' && KAP_STATE.totalAvailable) {
+        return KAP_STATE.totalAvailable;
+    }
+    // Fallback to window.kapState
     return window.kapState?.wizbucksBalance || 0;
 }
 
@@ -271,7 +270,10 @@ function getKAPBalance() {
  * Calculate other taxable spend (to be implemented by main KAP form)
  */
 function calculateOtherTaxableSpend() {
-    // This should be implemented in the main KAP.js file
+    // Get from KAP_STATE if available
+    if (typeof KAP_STATE !== 'undefined' && typeof calculateTaxableSpend === 'function') {
+        return calculateTaxableSpend() - getTotalBuyinSpend(); // Exclude buy-ins already counted
+    }
     // Returns taxable spend from other sources (FA, contracts, etc.)
     return window.kapState?.otherTaxableSpend || 0;
 }

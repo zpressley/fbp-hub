@@ -13,6 +13,7 @@
     <meta name="theme-color" content="#EF3E42">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/kap.css">
+    <link rel="stylesheet" href="css/kap-calculator.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -274,7 +275,7 @@
                             <div class="buyin-cost">$55</div>
                         </div>
                         <div class="buyin-status" id="buyin1Status">Not Purchased</div>
-                        <button class="btn-buyin" id="buyin1Btn" onclick="toggleBuyIn(1, 55)">
+                        <button class="btn-buyin" id="buyin1Btn" data-round="1" data-cost="55">
                             <i class="fas fa-shopping-cart"></i> Purchase
                         </button>
                     </div>
@@ -285,7 +286,7 @@
                             <div class="buyin-cost">$35</div>
                         </div>
                         <div class="buyin-status" id="buyin2Status">Not Purchased</div>
-                        <button class="btn-buyin" id="buyin2Btn" onclick="toggleBuyIn(2, 35)">
+                        <button class="btn-buyin" id="buyin2Btn" data-round="2" data-cost="35">
                             <i class="fas fa-shopping-cart"></i> Purchase
                         </button>
                     </div>
@@ -296,7 +297,7 @@
                             <div class="buyin-cost">$10</div>
                         </div>
                         <div class="buyin-status" id="buyin3Status">Not Purchased</div>
-                        <button class="btn-buyin" id="buyin3Btn" onclick="toggleBuyIn(3, 10)">
+                        <button class="btn-buyin" id="buyin3Btn" data-round="3" data-cost="10">
                             <i class="fas fa-shopping-cart"></i> Purchase
                         </button>
                     </div>
@@ -478,6 +479,7 @@
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/player-profile.js"></script>
+    <script src="js/kap-buyin-integration.js"></script>
     <script src="js/kap.js"></script>
 </body>
 </html>

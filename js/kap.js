@@ -148,7 +148,11 @@ async function initKAPPage() {
     displayKeepers();
     displayILTags();
     displayRaT();
-    displayBuyIns();
+    
+    // Initialize buy-ins (loads from draft_order_2026.json)
+    if (typeof initKAPBuyins === 'function') {
+        await initKAPBuyins(KAP_STATE.team);
+    }
     
     // Make step circles clickable
     document.querySelectorAll('.progress-step').forEach((stepEl, index) => {
@@ -566,7 +570,12 @@ function getSelectedKeeperSlots() {
 
 function calculateTaxableSpend() {
     const salaryCost = calculateKeeperSalaryCost();
-    const buyInCost = (KAP_STATE.buyIns[1] ? 55 : 0) + (KAP_STATE.buyIns[2] ? 35 : 0) + (KAP_STATE.buyIns[3] ? 10 : 0);
+    
+    // Get buy-in cost from kap-buyin-integration.js if available
+    const buyInCost = (typeof getTotalBuyinSpend === 'function') 
+        ? getTotalBuyinSpend() 
+        : (KAP_STATE.buyIns[1] ? 55 : 0) + (KAP_STATE.buyIns[2] ? 35 : 0) + (KAP_STATE.buyIns[3] ? 10 : 0);
+    
     return salaryCost + buyInCost;
 }
 
@@ -933,56 +942,22 @@ function toggleRaT(upid) {
 }
 
 /**
- * Display buy-ins
+ * Display buy-ins - DEPRECATED
+ * Now handled by kap-buyin-integration.js
  */
 function displayBuyIns() {
-    [1, 2, 3].forEach(round => {
-        const isPurchased = KAP_STATE.buyIns[round];
-        const statusEl = document.getElementById(`buyin${round}Status`);
-        const btnEl = document.getElementById(`buyin${round}Btn`);
-        
-        if (isPurchased) {
-            statusEl.textContent = 'Purchased';
-            statusEl.classList.add('active');
-            btnEl.classList.add('purchased');
-            btnEl.innerHTML = '<i class="fas fa-check"></i> Purchased (Click to Remove)';
-        } else {
-            statusEl.textContent = 'Not Purchased';
-            statusEl.classList.remove('active');
-            btnEl.classList.remove('purchased');
-            btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
-        }
-        
-        const card = btnEl.closest('.buyin-card');
-        card.classList.toggle('purchased', isPurchased);
-    });
+    // This function is deprecated - buy-ins are now handled by initKAPBuyins()
+    // Kept for backwards compatibility during transition
 }
 
 /**
- * Toggle buy-in
+ * Toggle buy-in - DEPRECATED
+ * Now handled by kap-buyin-integration.js
  */
 function toggleBuyIn(round, cost) {
-    const isPurchased = KAP_STATE.buyIns[round];
-    
-    if (!isPurchased) {
-        // Purchase
-        const remaining = KAP_STATE.totalAvailable - calculateTotalSpend();
-        if (remaining < cost) {
-            showToast(`Insufficient KAP balance ($${cost} required)`, 'error');
-            return;
-        }
-        
-        KAP_STATE.buyIns[round] = true;
-        showToast(`Round ${round} buy-in purchased`, 'success');
-    } else {
-        // Remove
-        KAP_STATE.buyIns[round] = false;
-        showToast(`Round ${round} buy-in removed`, 'success');
-    }
-    
-    updateKAPBudgetDisplay();
-    displayBuyIns();
-    saveDraft();
+    // This function is deprecated - buy-ins are now handled by kap-buyin-integration.js
+    // Click handlers are attached in initKAPBuyins()
+    console.warn('toggleBuyIn() called but is deprecated - use kap-buyin-integration.js');
 }
 
 /**
