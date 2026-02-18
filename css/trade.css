@@ -150,7 +150,12 @@
 }
 
 .trade-builder-grid.three-team {
-    grid-template-columns: repeat(3, 1fr);
+    /* Desktop: 2-up with the 3rd team full-width below (3 columns doesn't fit well) */
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.trade-builder-grid.three-team #team3Column {
+    grid-column: 1 / -1;
 }
 
 .trade-column {

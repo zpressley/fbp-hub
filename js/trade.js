@@ -381,6 +381,11 @@ function showPlayerPicker(toTeamKey) {
   PLAYER_PICKER_SELECTED = new Set();
 
   const fromOptions = getFromTeamOptionsFor(toTeamAbbr);
+  if (!fromOptions.length) {
+    showToast('Select another team first', 'error');
+    return;
+  }
+
   const fromSelect = document.getElementById('playerPickerFromTeam');
   if (!fromSelect) return;
 
@@ -593,6 +598,11 @@ function showWBPicker(toTeamKey) {
   TRADE_STATE.currentToTeamKey = toTeamKey;
 
   const fromOptions = getFromTeamOptionsFor(toTeamAbbr);
+  if (!fromOptions.length) {
+    showToast('Select another team first', 'error');
+    return;
+  }
+
   const fromSelect = document.getElementById('wbFromTeam');
   if (!fromSelect) return;
 
@@ -719,7 +729,9 @@ function closePreview() {
 async function submitTrade() {
   const btn = document.getElementById('confirmSubmitBtn');
   btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+  let didSend = false;
 
   try {
     const teams = activeTeamKeys().map((k) => teamKeyToAbbr(k)).filter(Boolean);
@@ -749,7 +761,12 @@ async function submitTrade() {
       throw new Error(data.detail || data.error || 'Trade submission failed');
     }
 
+    didSend = true;
+
+    // Close immediately on success (some browsers can fail to repaint if we wait
+    // for downstream UI updates).
     closePreview();
+
     showToast('✅ Trade sent! Check Discord for the approval thread.', 'success');
 
     resetTradeStateButKeepTeams();
@@ -760,6 +777,11 @@ async function submitTrade() {
     console.error('Trade submit failed', e);
     showToast(`Submission failed: ${e.message}`, 'error');
   } finally {
+    // Safety: ensure preview is not left open after a successful send.
+    if (didSend) {
+      try { closePreview(); } catch (e) {}
+    }
+
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
   }
@@ -941,6 +963,10 @@ function displayTradeInbox(trades) {
     const myTeam = TRADE_STATE.userTeam.abbreviation;
     const myReceives = (trade.receives && trade.receives[myTeam]) ? trade.receives[myTeam] : [];
 
+    const transfers = trade.transfers || [];
+    const youSend = transfers.filter((t) => String(t?.from_team || '').toUpperCase() === myTeam);
+    const sendLines = youSend.map((t) => formatTransferLabel(t)).filter(Boolean);
+
     return `
       <div class="trade-card">
         <div class="trade-card-header">
@@ -957,6 +983,12 @@ function displayTradeInbox(trades) {
             <h4>You receive (preview):</h4>
             <ul>
               ${myReceives.length ? myReceives.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
+            </ul>
+          </div>
+          <div class="trade-card-team">
+            <h4>You send (preview):</h4>
+            <ul>
+              ${sendLines.length ? sendLines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
             </ul>
           </div>
         </div>
