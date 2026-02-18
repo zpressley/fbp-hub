@@ -506,7 +506,7 @@ function previewTrade() {
       <div class="trade-preview-column">
         <h4>${abbr} - ${getTeamName(abbr)}</h4>
         <div class="trade-preview-section get">
-          <h5><i class="fas fa-arrow-left"></i> Receives</h5>
+          <h5><i class="fas fa-arrow-left"></i> GET</h5>
           <ul>
             ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
           </ul>
@@ -603,7 +603,7 @@ async function loadTradeQueue() {
     document.getElementById('tradeQueueList').innerHTML = `
       <div class="empty-state">
         <i class="fas fa-exclamation-triangle"></i>
-        <p>Error loading sent trades</p>
+        <p>Error loading offers</p>
       </div>
     `;
   }
@@ -616,7 +616,7 @@ function displayTradeQueue(trades) {
     container.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-paper-plane"></i>
-        <p>No sent trades</p>
+        <p>No active offers</p>
       </div>
     `;
     return;
@@ -667,7 +667,7 @@ function renderReceivesBlocks(receives) {
     const lines = receives[abbr] || [];
     return `
       <div class="trade-card-team">
-        <h4>${abbr} receives:</h4>
+        <h4>${abbr} gets:</h4>
         <ul>
           ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
         </ul>
@@ -768,7 +768,7 @@ function displayTradeInbox(trades) {
         </div>
         <div class="trade-card-body">
           <div class="trade-card-team">
-            <h4>You receive:</h4>
+            <h4>You get:</h4>
             <ul>
               ${myReceives.length ? myReceives.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
             </ul>
@@ -812,7 +812,7 @@ async function viewInboxTrade(tradeId) {
         <div class="trade-preview-column">
           <h4>${abbr} - ${getTeamName(abbr)}</h4>
           <div class="trade-preview-section get">
-            <h5><i class="fas fa-arrow-left"></i> Receives</h5>
+            <h5><i class="fas fa-arrow-left"></i> GET</h5>
             <ul>
               ${lines.length ? lines.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
             </ul>
@@ -847,7 +847,7 @@ function acceptInboxTrade() {
 
   document.getElementById('acceptConfirmSummary').innerHTML = `
     <div class="trade-preview-section get">
-      <h5>You will receive:</h5>
+      <h5>You will get:</h5>
       <ul>
         ${myReceives.length ? myReceives.map((l) => `<li>${l}</li>`).join('') : '<li style="color: var(--text-gray)">Nothing</li>'}
       </ul>
