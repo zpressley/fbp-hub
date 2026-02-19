@@ -132,10 +132,12 @@ function _buyinAuthHeaders() {
 }
 
 function getKAPPurchaseBalance() {
-    // Buy-in API validates against managers.json KAP balance (allotments.KAP.total)
+    // Buy-in purchases deduct from actual wallet balance.
+    // Must use totalAvailable (which tracks actual current balance after buy-ins),
+    // NOT kapAllotment (which is just the base $375).
     try {
-        if (typeof KAP_STATE !== 'undefined' && typeof KAP_STATE.kapAllotment === 'number') {
-            return KAP_STATE.kapAllotment;
+        if (typeof KAP_STATE !== 'undefined' && typeof KAP_STATE.totalAvailable === 'number') {
+            return KAP_STATE.totalAvailable;
         }
     } catch (e) {}
 
@@ -242,9 +244,18 @@ window.confirmBuyinPurchase = async function(round, cost) {
         try {
             if (typeof KAP_STATE !== 'undefined') {
                 if (typeof result?.new_balance === 'number') {
+                    // Backend returns the NEW balance after deduction.
+                    // Update totalAvailable to track actual current wallet balance.
+                    KAP_STATE.totalAvailable = result.new_balance;
+                    
+                    // Also update kapAllotment for compatibility (though totalAvailable is the source of truth)
                     KAP_STATE.kapAllotment = result.new_balance;
-                    KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + (KAP_STATE.rolloverFromPAD || 0);
+                } else {
+                    // Fallback: manually deduct if backend doesn't return new balance
+                    KAP_STATE.totalAvailable -= cost;
+                    KAP_STATE.kapAllotment -= cost;
                 }
+                
                 if (KAP_STATE.buyIns && typeof KAP_STATE.buyIns === 'object') {
                     KAP_STATE.buyIns[round] = true;
                 }
