@@ -90,9 +90,23 @@ export default {
         return await proxyToBot('/api/draft/prospect/state', env);
       }
 
+      // --- Buy-In APIs (NEW) ---
+      if (path === '/api/buyin/purchase' && request.method === 'POST') {
+        return await proxyToBot('/api/buyin/purchase', env, request);
+      }
+
+      if (path === '/api/buyin/refund' && request.method === 'POST') {
+        return await proxyToBot('/api/buyin/refund', env, request);
+      }
+
       // --- PAD submission ---
       if (path === '/api/pad/submit' && request.method === 'POST') {
         return await proxyToBot('/api/pad/submit', env, request);
+      }
+
+      // --- KAP submission ---
+      if (path === '/api/kap/submit' && request.method === 'POST') {
+        return await proxyToBot('/api/kap/submit', env, request);
       }
 
       // --- Auction APIs ---

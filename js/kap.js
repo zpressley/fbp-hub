@@ -25,17 +25,18 @@ const IL_DISCOUNTS = {
 };
 
 // Contract advancement rules
+// Progression: TC-R → TC-1 → TC-2 → VC-1 → VC-2 → FC-1 → FC-2+
+// Blue Chip exception: TC-BC-1 → TC-BC-2 → TC-1 (then follows normal progression)
 const CONTRACT_ADVANCEMENT = {
     'TC-R': 'TC-1',
-    'TC-BC-1': 'TC-BC-2',
-    'TC-BC-2': 'TC-1',
+    'TC-BC-1': 'TC-BC-2',  // Blue Chip year 1
+    'TC-BC-2': 'TC-1',     // Blue Chip year 2 → enters normal progression
     'TC-1': 'TC-2',
-    'TC-2': 'TC-2', // Stays
+    'TC-2': 'VC-1',
     'VC-1': 'VC-2',
-    'VC-2': 'VC-2', // Stays
-    'FC-1': 'FC-2',
-    'FC-2': 'FC-2+',
-    'FC-2+': 'FC-2+'
+    'VC-2': 'FC-1',
+    'FC-1': 'FC-2+',
+    'FC-2+': 'FC-2+'       // Terminal tier
 };
 
 // RaT tier reduction
