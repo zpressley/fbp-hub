@@ -6,6 +6,17 @@
 
 set -e  # Exit on error
 
+# Files to exclude from commits (auto-synced from fbp-trade-bot)
+EXCLUDE_FILES=(
+    "data/draft_order_2026.json"
+    "data/combined_players.json"
+    "data/standings.json"
+    "data/wizbucks.json"
+    "data/wizbucks_transactions.json"
+    "data/player_log.json"
+    "data/service_stats.json"
+)
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -17,15 +28,59 @@ echo -e "${BLUE}📦 FBP Hub - Quick Commit${NC}"
 echo "================================"
 echo ""
 
-# Check if there are changes
-if [[ -z $(git status -s) ]]; then
-    echo -e "${YELLOW}⚠️  No changes to commit${NC}"
+# Unstage excluded files if they were staged
+for file in "${EXCLUDE_FILES[@]}"; do
+    if git diff --cached --name-only | grep -q "^$file$"; then
+        git restore --staged "$file" 2>/dev/null || true
+    fi
+done
+
+# Check if there are changes (excluding auto-synced files)
+HAS_CHANGES=false
+while IFS= read -r file; do
+    # Skip if file is in exclude list
+    is_excluded=false
+    for exclude in "${EXCLUDE_FILES[@]}"; do
+        if [[ "$file" == "$exclude" ]]; then
+            is_excluded=true
+            break
+        fi
+    done
+    
+    if [[ "$is_excluded" == false ]]; then
+        HAS_CHANGES=true
+        break
+    fi
+done < <(git status -s | awk '{print $2}')
+
+if [[ "$HAS_CHANGES" == false ]]; then
+    echo -e "${YELLOW}⚠️  No changes to commit (excluding auto-synced data files)${NC}"
+    if [[ -n $(git status -s) ]]; then
+        echo -e "${YELLOW}💡 Only auto-synced data files have changed. These are managed by the sync workflow.${NC}"
+    fi
     exit 0
 fi
 
-# Show what will be committed
+# Show what will be committed (excluding auto-synced files)
 echo -e "${BLUE}📋 Files changed:${NC}"
-git status -s
+while IFS= read -r line; do
+    file=$(echo "$line" | awk '{print $2}')
+    is_excluded=false
+    for exclude in "${EXCLUDE_FILES[@]}"; do
+        if [[ "$file" == "$exclude" ]]; then
+            is_excluded=true
+            break
+        fi
+    done
+    
+    if [[ "$is_excluded" == false ]]; then
+        echo "$line"
+    fi
+done < <(git status -s)
+
+if [[ -n $(git status -s | grep -E "$(IFS='|'; echo "${EXCLUDE_FILES[*]}")" 2>/dev/null) ]]; then
+    echo -e "${YELLOW}⚠️  Excluding auto-synced data files (managed by workflow)${NC}"
+fi
 echo ""
 
 # Ask for confirmation
@@ -47,10 +102,15 @@ if [[ -z "$commit_message" ]]; then
     exit 1
 fi
 
-# Add all changes
+# Add changes (excluding auto-synced files)
 echo ""
-echo -e "${GREEN}📦 Adding all changes...${NC}"
+echo -e "${GREEN}📦 Adding changes...${NC}"
 git add .
+
+# Unstage excluded files
+for file in "${EXCLUDE_FILES[@]}"; do
+    git restore --staged "$file" 2>/dev/null || true
+done
 
 # Commit
 echo -e "${GREEN}💾 Committing...${NC}"
