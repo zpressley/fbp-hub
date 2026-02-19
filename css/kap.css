@@ -233,7 +233,23 @@
 
 .pick-summary-row.traded {
     border-left: 3px solid var(--primary-red);
-    color: var(--primary-red);
+}
+
+.pick-summary-row.removed {
+    opacity: 0.4;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.pick-summary-row.taxed {
+    background-color: rgba(255, 61, 61, 0.1);
+    border-color: var(--primary-red);
+    opacity: 0.6;
+}
+
+.pick-summary-row.final {
+    border-color: var(--success);
+    border-left: 3px solid var(--success);
 }
 
 .pick-summary-label {
@@ -253,6 +269,42 @@
     text-align: center;
     color: var(--text-white);
     font-family: var(--font-body);
+}
+
+/* Draft Picks Sections */
+.picks-section {
+    margin-bottom: var(--space-lg);
+}
+
+.picks-section h5 {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.picks-section.removed h5 {
+    color: var(--text-gray);
+}
+
+.picks-section.taxed h5 {
+    color: var(--primary-red);
+}
+
+.picks-section.final h5 {
+    color: var(--success);
+}
+
+.picks-section .section-note {
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    margin-bottom: var(--space-sm);
+    font-style: italic;
 }
 
 /* KAP Steps */

@@ -952,7 +952,7 @@ function displayBuyIns() {
 }
 
 /**
- * Load and display draft picks summary
+ * Load and display draft picks summary with live calculation
  */
 async function loadDraftPicksSummary() {
     const container = document.getElementById('summaryDraftPicks');
@@ -977,38 +977,118 @@ async function loadDraftPicksSummary() {
         // Sort by round
         teamPicks.sort((a, b) => a.round - b.round);
         
-        // Display in compact list format: R# - P# (Overall) [Status]
-        const picksHTML = teamPicks.map(pick => {
-            const isEliminated = pick.taxed_out || false;
-            const traded = pick.traded || (pick.current_owner !== pick.original_owner);
-            
-            let statusClass = '';
-            let statusText = '';
-            
-            if (isEliminated) {
-                statusClass = 'eliminated';
-                statusText = 'Taxed Out';
-            } else if (traded) {
-                statusClass = 'traded';
-                statusText = `from ${pick.original_owner}`;
+        // STEP 1: Filter out rounds 1-3 where buyin_purchased=false
+        const buyinFilteredPicks = [];
+        const buyinRemovedPicks = [];
+        
+        teamPicks.forEach(pick => {
+            if ([1, 2, 3].includes(pick.round) && !pick.buyin_purchased) {
+                buyinRemovedPicks.push(pick);
+            } else {
+                buyinFilteredPicks.push(pick);
             }
-            
-            return `
-                <div class="pick-summary-row ${statusClass}">
-                    <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
-                    ${statusText ? `<span class="pick-summary-status">${statusText}</span>` : ''}
+        });
+        
+        // STEP 2: Calculate picks needed based on keeper count
+        const keeperCount = KAP_STATE.selectedKeepers.length;
+        const picksNeeded = 26 - keeperCount;
+        
+        // STEP 3: Take first N picks (drop last picks based on roster limit)
+        const availablePicks = buyinFilteredPicks.slice(0, picksNeeded);
+        const rosterRemovedPicks = buyinFilteredPicks.slice(picksNeeded);
+        
+        // STEP 4: Apply tax bracket to available picks
+        const taxableSpend = calculateTaxableSpend();
+        const taxBracket = calculateTaxBracket(taxableSpend);
+        const taxedRounds = taxBracket.rounds || [];
+        
+        const finalPicks = [];
+        const taxedPicks = [];
+        
+        availablePicks.forEach(pick => {
+            if (taxedRounds.includes(pick.round)) {
+                taxedPicks.push(pick);
+            } else {
+                finalPicks.push(pick);
+            }
+        });
+        
+        // Display in compact list format with sections
+        let html = '';
+        
+        // Section 1: Buy-in removed (if any)
+        if (buyinRemovedPicks.length > 0) {
+            html += `
+                <div class="picks-section removed">
+                    <h5><i class="fas fa-shopping-cart"></i> Excluded - Buy-In Not Purchased</h5>
+                    ${buyinRemovedPicks.map(pick => `
+                        <div class="pick-summary-row removed">
+                            <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
+                            <span class="pick-summary-status">Buy-in needed</span>
+                        </div>
+                    `).join('')}
                 </div>
             `;
-        }).join('');
+        }
         
-        container.innerHTML = `
-            <div class="picks-summary-list">
-                ${picksHTML}
-            </div>
-            <div class="picks-summary-footer">
-                <strong>Total Picks:</strong> ${teamPicks.filter(p => !p.taxed_out).length} available
+        // Section 2: Roster limit removed (if any)
+        if (rosterRemovedPicks.length > 0) {
+            html += `
+                <div class="picks-section removed">
+                    <h5><i class="fas fa-times-circle"></i> Excluded - Roster Limit</h5>
+                    <p class="section-note">With ${keeperCount} keepers, you need ${picksNeeded} picks. ${rosterRemovedPicks.length} pick(s) dropped from the end.</p>
+                    ${rosterRemovedPicks.map(pick => `
+                        <div class="pick-summary-row removed">
+                            <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
+                            <span class="pick-summary-status">Excess pick</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Section 3: Taxed picks (if any)
+        if (taxedPicks.length > 0) {
+            html += `
+                <div class="picks-section taxed">
+                    <h5><i class="fas fa-exclamation-triangle"></i> Taxed Out - $${taxableSpend} Bracket</h5>
+                    <p class="section-note">Lose Rounds ${taxedRounds.join(', ')}</p>
+                    ${taxedPicks.map(pick => {
+                        const traded = pick.traded || (pick.current_owner !== pick.original_owner);
+                        return `
+                            <div class="pick-summary-row taxed">
+                                <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
+                                <span class="pick-summary-status">${traded ? `from ${pick.original_owner} - ` : ''}TAXED</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+        
+        // Section 4: Final available picks
+        html += `
+            <div class="picks-section final">
+                <h5><i class="fas fa-check-circle"></i> Your Draft Picks</h5>
+                ${finalPicks.map(pick => {
+                    const traded = pick.traded || (pick.current_owner !== pick.original_owner);
+                    return `
+                        <div class="pick-summary-row final">
+                            <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
+                            ${traded ? `<span class="pick-summary-status">from ${pick.original_owner}</span>` : ''}
+                        </div>
+                    `;
+                }).join('')}
             </div>
         `;
+        
+        html += `
+            <div class="picks-summary-footer">
+                <strong>Total Picks:</strong> ${finalPicks.length} available
+            </div>
+        `;
+        
+        container.innerHTML = html;
         
     } catch (error) {
         console.error('Error loading draft picks:', error);
