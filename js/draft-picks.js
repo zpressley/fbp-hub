@@ -99,6 +99,24 @@ function getManagerName(teamAbbr) {
 }
 
 /**
+ * Calculate overall pick number accounting for buy-ins and taxed picks
+ */
+function calculateOverallPickNumber(pick, allPicks) {
+    // Count all non-eliminated picks before this one
+    let overallCount = 0;
+    for (const p of allPicks) {
+        if (p.round > pick.round) break;
+        if (p.round === pick.round && p.pick > pick.pick) break;
+        
+        // Only count if not eliminated (taxed out)
+        if (!p.taxed_out) {
+            overallCount++;
+        }
+    }
+    return overallCount;
+}
+
+/**
  * Display keeper draft as list view with team colors
  */
 function displayKeeperDraft() {
@@ -123,6 +141,9 @@ function displayKeeperDraft() {
     
     console.log(`📊 Displaying ${allPicks.length} keeper picks across ${new Set(allPicks.map(p => p.round)).size} rounds`);
     
+    // Check for filter
+    const showYourPicks = document.getElementById('yourPicksFilter')?.checked;
+    
     let html = '<div class="draft-picks-list">';
     
     // Group by round
@@ -132,6 +153,14 @@ function displayKeeperDraft() {
             console.warn(`⚠️ Round ${round} has no picks`);
             continue;
         }
+        
+        // Filter for user's picks if enabled
+        const filteredPicks = showYourPicks && currentUser
+            ? roundPicks.filter(p => p.current_owner === currentUser)
+            : roundPicks;
+        
+        if (filteredPicks.length === 0) continue;
+        
         console.log(`✅ Round ${round}: ${roundPicks.length} picks`);
         
         const buyInCost = BUY_IN_COSTS[round];
@@ -143,7 +172,7 @@ function displayKeeperDraft() {
                     ${buyInCost ? `<span class="round-buyin">Buy-In: $${buyInCost}</span>` : ''}
                 </div>
                 <div class="round-picks">
-                    ${roundPicks.map(pick => createPickRow(pick)).join('')}
+                    ${filteredPicks.map(pick => createPickRow(pick, allPicks)).join('')}
                 </div>
             </div>
         `;
@@ -156,17 +185,21 @@ function displayKeeperDraft() {
 
 /**
  * Create pick row HTML with website colors and team tag
+ * Format: R# - P# (Overall) Manager [Tag]
  */
-function createPickRow(pick) {
+function createPickRow(pick, allPicks) {
     const team = pick.current_owner;
     const round = pick.round;
     const purchased = pick.buyin_purchased || false;
-    const traded = team !== pick.original_owner;
+    const traded = pick.traded || (team !== pick.original_owner);
     const isUserTeam = currentUser && team === currentUser;
     const canPurchase = isUserTeam && !purchased && round <= 3;
     
     // Use taxed_out field from data
     const isEliminated = pick.taxed_out || false;
+    
+    // Calculate overall pick number dynamically
+    const overallPick = calculateOverallPickNumber(pick, allPicks);
     
     // Get team colors for tag only
     const teamColors = FBPHub?.data?.teamColors?.[team];
@@ -207,7 +240,9 @@ function createPickRow(pick) {
     
     const managerName = managersData?.teams?.[team]?.name || team;
     const originalOwnerName = managersData?.teams?.[pick.original_owner]?.name || pick.original_owner;
-    const pickLabel = `R${round} - P${pick.pick} - ${managerName}`;
+    
+    // New format: R# - P# (Overall) Manager [Tag]
+    const pickLabel = `R${round} - P${pick.pick} (${overallPick}) ${managerName}`;
     const teamTag = `<span class="team-tag" style="background-color: ${teamColor};">${team}</span>`;
     
     // Build traded info with crossed out original owner
@@ -215,8 +250,7 @@ function createPickRow(pick) {
     if (traded) {
         tradedHTML = `
             <span class="pick-traded">
-                <i class="fas fa-exchange-alt"></i> 
-                <span class="original-owner">${originalOwnerName}</span> → ${managerName}
+                <span class="original-owner">${originalOwnerName}</span>
             </span>
         `;
     }

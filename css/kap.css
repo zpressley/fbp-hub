@@ -198,6 +198,63 @@
     margin: 0 var(--space-sm);
 }
 
+/* Draft Picks Summary */
+.draft-picks-summary {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.picks-summary-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-sm);
+}
+
+.pick-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--bg-charcoal);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+}
+
+.pick-summary-row.eliminated {
+    opacity: 0.5;
+    text-decoration: line-through;
+    background-color: #3A3A3A;
+}
+
+.pick-summary-row.traded {
+    border-left: 3px solid var(--primary-red);
+    color: var(--primary-red);
+}
+
+.pick-summary-label {
+    font-weight: 700;
+}
+
+.pick-summary-status {
+    font-size: var(--text-xs);
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+.picks-summary-footer {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: var(--text-white);
+    font-family: var(--font-body);
+}
+
 /* KAP Steps */
 .kap-step {
     display: none;

@@ -951,6 +951,71 @@ function displayBuyIns() {
 }
 
 /**
+ * Load and display draft picks summary
+ */
+async function loadDraftPicksSummary() {
+    const container = document.getElementById('summaryDraftPicks');
+    if (!container) return;
+    
+    try {
+        const response = await fetch('./data/draft_order_2026.json');
+        const draftData = await response.json();
+        
+        // Filter for keeper draft and current team
+        const teamPicks = draftData.filter(p => 
+            p.draft === 'keeper' && 
+            p.current_owner === KAP_STATE.team &&
+            !p._comment
+        );
+        
+        if (teamPicks.length === 0) {
+            container.innerHTML = '<div class="summary-empty">No draft picks found</div>';
+            return;
+        }
+        
+        // Sort by round
+        teamPicks.sort((a, b) => a.round - b.round);
+        
+        // Display in compact list format: R# - P# (Overall) [Status]
+        const picksHTML = teamPicks.map(pick => {
+            const isEliminated = pick.taxed_out || false;
+            const traded = pick.traded || (pick.current_owner !== pick.original_owner);
+            
+            let statusClass = '';
+            let statusText = '';
+            
+            if (isEliminated) {
+                statusClass = 'eliminated';
+                statusText = 'Taxed Out';
+            } else if (traded) {
+                statusClass = 'traded';
+                statusText = `from ${pick.original_owner}`;
+            }
+            
+            return `
+                <div class="pick-summary-row ${statusClass}">
+                    <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
+                    ${statusText ? `<span class="pick-summary-status">${statusText}</span>` : ''}
+                </div>
+            `;
+        }).join('');
+        
+        container.innerHTML = `
+            <div class="picks-summary-list">
+                ${picksHTML}
+            </div>
+            <div class="picks-summary-footer">
+                <strong>Total Picks:</strong> ${teamPicks.filter(p => !p.taxed_out).length} available
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('Error loading draft picks:', error);
+        container.innerHTML = '<div class="summary-empty">Error loading draft picks</div>';
+    }
+}
+
+/**
  * Toggle buy-in - DEPRECATED
  * Now handled by kap-buyin-integration.js
  */
@@ -1023,6 +1088,9 @@ function updateSummary() {
     if (KAP_STATE.buyIns[3]) buyInsHTML.push('<div class="summary-item"><strong>Round 3:</strong> $10</div>');
     
     document.getElementById('summaryBuyIns').innerHTML = buyInsHTML.length > 0 ? buyInsHTML.join('') : '<div class="summary-empty">No buy-ins purchased</div>';
+    
+    // Draft picks summary
+    loadDraftPicksSummary();
     
     // Budget table
     const tbody = document.getElementById('summaryBudgetTable');

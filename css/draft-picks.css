@@ -151,10 +151,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
-    min-height: 60px;
+    min-height: 50px;
     background-color: var(--bg-charcoal);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-white);
@@ -178,13 +178,17 @@
     background-color: #4A4A4A;
     color: var(--text-white);
     border: 1px solid #666666;
+    padding: var(--space-sm) var(--space-md);
+    min-height: 50px;
 }
 
 /* Purchased rounds (1-3) - black with red outline and red text */
 .pick-row.purchased {
     background-color: #1A1A1A;
     color: var(--primary-red);
-    border: 2px solid var(--primary-red);
+    border: 1px solid var(--primary-red);
+    padding: var(--space-sm) var(--space-md);
+    min-height: 50px;
 }
 
 /* Taxed out rounds - grayed out with white letters */
@@ -233,9 +237,49 @@
     letter-spacing: 0.5px;
 }
 
-/* Traded picks styling */
+/* Filter Controls */
+.filter-controls {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    background-color: var(--bg-charcoal);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    color: var(--text-white);
+    font-weight: 600;
+    user-select: none;
+}
+
+.filter-toggle input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-red);
+}
+
+.filter-toggle span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.filter-toggle i {
+    color: var(--accent-yellow);
+}
+
+/* Traded picks styling - red text and crossed out original owner */
+.pick-row.traded {
+    color: var(--primary-red) !important;
+}
+
 .pick-row.traded .pick-label {
-    color: var(--primary-red);
+    color: var(--primary-red) !important;
 }
 
 .pick-traded {
@@ -243,17 +287,20 @@
     align-items: center;
     gap: var(--space-xs);
     font-size: var(--text-sm);
-    font-style: italic;
-    color: var(--text-gray);
+    color: var(--primary-red);
+    margin-top: var(--space-xs);
 }
 
 .pick-traded .original-owner {
     text-decoration: line-through;
-    opacity: 0.6;
+    opacity: 0.7;
+    font-weight: 600;
 }
 
-.pick-row.purchased .pick-traded {
-    color: rgba(239, 62, 66, 0.7);
+/* Preserve red text on purchased traded picks */
+.pick-row.purchased.traded .pick-label,
+.pick-row.purchased.traded .pick-traded {
+    color: var(--primary-red) !important;
 }
 
 .pick-tax-label {
