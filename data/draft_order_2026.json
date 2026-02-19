@@ -136,7 +136,7 @@
     "team": "WAR",
     "round_type": "fypd",
     "result": {
-      "player": "Luis Hern\u00e1ndez",
+      "player": "Luis Hernández",
       "timestamp": "2026-02-16T01:42:12.624282",
       "pick_index": 10,
       "upid": "8339"
@@ -266,7 +266,7 @@
     "team": "DMN",
     "round_type": "dc",
     "result": {
-      "player": "Elmer Rodr\u00edguez",
+      "player": "Elmer Rodríguez",
       "timestamp": "2026-02-16T01:50:14.471027",
       "pick_index": 20,
       "upid": "8319"
@@ -879,7 +879,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 1,
+    "pick": 13,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -895,7 +895,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 2,
+    "pick": 14,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -911,7 +911,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 3,
+    "pick": 15,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -927,7 +927,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 4,
+    "pick": 16,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -943,7 +943,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 5,
+    "pick": 17,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -959,7 +959,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 6,
+    "pick": 18,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -975,7 +975,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 7,
+    "pick": 19,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -991,7 +991,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 8,
+    "pick": 20,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1007,7 +1007,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 9,
+    "pick": 21,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1023,7 +1023,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 10,
+    "pick": 22,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1039,7 +1039,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 11,
+    "pick": 23,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -1055,7 +1055,7 @@
   {
     "draft": "keeper",
     "round": 2,
-    "pick": 12,
+    "pick": 24,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -1071,7 +1071,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 1,
+    "pick": 25,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -1087,7 +1087,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 2,
+    "pick": 26,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -1103,7 +1103,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 3,
+    "pick": 27,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -1119,7 +1119,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 4,
+    "pick": 28,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -1135,7 +1135,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 5,
+    "pick": 29,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -1151,7 +1151,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 6,
+    "pick": 30,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -1167,7 +1167,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 7,
+    "pick": 31,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -1183,7 +1183,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 8,
+    "pick": 32,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1199,7 +1199,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 9,
+    "pick": 33,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1215,7 +1215,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 10,
+    "pick": 34,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1231,7 +1231,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 11,
+    "pick": 35,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -1247,7 +1247,7 @@
   {
     "draft": "keeper",
     "round": 3,
-    "pick": 12,
+    "pick": 36,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -1263,7 +1263,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 1,
+    "pick": 37,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -1279,7 +1279,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 2,
+    "pick": 38,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -1295,7 +1295,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 3,
+    "pick": 39,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -1311,7 +1311,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 4,
+    "pick": 40,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -1327,7 +1327,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 5,
+    "pick": 41,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -1343,7 +1343,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 6,
+    "pick": 42,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -1359,7 +1359,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 7,
+    "pick": 43,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -1375,7 +1375,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 8,
+    "pick": 44,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1391,7 +1391,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 9,
+    "pick": 45,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1407,7 +1407,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 10,
+    "pick": 46,
     "team": "WIZ",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1423,7 +1423,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 11,
+    "pick": 47,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -1439,7 +1439,7 @@
   {
     "draft": "keeper",
     "round": 4,
-    "pick": 12,
+    "pick": 48,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -1455,7 +1455,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 1,
+    "pick": 49,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -1471,7 +1471,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 2,
+    "pick": 50,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -1487,7 +1487,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 3,
+    "pick": 51,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -1503,7 +1503,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 4,
+    "pick": 52,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -1519,7 +1519,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 5,
+    "pick": 53,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -1535,7 +1535,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 6,
+    "pick": 54,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -1551,7 +1551,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 7,
+    "pick": 55,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -1567,7 +1567,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 8,
+    "pick": 56,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1583,7 +1583,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 9,
+    "pick": 57,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1599,7 +1599,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 10,
+    "pick": 58,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1615,7 +1615,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 11,
+    "pick": 59,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -1631,7 +1631,7 @@
   {
     "draft": "keeper",
     "round": 5,
-    "pick": 12,
+    "pick": 60,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -1647,7 +1647,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 1,
+    "pick": 61,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -1663,7 +1663,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 2,
+    "pick": 62,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -1679,7 +1679,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 3,
+    "pick": 63,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -1695,7 +1695,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 4,
+    "pick": 64,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -1711,7 +1711,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 5,
+    "pick": 65,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -1727,7 +1727,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 6,
+    "pick": 66,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -1743,7 +1743,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 7,
+    "pick": 67,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -1759,7 +1759,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 8,
+    "pick": 68,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1775,7 +1775,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 9,
+    "pick": 69,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1791,7 +1791,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 10,
+    "pick": 70,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1807,7 +1807,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 11,
+    "pick": 71,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -1823,7 +1823,7 @@
   {
     "draft": "keeper",
     "round": 6,
-    "pick": 12,
+    "pick": 72,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -1839,7 +1839,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 1,
+    "pick": 73,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -1855,7 +1855,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 2,
+    "pick": 74,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -1871,7 +1871,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 3,
+    "pick": 75,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -1887,7 +1887,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 4,
+    "pick": 76,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -1903,7 +1903,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 5,
+    "pick": 77,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -1919,7 +1919,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 6,
+    "pick": 78,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -1935,7 +1935,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 7,
+    "pick": 79,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -1951,7 +1951,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 8,
+    "pick": 80,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -1967,7 +1967,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 9,
+    "pick": 81,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -1983,7 +1983,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 10,
+    "pick": 82,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -1999,7 +1999,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 11,
+    "pick": 83,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2015,7 +2015,7 @@
   {
     "draft": "keeper",
     "round": 7,
-    "pick": 12,
+    "pick": 84,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2031,7 +2031,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 1,
+    "pick": 85,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -2047,7 +2047,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 2,
+    "pick": 86,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -2063,7 +2063,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 3,
+    "pick": 87,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -2079,7 +2079,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 4,
+    "pick": 88,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -2095,7 +2095,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 5,
+    "pick": 89,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -2111,7 +2111,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 6,
+    "pick": 90,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -2127,7 +2127,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 7,
+    "pick": 91,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -2143,7 +2143,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 8,
+    "pick": 92,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -2159,7 +2159,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 9,
+    "pick": 93,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -2175,7 +2175,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 10,
+    "pick": 94,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -2191,7 +2191,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 11,
+    "pick": 95,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2207,7 +2207,7 @@
   {
     "draft": "keeper",
     "round": 8,
-    "pick": 12,
+    "pick": 96,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2223,7 +2223,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 1,
+    "pick": 97,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -2239,7 +2239,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 2,
+    "pick": 98,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -2255,7 +2255,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 3,
+    "pick": 99,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -2271,7 +2271,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 4,
+    "pick": 100,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -2287,7 +2287,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 5,
+    "pick": 101,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -2303,7 +2303,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 6,
+    "pick": 102,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -2319,7 +2319,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 7,
+    "pick": 103,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -2335,7 +2335,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 8,
+    "pick": 104,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -2351,7 +2351,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 9,
+    "pick": 105,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -2367,7 +2367,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 10,
+    "pick": 106,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -2383,7 +2383,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 11,
+    "pick": 107,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2399,7 +2399,7 @@
   {
     "draft": "keeper",
     "round": 9,
-    "pick": 12,
+    "pick": 108,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2415,7 +2415,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 1,
+    "pick": 109,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -2431,7 +2431,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 2,
+    "pick": 110,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -2447,7 +2447,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 3,
+    "pick": 111,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -2463,7 +2463,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 4,
+    "pick": 112,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -2479,7 +2479,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 5,
+    "pick": 113,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -2495,7 +2495,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 6,
+    "pick": 114,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -2511,7 +2511,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 7,
+    "pick": 115,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -2527,7 +2527,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 8,
+    "pick": 116,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -2543,7 +2543,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 9,
+    "pick": 117,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -2559,7 +2559,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 10,
+    "pick": 118,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -2575,7 +2575,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 11,
+    "pick": 119,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2591,7 +2591,7 @@
   {
     "draft": "keeper",
     "round": 10,
-    "pick": 12,
+    "pick": 120,
     "team": "DRO",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2607,7 +2607,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 1,
+    "pick": 121,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -2623,7 +2623,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 2,
+    "pick": 122,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -2639,7 +2639,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 3,
+    "pick": 123,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -2655,7 +2655,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 4,
+    "pick": 124,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -2671,7 +2671,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 5,
+    "pick": 125,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -2687,7 +2687,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 6,
+    "pick": 126,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -2703,7 +2703,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 7,
+    "pick": 127,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -2719,7 +2719,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 8,
+    "pick": 128,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -2735,7 +2735,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 9,
+    "pick": 129,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -2751,7 +2751,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 10,
+    "pick": 130,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -2767,7 +2767,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 11,
+    "pick": 131,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2783,7 +2783,7 @@
   {
     "draft": "keeper",
     "round": 11,
-    "pick": 12,
+    "pick": 132,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2799,7 +2799,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 1,
+    "pick": 133,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -2815,7 +2815,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 2,
+    "pick": 134,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -2831,7 +2831,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 3,
+    "pick": 135,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -2847,7 +2847,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 4,
+    "pick": 136,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -2863,7 +2863,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 5,
+    "pick": 137,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -2879,7 +2879,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 6,
+    "pick": 138,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -2895,7 +2895,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 7,
+    "pick": 139,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -2911,7 +2911,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 8,
+    "pick": 140,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -2927,7 +2927,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 9,
+    "pick": 141,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -2943,7 +2943,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 10,
+    "pick": 142,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -2959,7 +2959,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 11,
+    "pick": 143,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -2975,7 +2975,7 @@
   {
     "draft": "keeper",
     "round": 12,
-    "pick": 12,
+    "pick": 144,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -2991,7 +2991,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 1,
+    "pick": 145,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3007,7 +3007,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 2,
+    "pick": 146,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3023,7 +3023,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 3,
+    "pick": 147,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3039,7 +3039,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 4,
+    "pick": 148,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -3055,7 +3055,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 5,
+    "pick": 149,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -3071,7 +3071,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 6,
+    "pick": 150,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -3087,7 +3087,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 7,
+    "pick": 151,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -3103,7 +3103,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 8,
+    "pick": 152,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -3119,7 +3119,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 9,
+    "pick": 153,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -3135,7 +3135,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 10,
+    "pick": 154,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -3151,7 +3151,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 11,
+    "pick": 155,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -3167,7 +3167,7 @@
   {
     "draft": "keeper",
     "round": 13,
-    "pick": 12,
+    "pick": 156,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -3183,7 +3183,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 1,
+    "pick": 157,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3199,7 +3199,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 2,
+    "pick": 158,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3215,7 +3215,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 3,
+    "pick": 159,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3231,7 +3231,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 4,
+    "pick": 160,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -3247,7 +3247,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 5,
+    "pick": 161,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -3263,7 +3263,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 6,
+    "pick": 162,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -3279,7 +3279,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 7,
+    "pick": 163,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -3295,7 +3295,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 8,
+    "pick": 164,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -3311,7 +3311,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 9,
+    "pick": 165,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -3327,7 +3327,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 10,
+    "pick": 166,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -3343,7 +3343,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 11,
+    "pick": 167,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -3359,7 +3359,7 @@
   {
     "draft": "keeper",
     "round": 14,
-    "pick": 12,
+    "pick": 168,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -3375,7 +3375,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 1,
+    "pick": 169,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3391,7 +3391,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 2,
+    "pick": 170,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3407,7 +3407,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 3,
+    "pick": 171,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3423,7 +3423,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 4,
+    "pick": 172,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -3439,7 +3439,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 5,
+    "pick": 173,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -3455,7 +3455,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 6,
+    "pick": 174,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -3471,7 +3471,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 7,
+    "pick": 175,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -3487,7 +3487,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 8,
+    "pick": 176,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -3503,7 +3503,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 9,
+    "pick": 177,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -3519,7 +3519,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 10,
+    "pick": 178,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -3535,7 +3535,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 11,
+    "pick": 179,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -3551,7 +3551,7 @@
   {
     "draft": "keeper",
     "round": 15,
-    "pick": 12,
+    "pick": 180,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -3567,7 +3567,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 1,
+    "pick": 181,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3583,7 +3583,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 2,
+    "pick": 182,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3599,7 +3599,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 3,
+    "pick": 183,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3615,7 +3615,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 4,
+    "pick": 184,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -3631,7 +3631,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 5,
+    "pick": 185,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -3647,7 +3647,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 6,
+    "pick": 186,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -3663,7 +3663,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 7,
+    "pick": 187,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -3679,7 +3679,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 8,
+    "pick": 188,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -3695,7 +3695,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 9,
+    "pick": 189,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -3711,7 +3711,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 10,
+    "pick": 190,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -3727,7 +3727,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 11,
+    "pick": 191,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -3743,7 +3743,7 @@
   {
     "draft": "keeper",
     "round": 16,
-    "pick": 12,
+    "pick": 192,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -3759,7 +3759,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 1,
+    "pick": 193,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3775,7 +3775,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 2,
+    "pick": 194,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3791,7 +3791,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 3,
+    "pick": 195,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3807,7 +3807,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 4,
+    "pick": 196,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -3823,7 +3823,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 5,
+    "pick": 197,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -3839,7 +3839,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 6,
+    "pick": 198,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -3855,7 +3855,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 7,
+    "pick": 199,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -3871,7 +3871,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 8,
+    "pick": 200,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -3887,7 +3887,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 9,
+    "pick": 201,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -3903,7 +3903,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 10,
+    "pick": 202,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -3919,7 +3919,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 11,
+    "pick": 203,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -3935,7 +3935,7 @@
   {
     "draft": "keeper",
     "round": 17,
-    "pick": 12,
+    "pick": 204,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -3951,7 +3951,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 1,
+    "pick": 205,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -3967,7 +3967,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 2,
+    "pick": 206,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -3983,7 +3983,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 3,
+    "pick": 207,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -3999,7 +3999,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 4,
+    "pick": 208,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4015,7 +4015,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 5,
+    "pick": 209,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4031,7 +4031,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 6,
+    "pick": 210,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -4047,7 +4047,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 7,
+    "pick": 211,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -4063,7 +4063,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 8,
+    "pick": 212,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -4079,7 +4079,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 9,
+    "pick": 213,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -4095,7 +4095,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 10,
+    "pick": 214,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -4111,7 +4111,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 11,
+    "pick": 215,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -4127,7 +4127,7 @@
   {
     "draft": "keeper",
     "round": 18,
-    "pick": 12,
+    "pick": 216,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -4143,7 +4143,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 1,
+    "pick": 217,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -4159,7 +4159,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 2,
+    "pick": 218,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -4175,7 +4175,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 3,
+    "pick": 219,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -4191,7 +4191,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 4,
+    "pick": 220,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4207,7 +4207,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 5,
+    "pick": 221,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4223,7 +4223,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 6,
+    "pick": 222,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -4239,7 +4239,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 7,
+    "pick": 223,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -4255,7 +4255,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 8,
+    "pick": 224,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -4271,7 +4271,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 9,
+    "pick": 225,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -4287,7 +4287,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 10,
+    "pick": 226,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -4303,7 +4303,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 11,
+    "pick": 227,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -4319,7 +4319,7 @@
   {
     "draft": "keeper",
     "round": 19,
-    "pick": 12,
+    "pick": 228,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -4335,7 +4335,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 1,
+    "pick": 229,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -4351,7 +4351,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 2,
+    "pick": 230,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -4367,7 +4367,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 3,
+    "pick": 231,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -4383,7 +4383,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 4,
+    "pick": 232,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4399,7 +4399,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 5,
+    "pick": 233,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4415,7 +4415,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 6,
+    "pick": 234,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -4431,7 +4431,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 7,
+    "pick": 235,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -4447,7 +4447,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 8,
+    "pick": 236,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -4463,7 +4463,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 9,
+    "pick": 237,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -4479,7 +4479,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 10,
+    "pick": 238,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -4495,7 +4495,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 11,
+    "pick": 239,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -4511,7 +4511,7 @@
   {
     "draft": "keeper",
     "round": 20,
-    "pick": 12,
+    "pick": 240,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -4527,7 +4527,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 1,
+    "pick": 241,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -4543,7 +4543,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 2,
+    "pick": 242,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -4559,7 +4559,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 3,
+    "pick": 243,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -4575,7 +4575,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 4,
+    "pick": 244,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4591,7 +4591,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 5,
+    "pick": 245,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4607,7 +4607,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 6,
+    "pick": 246,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -4623,7 +4623,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 7,
+    "pick": 247,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -4639,7 +4639,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 8,
+    "pick": 248,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -4655,7 +4655,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 9,
+    "pick": 249,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -4671,7 +4671,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 10,
+    "pick": 250,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -4687,7 +4687,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 11,
+    "pick": 251,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -4703,7 +4703,7 @@
   {
     "draft": "keeper",
     "round": 21,
-    "pick": 12,
+    "pick": 252,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -4719,7 +4719,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 1,
+    "pick": 253,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -4735,7 +4735,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 2,
+    "pick": 254,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -4751,7 +4751,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 3,
+    "pick": 255,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -4767,7 +4767,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 4,
+    "pick": 256,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4783,7 +4783,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 5,
+    "pick": 257,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4799,7 +4799,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 6,
+    "pick": 258,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -4815,7 +4815,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 7,
+    "pick": 259,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -4831,7 +4831,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 8,
+    "pick": 260,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -4847,7 +4847,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 9,
+    "pick": 261,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -4863,7 +4863,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 10,
+    "pick": 262,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -4879,7 +4879,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 11,
+    "pick": 263,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -4895,7 +4895,7 @@
   {
     "draft": "keeper",
     "round": 22,
-    "pick": 12,
+    "pick": 264,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -4911,7 +4911,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 1,
+    "pick": 265,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -4927,7 +4927,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 2,
+    "pick": 266,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -4943,7 +4943,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 3,
+    "pick": 267,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -4959,7 +4959,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 4,
+    "pick": 268,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -4975,7 +4975,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 5,
+    "pick": 269,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -4991,7 +4991,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 6,
+    "pick": 270,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5007,7 +5007,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 7,
+    "pick": 271,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5023,7 +5023,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 8,
+    "pick": 272,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5039,7 +5039,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 9,
+    "pick": 273,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -5055,7 +5055,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 10,
+    "pick": 274,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -5071,7 +5071,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 11,
+    "pick": 275,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -5087,7 +5087,7 @@
   {
     "draft": "keeper",
     "round": 23,
-    "pick": 12,
+    "pick": 276,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -5103,7 +5103,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 1,
+    "pick": 277,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -5119,7 +5119,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 2,
+    "pick": 278,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -5135,7 +5135,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 3,
+    "pick": 279,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -5151,7 +5151,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 4,
+    "pick": 280,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -5167,7 +5167,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 5,
+    "pick": 281,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -5183,7 +5183,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 6,
+    "pick": 282,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5199,7 +5199,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 7,
+    "pick": 283,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5215,7 +5215,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 8,
+    "pick": 284,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5231,7 +5231,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 9,
+    "pick": 285,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -5247,7 +5247,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 10,
+    "pick": 286,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -5263,7 +5263,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 11,
+    "pick": 287,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -5279,7 +5279,7 @@
   {
     "draft": "keeper",
     "round": 24,
-    "pick": 12,
+    "pick": 288,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -5295,7 +5295,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 1,
+    "pick": 289,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -5311,7 +5311,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 2,
+    "pick": 290,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -5327,7 +5327,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 3,
+    "pick": 291,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -5343,7 +5343,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 4,
+    "pick": 292,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -5359,7 +5359,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 5,
+    "pick": 293,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -5375,7 +5375,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 6,
+    "pick": 294,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5391,7 +5391,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 7,
+    "pick": 295,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5407,7 +5407,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 8,
+    "pick": 296,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5423,7 +5423,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 9,
+    "pick": 297,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -5439,7 +5439,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 10,
+    "pick": 298,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -5455,7 +5455,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 11,
+    "pick": 299,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -5471,7 +5471,7 @@
   {
     "draft": "keeper",
     "round": 25,
-    "pick": 12,
+    "pick": 300,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -5487,7 +5487,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 1,
+    "pick": 301,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -5503,7 +5503,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 2,
+    "pick": 302,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -5519,7 +5519,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 3,
+    "pick": 303,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -5535,7 +5535,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 4,
+    "pick": 304,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -5551,7 +5551,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 5,
+    "pick": 305,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -5567,7 +5567,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 6,
+    "pick": 306,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5583,7 +5583,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 7,
+    "pick": 307,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5599,7 +5599,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 8,
+    "pick": 308,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5615,7 +5615,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 9,
+    "pick": 309,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -5631,7 +5631,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 10,
+    "pick": 310,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -5647,7 +5647,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 11,
+    "pick": 311,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -5663,7 +5663,7 @@
   {
     "draft": "keeper",
     "round": 26,
-    "pick": 12,
+    "pick": 312,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -5679,7 +5679,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 1,
+    "pick": 313,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -5695,7 +5695,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 2,
+    "pick": 314,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -5711,7 +5711,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 3,
+    "pick": 315,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -5727,7 +5727,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 4,
+    "pick": 316,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -5743,7 +5743,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 5,
+    "pick": 317,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -5759,7 +5759,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 6,
+    "pick": 318,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5775,7 +5775,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 7,
+    "pick": 319,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5791,7 +5791,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 8,
+    "pick": 320,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5807,7 +5807,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 9,
+    "pick": 321,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -5823,7 +5823,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 10,
+    "pick": 322,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -5839,7 +5839,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 11,
+    "pick": 323,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -5855,7 +5855,7 @@
   {
     "draft": "keeper",
     "round": 27,
-    "pick": 12,
+    "pick": 324,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -5871,7 +5871,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 1,
+    "pick": 325,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -5887,7 +5887,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 2,
+    "pick": 326,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -5903,7 +5903,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 3,
+    "pick": 327,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -5919,7 +5919,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 4,
+    "pick": 328,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -5935,7 +5935,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 5,
+    "pick": 329,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -5951,7 +5951,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 6,
+    "pick": 330,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -5967,7 +5967,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 7,
+    "pick": 331,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -5983,7 +5983,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 8,
+    "pick": 332,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -5999,7 +5999,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 9,
+    "pick": 333,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -6015,7 +6015,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 10,
+    "pick": 334,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -6031,7 +6031,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 11,
+    "pick": 335,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -6047,7 +6047,7 @@
   {
     "draft": "keeper",
     "round": 28,
-    "pick": 12,
+    "pick": 336,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
@@ -6063,7 +6063,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 1,
+    "pick": 337,
     "team": "TBB",
     "original_owner": "TBB",
     "current_owner": "TBB",
@@ -6079,7 +6079,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 2,
+    "pick": 338,
     "team": "B2J",
     "original_owner": "B2J",
     "current_owner": "B2J",
@@ -6095,7 +6095,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 3,
+    "pick": 339,
     "team": "HAM",
     "original_owner": "HAM",
     "current_owner": "HAM",
@@ -6111,7 +6111,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 4,
+    "pick": 340,
     "team": "RV",
     "original_owner": "RV",
     "current_owner": "RV",
@@ -6127,7 +6127,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 5,
+    "pick": 341,
     "team": "DMN",
     "original_owner": "DMN",
     "current_owner": "DMN",
@@ -6143,7 +6143,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 6,
+    "pick": 342,
     "team": "CFL",
     "original_owner": "CFL",
     "current_owner": "CFL",
@@ -6159,7 +6159,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 7,
+    "pick": 343,
     "team": "JEP",
     "original_owner": "JEP",
     "current_owner": "JEP",
@@ -6175,7 +6175,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 8,
+    "pick": 344,
     "team": "WAR",
     "original_owner": "WAR",
     "current_owner": "WAR",
@@ -6191,7 +6191,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 9,
+    "pick": 345,
     "team": "SAD",
     "original_owner": "SAD",
     "current_owner": "SAD",
@@ -6207,7 +6207,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 10,
+    "pick": 346,
     "team": "DRO",
     "original_owner": "DRO",
     "current_owner": "DRO",
@@ -6223,7 +6223,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 11,
+    "pick": 347,
     "team": "LFB",
     "original_owner": "LFB",
     "current_owner": "LFB",
@@ -6239,7 +6239,7 @@
   {
     "draft": "keeper",
     "round": 29,
-    "pick": 12,
+    "pick": 348,
     "team": "WIZ",
     "original_owner": "WIZ",
     "current_owner": "WIZ",
