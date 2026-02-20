@@ -9,6 +9,7 @@ let currentFilters = {
     type: '',
     position: '',
     team: '',
+    contract: '',
     manager: ''
 };
 let displayedCount = 50;
@@ -122,6 +123,36 @@ function setupFilterDropdowns() {
         });
     }
     
+    // Contract filter (combines years_simple status and contract_type)
+    const contractFilter = document.getElementById('contractFilter');
+    if (contractFilter) {
+        // Build unique contract labels from both fields
+        const contractLabels = new Map();
+        // Status prefixes from years_simple (TC, VC, FC, P)
+        contractLabels.set('TC', 'TC (Keeper)');
+        contractLabels.set('VC', 'VC (Veteran)');
+        contractLabels.set('FC', 'FC (Franchise)');
+        contractLabels.set('P', 'P (Prospect)');
+        // Contract types from contract_type field
+        contractLabels.set('PC', 'PC (Purchased)');
+        contractLabels.set('BC', 'BC (Blue Chip)');
+        contractLabels.set('DC', 'DC (Development)');
+        contractLabels.set('KC', 'KC (Keeper Contract)');
+
+        contractLabels.forEach((label, value) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            contractFilter.appendChild(option);
+        });
+
+        contractFilter.addEventListener('change', (e) => {
+            currentFilters.contract = e.target.value;
+            displayedCount = LOAD_MORE_INCREMENT;
+            displayPlayers();
+        });
+    }
+
     // Manager/team filter (by FBP team abbreviation)
     const managerFilter = document.getElementById('managerFilter');
     if (managerFilter) {
@@ -206,6 +237,7 @@ function setupClearFilters() {
             type: '',
             position: '',
             team: '',
+            contract: '',
             manager: ''
         };
         
@@ -213,6 +245,7 @@ function setupClearFilters() {
         document.getElementById('playerSearch').value = '';
         document.getElementById('positionFilter').value = '';
         document.getElementById('teamFilter').value = '';
+        document.getElementById('contractFilter').value = '';
         document.getElementById('managerFilter').value = '';
         
         // Reset quick filter chips
@@ -259,6 +292,7 @@ function displayPlayers() {
         playerType: currentFilters.type,
         position: currentFilters.position,
         team: currentFilters.team,
+        contract: currentFilters.contract,
         manager: currentFilters.manager,
         search: currentFilters.search
     });

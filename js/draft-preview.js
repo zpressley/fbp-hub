@@ -473,15 +473,35 @@ async function displayKeeperPreview() {
         if (!stats || stats[statKey] == null) return '-';
         return stats[statKey];
     };
+
+    // Detect pitcher by position
+    const isPitcher = (player) => {
+        const pos = (player.position || '').toUpperCase();
+        const tokens = pos.split(/[,\/]/).map(p => p.trim()).filter(Boolean);
+        if (!tokens.length) return false;
+        const pitcherTokens = ['SP', 'RP', 'P', 'LHP', 'RHP', 'SHP', 'MIRP', 'SIRP'];
+        return tokens.every(t => pitcherTokens.includes(t));
+    };
+
+    // Per-player stat helper: only show stats for the player's type
+    const getHitStat = (player, key) => isPitcher(player) ? '-' : getStat(player, key);
+    const getPitchStat = (player, key) => isPitcher(player) ? getStat(player, key) : '-';
     
-    // Render table with all stats
+    // Render table with grouped HITTING / PITCHING headers
     const tableHTML = `
         <div class="draft-pool-table-wrapper">
             <table class="prospect-table keeper-stats-table">
                 <thead>
+                    <tr class="stat-group-row">
+                        <th class="sticky-col-rk" colspan="1"></th>
+                        <th class="sticky-col-name" colspan="1"></th>
+                        <th colspan="3"></th>
+                        <th colspan="11" class="stat-group-header stat-group-hitting">HITTING</th>
+                        <th colspan="11" class="stat-group-header stat-group-pitching">PITCHING</th>
+                    </tr>
                     <tr>
-                        <th class="sortable" data-sort="relative_rank">RK <i class="fas fa-sort"></i></th>
-                        <th class="sortable" data-sort="name">PLAYER <i class="fas fa-sort"></i></th>
+                        <th class="sortable sticky-col-rk" data-sort="relative_rank">RK <i class="fas fa-sort"></i></th>
+                        <th class="sortable sticky-col-name" data-sort="name">PLAYER <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="team">TEAM <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="age">AGE <i class="fas fa-sort"></i></th>
@@ -499,9 +519,9 @@ async function displayKeeperPreview() {
                         <th class="sortable" data-sort="APP">APP <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="IP">IP <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="ER">ER <i class="fas fa-sort"></i></th>
-                        <th class="sortable" data-sort="HR_P">HR_P <i class="fas fa-sort"></i></th>
-                        <th class="sortable" data-sort="K_P">K_P <i class="fas fa-sort"></i></th>
-                        <th class="sortable" data-sort="TB_P">TB_P <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="HR_P">HR <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="K_P">K <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="TB_P">TB <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="ERA">ERA <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="K/9">K/9 <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="H/9">H/9 <i class="fas fa-sort"></i></th>
@@ -513,35 +533,35 @@ async function displayKeeperPreview() {
                     ${available.map((p, idx) => {
                         return `
                             <tr class="prospect-row">
-                                <td class="prospect-rank">${p.relative_rank || idx + 1}</td>
-                                <td class="prospect-name">
+                                <td class="prospect-rank sticky-col-rk">${p.relative_rank || idx + 1}</td>
+                                <td class="prospect-name sticky-col-name">
                                     <span class="prospect-name-link">${p.name || 'Unknown'}</span>
                                 </td>
                                 <td class="prospect-org">${p.team || '-'}</td>
                                 <td class="prospect-pos">${p.position || '-'}</td>
                                 <td class="prospect-age">${p.age || '—'}</td>
-                                <td>${getStat(p, 'H/AB')}</td>
-                                <td>${getStat(p, 'R')}</td>
-                                <td>${getStat(p, 'H')}</td>
-                                <td>${getStat(p, 'HR')}</td>
-                                <td>${getStat(p, 'RBI')}</td>
-                                <td>${getStat(p, 'SB')}</td>
-                                <td>${getStat(p, 'BB')}</td>
-                                <td>${getStat(p, 'K')}</td>
-                                <td>${getStat(p, 'TB')}</td>
-                                <td>${getStat(p, 'AVG')}</td>
-                                <td>${getStat(p, 'OPS')}</td>
-                                <td>${getStat(p, 'APP')}</td>
-                                <td>${getStat(p, 'IP')}</td>
-                                <td>${getStat(p, 'ER')}</td>
-                                <td>${getStat(p, 'HR_P')}</td>
-                                <td>${getStat(p, 'K_P')}</td>
-                                <td>${getStat(p, 'TB_P')}</td>
-                                <td>${getStat(p, 'ERA')}</td>
-                                <td>${getStat(p, 'K/9')}</td>
-                                <td>${getStat(p, 'H/9')}</td>
-                                <td>${getStat(p, 'BB/9')}</td>
-                                <td>${getStat(p, 'QS')}</td>
+                                <td>${getHitStat(p, 'H/AB')}</td>
+                                <td>${getHitStat(p, 'R')}</td>
+                                <td>${getHitStat(p, 'H')}</td>
+                                <td>${getHitStat(p, 'HR')}</td>
+                                <td>${getHitStat(p, 'RBI')}</td>
+                                <td>${getHitStat(p, 'SB')}</td>
+                                <td>${getHitStat(p, 'BB')}</td>
+                                <td>${getHitStat(p, 'K')}</td>
+                                <td>${getHitStat(p, 'TB')}</td>
+                                <td>${getHitStat(p, 'AVG')}</td>
+                                <td>${getHitStat(p, 'OPS')}</td>
+                                <td>${getPitchStat(p, 'APP')}</td>
+                                <td>${getPitchStat(p, 'IP')}</td>
+                                <td>${getPitchStat(p, 'ER')}</td>
+                                <td>${getPitchStat(p, 'HR_P')}</td>
+                                <td>${getPitchStat(p, 'K_P')}</td>
+                                <td>${getPitchStat(p, 'TB_P')}</td>
+                                <td>${getPitchStat(p, 'ERA')}</td>
+                                <td>${getPitchStat(p, 'K/9')}</td>
+                                <td>${getPitchStat(p, 'H/9')}</td>
+                                <td>${getPitchStat(p, 'BB/9')}</td>
+                                <td>${getPitchStat(p, 'QS')}</td>
                             </tr>
                         `;
                     }).join('')}

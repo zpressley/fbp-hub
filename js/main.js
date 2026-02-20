@@ -822,6 +822,29 @@ function filterPlayers(criteria) {
         filtered = filtered.filter(p => p.team === criteria.team);
     }
     
+    // Filter by contract (combines years_simple status prefix and contract_type)
+    if (criteria.contract) {
+        const CONTRACT_TYPE_MAP = {
+            'PC': 'Purchased Contract',
+            'BC': 'Blue Chip Contract',
+            'DC': 'Development Cont.',
+            'KC': 'Keeper Contract'
+        };
+        const code = criteria.contract;
+        if (CONTRACT_TYPE_MAP[code]) {
+            // Match against contract_type field
+            filtered = filtered.filter(p => p.contract_type === CONTRACT_TYPE_MAP[code]);
+        } else {
+            // Match against years_simple prefix (TC, VC, FC, P)
+            filtered = filtered.filter(p => {
+                if (!p.years_simple) return false;
+                const ys = p.years_simple.toUpperCase();
+                if (code === 'P') return ys === 'P';
+                return ys.startsWith(code);
+            });
+        }
+    }
+
     // Filter by FBP team (abbreviation)
     if (criteria.manager) {
         filtered = filtered.filter(p => p.FBP_Team === criteria.manager);

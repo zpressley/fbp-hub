@@ -1552,26 +1552,82 @@ body.draft-preview-page .pick-number {
     min-width: 60px;
 }
 
-.keeper-stats-table th:first-child,
-.keeper-stats-table td:first-child {
+/* Sticky RK column */
+.keeper-stats-table th.sticky-col-rk,
+.keeper-stats-table td.sticky-col-rk {
     position: sticky;
     left: 0;
-    z-index: 2;
+    z-index: 3;
     background-color: var(--accent-yellow);
+    min-width: 50px;
+    width: 50px;
 }
 
-.keeper-stats-table tbody tr td:first-child {
+.keeper-stats-table tbody tr td.sticky-col-rk {
     background-color: var(--card-bg);
 }
 
-.keeper-stats-table tbody tr:hover td:first-child {
-    background-color: rgba(255, 255, 255, 0.03);
+.keeper-stats-table tbody tr:hover td.sticky-col-rk {
+    background-color: rgba(255, 255, 255, 0.06);
 }
 
-/* Player name column - slightly wider */
-.keeper-stats-table th:nth-child(2),
-.keeper-stats-table td:nth-child(2) {
+/* Sticky PLAYER column */
+.keeper-stats-table th.sticky-col-name,
+.keeper-stats-table td.sticky-col-name {
+    position: sticky;
+    left: 50px;
+    z-index: 3;
+    background-color: var(--accent-yellow);
     min-width: 150px;
+}
+
+.keeper-stats-table tbody tr td.sticky-col-name {
+    background-color: var(--card-bg);
+}
+
+.keeper-stats-table tbody tr:hover td.sticky-col-name {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Shadow on the last sticky column to show scroll boundary */
+.keeper-stats-table td.sticky-col-name {
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.keeper-stats-table th.sticky-col-name {
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Group header row (HITTING / PITCHING) */
+.keeper-stats-table .stat-group-row th {
+    padding: var(--space-xs) var(--space-lg);
+    font-size: var(--text-xs);
+    letter-spacing: 2px;
+    border-bottom: none;
+}
+
+.stat-group-header {
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.stat-group-hitting {
+    background-color: rgba(76, 175, 80, 0.25);
+    color: #4CAF50;
+    border-left: 2px solid #4CAF50;
+}
+
+.stat-group-pitching {
+    background-color: rgba(66, 165, 245, 0.25);
+    color: #42A5F5;
+    border-left: 2px solid #42A5F5;
+}
+
+/* Sticky column header cells need highest z-index (sticky left + top) */
+.keeper-stats-table thead th.sticky-col-rk,
+.keeper-stats-table thead th.sticky-col-name {
+    z-index: 12;
 }
 
 /* Status Badges */
