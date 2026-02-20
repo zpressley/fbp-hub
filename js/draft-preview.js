@@ -897,26 +897,41 @@ function getUserTeamAbbreviation() {
 }
 
 /**
- * Load keeper (2025) draft picks for a team from draft_picks.json
+ * Load keeper draft picks for a team from draft_order_2026.json
+ * Filters for draft='keeper' picks
  */
 async function loadKeeperPicksForTeam(teamAbbr) {
     try {
-        const resp = await fetch('data/draft_picks.json', { cache: 'no-store' });
+        const resp = await fetch('data/draft_order_2026.json', { cache: 'no-store' });
         if (!resp.ok) return [];
         const data = await resp.json();
-        const picks = Array.isArray(data.picks) ? data.picks : [];
-        return picks
-            .filter(p => p.currentOwner === teamAbbr)
+        if (!Array.isArray(data)) return [];
+        
+        return data
+            .filter(p => {
+                // Filter for keeper draft picks
+                if (p.draft !== 'keeper') return false;
+                if (p.current_owner !== teamAbbr) return false;
+                
+                // Rounds 1-3: only purchased buy-ins
+                if (p.round <= 3) {
+                    return p.buyin_purchased === true;
+                }
+                
+                // Rounds 4+: only not taxed out
+                return p.taxed_out === false;
+            })
+            .map(p => ({ round: p.round, pick: p.pick, draft: 'keeper' }))
             .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
     } catch (e) {
-        console.log('No draft_picks.json available for keeper picks');
+        console.log('No draft_order_2026.json available for keeper picks');
         return [];
     }
 }
 
 /**
- * Load prospect draft picks for a team from draft_order_2026.json (if present).
- * This is a simple preview of PAD-based FYPD/DC picks.
+ * Load prospect draft picks for a team from draft_order_2026.json
+ * Filters for draft='prospect' picks
  */
 async function loadProspectPicksForTeam(teamAbbr) {
     try {
@@ -924,8 +939,9 @@ async function loadProspectPicksForTeam(teamAbbr) {
         if (!resp.ok) return [];
         const data = await resp.json();
         if (!Array.isArray(data)) return [];
+        
         return data
-            .filter(p => p.team === teamAbbr)
+            .filter(p => p.draft === 'prospect' && p.current_owner === teamAbbr)
             .map(p => ({ round: p.round, pick: p.pick, round_type: p.round_type || 'prospect' }))
             .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
     } catch (e) {
@@ -964,7 +980,7 @@ async function openPicksModal() {
     let html = `<p class="picks-count" style="margin-bottom: 1rem;">Team: <strong>${teamAbbr}</strong></p>`;
 
     if (keeperPicks.length) {
-        html += '<h4 style="margin-top:0;">Keeper Draft Picks (2025)</h4>';
+        html += '<h4 style="margin-top:0;">Keeper Draft Picks (2026)</h4>';
         html += '<ul class="simple-list">';
         keeperPicks.forEach(p => {
             html += `<li>Round ${p.round}, Pick ${p.pick}</li>`;
@@ -976,7 +992,7 @@ async function openPicksModal() {
         html += '<h4 style="margin-top:1.5rem;">Prospect Draft Picks (2026)</h4>';
         html += '<ul class="simple-list">';
         prospectPicks.forEach(p => {
-            const label = p.round_type === 'fypd' ? 'FYPD' : p.round_type.toUpperCase();
+            const label = p.round_type === 'fypd' ? 'FYPD' : (p.round_type || 'PROSPECT').toUpperCase();
             html += `<li>Round ${p.round}, Pick ${p.pick} <span style="color: var(--accent-yellow); font-family: var(--font-mono); font-size: 0.8rem;">(${label})</span></li>`;
         });
         html += '</ul>';
