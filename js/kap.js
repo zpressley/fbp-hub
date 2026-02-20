@@ -556,7 +556,9 @@ function calculateKeeperSalaryCost() {
         const player = KAP_STATE.mlbPlayers.find(p => p.upid === upid);
         if (!player) return;
         
-        const baseCost = KEEPER_SALARIES[player.contract] || 0;
+        // Use effectiveContract if RaT applied, otherwise use base contract
+        const contractToUse = player.hasRaT ? player.effectiveContract : player.contract;
+        const baseCost = KEEPER_SALARIES[contractToUse] || 0;
         const ilDiscount = player.hasILTag ? (IL_DISCOUNTS[getContractTier(player.contract)] || 0) : 0;
         const finalCost = baseCost - ilDiscount;
         
@@ -651,7 +653,9 @@ function displayKeepers() {
     }
     
     container.innerHTML = KAP_STATE.mlbPlayers.map(p => {
-        const baseCost = KEEPER_SALARIES[p.contract] || 0;
+        // Use effectiveContract if RaT applied, otherwise use base contract
+        const contractToUse = p.hasRaT ? p.effectiveContract : p.contract;
+        const baseCost = KEEPER_SALARIES[contractToUse] || 0;
         const ilDiscount = p.hasILTag ? (IL_DISCOUNTS[getContractTier(p.contract)] || 0) : 0;
         const finalCost = baseCost - ilDiscount;
         const nextContract = CONTRACT_ADVANCEMENT[p.contract] || p.contract;

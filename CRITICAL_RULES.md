@@ -72,9 +72,40 @@ async function loadBalance() {
 
 ## 🔒 Other Critical Rules
 
-### (Add more as needed)
+### ⚠️ RAT (REDUCE-A-TIER) CALCULATION
+
+**THE RULE**: When RaT is applied, use `player.effectiveContract` for salary calculations, NOT `player.contract`
+
+#### Constitution Reference (Article 2, Section 03)
+> "Manager spends $75 WB on FC-1 ($85) player to reduce his contract to VC-2 ($55). Player is kept at only a **$55 tax hit**"
+
+#### How RaT Works:
+1. Manager pays $75 (tax-free)
+2. Player's contract tier is reduced (FC-1 → VC-2)
+3. Manager is charged the **REDUCED** salary ($55), not original ($85)
+
+#### ✅ CORRECT Implementation:
+```javascript
+// Use effectiveContract if RaT applied
+const contractToUse = player.hasRaT ? player.effectiveContract : player.contract;
+const baseCost = KEEPER_SALARIES[contractToUse];
+```
+
+#### ❌ WRONG Implementation:
+```javascript
+// This charges FC-1 price ($85) even after RaT!
+const baseCost = KEEPER_SALARIES[player.contract]; // WRONG
+```
+
+#### Where This Applies:
+- `calculateKeeperSalaryCost()` - Total salary calculation
+- `displayKeepers()` - Individual player display
+- Summary views
+- KAP submission payload
 
 ---
 
-**Last Updated**: 2026-02-20
-**Reason for Rule**: Balance discrepancies causing managers to see incorrect available funds
+**Last Updated**: 2026-02-20  
+**Reason for Rules**:  
+- WizBucks: Balance discrepancies causing managers to see incorrect available funds
+- RaT: Manager charged $85 + $75 instead of $55 + $75, shorting them $30
