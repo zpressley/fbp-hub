@@ -190,44 +190,54 @@ async function checkSubmissionStatus() {
  * Load KAP data
  */
 async function loadKAPData() {
-    // Load KAP budget + PAD→KAP rollover from managers.json so the UI
-    // matches the constitution and per-team WizBucks config.
+    // ========================================================================
+    // CRITICAL: KAP BALANCE COMES FROM WIZBUCKS WALLET ONLY
+    // ========================================================================
+    // ALL KAP purchases deduct from data/wizbucks.json wallet balance.
+    // The KAP "allotment" in managers.json is ONLY for tracking what managers
+    // were given - it is NOT the source of truth for available balance.
+    // 
+    // DO NOT USE config/managers.json for balance calculations.
+    // USE data/wizbucks.json (FBPHub.data.wizbucks) ONLY.
+    // ========================================================================
+    
     try {
-        const res = await fetch('./config/managers.json');
-        if (res.ok) {
-            const cfg = await res.json();
-            const teamCfg = cfg?.teams?.[KAP_STATE.team];
-
-            // 1) Base KAP allotment comes from wizbucks[2026].allotments.KAP.total
-            //    which already includes bracket bonuses and any carry that
-            //    should be available at KAP. Fallback to the constitutional
-            //    baseline of 375 if the config is missing.
-            const seasonCfg = teamCfg?.wizbucks?.["2026"];
-            const kapAllot = seasonCfg?.allotments?.KAP?.total;
-            if (typeof kapAllot === 'number' && kapAllot > 0) {
-                KAP_STATE.kapAllotment = kapAllot;
-            } else {
-                KAP_STATE.kapAllotment = 375;
-            }
-
-            // 2) PAD→KAP rollover from PAD submissions (kap_rollover_2026),
-            //    clamped to $30 per the constitution.
-            if (teamCfg && typeof teamCfg.kap_rollover_2026 === 'number') {
-                KAP_STATE.rolloverFromPAD = Math.max(0, Math.min(30, teamCfg.kap_rollover_2026));
-            } else {
-                KAP_STATE.rolloverFromPAD = 0;
-            }
-        } else {
-            // managers.json missing/unreachable: fallback to 375 with no rollover
-            KAP_STATE.kapAllotment = 375;
-            KAP_STATE.rolloverFromPAD = 0;
+        // Get current WizBucks wallet balance
+        if (!FBPHub.data.wizbucks) {
+            throw new Error('WizBucks data not loaded');
         }
+        
+        // Load team name mapping from managers.json
+        const managersRes = await fetch('./config/managers.json');
+        if (!managersRes.ok) {
+            throw new Error('Failed to load managers.json');
+        }
+        const managersData = await managersRes.json();
+        const teamCfg = managersData?.teams?.[KAP_STATE.team];
+        const fullTeamName = teamCfg?.name || KAP_STATE.team;
+        
+        // Get wallet balance from data/wizbucks.json
+        const walletBalance = FBPHub.data.wizbucks[fullTeamName];
+        
+        if (typeof walletBalance !== 'number') {
+            console.error(`No WizBucks balance found for ${fullTeamName}`);
+            throw new Error(`WizBucks balance not found for team: ${fullTeamName}`);
+        }
+        
+        // Set total available to actual wallet balance
+        KAP_STATE.totalAvailable = walletBalance;
+        KAP_STATE.kapAllotment = walletBalance; // For display compatibility
+        KAP_STATE.rolloverFromPAD = 0; // Not used - balance is already in wallet
+        
+        console.log(`✅ KAP Balance loaded from WizBucks wallet: $${walletBalance}`);
+        
     } catch (e) {
-        console.error('Failed to load KAP config from managers.json:', e);
-        KAP_STATE.kapAllotment = 375;
+        console.error('Failed to load KAP balance from WizBucks wallet:', e);
+        showToast('Error loading WizBucks balance', 'error');
+        KAP_STATE.totalAvailable = 0;
+        KAP_STATE.kapAllotment = 0;
         KAP_STATE.rolloverFromPAD = 0;
     }
-    KAP_STATE.totalAvailable = KAP_STATE.kapAllotment + KAP_STATE.rolloverFromPAD;
     
     // Load MLB players from combined_players.json via FBPHub, using years_simple
     // as the canonical contract/status field for KAP salary math. Two-way

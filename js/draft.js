@@ -17,10 +17,10 @@ let DRAFT_STATE = {
     userTeam: null,
     updateInterval: null,
     timerInterval: null,
-    // Default to prospect draft; /draft start currently runs the prospect
-    // draft, and draft.html will switch to keeper if FBPHub.draftInitialMode
-    // is set to 'keeper' by the preflight script.
-    mode: 'prospect', // 'keeper' or 'prospect'
+    // Default to keeper draft; managers can switch to prospect view if needed.
+    // draft.html will override this if FBPHub.draftInitialMode is set to
+    // 'prospect' by the preflight script.
+    mode: 'keeper', // 'keeper' or 'prospect'
     initializedFromHint: false,
     // Enriched prospect data for the Draft Pool (from prospect_tags.json)
     tagsByUpid: {},
@@ -178,7 +178,7 @@ async function initDraft() {
         DRAFT_STATE.poolFiltersInitialized = true;
     }
 
-    displayDraftPool();
+    await displayDraftPool();
 
     // Always show the main draft UI; we keep the draft page usable even when
     // the API has no active draft so managers can plan ahead.
@@ -897,7 +897,16 @@ function displayDraftGrid() {
     let gridHTML = '';
     rounds.forEach(round => {
         const roundSlots = orderByRound[round] || [];
-        const roundType = roundSlots[0]?.round_type === 'fypd' ? 'FYPD' : 'DC';
+        
+        // For keeper draft: rounds 1-3 are VC (Veteran Contract) rounds
+        // For prospect draft: legacy FYPD/DC labels (though keeper is now default)
+        let roundLabel = `Round ${round}`;
+        if (DRAFT_STATE.mode === 'keeper' && round <= 3) {
+            roundLabel += ' — VC';
+        } else if (DRAFT_STATE.mode === 'prospect') {
+            const roundType = roundSlots[0]?.round_type === 'fypd' ? 'FYPD' : 'DC';
+            roundLabel += ` — ${roundType}`;
+        }
 
         const picksHTML = roundSlots.map(slot => {
             const team = slot.team;
@@ -925,7 +934,7 @@ function displayDraftGrid() {
         gridHTML += `
             <div class="draft-round" id="round-${round}">
                 <div class="draft-round-header">
-                    <div class="draft-round-title">Round ${round} — ${roundType} (${roundSlots.length} picks)</div>
+                    <div class="draft-round-title">${roundLabel} (${roundSlots.length} picks)</div>
                 </div>
                 <div class="draft-round-picks">
                     ${picksHTML}
@@ -1319,12 +1328,26 @@ async function loadDroppedProspectsForDraft() {
 }
 
 /**
- * Build the base eligible keeper pool from FBPHub.data.players.
- * Returns all unowned MLB players, sorted by rank.
+ * Build the base eligible keeper pool from keeper_pool_2026.json.
+ * Returns all unowned MLB players with 2025 stats, sorted by rank.
  */
-function buildDraftPoolKeepers() {
+async function buildDraftPoolKeepers() {
     const draft = DRAFT_STATE.draftData;
-    if (!FBPHub?.data?.players) return [];
+    
+    // Load keeper pool if not already cached
+    if (!DRAFT_STATE.keeperPoolData) {
+        try {
+            const response = await fetch('data/keeper_pool_2026.json');
+            if (!response.ok) {
+                console.error('Failed to load keeper pool');
+                return [];
+            }
+            DRAFT_STATE.keeperPoolData = await response.json();
+        } catch (e) {
+            console.error('Error loading keeper pool:', e);
+            return [];
+        }
+    }
 
     const draftedNames = new Set(
         Array.isArray(draft?.picks)
@@ -1334,26 +1357,15 @@ function buildDraftPoolKeepers() {
 
     const keepers = [];
 
-    FBPHub.data.players.forEach(player => {
-        if (player.player_type !== 'MLB') return;
-
-        // Skip OWNED players (has a manager or FBP_Team)
+    DRAFT_STATE.keeperPoolData.forEach(player => {
+        // Skip OWNED players (has a manager)
         const hasManager = player.manager && player.manager !== 'None' && (player.manager || '').trim();
-        const hasFbpTeam = player.FBP_Team && player.FBP_Team !== 'None' && (player.FBP_Team || '').trim();
-        if (hasManager || hasFbpTeam) return;
+        if (hasManager) return;
 
         // Skip already drafted in this draft
         if (draftedNames.has((player.name || '').toLowerCase())) return;
 
-        keepers.push({
-            upid: player.upid,
-            name: player.name,
-            team: player.team || '-',
-            position: player.position || '-',
-            rank: player.rank,
-            age: player.age,
-            player_type: player.player_type
-        });
+        keepers.push({ ...player });
     });
 
     // Sort by rank (lower is better), then alphabetically
@@ -1362,6 +1374,11 @@ function buildDraftPoolKeepers() {
         const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
         if (aRank !== bRank) return aRank - bRank;
         return (a.name || '').localeCompare(b.name || '');
+    });
+    
+    // Add relative ranking (1-N based on available players)
+    keepers.forEach((player, idx) => {
+        player.relative_rank = idx + 1;
     });
 
     return keepers;
@@ -1474,7 +1491,7 @@ function renderDraftPoolStatusBadges(statusArr) {
  * 1–2. This keeps the underlying eligibility identical to the previous
  * implementation while upgrading the UX.
  */
-function displayDraftPool() {
+async function displayDraftPool() {
     const draft = DRAFT_STATE.draftData;
     const poolList = document.getElementById('draftPoolList');
     const countEl = document.getElementById('draftPoolCount');
@@ -1490,7 +1507,7 @@ function displayDraftPool() {
         const posFilter = document.getElementById('poolPositionFilter')?.value || 'any';
         const teamFilter = document.getElementById('poolTeamFilter')?.value || 'any';
         
-        let available = buildDraftPoolKeepers();
+        let available = await buildDraftPoolKeepers();
         
         // Position filter
         if (posFilter !== 'any') {
@@ -1528,6 +1545,11 @@ function displayDraftPool() {
             );
         }
         
+        // Apply sorting if set
+        if (DRAFT_STATE.keeperPoolSort) {
+            sortKeeperPool(available);
+        }
+        
         countEl.textContent = `${available.length} players`;
         
         if (!available.length) {
@@ -1535,41 +1557,97 @@ function displayDraftPool() {
             return;
         }
         
-        // Render keeper table
+        // Helper to get stat value or '-'
+        const getStat = (player, statKey) => {
+            const stats = player.stats_2025;
+            if (!stats || stats[statKey] == null) return '-';
+            return stats[statKey];
+        };
+        
+        // Render keeper table with all stats
         const tableHTML = `
-            <table class="prospect-table draft-pool-table">
-                <thead>
-                    <tr>
-                        <th>RANK</th>
-                        <th>PLAYER</th>
-                        <th>TEAM</th>
-                        <th>POS</th>
-                        <th>AGE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${available.map((p, idx) => {
-                        const rank = typeof p.rank === 'number' ? p.rank : '—';
-                        const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(p) : '#';
-                        
-                        return `
-                            <tr class="prospect-row"
-                                data-player-id="${p.upid || ''}" data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
-                                <td class="prospect-rank">${rank}</td>
-                                <td class="prospect-name">
-                                    <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
-                                </td>
-                                <td class="prospect-org">${p.team || '-'}</td>
-                                <td class="prospect-pos">${p.position || '-'}</td>
-                                <td class="prospect-age">${p.age || '—'}</td>
-                            </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
+            <div class="draft-pool-table-wrapper">
+                <table class="prospect-table draft-pool-table keeper-stats-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="relative_rank">RK <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="name">PLAYER <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="team">TEAM <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="age">AGE <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="H/AB">H/AB <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="R">R <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="H">H <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="HR">HR <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="RBI">RBI <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="SB">SB <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="BB">BB <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="K">K <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="TB">TB <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="AVG">AVG <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="OPS">OPS <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="APP">APP <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="IP">IP <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="ER">ER <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="HR_P">HR_P <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="K_P">K_P <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="TB_P">TB_P <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="ERA">ERA <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="K/9">K/9 <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="H/9">H/9 <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="BB/9">BB/9 <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="QS">QS <i class="fas fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${available.map((p, idx) => {
+                            const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(p) : '#';
+                            
+                            return `
+                                <tr class="prospect-row"
+                                    data-player-id="${p.upid || ''}" 
+                                    data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
+                                    <td class="prospect-rank">${p.relative_rank || idx + 1}</td>
+                                    <td class="prospect-name">
+                                        <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
+                                    </td>
+                                    <td class="prospect-org">${p.team || '-'}</td>
+                                    <td class="prospect-pos">${p.position || '-'}</td>
+                                    <td class="prospect-age">${p.age || '—'}</td>
+                                    <td>${getStat(p, 'H/AB')}</td>
+                                    <td>${getStat(p, 'R')}</td>
+                                    <td>${getStat(p, 'H')}</td>
+                                    <td>${getStat(p, 'HR')}</td>
+                                    <td>${getStat(p, 'RBI')}</td>
+                                    <td>${getStat(p, 'SB')}</td>
+                                    <td>${getStat(p, 'BB')}</td>
+                                    <td>${getStat(p, 'K')}</td>
+                                    <td>${getStat(p, 'TB')}</td>
+                                    <td>${getStat(p, 'AVG')}</td>
+                                    <td>${getStat(p, 'OPS')}</td>
+                                    <td>${getStat(p, 'APP')}</td>
+                                    <td>${getStat(p, 'IP')}</td>
+                                    <td>${getStat(p, 'ER')}</td>
+                                    <td>${getStat(p, 'HR_P')}</td>
+                                    <td>${getStat(p, 'K_P')}</td>
+                                    <td>${getStat(p, 'TB_P')}</td>
+                                    <td>${getStat(p, 'ERA')}</td>
+                                    <td>${getStat(p, 'K/9')}</td>
+                                    <td>${getStat(p, 'H/9')}</td>
+                                    <td>${getStat(p, 'BB/9')}</td>
+                                    <td>${getStat(p, 'QS')}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
         `;
         
         poolList.innerHTML = tableHTML;
+        
+        // Wire up sortable headers
+        setupKeeperPoolSorting();
         return;
     }
     
@@ -1678,6 +1756,101 @@ function displayDraftPool() {
 }
 
 /**
+ * Setup sortable headers for keeper pool table
+ */
+function setupKeeperPoolSorting() {
+    const headers = document.querySelectorAll('.keeper-stats-table th.sortable');
+    if (!headers.length) return;
+    
+    headers.forEach(header => {
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => {
+            const field = header.dataset.sort;
+            if (!field) return;
+            
+            // Toggle sort direction
+            const currentDir = DRAFT_STATE.keeperPoolSort?.field === field 
+                ? DRAFT_STATE.keeperPoolSort.direction 
+                : 'asc';
+            const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+            
+            DRAFT_STATE.keeperPoolSort = { field, direction: newDir };
+            
+            // Re-render with new sort
+            displayDraftPool();
+        });
+    });
+}
+
+/**
+ * Sort keeper pool players by the current sort field/direction
+ */
+function sortKeeperPool(players) {
+    if (!DRAFT_STATE.keeperPoolSort) return;
+    
+    const { field, direction } = DRAFT_STATE.keeperPoolSort;
+    const multiplier = direction === 'asc' ? 1 : -1;
+    
+    players.sort((a, b) => {
+        let aVal, bVal;
+        
+        // Handle stats that are nested in stats_2025
+        const statFields = ['H/AB', 'R', 'H', 'HR', 'RBI', 'SB', 'BB', 'K', 'TB', 'AVG', 'OPS',
+                           'APP', 'IP', 'ER', 'HR_P', 'K_P', 'TB_P', 'ERA', 'K/9', 'H/9', 'BB/9', 'QS'];
+        
+        if (statFields.includes(field)) {
+            aVal = a.stats_2025?.[field];
+            bVal = b.stats_2025?.[field];
+            
+            // Convert to numbers for numeric stats
+            if (typeof aVal === 'string' && !field.includes('/')) {
+                aVal = parseFloat(aVal);
+            }
+            if (typeof bVal === 'string' && !field.includes('/')) {
+                bVal = parseFloat(bVal);
+            }
+        } else {
+            aVal = a[field];
+            bVal = b[field];
+        }
+        
+        // Handle nulls/undefined (push to end)
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
+        
+        // Numeric comparison
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+            return (aVal - bVal) * multiplier;
+        }
+        
+        // String comparison
+        const aStr = String(aVal).toLowerCase();
+        const bStr = String(bVal).toLowerCase();
+        return aStr.localeCompare(bStr) * multiplier;
+    });
+}
+
+/**
+ * Update filter visibility based on current draft mode.
+ * Keeper mode: show only Position and Team filters
+ * Prospect mode: show all filters
+ */
+function updateFilterVisibility() {
+    const isKeeper = DRAFT_STATE.mode === 'keeper';
+    
+    // Get filter groups by their parent elements
+    const fvYearGroup = document.getElementById('poolFvYear')?.closest('.filter-group');
+    const statusGroup = document.getElementById('poolStatusFilter')?.closest('.filter-group');
+    const badgeGroup = document.getElementById('poolBadgeFilter')?.closest('.filter-group');
+    
+    // Hide prospect-specific filters in keeper mode
+    if (fvYearGroup) fvYearGroup.style.display = isKeeper ? 'none' : 'flex';
+    if (statusGroup) statusGroup.style.display = isKeeper ? 'none' : 'flex';
+    if (badgeGroup) badgeGroup.style.display = isKeeper ? 'none' : 'flex';
+}
+
+/**
  * Wire up the dropdown filters so any change re-renders the pool.
  */
 function setupDraftPoolFilters() {
@@ -1690,6 +1863,9 @@ function setupDraftPoolFilters() {
     if (searchInput) {
         searchInput.addEventListener('input', () => displayDraftPool());
     }
+    
+    // Set initial filter visibility
+    updateFilterVisibility();
 }
 
 /**

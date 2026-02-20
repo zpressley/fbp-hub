@@ -51,12 +51,12 @@ async function initDraftPreview() {
     // Setup filters
     setupFilters();
     
-    // Display initial view - default to prospect tab
-    const prospectTab = document.querySelector('.view-btn[data-tab="prospect"]');
-    if (prospectTab) {
-        prospectTab.click();
+    // Display initial view - default to keeper tab
+    const keeperTab = document.querySelector('.view-btn[data-tab="keeper"]');
+    if (keeperTab) {
+        keeperTab.click();
     } else {
-        displayKeeperPreview();
+        await displayKeeperPreview();
     }
 }
 
@@ -376,17 +376,31 @@ function setupProspectTableSorting() {
 /**
  * Display keeper draft preview
  */
-function displayKeeperPreview() {
+async function displayKeeperPreview() {
     const searchTerm = document.getElementById('keeperSearch')?.value.toLowerCase() || '';
     const positionFilter = document.getElementById('keeperPositionFilter')?.value || 'any';
     const teamFilter = document.getElementById('keeperTeamFilter')?.value || 'any';
     
-    // Filter: MLB players, not owned
-    let available = PREVIEW_STATE.allPlayers.filter(p => 
-        p.player_type === 'MLB' &&
-        !p.manager &&
-        !p.FBP_Team
-    );
+    // Load keeper pool with stats if not already cached
+    if (!PREVIEW_STATE.keeperPoolData) {
+        try {
+            const response = await fetch('data/keeper_pool_2026.json');
+            if (!response.ok) {
+                console.error('Failed to load keeper pool');
+                return;
+            }
+            PREVIEW_STATE.keeperPoolData = await response.json();
+        } catch (e) {
+            console.error('Error loading keeper pool:', e);
+            return;
+        }
+    }
+    
+    // Filter: not owned players
+    let available = PREVIEW_STATE.keeperPoolData.filter(p => {
+        const hasManager = p.manager && p.manager !== 'None' && (p.manager || '').trim();
+        return !hasManager;
+    });
     
     // Apply position filter
     if (positionFilter !== 'any') {
@@ -432,6 +446,16 @@ function displayKeeperPreview() {
         return a.name.localeCompare(b.name);
     });
     
+    // Add relative ranking (1-N based on available players)
+    available.forEach((player, idx) => {
+        player.relative_rank = idx + 1;
+    });
+    
+    // Apply sorting if keeper sort state exists
+    if (PREVIEW_STATE.keeperSort) {
+        sortKeeperPlayers(available);
+    }
+    
     // Update count
     document.getElementById('keeperCount').textContent = `${available.length} players`;
     
@@ -443,9 +467,169 @@ function displayKeeperPreview() {
         return;
     }
     
-    container.innerHTML = available
-        .map((player, index) => renderPlayerRow(player, false, index + 1))
-        .join('');
+    // Helper to get stat value or '-'
+    const getStat = (player, statKey) => {
+        const stats = player.stats_2025;
+        if (!stats || stats[statKey] == null) return '-';
+        return stats[statKey];
+    };
+    
+    // Render table with all stats
+    const tableHTML = `
+        <div class="draft-pool-table-wrapper">
+            <table class="prospect-table keeper-stats-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="relative_rank">RK <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="name">PLAYER <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="team">TEAM <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="age">AGE <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="H/AB">H/AB <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="R">R <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="H">H <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="HR">HR <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="RBI">RBI <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="SB">SB <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="BB">BB <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="K">K <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="TB">TB <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="AVG">AVG <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="OPS">OPS <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="APP">APP <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="IP">IP <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="ER">ER <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="HR_P">HR_P <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="K_P">K_P <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="TB_P">TB_P <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="ERA">ERA <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="K/9">K/9 <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="H/9">H/9 <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="BB/9">BB/9 <i class="fas fa-sort"></i></th>
+                        <th class="sortable" data-sort="QS">QS <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${available.map((p, idx) => {
+                        return `
+                            <tr class="prospect-row">
+                                <td class="prospect-rank">${p.relative_rank || idx + 1}</td>
+                                <td class="prospect-name">
+                                    <span class="prospect-name-link">${p.name || 'Unknown'}</span>
+                                </td>
+                                <td class="prospect-org">${p.team || '-'}</td>
+                                <td class="prospect-pos">${p.position || '-'}</td>
+                                <td class="prospect-age">${p.age || '—'}</td>
+                                <td>${getStat(p, 'H/AB')}</td>
+                                <td>${getStat(p, 'R')}</td>
+                                <td>${getStat(p, 'H')}</td>
+                                <td>${getStat(p, 'HR')}</td>
+                                <td>${getStat(p, 'RBI')}</td>
+                                <td>${getStat(p, 'SB')}</td>
+                                <td>${getStat(p, 'BB')}</td>
+                                <td>${getStat(p, 'K')}</td>
+                                <td>${getStat(p, 'TB')}</td>
+                                <td>${getStat(p, 'AVG')}</td>
+                                <td>${getStat(p, 'OPS')}</td>
+                                <td>${getStat(p, 'APP')}</td>
+                                <td>${getStat(p, 'IP')}</td>
+                                <td>${getStat(p, 'ER')}</td>
+                                <td>${getStat(p, 'HR_P')}</td>
+                                <td>${getStat(p, 'K_P')}</td>
+                                <td>${getStat(p, 'TB_P')}</td>
+                                <td>${getStat(p, 'ERA')}</td>
+                                <td>${getStat(p, 'K/9')}</td>
+                                <td>${getStat(p, 'H/9')}</td>
+                                <td>${getStat(p, 'BB/9')}</td>
+                                <td>${getStat(p, 'QS')}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = tableHTML;
+    
+    // Wire up sortable headers
+    setupKeeperSorting();
+}
+
+/**
+ * Setup sortable headers for keeper pool table
+ */
+function setupKeeperSorting() {
+    const headers = document.querySelectorAll('.keeper-stats-table th.sortable');
+    if (!headers.length) return;
+    
+    headers.forEach(header => {
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => {
+            const field = header.dataset.sort;
+            if (!field) return;
+            
+            // Toggle sort direction
+            const currentDir = PREVIEW_STATE.keeperSort?.field === field 
+                ? PREVIEW_STATE.keeperSort.direction 
+                : 'asc';
+            const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+            
+            PREVIEW_STATE.keeperSort = { field, direction: newDir };
+            
+            // Re-render with new sort
+            displayKeeperPreview();
+        });
+    });
+}
+
+/**
+ * Sort keeper pool players by the current sort field/direction
+ */
+function sortKeeperPlayers(players) {
+    if (!PREVIEW_STATE.keeperSort) return;
+    
+    const { field, direction } = PREVIEW_STATE.keeperSort;
+    const multiplier = direction === 'asc' ? 1 : -1;
+    
+    players.sort((a, b) => {
+        let aVal, bVal;
+        
+        // Handle stats that are nested in stats_2025
+        const statFields = ['H/AB', 'R', 'H', 'HR', 'RBI', 'SB', 'BB', 'K', 'TB', 'AVG', 'OPS',
+                           'APP', 'IP', 'ER', 'HR_P', 'K_P', 'TB_P', 'ERA', 'K/9', 'H/9', 'BB/9', 'QS'];
+        
+        if (statFields.includes(field)) {
+            aVal = a.stats_2025?.[field];
+            bVal = b.stats_2025?.[field];
+            
+            // Convert to numbers for numeric stats
+            if (typeof aVal === 'string' && !field.includes('/')) {
+                aVal = parseFloat(aVal);
+            }
+            if (typeof bVal === 'string' && !field.includes('/')) {
+                bVal = parseFloat(bVal);
+            }
+        } else {
+            aVal = a[field];
+            bVal = b[field];
+        }
+        
+        // Handle nulls/undefined (push to end)
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
+        
+        // Numeric comparison
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+            return (aVal - bVal) * multiplier;
+        }
+        
+        // String comparison
+        const aStr = String(aVal).toLowerCase();
+        const bStr = String(bVal).toLowerCase();
+        return aStr.localeCompare(bStr) * multiplier;
+    });
 }
 
 /**

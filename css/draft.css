@@ -1534,6 +1534,46 @@ body.draft-preview-page .pick-number {
     background-color: rgba(239, 62, 66, 0.05);
 }
 
+/* Keeper Stats Table - Horizontal Scroll Support */
+.draft-pool-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: var(--space-md);
+}
+
+.keeper-stats-table {
+    min-width: 100%;
+    width: max-content;
+}
+
+.keeper-stats-table th,
+.keeper-stats-table td {
+    white-space: nowrap;
+    min-width: 60px;
+}
+
+.keeper-stats-table th:first-child,
+.keeper-stats-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background-color: var(--accent-yellow);
+}
+
+.keeper-stats-table tbody tr td:first-child {
+    background-color: var(--card-bg);
+}
+
+.keeper-stats-table tbody tr:hover td:first-child {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Player name column - slightly wider */
+.keeper-stats-table th:nth-child(2),
+.keeper-stats-table td:nth-child(2) {
+    min-width: 150px;
+}
+
 /* Status Badges */
 .status-badge {
     display: inline-block;
