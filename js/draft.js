@@ -40,9 +40,13 @@ let DRAFT_STATE = {
 /**
  * Return the draft-order slots to use for the current mode.
  *
- * draft_order_2026.json entries include a "draft" field (e.g. "prospect");
+ * draft_order_2026.json entries include a "draft" field (e.g. "prospect", "keeper");
  * if it matches the current mode, we filter to it. Otherwise we fall back
  * to the full list.
+ *
+ * For keeper draft, also applies buy-in and tax filtering:
+ * - Rounds 1-3: only buyin_purchased=true
+ * - Rounds 4+: only taxed_out=false
  */
 function getDraftOrderSlotsForMode() {
     const slots = Array.isArray(DRAFT_STATE.draftOrder) ? DRAFT_STATE.draftOrder : [];
@@ -54,7 +58,24 @@ function getDraftOrderSlotsForMode() {
     const hasDraftField = slots.some(s => (s.draft || '').trim());
     if (!hasDraftField) return slots;
 
-    return slots.filter(s => (s.draft || '').toLowerCase() === mode);
+    let filtered = slots.filter(s => (s.draft || '').toLowerCase() === mode);
+    
+    // For keeper draft, apply additional filtering
+    if (mode === 'keeper') {
+        filtered = filtered.filter(slot => {
+            const round = slot.round || 0;
+            
+            // Rounds 1-3: only show if buy-in purchased
+            if (round <= 3) {
+                return slot.buyin_purchased === true;
+            }
+            
+            // Rounds 4+: only show if not taxed out
+            return slot.taxed_out === false;
+        });
+    }
+    
+    return filtered;
 }
 
 /**
@@ -1298,6 +1319,55 @@ async function loadDroppedProspectsForDraft() {
 }
 
 /**
+ * Build the base eligible keeper pool from FBPHub.data.players.
+ * Returns all unowned MLB players, sorted by rank.
+ */
+function buildDraftPoolKeepers() {
+    const draft = DRAFT_STATE.draftData;
+    if (!FBPHub?.data?.players) return [];
+
+    const draftedNames = new Set(
+        Array.isArray(draft?.picks)
+            ? draft.picks.map(p => (p.player_name || '').toLowerCase()).filter(Boolean)
+            : []
+    );
+
+    const keepers = [];
+
+    FBPHub.data.players.forEach(player => {
+        if (player.player_type !== 'MLB') return;
+
+        // Skip OWNED players (has a manager or FBP_Team)
+        const hasManager = player.manager && player.manager !== 'None' && (player.manager || '').trim();
+        const hasFbpTeam = player.FBP_Team && player.FBP_Team !== 'None' && (player.FBP_Team || '').trim();
+        if (hasManager || hasFbpTeam) return;
+
+        // Skip already drafted in this draft
+        if (draftedNames.has((player.name || '').toLowerCase())) return;
+
+        keepers.push({
+            upid: player.upid,
+            name: player.name,
+            team: player.team || '-',
+            position: player.position || '-',
+            rank: player.rank,
+            age: player.age,
+            player_type: player.player_type
+        });
+    });
+
+    // Sort by rank (lower is better), then alphabetically
+    keepers.sort((a, b) => {
+        const aRank = typeof a.rank === 'number' ? a.rank : Infinity;
+        const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
+        if (aRank !== bRank) return aRank - bRank;
+        return (a.name || '').localeCompare(b.name || '');
+    });
+
+    return keepers;
+}
+
+/**
  * Build the base eligible prospect pool from FBPHub.data.players, applying
  * only hard eligibility rules (Farm, unowned, no contract, undrafted).
  *
@@ -1411,16 +1481,99 @@ function displayDraftPool() {
 
     if (!poolList || !countEl) return;
 
-    // Keeper mode: not wired yet; avoid showing prospect pool here.
-    if (DRAFT_STATE.mode === 'keeper') {
-        countEl.textContent = '0 players';
-        poolList.innerHTML = '<div class="empty-state">Keeper draft pool view is not available yet.</div>';
-        return;
-    }
-
     if (!FBPHub?.data?.players) return;
 
     const searchTerm = (document.getElementById('draftPoolSearch')?.value || '').toLowerCase();
+    
+    // Keeper mode: simpler filters (position, team, search)
+    if (DRAFT_STATE.mode === 'keeper') {
+        const posFilter = document.getElementById('poolPositionFilter')?.value || 'any';
+        const teamFilter = document.getElementById('poolTeamFilter')?.value || 'any';
+        
+        let available = buildDraftPoolKeepers();
+        
+        // Position filter
+        if (posFilter !== 'any') {
+            available = available.filter(p => {
+                const playerPos = (p.position || '').toUpperCase();
+                const filter = posFilter.toUpperCase();
+                
+                // Direct match
+                if (playerPos === filter) return true;
+                
+                // Multi-position players
+                const positions = playerPos.split(/[,\/]/).map(pos => pos.trim());
+                if (positions.includes(filter)) return true;
+                
+                // Position group matches
+                if (filter === 'OF' && positions.some(pos => ['LF', 'CF', 'RF', 'OF'].includes(pos))) return true;
+                if (filter === 'UTIL' && positions.some(pos => !['SP', 'RP', 'P'].includes(pos))) return true;
+                if (filter === 'P' && positions.some(pos => ['SP', 'RP', 'P', 'LHP', 'RHP'].includes(pos))) return true;
+                
+                return false;
+            });
+        }
+        
+        // Team filter
+        if (teamFilter !== 'any') {
+            available = available.filter(p => (p.team || '').toUpperCase() === teamFilter.toUpperCase());
+        }
+        
+        // Search
+        if (searchTerm) {
+            available = available.filter(p =>
+                (p.name || '').toLowerCase().includes(searchTerm) ||
+                (p.team || '').toLowerCase().includes(searchTerm) ||
+                (p.position || '').toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        countEl.textContent = `${available.length} players`;
+        
+        if (!available.length) {
+            poolList.innerHTML = '<div class="empty-state">No eligible players match your filters</div>';
+            return;
+        }
+        
+        // Render keeper table
+        const tableHTML = `
+            <table class="prospect-table draft-pool-table">
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th>PLAYER</th>
+                        <th>TEAM</th>
+                        <th>POS</th>
+                        <th>AGE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${available.map((p, idx) => {
+                        const rank = typeof p.rank === 'number' ? p.rank : '—';
+                        const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(p) : '#';
+                        
+                        return `
+                            <tr class="prospect-row"
+                                data-player-id="${p.upid || ''}" data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
+                                <td class="prospect-rank">${rank}</td>
+                                <td class="prospect-name">
+                                    <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
+                                </td>
+                                <td class="prospect-org">${p.team || '-'}</td>
+                                <td class="prospect-pos">${p.position || '-'}</td>
+                                <td class="prospect-age">${p.age || '—'}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+        
+        poolList.innerHTML = tableHTML;
+        return;
+    }
+    
+    // Prospect mode filters
     const fvYear = document.getElementById('poolFvYear')?.value || '2025';
     const statusFilter = document.getElementById('poolStatusFilter')?.value || 'any';
     const posFilter = document.getElementById('poolPositionFilter')?.value || 'any';
