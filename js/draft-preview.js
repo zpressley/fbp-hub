@@ -281,10 +281,20 @@ function setupTabs() {
  */
 function setupFilters() {
     const keeperSearch = document.getElementById('keeperSearch');
+    const keeperPositionFilter = document.getElementById('keeperPositionFilter');
+    const keeperTeamFilter = document.getElementById('keeperTeamFilter');
     const prospectSearch = document.getElementById('prospectSearch');
     
     if (keeperSearch) {
         keeperSearch.addEventListener('input', displayKeeperPreview);
+    }
+    
+    if (keeperPositionFilter) {
+        keeperPositionFilter.addEventListener('change', displayKeeperPreview);
+    }
+    
+    if (keeperTeamFilter) {
+        keeperTeamFilter.addEventListener('change', displayKeeperPreview);
     }
     
     // New prospect filter system
@@ -368,6 +378,8 @@ function setupProspectTableSorting() {
  */
 function displayKeeperPreview() {
     const searchTerm = document.getElementById('keeperSearch')?.value.toLowerCase() || '';
+    const positionFilter = document.getElementById('keeperPositionFilter')?.value || 'any';
+    const teamFilter = document.getElementById('keeperTeamFilter')?.value || 'any';
     
     // Filter: MLB players, not owned
     let available = PREVIEW_STATE.allPlayers.filter(p => 
@@ -375,6 +387,33 @@ function displayKeeperPreview() {
         !p.manager &&
         !p.FBP_Team
     );
+    
+    // Apply position filter
+    if (positionFilter !== 'any') {
+        available = available.filter(p => {
+            const playerPos = (p.position || '').toUpperCase();
+            const filter = positionFilter.toUpperCase();
+            
+            // Direct match
+            if (playerPos === filter) return true;
+            
+            // Multi-position players (e.g., "2B,SS" or "OF,CF")
+            const positions = playerPos.split(/[,\/]/).map(pos => pos.trim());
+            if (positions.includes(filter)) return true;
+            
+            // Position group matches
+            if (filter === 'OF' && positions.some(pos => ['LF', 'CF', 'RF', 'OF'].includes(pos))) return true;
+            if (filter === 'UTIL' && positions.some(pos => !['SP', 'RP', 'P'].includes(pos))) return true;
+            if (filter === 'P' && positions.some(pos => ['SP', 'RP', 'P', 'LHP', 'RHP'].includes(pos))) return true;
+            
+            return false;
+        });
+    }
+    
+    // Apply team filter
+    if (teamFilter !== 'any') {
+        available = available.filter(p => (p.team || '').toUpperCase() === teamFilter.toUpperCase());
+    }
     
     // Apply search
     if (searchTerm) {
