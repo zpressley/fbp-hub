@@ -405,14 +405,10 @@ function searchConstitution(query) {
     clearSearchHighlights();
     
     const content = document.getElementById('constitutionContent');
-    const html = content.innerHTML;
     
-    // Highlight matches - use word boundary for whole word matching
-    // Match words that START with the query (so "round" matches "Round" but not "Ron")
+    // Use a DOM walker to highlight text nodes without breaking HTML structure
     const regex = new RegExp(`\\b(${escapeRegex(query)}[a-z]*)`, 'gi');
-    const highlighted = html.replace(regex, '<span class="highlight" data-match="true">$1</span>');
-    
-    content.innerHTML = highlighted;
+    highlightTextNodes(content, regex);
     
     // Get all matches
     SEARCH_STATE.matches = Array.from(document.querySelectorAll('.highlight[data-match]'));
@@ -425,6 +421,75 @@ function searchConstitution(query) {
     if (SEARCH_STATE.matches.length > 0) {
         highlightCurrentMatch();
     }
+}
+
+/**
+ * Highlight text nodes without breaking HTML structure
+ */
+function highlightTextNodes(element, regex) {
+    const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: function(node) {
+                // Skip if parent is a button or already highlighted
+                if (node.parentElement.tagName === 'BUTTON' || 
+                    node.parentElement.classList.contains('highlight')) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                // Only accept text nodes that match
+                if (regex.test(node.textContent)) {
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+                return NodeFilter.FILTER_REJECT;
+            }
+        }
+    );
+    
+    const nodesToReplace = [];
+    let node;
+    
+    // Collect nodes first (can't modify while walking)
+    while (node = walker.nextNode()) {
+        nodesToReplace.push(node);
+    }
+    
+    // Reset regex lastIndex before processing
+    regex.lastIndex = 0;
+    
+    // Now replace text with highlighted spans
+    nodesToReplace.forEach(textNode => {
+        const text = textNode.textContent;
+        const matches = [...text.matchAll(regex)];
+        
+        if (matches.length > 0) {
+            const fragment = document.createDocumentFragment();
+            let lastIndex = 0;
+            
+            matches.forEach(match => {
+                // Add text before match
+                if (match.index > lastIndex) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+                }
+                
+                // Add highlighted match
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.setAttribute('data-match', 'true');
+                span.textContent = match[0];
+                fragment.appendChild(span);
+                
+                lastIndex = match.index + match[0].length;
+            });
+            
+            // Add remaining text
+            if (lastIndex < text.length) {
+                fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+            }
+            
+            textNode.parentNode.replaceChild(fragment, textNode);
+        }
+    });
 }
 
 /**
@@ -540,9 +605,16 @@ function clearSearchInput() {
  * Clear search highlights only
  */
 function clearSearchHighlights() {
+    // Remove highlight spans without breaking HTML structure
+    const highlights = document.querySelectorAll('.highlight[data-match]');
+    highlights.forEach(span => {
+        const text = document.createTextNode(span.textContent);
+        span.parentNode.replaceChild(text, span);
+    });
+    
+    // Normalize adjacent text nodes
     const content = document.getElementById('constitutionContent');
-    const html = content.innerHTML;
-    content.innerHTML = html.replace(/<span class="highlight"[^>]*>(.*?)<\/span>/g, '$1');
+    content.normalize();
 }
 
 /**
