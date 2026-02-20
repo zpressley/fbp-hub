@@ -42,16 +42,23 @@ async function loadBuyinStatus() {
         const draftOrder = await response.json();
         
         // Check rounds 1-3 for this team's buy-in status
+        // Store ALL picks for each round (teams may have multiple from trades)
         [1, 2, 3].forEach(round => {
-            const pick = draftOrder.find(p => 
+            const picks = draftOrder.filter(p => 
                 p.draft === 'keeper' && 
                 p.round === round && 
-                p.current_owner === currentTeam
+                p.current_owner === currentTeam &&
+                !p._comment
             );
             
-            if (pick) {
-                buyinStatus[round].purchased = pick.buyin_purchased || false;
-            }
+            // Store all picks for this round
+            buyinStatus[round].picks = picks;
+            
+            // Mark as purchased if ANY pick is purchased
+            // (In practice, if you have multiple picks, you buy them individually)
+            buyinStatus[round].purchased = picks.some(p => p.buyin_purchased);
+            buyinStatus[round].allPurchased = picks.length > 0 && picks.every(p => p.buyin_purchased);
+            buyinStatus[round].hasMultiple = picks.length > 1;
         });
         
         console.log('✅ Buy-in status loaded:', buyinStatus);
@@ -75,7 +82,36 @@ function displayBuyinCards() {
         // Ensure these never behave like form submits
         try { btnEl.type = 'button'; } catch (e) {}
 
-        if (status.purchased) {
+        // If team has multiple picks in this round, show all picks with individual buttons
+        if (status.hasMultiple && status.picks && status.picks.length > 0) {
+            statusEl.textContent = `${status.picks.length} picks`;
+            
+            // Count purchased
+            const purchasedCount = status.picks.filter(p => p.buyin_purchased).length;
+            
+            if (status.allPurchased) {
+                statusEl.classList.add('active');
+                btnEl.classList.add('purchased');
+                btnEl.disabled = true;
+                btnEl.innerHTML = '<i class="fas fa-check-circle"></i> All Purchased';
+                cardEl?.classList.add('purchased');
+                btnEl.onclick = null;
+            } else {
+                statusEl.classList.remove('active');
+                btnEl.classList.remove('purchased');
+                btnEl.disabled = false;
+                btnEl.innerHTML = `<i class="fas fa-shopping-cart"></i> Purchase (${purchasedCount}/${status.picks.length})`;
+                cardEl?.classList.remove('purchased');
+
+                // Show pick selection modal
+                btnEl.onclick = (e) => {
+                    try { e?.preventDefault?.(); } catch (err) {}
+                    try { e?.stopPropagation?.(); } catch (err) {}
+                    showPickSelectionModal(round, status.picks, status.cost);
+                };
+            }
+        } else if (status.purchased) {
+            // Single pick, already purchased
             statusEl.textContent = 'Already Purchased';
             statusEl.classList.add('active');
             btnEl.classList.add('purchased');
@@ -84,6 +120,7 @@ function displayBuyinCards() {
             cardEl?.classList.add('purchased');
             btnEl.onclick = null;
         } else {
+            // Single pick, not purchased
             statusEl.textContent = 'Not Purchased';
             statusEl.classList.remove('active');
             btnEl.classList.remove('purchased');
@@ -91,12 +128,13 @@ function displayBuyinCards() {
             btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
             cardEl?.classList.remove('purchased');
 
-            // Attach click handler
+            // Attach click handler (pass pick number if available)
             btnEl.onclick = (e) => {
                 try { e?.preventDefault?.(); } catch (err) {}
                 try { e?.stopPropagation?.(); } catch (err) {}
+                const pickNum = status.picks && status.picks[0] ? status.picks[0].pick : null;
                 if (typeof window.purchaseBuyinFromKAP === 'function') {
-                    window.purchaseBuyinFromKAP(round, status.cost);
+                    window.purchaseBuyinFromKAP(round, status.cost, pickNum);
                 }
             };
         }
@@ -144,21 +182,79 @@ function getKAPPurchaseBalance() {
     return getKAPBalance();
 }
 
-window.purchaseBuyinFromKAP = async function(round, cost) {
+/**
+ * Show pick selection modal (for teams with multiple picks in a round)
+ */
+function showPickSelectionModal(round, picks, cost) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'pickSelectionModal';
+    
+    const unpurchasedPicks = picks.filter(p => !p.buyin_purchased);
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-list"></i> Select Pick to Purchase</h2>
+            </div>
+            <div class="modal-body">
+                <p>You have multiple picks in Round ${round}. Select which pick to purchase:</p>
+                
+                <div class="pick-selection-list">
+                    ${picks.map(pick => {
+                        const traded = pick.original_owner !== pick.current_owner;
+                        const isPurchased = pick.buyin_purchased;
+                        
+                        return `
+                            <div class="pick-selection-item ${isPurchased ? 'purchased' : ''}">
+                                <div class="pick-info">
+                                    <strong>Pick #${pick.pick}</strong>
+                                    ${traded ? `<span class="pick-origin">(from ${pick.original_owner})</span>` : ''}
+                                    ${isPurchased ? '<span class="pick-status purchased"><i class="fas fa-check"></i> Purchased</span>' : ''}
+                                </div>
+                                ${!isPurchased ? `
+                                    <button class="btn-primary btn-sm" onclick="purchaseBuyinFromKAP(${round}, ${cost}, ${pick.pick}); closePickSelectionModal();">
+                                        <i class="fas fa-shopping-cart"></i> Purchase - $${cost}
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closePickSelectionModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+window.closePickSelectionModal = function() {
+    document.getElementById('pickSelectionModal')?.remove();
+};
+
+window.purchaseBuyinFromKAP = async function(round, cost, pickNumber = null) {
     // Get current KAP balance
     const kapBalance = getKAPPurchaseBalance();
 
     // Show confirmation modal
-    showBuyinConfirmationModal(round, cost, kapBalance);
+    showBuyinConfirmationModal(round, cost, kapBalance, pickNumber);
 };
 
 /**
  * Show buy-in confirmation modal
  */
-function showBuyinConfirmationModal(round, cost, kapBalance) {
+function showBuyinConfirmationModal(round, cost, kapBalance, pickNumber = null) {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
     modal.id = 'kapBuyinModal';
+    
+    // Store pick number for confirmation
+    modal.dataset.pickNumber = pickNumber || '';
     
     modal.innerHTML = `
         <div class="modal-content">
@@ -172,7 +268,7 @@ function showBuyinConfirmationModal(round, cost, kapBalance) {
                 </div>
                 
                 <div class="modal-info">
-                    <p><strong>Round ${round} Buy-In</strong></p>
+                    <p><strong>Round ${round} Buy-In${pickNumber ? ` - Pick #${pickNumber}` : ''}</strong></p>
                     <p>Cost: <strong>$${cost}</strong> (taxable)</p>
                     <p>Your KAP Balance: <strong>$${kapBalance}</strong></p>
                     <p>Remaining After Purchase: <strong>$${kapBalance - cost}</strong></p>
@@ -200,7 +296,7 @@ function showBuyinConfirmationModal(round, cost, kapBalance) {
                     <i class="fas fa-times"></i> Cancel
                 </button>
                 <button class="btn-primary" ${kapBalance < cost ? 'disabled' : ''} 
-                        onclick="confirmBuyinPurchase(${round}, ${cost})">
+                        onclick="confirmBuyinPurchase(${round}, ${cost}, ${pickNumber || 'null'})">
                     <i class="fas fa-check"></i> Confirm Purchase
                 </button>
             </div>
@@ -213,8 +309,21 @@ function showBuyinConfirmationModal(round, cost, kapBalance) {
 /**
  * Confirm buy-in purchase
  */
-window.confirmBuyinPurchase = async function(round, cost) {
+window.confirmBuyinPurchase = async function(round, cost, pickNumber = null) {
     try {
+        // Build request payload
+        const payload = {
+            team: currentTeam,
+            round: round,
+            cost: cost,
+            purchased_by: authManager.getUser().username
+        };
+        
+        // Add pick parameter if specified (for teams with multiple picks in round)
+        if (pickNumber !== null && pickNumber !== undefined) {
+            payload.pick = pickNumber;
+        }
+        
         // Call buy-in API (same endpoint as draft-picks page)
         const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/purchase`, {
             method: 'POST',
@@ -222,12 +331,7 @@ window.confirmBuyinPurchase = async function(round, cost) {
                 'Content-Type': 'application/json',
                 ..._buyinAuthHeaders(),
             },
-            body: JSON.stringify({
-                team: currentTeam,
-                round: round,
-                cost: cost,
-                purchased_by: authManager.getUser().username
-            })
+            body: JSON.stringify(payload)
         });
         
         if (!response.ok) {

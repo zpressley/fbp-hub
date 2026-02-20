@@ -1100,6 +1100,68 @@
     margin-bottom: var(--space-xl);
 }
 
+/* Pick Selection Modal (for teams with multiple picks) */
+.pick-selection-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+
+.pick-selection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--bg-charcoal);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+}
+
+.pick-selection-item:not(.purchased):hover {
+    border-color: var(--primary-red);
+    background-color: rgba(239, 62, 66, 0.05);
+}
+
+.pick-selection-item.purchased {
+    opacity: 0.5;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: var(--success);
+}
+
+.pick-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.pick-info strong {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--text-white);
+}
+
+.pick-origin {
+    font-size: var(--text-sm);
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+.pick-status.purchased {
+    font-size: var(--text-sm);
+    color: var(--success);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.btn-sm {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+}
+
 .confirmation-warning i {
     font-size: var(--text-3xl);
     color: #FF9800;
