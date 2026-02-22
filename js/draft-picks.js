@@ -278,6 +278,21 @@ window.showBuyinModal = function(round, cost, team) {
         return;
     }
     
+    // Check if team has multiple picks in this round
+    const teamRoundPicks = keeperPicks.filter(p => 
+        p.round === round && 
+        p.current_owner === team
+    );
+    
+    // If multiple picks, show pick selection modal instead
+    if (teamRoundPicks.length > 1) {
+        showPickSelectionModal(round, cost, team, teamRoundPicks);
+        return;
+    }
+    
+    // Single pick - proceed with standard modal
+    const pickNumber = teamRoundPicks.length === 1 ? teamRoundPicks[0].pick : null;
+    
     // Get team's KAP balance
     const teamData = managersData?.teams?.[team];
     const kapBalance = teamData?.wizbucks?.['2026']?.allotments?.KAP?.total || 0;
@@ -313,11 +328,81 @@ window.showBuyinModal = function(round, cost, team) {
     } else {
         confirmBtn.disabled = false;
         confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Purchase';
-        confirmBtn.onclick = () => confirmBuyinPurchase(round, cost, team);
+        confirmBtn.onclick = () => confirmBuyinPurchase(round, cost, team, pickNumber);
     }
     
     document.getElementById('buyinModal').classList.add('active');
 };
+
+/**
+ * Show pick selection modal for teams with multiple picks in same round
+ */
+function showPickSelectionModal(round, cost, team, picks) {
+    const teamData = managersData?.teams?.[team];
+    const kapBalance = teamData?.wizbucks?.['2026']?.allotments?.KAP?.total || 0;
+    
+    const modalBody = document.getElementById('buyinModalBody');
+    
+    // Build pick selection options
+    const pickOptions = picks.map(p => {
+        const purchased = p.buyin_purchased ? ' (Already Purchased)' : '';
+        const traded = p.original_owner !== p.current_owner ? ' (Traded)' : ' (Original)';
+        return `
+            <div class="pick-option ${p.buyin_purchased ? 'disabled' : ''}">
+                <input 
+                    type="radio" 
+                    name="pickSelection" 
+                    id="pick_${p.pick}" 
+                    value="${p.pick}"
+                    ${p.buyin_purchased ? 'disabled' : ''}
+                >
+                <label for="pick_${p.pick}">
+                    Pick #${p.pick}${traded}${purchased}
+                </label>
+            </div>
+        `;
+    }).join('');
+    
+    modalBody.innerHTML = `
+        <div class="modal-warning">
+            <strong><i class="fas fa-info-circle"></i> Multiple Picks Detected</strong>
+            <p>You have ${picks.length} picks in Round ${round}. Please select which pick you want to purchase a buy-in for.</p>
+        </div>
+        
+        <div class="pick-selection">
+            ${pickOptions}
+        </div>
+        
+        <div class="modal-info">
+            <p><strong>Round ${round} Buy-In</strong></p>
+            <p>Cost: <strong>$${cost}</strong> (taxable)</p>
+            <p>Your KAP Balance: <strong>$${kapBalance}</strong></p>
+            <p>Remaining After Purchase: <strong>$${kapBalance - cost}</strong></p>
+        </div>
+        
+        <p>This buy-in is required to trade picks in Round ${round}. The cost will be deducted from your KAP allotment.</p>
+    `;
+    
+    const confirmBtn = document.getElementById('confirmBuyinBtn');
+    
+    if (kapBalance < cost) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-times"></i> Insufficient Funds';
+    } else {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Purchase';
+        confirmBtn.onclick = () => {
+            const selectedPick = document.querySelector('input[name="pickSelection"]:checked');
+            if (!selectedPick) {
+                alert('Please select a pick');
+                return;
+            }
+            confirmBuyinPurchase(round, cost, team, parseInt(selectedPick.value));
+        };
+    }
+    
+    document.getElementById('buyinModal').classList.add('active');
+}
 
 /**
  * Close buy-in modal
@@ -329,9 +414,9 @@ window.closeBuyinModal = function() {
 /**
  * Confirm buy-in purchase
  */
-async function confirmBuyinPurchase(round, cost, team) {
+async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
     try {
-        console.log(`Processing buy-in purchase: Round ${round}, Team ${team}, Cost $${cost}`);
+        console.log(`Processing buy-in purchase: Round ${round}, Team ${team}, Cost $${cost}, Pick ${pickNumber || 'N/A'}`);
         
         // Close modal
         closeBuyinModal();
@@ -340,18 +425,25 @@ async function confirmBuyinPurchase(round, cost, team) {
         const session = (typeof authManager !== 'undefined' && authManager.getSession) ? authManager.getSession() : null;
         const authHeader = session?.token ? { 'Authorization': `Bearer ${session.token}` } : {};
 
+        // Build payload - include pick if specified (required for teams with multiple picks in same round)
+        const payload = {
+            team,
+            round,
+            cost,
+            purchased_by: currentUser
+        };
+        
+        if (pickNumber !== null) {
+            payload.pick = pickNumber;
+        }
+
         const response = await fetch(`${FBPHub.config.apiBase}/api/buyin/purchase`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 ...authHeader,
             },
-            body: JSON.stringify({
-                team,
-                round,
-                cost,
-                purchased_by: currentUser
-            })
+            body: JSON.stringify(payload)
         });
         
         if (!response.ok) {

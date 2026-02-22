@@ -199,6 +199,48 @@
     opacity: 0.6;
 }
 
+/* Pick selection modal (for multiple picks in same round) */
+.pick-selection {
+    margin: var(--space-lg) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.pick-option {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width) solid var(--primary-red);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.pick-option:hover:not(.disabled) {
+    background-color: rgba(255, 77, 77, 0.1);
+    border-color: var(--accent-yellow);
+}
+
+.pick-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--bg-secondary);
+}
+
+.pick-option input[type="radio"] {
+    margin-right: var(--space-md);
+    cursor: pointer;
+}
+
+.pick-option label {
+    cursor: pointer;
+    flex: 1;
+    font-family: var(--font-body);
+    color: var(--text-white);
+}
+
 .pick-info {
     display: flex;
     flex-direction: column;
