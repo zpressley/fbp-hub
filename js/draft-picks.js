@@ -280,8 +280,10 @@ window.showBuyinModal = function(round, cost, team, pickNumber) {
     }
     
     // Get team's WizBucks wallet balance (CRITICAL: use wallet, not KAP allotment)
-    const teamFullName = managersData?.teams?.[team]?.full_name || team;
-    const walletBalance = FBPHub?.data?.wizbucks?.[teamFullName] || 0;
+    // data/wizbucks.json is keyed by the franchise display name (e.g. "Btwn2Jackies"),
+    // which is `managers.json -> teams[TEAM].name`.
+    const teamFullName = managersData?.teams?.[team]?.full_name || managersData?.teams?.[team]?.name || team;
+    const walletBalance = FBPHub?.data?.wizbucks?.[teamFullName] ?? 0;
     
     const modalBody = document.getElementById('buyinModalBody');
     modalBody.innerHTML = `

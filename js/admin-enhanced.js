@@ -211,6 +211,91 @@ function checkAddPlayerDuplicates() {
 }
 
 /**
+ * Normalize MLB team abbreviations coming back from the MLB Stats API.
+ *
+ * The enrich endpoint returns `currentTeam.abbreviation`, which can differ from
+ * the canonical abbreviations used by this UI (e.g. CWS vs CHW, ARI vs AZ).
+ */
+function normalizeMLBTeamAbbrFromAPI(rawTeam) {
+    if (!rawTeam) return '';
+
+    const input = String(rawTeam).trim();
+    const upper = input.toUpperCase();
+
+    // UI (admin.js) uses a slightly different abbreviation set than the MLB Stats API.
+    // Keep this as the single translation layer.
+    const officialToUI = {
+        // StatsAPI/official → UI
+        'ARI': 'AZ',
+        'CWS': 'CHW',
+        'ATH': 'OAK',
+        'WSN': 'WSH',
+        'WAS': 'WSH',
+    };
+
+    // If it's already a valid UI option, keep it.
+    if (Array.isArray(MLB_TEAMS) && MLB_TEAMS.includes(upper)) return upper;
+
+    // Prefer mapping using data/mlb_team_map.json (loaded into ADMIN_STATE.mlbTeamMap).
+    // That file maps many aliases (including lowercase variants and long names) to an
+    // official abbreviation.
+    let official = upper;
+
+    const aliasMap = ADMIN_STATE?.mlbTeamMap?.aliases;
+    if (aliasMap && typeof aliasMap === 'object') {
+        const aliasKey = input.toLowerCase();
+        if (aliasMap[aliasKey]) {
+            official = String(aliasMap[aliasKey]).toUpperCase();
+        }
+    }
+
+    const ui = officialToUI[official] || official;
+
+    // Only return abbreviations the UI dropdown understands; otherwise fall back to
+    // returning the raw value so setSelectValueWithFallback can still display it.
+    if (Array.isArray(MLB_TEAMS) && MLB_TEAMS.includes(ui)) return ui;
+
+    return ui;
+}
+
+/**
+ * Normalize MLB position abbreviations coming back from the MLB Stats API.
+ */
+function normalizeMLBPositionAbbrFromAPI(rawPos) {
+    if (!rawPos) return '';
+    const upper = String(rawPos).trim().toUpperCase();
+
+    // Some APIs may return hand-specific pitcher tags.
+    if (upper === 'RHP' || upper === 'LHP') return 'P';
+
+    return upper;
+}
+
+/**
+ * Set a <select> value, adding a temporary option if the value doesn't exist.
+ *
+ * Browsers won't display a value that isn't present as an <option>, which makes
+ * it look like the field didn't autofill.
+ */
+function setSelectValueWithFallback(selectEl, value, labelSuffix = ' (from API)') {
+    if (!selectEl || !value) return false;
+
+    const val = String(value).trim();
+    if (!val) return false;
+
+    const hasOption = Array.from(selectEl.options || []).some(opt => opt.value === val);
+    if (!hasOption) {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = `${val}${labelSuffix}`;
+        selectEl.appendChild(opt);
+    }
+
+    selectEl.value = val;
+    return selectEl.value === val;
+}
+
+/**
  * Enrich player data from APIs
  */
 async function enrichPlayerData() {
@@ -262,12 +347,20 @@ async function enrichPlayerData() {
         if (data.debut_date) document.getElementById('addPlayerDebut').value = data.debut_date;
         if (data.bats) document.getElementById('addPlayerBats').value = data.bats;
         if (data.throws) document.getElementById('addPlayerThrows').value = data.throws;
-        if (data.position && !document.getElementById('addPlayerPosition').value) {
-            document.getElementById('addPlayerPosition').value = data.position;
+
+        const posEl = document.getElementById('addPlayerPosition');
+        const teamEl = document.getElementById('addPlayerTeam');
+
+        if (data.position && posEl && !posEl.value) {
+            const pos = normalizeMLBPositionAbbrFromAPI(data.position);
+            setSelectValueWithFallback(posEl, pos);
         }
-        if (data.team && !team) {
-            document.getElementById('addPlayerTeam').value = data.team;
+
+        if (data.team && teamEl && !team) {
+            const mlbTeam = normalizeMLBTeamAbbrFromAPI(data.team);
+            setSelectValueWithFallback(teamEl, mlbTeam);
         }
+
         if (data.age) document.getElementById('addPlayerAge').value = data.age;
         
     } catch (err) {
