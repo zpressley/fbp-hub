@@ -1,0 +1,503 @@
+/* ============================================================
+   FBP Hub – Transactions Feed CSS  v4
+   Shared by transactions.html AND homepage activity feed
+   
+   Font size scale — bumped ~15% across all white/primary text
+   for better mobile readability.
+   ============================================================ */
+
+/* ─── FILTER BAR ──────────────────────────────────────────────────────────── */
+.txn-filter-bar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.txn-filter-tab {
+  padding: 7px 15px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--text-gray);
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+.txn-filter-tab:hover  { border-color: var(--text-gray); color: var(--text-white); }
+.txn-filter-tab.active { background: var(--primary-red); border-color: var(--primary-red); color: var(--text-white); }
+.txn-filter-count {
+  display: inline-block;
+  background: rgba(255,255,255,.12);
+  padding: 1px 7px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  margin-left: 5px;
+}
+
+/* ─── DATE SEPARATOR ──────────────────────────────────────────────────────── */
+.txn-date-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 10px;
+}
+.txn-date-label span {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: rgba(170,170,170,.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.txn-date-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.06);
+}
+
+/* ─── CARD BASE ───────────────────────────────────────────────────────────── */
+.txn-card {
+  background: #1e1e1e;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color .15s, background .15s;
+}
+.txn-card:hover { background: #242424; }
+
+.txn-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px 11px;
+}
+.txn-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Icon circles */
+.txn-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.txn-icon-wrap.trade      { background: rgba(239,62,66,.18);   color: var(--primary-red); }
+.txn-icon-wrap.wb         { background: rgba(167,139,250,.18); color: #a78bfa; }
+.txn-icon-wrap.buyin      { background: rgba(255,182,18,.15);  color: var(--accent-yellow); }
+.txn-icon-wrap.grad       { background: rgba(34,197,94,.15);   color: #22c55e; }
+.txn-icon-wrap.contract   { background: rgba(255,182,18,.12);  color: var(--accent-yellow); }
+.txn-icon-wrap.drop       { background: rgba(239,62,66,.10);   color: rgba(239,62,66,.55); }
+.txn-icon-wrap.draft-pick { background: rgba(99,179,237,.15);  color: #63b3ed; }
+
+.txn-type-label {
+  display: block;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(170,170,170,.6);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.txn-headline {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-white);
+  line-height: 1.25;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.txn-time {
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  color: rgba(170,170,170,.5);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+
+/* Left-border accent per type */
+.txn-trade          { border-left-color: var(--primary-red); }
+.txn-wizbucks       { border-left-color: #a78bfa; }
+.txn-buyin          { border-left-color: var(--accent-yellow); }
+.txn-graduation     { border-left-color: #22c55e; }
+.txn-contract-event { border-left-color: var(--accent-yellow); }
+.txn-drop           { border-left-color: rgba(239,62,66,.35); }
+.txn-draft-event    { border-left-color: #63b3ed; }
+
+/* ─── TEAM BADGE ─────────────────────────────────────────────────────────── */
+/* Base style — overridden by inline style from team_colors.json */
+.txn-team-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  background: rgba(239,62,66,.14);
+  border: 1px solid rgba(239,62,66,.28);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary-red);
+  letter-spacing: 0.5px;
+}
+
+/* ─── TRADE BODY ─────────────────────────────────────────────────────────── */
+.txn-trade-body {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  padding: 0 16px 14px;
+  align-items: start;
+}
+@media (max-width: 540px) {
+  .txn-trade-body { grid-template-columns: 1fr; }
+  .txn-trade-arrow { display: none; }
+}
+.txn-trade-side-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+.txn-receives-text {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(170,170,170,.45);
+}
+.txn-asset-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.txn-asset-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 1rem;        /* ↑ was 0.87rem */
+  color: var(--text-white);
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  flex-wrap: wrap;
+}
+.txn-asset-list li:last-child { border-bottom: none; }
+.txn-asset-list .txn-empty-side {
+  color: rgba(170,170,170,.35);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+.txn-asset-wb {
+  color: #a78bfa !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+}
+.txn-pos         { font-family: var(--font-mono); font-size: 0.72rem; color: rgba(170,170,170,.5); min-width: 22px; }
+.txn-mlb         { font-size: 0.8rem; color: rgba(170,170,170,.45); }
+.txn-player-name { font-weight: 700; font-size: 1rem; }
+
+.txn-trade-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(239,62,66,.45);
+  font-size: 1rem;
+  padding-top: 24px;
+}
+
+/* ─── CONTRACT BADGE ─────────────────────────────────────────────────────── */
+.txn-contract {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.contract-tc { color: var(--text-white);      border: 1px solid #555; }
+.contract-vc { color: var(--accent-yellow);   border: 1px solid rgba(255,182,18,.5); }
+.contract-fc { color: var(--primary-red);     border: 1px solid rgba(239,62,66,.5); }
+.contract-pc { color: #fff; background: var(--legacy-blue, #1E88C7); }
+.contract-dc { color: var(--primary-red);     border: 1px solid rgba(239,62,66,.3); }
+.contract-bc { color: var(--accent-yellow);   background: rgba(255,182,18,.15); border: 1px solid rgba(255,182,18,.4); }
+
+/* ─── META ROW (trade footer — ID only, no thread link) ─────────────────── */
+.txn-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 7px 16px;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.txn-id {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(170,170,170,.35);
+  letter-spacing: 0.5px;
+}
+
+/* ─── WIZBUCKS ────────────────────────────────────────────────────────────── */
+.txn-wb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 5px;
+  padding: 2px 16px 14px;
+}
+.txn-wb-team {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(0,0,0,.2);
+  border-radius: 4px;
+  padding: 7px 10px;
+}
+.txn-wb-balance {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;    /* ↑ was 0.95rem */
+  color: #a78bfa;
+}
+.txn-wb-delta          { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; }   /* ↑ was 0.88rem */
+.txn-wb-delta.pos      { color: #22c55e; }
+.txn-wb-delta.neg      { color: var(--primary-red); }
+.txn-wb-desc {
+  padding: 2px 16px 10px;
+  font-size: 0.9rem;     /* ↑ was 0.8rem */
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* ─── GRADUATION / CONTRACT / DROP / DRAFT DETAIL ────────────────────────── */
+.txn-graduation-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 3px 16px 13px;
+  font-size: 0.9rem;     /* ↑ was 0.82rem */
+}
+.txn-grad-arrow { color: rgba(170,170,170,.35); font-size: 0.75rem; }
+
+/* Draft pick slot label: "Rd 1, Pick 9" */
+.txn-draft-slot {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: rgba(170,170,170,.55);
+  letter-spacing: 0.3px;
+}
+
+/* "→ Released" label on dropped player cards */
+.txn-released-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: rgba(239,62,66,.4);
+  letter-spacing: 0.3px;
+}
+
+/* ─── HEADER LINK ("Full Player Log") ────────────────────────────────────── */
+.txn-header-link {
+  color: rgba(170,170,170,.55);
+  text-decoration: none;
+  font-size: inherit;
+  transition: color .15s;
+}
+.txn-header-link:hover { color: var(--text-white); }
+
+/* ─── EMPTY / LOADING ─────────────────────────────────────────────────────── */
+.txn-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(170,170,170,.35);
+}
+.txn-empty i { font-size: 2.4rem; margin-bottom: 14px; display: block; }
+.txn-empty p { font-size: 1rem; }
+.txn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px;
+  color: rgba(170,170,170,.5);
+  font-family: var(--font-title);
+  font-size: 1rem;       /* ↑ was 0.88rem */
+}
+
+/* ─── PAD SUBMISSION CARD ────────────────────────────────────────────────── */
+.txn-pad             { border-left-color: #22c55e; }
+.txn-kap             { border-left-color: #f59e0b; }
+
+.txn-icon-wrap.pad   { background: rgba(34,197,94,.15);   color: #22c55e; }
+.txn-icon-wrap.kap   { background: rgba(245,158,11,.15);  color: #f59e0b; }
+
+/* Player sections inside PAD card */
+.txn-pad-body {
+  padding: 0 16px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.txn-pad-section { display: flex; flex-direction: column; gap: 5px; }
+.txn-pad-section-label {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
+  width: fit-content;
+}
+.txn-pad-section-label.bc      { color: var(--accent-yellow); background: rgba(255,182,18,.12); border: 1px solid rgba(255,182,18,.35); }
+.txn-pad-section-label.pc      { color: #fff; background: var(--legacy-blue, #1E88C7); }
+.txn-pad-section-label.dc      { color: var(--primary-red); border: 1px solid rgba(239,62,66,.3); }
+.txn-pad-section-label.dropped { color: rgba(170,170,170,.5); border: 1px solid rgba(170,170,170,.2); }
+
+.txn-pad-player-list {
+  list-style: none;
+  padding: 0 0 0 4px;
+  margin: 0;
+}
+.txn-pad-player-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  font-family: var(--font-title);
+  font-size: 0.92rem;
+  color: var(--text-white);
+}
+.txn-pad-player-list.dropped-list li { color: rgba(170,170,170,.45); font-size: 0.85rem; }
+
+/* PAD / KAP shared footer */
+.txn-pad-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 16px 12px;
+  border-top: 1px solid rgba(255,255,255,.05);
+  margin-top: 6px;
+}
+.txn-pad-slots {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(170,170,170,.5);
+  letter-spacing: 0.3px;
+}
+.txn-pad-remaining {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: rgba(170,170,170,.45);
+  margin-left: auto;
+}
+
+/* ─── KAP SUBMISSION CARD ────────────────────────────────────────────────── */
+.txn-kap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 6px;
+  padding: 4px 16px 8px;
+}
+.txn-kap-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(0,0,0,.2);
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+.txn-kap-label {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(170,170,170,.5);
+}
+.txn-kap-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-white);
+}
+.txn-kap-free   { color: #22c55e; }
+.txn-kap-taxed  { color: var(--primary-red); font-size: 0.88rem; }
+.txn-kap-safe   { color: rgba(170,170,170,.5); }
+.txn-kap-tag {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(34,197,94,.7);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 4px;
+}
+.txn-kap-tax { grid-column: 1 / -1; } /* Pick Tax spans full width */
+
+/* ─── COMPACT VARIANT (homepage feed) ────────────────────────────────────── */
+.txn-compact .txn-card-header        { padding: 11px 13px 8px; }
+.txn-compact .txn-trade-body         { padding: 0 13px 10px; gap: 7px; }
+.txn-compact .txn-wb-grid            { padding: 2px 13px 9px; }
+.txn-compact .txn-graduation-detail  { padding: 2px 13px 9px; }
+.txn-compact .txn-wb-desc            { padding: 2px 13px 9px; }
+.txn-compact .txn-meta-row           { padding: 6px 13px; }
+.txn-compact .txn-icon-wrap          { width: 32px; height: 32px; font-size: 0.82rem; }
+.txn-compact .txn-headline           { font-size: 1rem; }
+.txn-compact .txn-asset-list li      { font-size: 0.95rem; }
+.txn-compact .txn-date-label         { margin: 16px 0 7px; }
+
+/* ─── VIEW ALL LINK (homepage activity feed footer) ──────────────────────── */
+.txn-view-all-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px;
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid rgba(239,62,66,.3);
+  border-radius: 4px;
+  color: var(--text-gray);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.88rem;    /* ↑ was 0.8rem */
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color .15s, color .15s;
+}
+.txn-view-all-link:hover {
+  border-color: var(--primary-red);
+  color: var(--text-white);
+}

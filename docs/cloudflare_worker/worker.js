@@ -123,6 +123,14 @@ export default {
         return await proxyToBot('/api/manager/contract-purchase', env, request);
       }
 
+      // --- Settings APIs ---
+      // These endpoints require Authorization so we can map the caller to a team
+      // and inject X-Manager-Team for the bot.
+      if (path.startsWith('/api/settings/') && (request.method === 'GET' || request.method === 'POST')) {
+        const pathAndQuery = `${path}${url.search}`;
+        return await proxyToBotAsManager(pathAndQuery, env, request);
+      }
+
       // --- Trade APIs ---
       // These endpoints require Authorization so we can map the caller to a team
       // and inject X-Manager-Team for the bot.

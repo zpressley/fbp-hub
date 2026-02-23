@@ -88,6 +88,7 @@ function displayBuyinCards() {
             
             // Count purchased
             const purchasedCount = status.picks.filter(p => p.buyin_purchased).length;
+            const unpurchasedPicks = status.picks.filter(p => !p.buyin_purchased);
             
             if (status.allPurchased) {
                 statusEl.classList.add('active');
@@ -100,15 +101,47 @@ function displayBuyinCards() {
                 statusEl.classList.remove('active');
                 btnEl.classList.remove('purchased');
                 btnEl.disabled = false;
-                btnEl.innerHTML = `<i class="fas fa-shopping-cart"></i> Purchase (${purchasedCount}/${status.picks.length})`;
                 cardEl?.classList.remove('purchased');
 
-                // Show pick selection modal
-                btnEl.onclick = (e) => {
-                    try { e?.preventDefault?.(); } catch (err) {}
-                    try { e?.stopPropagation?.(); } catch (err) {}
-                    showPickSelectionModal(round, status.picks, status.cost);
-                };
+                // In practice, a team should only ever have ONE eligible (unpurchased) buy-in per round:
+                // the pick they own that still needs the buy-in. Any extra picks acquired via trade should
+                // already be purchased (auto-buyin on approval).
+                //
+                // So instead of a pick-selection modal, deterministically choose the unpurchased pick.
+                let targetPick = null;
+                if (unpurchasedPicks.length === 1) {
+                    targetPick = unpurchasedPicks[0];
+                } else if (unpurchasedPicks.length > 1) {
+                    // If something is off and there are multiple, prefer the team's original pick.
+                    const native = unpurchasedPicks.filter(p => String(p?.original_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase());
+                    if (native.length === 1) {
+                        targetPick = native[0];
+                    }
+                }
+
+                if (targetPick) {
+                    const pickNum = targetPick?.pick ?? null;
+                    btnEl.innerHTML = `<i class="fas fa-shopping-cart"></i> Purchase Pick #${pickNum} (${purchasedCount}/${status.picks.length})`;
+                    btnEl.onclick = (e) => {
+                        try { e?.preventDefault?.(); } catch (err) {}
+                        try { e?.stopPropagation?.(); } catch (err) {}
+                        if (typeof window.purchaseBuyinFromKAP === 'function') {
+                            window.purchaseBuyinFromKAP(round, status.cost, pickNum);
+                        }
+                    };
+                } else {
+                    // Safety: ambiguous state; don't guess.
+                    btnEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Cannot determine pick (${purchasedCount}/${status.picks.length})`;
+                    btnEl.onclick = (e) => {
+                        try { e?.preventDefault?.(); } catch (err) {}
+                        try { e?.stopPropagation?.(); } catch (err) {}
+                        const msg = 'Multiple unpurchased buy-in picks found for this round. Please refresh and try again, or contact an admin.';
+                        try {
+                            if (typeof showToast === 'function') showToast(msg, 'error');
+                            else alert(msg);
+                        } catch (err2) {}
+                    };
+                }
             }
         } else if (status.purchased) {
             // Single pick, already purchased

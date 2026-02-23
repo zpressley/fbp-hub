@@ -304,7 +304,7 @@ function resetToDefaults() {
 /**
  * Save team colors
  */
-function saveTeamColors() {
+async function saveTeamColors() {
     const colors = {
         primary: document.getElementById('primaryColor').value,
         secondary: document.getElementById('secondaryColor').value,
@@ -312,28 +312,57 @@ function saveTeamColors() {
         accent2: document.getElementById('accent2ColorHex').value || null,
         accent3: document.getElementById('accent3ColorHex').value || null
     };
-    
+
     // Validate required colors
     if (!colors.primary || !colors.secondary) {
         showToast('Primary and Secondary colors are required', 'error');
         return;
     }
-    
-    // Save to localStorage
-    saveTeamColorsToStorage(currentTeam.abbreviation, colors);
-    
-    // In production: POST to /api/settings/team-colors
-    console.log('💾 Saving team colors:', colors);
-    
-    // Apply colors globally
-    applyTeamColorsGlobally(colors);
-    
-    showToast('Team colors saved successfully!', 'success');
-    
-    // Optional: redirect to dashboard to see changes
-    setTimeout(() => {
-        window.location.href = 'dashboard.html';
-    }, 1500);
+
+    // Must be logged in (we need the Discord token so the Worker can map → X-Manager-Team)
+    const session = (typeof authManager !== 'undefined' && authManager.getSession)
+        ? authManager.getSession()
+        : null;
+
+    if (!session?.token) {
+        showToast('Please log in again to save settings', 'error');
+        return;
+    }
+
+    try {
+        console.log('💾 Saving team colors globally:', colors);
+
+        const resp = await fetch(`${AUTH_CONFIG.workerUrl}/api/settings/team-colors`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+            body: JSON.stringify(colors),
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+            throw new Error(data.detail || data.error || 'Failed to save team colors');
+        }
+
+        // Save locally too for immediate UX (hub sync may lag)
+        saveTeamColorsToStorage(currentTeam.abbreviation, colors);
+
+        // Apply colors globally
+        applyTeamColorsGlobally(colors);
+
+        showToast('Team colors saved globally!', 'success');
+
+        // Redirect to dashboard to see changes
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1500);
+
+    } catch (err) {
+        console.error('Failed saving team colors', err);
+        showToast(`Save failed: ${err.message || err}`, 'error');
+    }
 }
 
 /**

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions – FBP Hub 3.0</title>
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#EF3E42">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/transactions-feed.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ── Top Navigation ───────────────────────────────────────────────────── -->
+<nav class="mobile-nav">
+  <div class="nav-container">
+    <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+    <div class="nav-brand">
+      <h1>FBP HUB 3.0</h1>
+      <p class="season-year">Est. 2012</p>
+    </div>
+    <div class="user-menu" id="userMenu">
+      <button class="user-menu-toggle" id="userMenuToggle">
+        <i class="fas fa-user-circle"></i>
+        <span>Menu</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="constitution.html" class="nav-link"><i class="fas fa-scroll"></i><span>Constitution</span></a>
+    <a href="players.html" class="nav-link"><i class="fas fa-users"></i><span>Players</span></a>
+    <a href="rosters.html" class="nav-link"><i class="fas fa-baseball-ball"></i><span>Rosters</span></a>
+    <a href="transactions.html" class="nav-link active"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
+
+    <a href="wizbucks.html" class="nav-link"><i class="fas fa-coins"></i><span>WizBucks</span></a>
+    <div class="nav-item-dropdown">
+      <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+        <span><i class="fas fa-table-list"></i><span>Draft</span></span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="nav-dropdown-menu" id="draftDropdownMenu">
+        <a href="draft.html" class="nav-dropdown-item"><i class="fas fa-list-ol"></i><span>Live Draft</span></a>
+        <a href="draft-preview.html" class="nav-dropdown-item"><i class="fas fa-eye"></i><span>Draft Preview</span></a>
+        <a href="draft-picks.html" class="nav-dropdown-item"><i class="fas fa-shopping-cart"></i><span>Draft Picks</span></a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main Content ──────────────────────────────────────────────────────── -->
+<main class="container-compact">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2>TRANSACTIONS</h2>
+    <p class="page-subtitle">
+      Trades, WizBucks, contracts &amp; more
+      &ensp;·&ensp;
+      <a href="player-log.html" class="txn-header-link">Full Player Log</a>
+    </p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="txn-filter-bar" id="txnFilterBar">
+    <button class="txn-filter-tab active" data-filter="all">
+      All <span class="txn-filter-count" id="count-all">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="trade">
+      Trades <span class="txn-filter-count" id="count-trade">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="wizbucks">
+      WizBucks <span class="txn-filter-count" id="count-wizbucks">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="buyin">
+      Buy-Ins <span class="txn-filter-count" id="count-buyin">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="graduation">
+      Graduations <span class="txn-filter-count" id="count-graduation">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="contract">
+      Contracts <span class="txn-filter-count" id="count-contract">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="drop">
+      Drops <span class="txn-filter-count" id="count-drop">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="draft">
+      Draft <span class="txn-filter-count" id="count-draft">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="pad">
+      PAD <span class="txn-filter-count" id="count-pad">–</span>
+    </button>
+    <button class="txn-filter-tab" data-filter="kap">
+      KAP <span class="txn-filter-count" id="count-kap">–</span>
+    </button>
+  </div>
+
+  <!-- Feed -->
+  <div id="txnFeed">
+    <div class="txn-loading">
+      <div class="spinner"></div>
+      <p>Loading transactions…</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Bottom Navigation ─────────────────────────────────────────────────── -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i><span>Home</span>
+  </a>
+  <a href="players.html" class="bottom-nav-item">
+    <i class="fas fa-search"></i><span>Search</span>
+  </a>
+  <a href="rosters.html" class="bottom-nav-item">
+    <i class="fas fa-baseball-ball"></i><span>Rosters</span>
+  </a>
+  <a href="dashboard.html" class="bottom-nav-item">
+    <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+  </a>
+  <!-- Menu button — Transactions is listed inside the slide-out drawer via main.js -->
+  <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+    <i class="fas fa-bars"></i><span>Menu</span>
+  </button>
+</nav>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+</footer>
+
+<!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script type="module">
+  import { loadTransactionFeed, renderFeedHTML, countByType } from './js/transactions.js';
+
+  let allEvents = [];
+  let activeFilter = 'all';
+
+  function updateCounts(counts) {
+    document.getElementById('count-all').textContent        = counts.all;
+    document.getElementById('count-trade').textContent      = counts.trade;
+    document.getElementById('count-wizbucks').textContent   = counts.wizbucks;
+    document.getElementById('count-buyin').textContent      = counts.buyin;
+    document.getElementById('count-graduation').textContent = counts.graduation;
+    document.getElementById('count-contract').textContent   = counts.contract;
+    document.getElementById('count-drop').textContent       = counts.drop;
+    const draftEl = document.getElementById('count-draft');
+    if (draftEl) draftEl.textContent = counts.draft || 0;
+    const padEl = document.getElementById('count-pad');
+    if (padEl) padEl.textContent = counts.pad || 0;
+    const kapEl = document.getElementById('count-kap');
+    if (kapEl) kapEl.textContent = counts.kap || 0;
+  }
+
+  function renderFeed() {
+    document.getElementById('txnFeed').innerHTML =
+      renderFeedHTML(allEvents, { limit: 200, filter: activeFilter });
+  }
+
+  // Filter tab clicks
+  document.getElementById('txnFilterBar').addEventListener('click', e => {
+    const btn = e.target.closest('.txn-filter-tab');
+    if (!btn) return;
+    document.querySelectorAll('.txn-filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderFeed();
+  });
+
+  // Load data
+  (async () => {
+    try {
+      allEvents = await loadTransactionFeed();
+      updateCounts(countByType(allEvents));
+      renderFeed();
+    } catch (err) {
+      console.error('Transactions page load error:', err);
+      document.getElementById('txnFeed').innerHTML =
+        '<div class="txn-empty"><i class="fas fa-exclamation-triangle"></i><p>Could not load transactions.</p></div>';
+    }
+  })();
+</script>
+
+</body>
+</html>
