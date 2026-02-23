@@ -597,7 +597,11 @@ function calculateTaxFreeSpend() {
 }
 
 function calculateTotalSpend() {
-    return calculateTaxableSpend() + calculateTaxFreeSpend();
+    // Buy-ins are already deducted from the WizBucks wallet at purchase time,
+    // so totalAvailable already reflects them. Only include costs that haven't
+    // been deducted yet: keeper salaries + RaT (tax-free).
+    // Buy-in cost is still in calculateTaxableSpend() for tax bracket purposes.
+    return calculateKeeperSalaryCost() + calculateTaxFreeSpend();
 }
 
 function calculateTaxBracket(taxableSpend) {
@@ -615,8 +619,8 @@ function calculateTaxBracket(taxableSpend) {
 function updateKAPBudgetDisplay() {
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
-    const totalSpend = taxableSpend + taxFreeSpend;
-    const remaining = KAP_STATE.totalAvailable - totalSpend;
+    // Use calculateTotalSpend() which excludes already-deducted buy-ins
+    const remaining = KAP_STATE.totalAvailable - calculateTotalSpend();
     const taxBracket = calculateTaxBracket(taxableSpend);
     const salaryCost = calculateKeeperSalaryCost();
     
@@ -1201,7 +1205,8 @@ function updateSummary() {
     
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
-    const remaining = KAP_STATE.totalAvailable - (taxableSpend + taxFreeSpend);
+    // Use calculateTotalSpend() which excludes already-deducted buy-ins
+    const remaining = KAP_STATE.totalAvailable - calculateTotalSpend();
     const taxBracket = calculateTaxBracket(taxableSpend);
     
     document.getElementById('summaryTaxableTotal').textContent = `$${taxableSpend}`;
@@ -1284,7 +1289,7 @@ function showConfirmation() {
 
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
-    const totalSpend = taxableSpend + taxFreeSpend;
+    const totalSpend = calculateTotalSpend();
     const remaining = KAP_STATE.totalAvailable - totalSpend;
     const rollover = Math.min(remaining, 100);
     const taxBracket = calculateTaxBracket(taxableSpend);
@@ -1357,7 +1362,7 @@ async function confirmSubmit() {
     
     const taxableSpend = calculateTaxableSpend();
     const taxFreeSpend = calculateTaxFreeSpend();
-    const totalSpend = taxableSpend + taxFreeSpend;
+    const totalSpend = calculateTotalSpend();
     const remaining = KAP_STATE.totalAvailable - totalSpend;
     const rollover = Math.min(remaining, 100);
     

@@ -342,11 +342,13 @@ window.closeBuyinModal = function() {
  * Confirm buy-in purchase
  */
 async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
+    const confirmBtn = document.getElementById('confirmBuyinBtn');
     try {
         console.log(`Processing buy-in purchase: Round ${round}, Team ${team}, Cost $${cost}, Pick ${pickNumber || 'N/A'}`);
         
-        // Close modal
-        closeBuyinModal();
+        // Show loading state (keep modal open)
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         
         // Call backend API
         const session = (typeof authManager !== 'undefined' && authManager.getSession) ? authManager.getSession() : null;
@@ -378,6 +380,7 @@ async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
             const msg = error.detail || error.error || 'Purchase failed';
 
             if (String(msg).toLowerCase().includes('already purchased')) {
+                closeBuyinModal();
                 if (typeof showToast === 'function') {
                     showToast(`Round ${round} buy-in already purchased.`, 'success');
                 }
@@ -391,7 +394,9 @@ async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
         
         const result = await response.json();
         
-        // Show success message
+        // Success — close modal and show toast
+        closeBuyinModal();
+        
         if (typeof showToast === 'function') {
             showToast(`Round ${round} buy-in purchased successfully!`, 'success');
         } else {
@@ -404,6 +409,11 @@ async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
         
     } catch (error) {
         console.error('Error processing buy-in:', error);
+        // Reset button so user can retry
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Purchase';
+        }
         alert(`Error: ${error.message}`);
     }
 }
@@ -462,11 +472,13 @@ window.closeRefundModal = function() {
  * Confirm refund
  */
 async function confirmRefund(round, team, cost) {
+    const confirmBtn = document.getElementById('confirmRefundBtn');
     try {
         console.log(`Processing refund: Round ${round}, Team ${team}, Amount $${cost}`);
         
-        // Close modal
-        closeRefundModal();
+        // Show loading state (keep modal open)
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         
         // Call backend API
         const session = (typeof authManager !== 'undefined' && authManager.getSession) ? authManager.getSession() : null;
@@ -492,7 +504,9 @@ async function confirmRefund(round, team, cost) {
         
         const result = await response.json();
         
-        // Show success
+        // Success — close modal and show toast
+        closeRefundModal();
+        
         if (typeof showToast === 'function') {
             showToast(`Round ${round} buy-in refunded for ${team}`, 'success');
         } else {
@@ -505,6 +519,11 @@ async function confirmRefund(round, team, cost) {
         
     } catch (error) {
         console.error('Error processing refund:', error);
+        // Reset button so user can retry
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Refund';
+        }
         alert(`Error: ${error.message}`);
     }
 }
