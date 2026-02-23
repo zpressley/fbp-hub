@@ -200,8 +200,6 @@
 
 /* Draft Picks Summary */
 .draft-picks-summary {
-    max-height: 400px;
-    overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: var(--radius-md);
     padding: var(--space-md);

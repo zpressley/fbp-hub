@@ -1,191 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weekly Auction - FBP Hub</title>
-    <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#EF3E42">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/auction.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auction Portal – FBP Hub</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#EF3E42">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/auction.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="mobile-nav">
-        <div class="nav-container">
-            <button class="nav-toggle" id="navToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-brand">
-                <h1>FBP HUB 3.0</h1>
-                <p class="season-year">Est. 2012</p>
-            </div>
-            <div class="user-menu" id="userMenu">
-                <!-- Guest state -->
-                <button class="user-menu-toggle" id="userMenuToggle">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Menu</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="user-menu-dropdown" id="userMenuDropdown">
-                    <a href="login.html">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Login
-                    </a>
-                </div>
-            </div>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="mobile-nav">
+  <div class="nav-container">
+    <button class="nav-toggle" id="navToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="nav-brand">
+      <h1>FBP HUB 3.0</h1>
+      <p class="season-year">Est. 2012</p>
+    </div>
+    <div class="user-menu" id="userMenu">
+      <button class="user-menu-toggle" id="userMenuToggle">
+        <i class="fas fa-user-circle"></i>
+        <span>Menu</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <a href="login.html">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html" class="nav-link">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="constitution.html" class="nav-link">
+      <i class="fas fa-scroll"></i>
+      <span>Constitution</span>
+    </a>
+    <a href="players.html" class="nav-link">
+      <i class="fas fa-users"></i>
+      <span>Players</span>
+    </a>
+    <a href="rosters.html" class="nav-link">
+      <i class="fas fa-baseball-ball"></i>
+      <span>Rosters</span>
+    </a>
+    <a href="transactions.html" class="nav-link">
+      <i class="fas fa-exchange-alt"></i>
+      <span>Transactions</span>
+    </a>
+    <a href="wizbucks.html" class="nav-link">
+      <i class="fas fa-coins"></i>
+      <span>WizBucks</span>
+    </a>
+    <div class="nav-item-dropdown">
+      <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+        <span>
+          <i class="fas fa-table-list"></i>
+          <span>Draft</span>
+        </span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="nav-dropdown-menu" id="draftDropdownMenu">
+        <a href="draft.html" class="nav-dropdown-item">
+          <i class="fas fa-list-ol"></i>
+          <span>Live Draft</span>
+        </a>
+        <a href="draft-preview.html" class="nav-dropdown-item">
+          <i class="fas fa-eye"></i>
+          <span>Draft Preview</span>
+        </a>
+        <a href="draft-picks.html" class="nav-dropdown-item">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Draft Picks</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main ───────────────────────────────────────────────────────────────── -->
+<main class="container-compact">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2><i class="fas fa-gavel"></i> AUCTION PORTAL</h2>
+    <p class="page-subtitle">
+      Weekly Prospect Auction &mdash; columns ordered worst&nbsp;&rarr;&nbsp;best standing
+      &ensp;&middot;&ensp; Refreshes every 30s
+    </p>
+  </div>
+
+  <!-- Phase Banner -->
+  <div class="auc-phase-banner" id="phaseBanner">
+    <div class="auc-phase-icon" id="phaseIcon">
+      <i class="fas fa-clock"></i>
+    </div>
+    <div class="auc-phase-content">
+      <div class="auc-phase-title" id="phaseTitle">Loading auction status&hellip;</div>
+      <div class="auc-phase-sub"   id="phaseSub"></div>
+    </div>
+    <div class="auc-phase-schedule">
+      <div class="auc-sched-item">
+        <span class="auc-sched-label">OB Window</span>
+        <span class="auc-sched-val">Mon 3pm – Tue EOD ET</span>
+      </div>
+      <div class="auc-sched-item">
+        <span class="auc-sched-label">CB Window</span>
+        <span class="auc-sched-val">Wed – Fri 9pm ET</span>
+      </div>
+      <div class="auc-sched-item">
+        <span class="auc-sched-label">OB Match</span>
+        <span class="auc-sched-val">Saturday</span>
+      </div>
+      <div class="auc-sched-item">
+        <span class="auc-sched-label">Process</span>
+        <span class="auc-sched-val">Sunday</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WizBucks Bar -->
+  <div class="auc-wb-bar" id="wbBar" style="display:none">
+    <div class="auc-wb-item">
+      <span class="auc-wb-label">Team</span>
+      <span class="auc-wb-val" id="wbTeamLabel">–</span>
+    </div>
+    <div class="auc-wb-item">
+      <span class="auc-wb-label">Balance</span>
+      <span class="auc-wb-val money" id="wbTotal">–</span>
+    </div>
+    <div class="auc-wb-item">
+      <span class="auc-wb-label">Committed</span>
+      <span class="auc-wb-val neg" id="wbCommitted">–</span>
+    </div>
+    <div class="auc-wb-item">
+      <span class="auc-wb-label">Available</span>
+      <span class="auc-wb-val pos" id="wbAvailable">–</span>
+    </div>
+    <div class="auc-wb-item auc-wb-login" id="wbLoginPrompt">
+      <a href="login.html" class="auc-login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login to Bid
+      </a>
+    </div>
+  </div>
+
+  <!-- Rules (collapsed) -->
+  <details class="auc-rules-details">
+    <summary class="auc-rules-summary">
+      <i class="fas fa-info-circle"></i> Auction Rules
+    </summary>
+    <div class="auc-rules-grid">
+      <div class="auc-rule">
+        <strong>OB (Originating Bid)</strong> — $10 min · 1 per team per week ·
+        Mon 3pm – Tue EOD ET · OBs win <em>all</em> tiebreaks.
+      </div>
+      <div class="auc-rule">
+        <strong>CB (Challenge Bid)</strong> — Must raise current high by at least $5 ·
+        1 CB per prospect per calendar day · Wed – Fri 9pm ET · No weekly CB limit.
+      </div>
+      <div class="auc-rule">
+        <strong>Saturday Match Window</strong> — OB manager may match the high challenge
+        bid amount, or forfeit. This is Saturday only.
+      </div>
+      <div class="auc-rule">
+        <strong>Tiebreak</strong> — OB beats CB. Among tied CBs: lower standings rank
+        (left column = worst record) wins. All bids in $5 increments.
+        Committed bids cannot be removed.
+      </div>
+    </div>
+  </details>
+
+  <!-- Main Grid -->
+  <div class="auc-grid-wrapper" id="auctionGridWrapper">
+    <div class="auc-loading" id="auctionLoading">
+      <div class="spinner"></div>
+      <p>Loading auction portal&hellip;</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Bid Modal ──────────────────────────────────────────────────────────── -->
+<div class="auc-modal-overlay"
+     id="bidModal"
+     style="display:none"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="bidModalTitle">
+
+  <div class="auc-modal">
+
+    <button class="auc-modal-close" id="bidModalClose" aria-label="Close">✕</button>
+
+    <div class="auc-modal-header">
+      <span class="auc-modal-icon"><i class="fas fa-gavel"></i></span>
+      <div>
+        <div class="auc-modal-title" id="bidModalTitle">Place Bid</div>
+        <div class="auc-modal-prospect" id="bidModalProspect"></div>
+      </div>
+    </div>
+
+    <div class="auc-modal-body">
+
+      <div class="auc-modal-row">
+        <label class="auc-modal-label">Bid Type</label>
+        <div class="auc-bid-type-toggle">
+          <button class="auc-type-btn active" data-type="OB" id="typeOB">
+            <span class="auc-type-label">OB</span>
+            <span class="auc-type-desc">Originating</span>
+          </button>
+          <button class="auc-type-btn" data-type="CB" id="typeCB">
+            <span class="auc-type-label">CB</span>
+            <span class="auc-type-desc">Challenge</span>
+          </button>
         </div>
-                <div class="nav-menu" id="navMenu">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="constitution.html" class="nav-link">
-                <i class="fas fa-scroll"></i>
-                <span>Constitution</span>
-            </a>
-            <a href="players.html" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>Players</span>
-            </a>
-            <a href="rosters.html" class="nav-link">
-                <i class="fas fa-baseball-ball"></i>
-                <span>Rosters</span>
-            </a>
-            <a href="transactions.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
+      </div>
 
-            <a href="wizbucks.html" class="nav-link">
-                <i class="fas fa-coins"></i>
-                <span>WizBucks</span>
-            </a>
-            <div class="nav-item-dropdown">
-                <button class="nav-dropdown-toggle" id="draftDropdownToggle">
-                    <span>
-                        <i class="fas fa-table-list"></i>
-                        <span>Draft</span>
-                    </span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="nav-dropdown-menu" id="draftDropdownMenu">
-                    <a href="draft.html" class="nav-dropdown-item">
-                        <i class="fas fa-list-ol"></i>
-                        <span>Live Draft</span>
-                    </a>
-                    <a href="draft-preview.html" class="nav-dropdown-item">
-                        <i class="fas fa-eye"></i>
-                        <span>Draft Preview</span>
-                    </a>
-                    <a href="draft-picks.html" class="nav-dropdown-item">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Draft Picks</span>
-                    </a>
-                </div>
-            </div>
+      <div class="auc-modal-row">
+        <label class="auc-modal-label" for="bidAmount">
+          Amount (WB)
+          <span class="auc-modal-hint" id="bidAmountHint">$5 increments · min $10</span>
+        </label>
+        <div class="auc-amount-row">
+          <button class="auc-amt-btn" data-delta="-5" aria-label="Decrease by $5">−5</button>
+          <input type="number"
+                 id="bidAmount"
+                 class="auc-amount-input"
+                 min="10"
+                 step="5"
+                 value="10"
+                 inputmode="numeric"
+                 aria-label="Bid amount in WizBucks">
+          <button class="auc-amt-btn" data-delta="5" aria-label="Increase by $5">+5</button>
         </div>
-    </nav>
+      </div>
 
-    <!-- Main Content -->
-    <main class="container-compact">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h2><i class="fas fa-gavel"></i> WEEKLY AUCTION PORTAL</h2>
-            <p class="page-subtitle">Prospect Auction Portal &mdash; synced with Discord bot</p>
-        </div>
+      <div class="auc-modal-info" id="bidModalInfo"></div>
+      <div class="auc-modal-error" id="bidModalError" style="display:none" role="alert"></div>
 
-        <!-- Phase banner / non-auction message -->
-        <section class="container" id="auctionPhaseSection">
-            <div class="card" id="auctionPhaseCard">
-                <div id="auctionPhaseContent">
-                    <h3 id="auctionPhaseTitle">Loading auction status...</h3>
-                    <p id="auctionPhaseSubtitle" class="text-gray"></p>
-                    <p id="auctionPhaseCountdown" class="text-yellow"></p>
-                </div>
-            </div>
-        </section>
+      <button class="auc-submit-btn" id="bidSubmitBtn">
+        <i class="fas fa-gavel"></i> Submit Bid
+      </button>
 
-        <!-- WizBucks summary for logged-in user -->
-        <section class="container" id="wizbucksSection">
-            <div class="section-header">
-                <h3><i class="fas fa-coins"></i> YOUR WIZBUCKS</h3>
-            </div>
-            <div class="card" id="wizbucksCard">
-                <p class="text-gray" id="wizbucksGuestMessage">
-                    Login with Discord to see your WizBucks balance and active bids.
-                </p>
-                <div id="wizbucksStats" class="hidden">
-                    <p><strong>Team:</strong> <span id="wbTeam"></span></p>
-                    <p><strong>Total:</strong> <span id="wbTotal" class="money-value"></span></p>
-                    <p><strong>Committed:</strong> <span id="wbCommitted" class="money-value"></span></p>
-                    <p><strong>Available:</strong> <span id="wbAvailable" class="money-value"></span></p>
-                </div>
-            </div>
-        </section>
+    </div>
+  </div>
+</div>
 
-        <!-- Your active bids -->
-        <section class="container" id="yourBidsSection">
-            <div class="section-header">
-                <h3><i class="fas fa-user-check"></i> YOUR ACTIVE BIDS</h3>
-            </div>
-            <div id="userBidsContainer" class="card">
-                <div class="loading-message">
-                    <div class="spinner"></div>
-                    <p>Loading your bids...</p>
-                </div>
-            </div>
-        </section>
+<!-- ── Bottom Navigation ──────────────────────────────────────────────────── -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="players.html" class="bottom-nav-item">
+    <i class="fas fa-search"></i>
+    <span>Search</span>
+  </a>
+  <a href="rosters.html" class="bottom-nav-item">
+    <i class="fas fa-baseball-ball"></i>
+    <span>Rosters</span>
+  </a>
+  <a href="dashboard.html" class="bottom-nav-item">
+    <i class="fas fa-tachometer-alt"></i>
+    <span>Dashboard</span>
+  </a>
+  <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+    <i class="fas fa-bars"></i>
+    <span>Menu</span>
+  </button>
+</nav>
 
-        <!-- Available prospects -->
-        <section class="container" id="prospectsSection">
-            <div class="section-header">
-                <h3><i class="fas fa-user-astronaut"></i> AVAILABLE PROSPECTS</h3>
-            </div>
-            <div id="prospectsGrid" class="card">
-                <div class="loading-message">
-                    <div class="spinner"></div>
-                    <p>Loading prospects...</p>
-                </div>
-            </div>
-        </section>
-    </main>
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+</footer>
 
-    <!-- Bottom Navigation (mobile) -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="players.html" class="bottom-nav-item">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </a>
-        <a href="rosters.html" class="bottom-nav-item">
-            <i class="fas fa-baseball-ball"></i>
-            <span>Rosters</span>
-        </a>
-        <a href="dashboard.html" class="bottom-nav-item">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-        </a>
-        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
-            <i class="fas fa-bars"></i>
-            <span>Menu</span>
-        </button>
-    </nav>
+<!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/auction.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof window.initAuctionPage === 'function') {
+      window.initAuctionPage();
+    }
+  });
+</script>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/auction.js"></script>
 </body>
 </html>

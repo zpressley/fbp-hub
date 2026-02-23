@@ -9,12 +9,12 @@
  *   Match/Forfeit  • Saturday only, OB manager only
  *   Processing     • Sunday — read-only results view
  *
- * UPID is the canonical prospect identifier stored in bids.
- * Player names are resolved from combined_players.json for display only.
- *
  * Column order = _state.priority_order (set by AuctionManager each Monday from
  * managers.json 'standing' field).  Left = rank 12 = worst record = highest
  * CB tiebreak priority.
+ *
+ * Transactions feed: Sunday processing writes wizbucks_transactions.json +
+ * player_log.json entries which appear automatically in transactions.html.
  */
 
 (function () {
@@ -25,12 +25,11 @@
 
   // ── State ──────────────────────────────────────────────────────────────────
   let _state    = null;
-  let _players  = [];     // unowned Farm prospects (full records)
-  let _byUpid   = {};     // UPID → player record (for name/position resolution)
+  let _players  = [];
   let _wizbucks = {};
   let _myTeam   = null;
   let _phase    = 'off_week';
-  let _priority = [];     // column order from _state.priority_order
+  let _priority = [];   // column order from _state.priority_order
   let _modal    = { prospectId: null, prospectName: null };
   let _tick     = null;
 
@@ -53,32 +52,10 @@
     _phase    = _state.phase || 'off_week';
     _priority = (_state.priority_order || []).filter(Boolean);
     _wizbucks = wb      || {};
-
-    // Build UPID lookup from ALL players (for resolving bid prospect_ids)
-    const allPlayers = Array.isArray(players) ? players : [];
-    _byUpid = {};
-    for (const p of allPlayers) {
-      if (p.upid) _byUpid[String(p.upid)] = p;
-    }
-
-    // Eligible prospects: Farm type, unowned
-    _players = allPlayers.filter(p =>
-      p.player_type === 'Farm' && !p.FBP_Team && !p.manager
-    );
-
+    _players  = Array.isArray(players)
+      ? players.filter(p => p.player_type === 'Farm' && !p.FBP_Team && !p.manager)
+      : [];
     _myTeam = getMyTeam();
-  }
-
-  /** Resolve a UPID to a display name. Falls back to the raw pid string. */
-  function resolveName(pid) {
-    const p = _byUpid[String(pid)];
-    return p ? p.name : String(pid);
-  }
-
-  /** Resolve a UPID to position string, or empty. */
-  function resolvePos(pid) {
-    const p = _byUpid[String(pid)];
-    return p?.position || '';
   }
 
   function getMyTeam() {
@@ -168,7 +145,7 @@
 
   function alreadyCBToday(team, prospectId, bids) {
     const pid   = String(prospectId);
-    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // YYYY-MM-DD
     return bids.some(b =>
       b.team === team && String(b.prospect_id) === pid &&
       b.type === 'CB' && (b.timestamp || '').slice(0, 10) === today
@@ -184,10 +161,10 @@
     if (!banner) return;
 
     const cfgs = {
-      ob_window:  { cls:'phase-ob',    icon:'fas fa-circle-dot', title:'\u{1F7E2} Originating Bid Window Open',    sub:'Mon 3pm \u2013 Tue EOD ET \u00B7 Min $10 \u00B7 1 OB per team per week' },
-      cb_window:  { cls:'phase-cb',    icon:'fas fa-swords',     title:'\u{1F7E1} Challenge Bid Window Open',       sub:'Wed \u2013 Fri 9pm ET \u00B7 Min current high +$5 \u00B7 1 CB per prospect per day' },
-      ob_final:   { cls:'phase-match', icon:'fas fa-handshake',  title:'\u{1F7E3} Match / Forfeit Window',          sub:'Saturday \u00B7 OB managers: match the high challenge bid or forfeit' },
-      processing: { cls:'phase-proc',  icon:'fas fa-gears',      title:'\u{1F535} Processing Results',              sub:'Sunday \u00B7 Results being finalized \u00B7 Transactions page will update' },
+      ob_window:  { cls:'phase-ob',    icon:'fas fa-circle-dot', title:'🟢 Originating Bid Window Open',    sub:'Mon 3pm – Tue EOD ET · Min $10 · 1 OB per team per week' },
+      cb_window:  { cls:'phase-cb',    icon:'fas fa-swords',     title:'🟡 Challenge Bid Window Open',       sub:'Wed – Fri 9pm ET · Min current high +$5 · 1 CB per prospect per day' },
+      ob_final:   { cls:'phase-match', icon:'fas fa-handshake',  title:'🟣 Match / Forfeit Window',          sub:'Saturday · OB managers: match the high challenge bid or forfeit' },
+      processing: { cls:'phase-proc',  icon:'fas fa-gears',      title:'🔵 Processing Results',              sub:'Sunday · Results being finalized · Transactions page will update' },
       off_week:   { cls:'phase-off',   icon:'fas fa-moon',       title:'No Auction This Week',               sub:'Portal opens Monday at 3pm ET during the regular season' },
     };
     const cfg = cfgs[_phase] || cfgs.off_week;
@@ -216,7 +193,7 @@
       setText('wbAvailable', `$${available}`);
     } else {
       if (loginPrompt) loginPrompt.style.display = '';
-      ['wbTeamLabel','wbTotal','wbCommitted','wbAvailable'].forEach(id => setText(id, '\u2014'));
+      ['wbTeamLabel','wbTotal','wbCommitted','wbAvailable'].forEach(id => setText(id, '—'));
     }
   }
 
@@ -246,6 +223,10 @@
       return;
     }
 
+    // Prospect lookup
+    const pByName = {};
+    for (const p of _players) pByName[p.name] = p;
+
     // Header
     let hdr = `<th class="th-rank">#</th><th class="th-team">Team</th><th class="th-balance">WB Bal</th><th class="th-spend">Committed</th><th class="th-claim">Prospect</th><th class="th-time">OB Time</th>`;
     cols.forEach((abbr, i) => {
@@ -253,7 +234,7 @@
     });
     hdr += `<th class="th-bid" style="min-width:90px;color:rgba(170,170,170,.25);font-size:.58rem;letter-spacing:.5px;">SAT</th>`;
 
-    // Body — prospect_id (UPID) is the key; names resolved for display
+    // Body
     let body = '';
     for (const pid of prospectIds) {
       const ob      = getOB(pid, bids);
@@ -262,18 +243,17 @@
       const obRank  = cols.indexOf(obTeam) + 1;
       const obBal   = getBalance(obTeam);
       const obCom   = computeCommitted(obTeam, bids);
-      const name    = resolveName(pid);
-      const pos     = resolvePos(pid);
+      const pos     = pByName[pid]?.position;
       const posStr  = pos ? `<span class="prospect-pos">${esc(pos)}</span>` : '';
-      const time    = ob?.timestamp ? fmtTime(ob.timestamp) : '\u2013';
+      const time    = ob?.timestamp ? fmtTime(ob.timestamp) : '–';
       const isMyRow = obTeam === _myTeam;
 
       body += `<tr class="${isMyRow ? 'my-row' : ''}">
-        <td class="td-rank">${obRank || '\u2013'}</td>
+        <td class="td-rank">${obRank || '–'}</td>
         <td class="td-team">${esc(obTeam)}</td>
         <td class="td-balance">$${obBal}</td>
         <td class="td-spend">$${obCom}</td>
-        <td class="td-claim">${posStr}<span class="prospect-name">${esc(name)}</span></td>
+        <td class="td-claim">${posStr}<span class="prospect-name">${esc(pid)}</span></td>
         <td class="td-time">${time}</td>`;
 
       for (const team of cols) {
@@ -285,7 +265,7 @@
         let cls = 'auc-bid-cell' + (isWinner ? ' winning' : isMyBid ? ' my-bid' : '') + (canClick ? ' clickable' : '');
         const content = bid
           ? `<span class="auc-bid-amount">$${bid.amount}</span><span class="auc-bid-marker">${bid.type}</span>`
-          : `<span class="auc-bid-empty">\u2013</span>`;
+          : `<span class="auc-bid-empty">–</span>`;
 
         body += `<td class="${cls}" data-pid="${esc(pid)}" data-team="${esc(team)}">${content}</td>`;
       }
@@ -294,7 +274,7 @@
       if (_phase === 'ob_final' && obTeam === _myTeam) {
         const highCB = winner && winner.team !== obTeam ? winner : null;
         body += highCB
-          ? `<td class="auc-match-cell"><button class="auc-match-btn" data-pid="${esc(pid)}" data-action="match">\u2705 Match $${highCB.amount}</button><button class="auc-forfeit-btn" data-pid="${esc(pid)}" data-action="forfeit">\u274C Forfeit</button></td>`
+          ? `<td class="auc-match-cell"><button class="auc-match-btn" data-pid="${esc(pid)}" data-action="match">✅ Match $${highCB.amount}</button><button class="auc-forfeit-btn" data-pid="${esc(pid)}" data-action="forfeit">❌ Forfeit</button></td>`
           : `<td><span style="color:rgba(170,170,170,.25);font-size:.7rem;">No challengers</span></td>`;
       } else {
         body += `<td></td>`;
@@ -303,21 +283,20 @@
       body += `</tr>`;
     }
 
-    // New OB row — uses UPID as option value, displays name
+    // New OB row
     const myHasOB = bids.some(b => b.team === _myTeam && b.type === 'OB');
     let newRow = '';
     if (_phase === 'ob_window' && _myTeam && !myHasOB) {
-      const activeUpids = new Set(prospectIds);
       const opts = _players
-        .filter(p => p.upid && !activeUpids.has(String(p.upid)))
-        .map(p => `<option value="${esc(String(p.upid))}">${esc(p.name)}${p.position ? ` (${p.position})` : ''}</option>`)
+        .filter(p => !prospectIds.includes(p.name))
+        .map(p => `<option value="${esc(p.name)}">${esc(p.name)}${p.position ? ` (${p.position})` : ''}</option>`)
         .join('');
       const emptyCols = cols.map(() => '<td></td>').join('');
       newRow = `<tr class="auc-new-prospect-row">
         <td></td><td class="td-team">${esc(_myTeam)}</td><td></td><td></td>
         <td class="td-claim">
           <select class="auc-prospect-select" id="newProspectSelect">
-            <option value="">\u2014 Select prospect \u2014</option>${opts}
+            <option value="">— Select prospect —</option>${opts}
           </select>
         </td>
         <td></td>${emptyCols.slice(0,-4)}
@@ -348,14 +327,14 @@
         <tfoot><tr>${foot}</tr></tfoot>
       </table>`;
 
-    // Events — pass UPID as pid, resolve name for display
+    // Events
     wrapper.querySelectorAll('.auc-bid-cell.clickable').forEach(cell => {
-      cell.addEventListener('click', () => openBidModal(cell.dataset.pid, resolveName(cell.dataset.pid), 'CB'));
+      cell.addEventListener('click', () => openBidModal(cell.dataset.pid, cell.dataset.pid, 'CB'));
     });
     document.getElementById('placeNewOB')?.addEventListener('click', () => {
-      const upid = document.getElementById('newProspectSelect')?.value;
-      if (!upid) { document.getElementById('newProspectSelect')?.focus(); return; }
-      openBidModal(upid, resolveName(upid), 'OB');
+      const pid = document.getElementById('newProspectSelect')?.value;
+      if (!pid) { document.getElementById('newProspectSelect')?.focus(); return; }
+      openBidModal(pid, pid, 'OB');
     });
     wrapper.querySelectorAll('[data-action]').forEach(btn => {
       btn.addEventListener('click', () => handleMatchForfeit(btn.dataset.pid, btn.dataset.action));
@@ -365,15 +344,14 @@
   function renderProcessingView(wrapper, bids, prospectIds) {
     let rows = prospectIds.map(pid => {
       const w = computeWinner(pid, bids);
-      const name = resolveName(pid);
       return `<tr>
-        <td class="td-claim"><span class="prospect-name">${esc(name)}</span></td>
-        <td class="td-team" style="color:${w ? '#22c55e' : 'rgba(170,170,170,.3)'}">${w ? esc(w.team) : '\u2013'}</td>
-        <td class="td-balance">${w ? '$' + w.amount : '\u2013'}</td>
+        <td class="td-claim"><span class="prospect-name">${esc(pid)}</span></td>
+        <td class="td-team" style="color:${w ? '#22c55e' : 'rgba(170,170,170,.3)'}">${w ? esc(w.team) : '–'}</td>
+        <td class="td-balance">${w ? '$' + w.amount : '–'}</td>
       </tr>`;
     }).join('');
     wrapper.innerHTML = `
-      <div style="padding:6px 0 4px;font-family:var(--font-title);font-size:.72rem;color:rgba(170,170,170,.35);letter-spacing:.5px;text-transform:uppercase;">Processing \u2014 Results will appear in Transactions</div>
+      <div style="padding:6px 0 4px;font-family:var(--font-title);font-size:.72rem;color:rgba(170,170,170,.35);letter-spacing:.5px;text-transform:uppercase;">Processing — Results will appear in Transactions</div>
       <table class="auc-table" style="min-width:280px;">
         <thead><tr><th class="th-claim">Prospect</th><th class="th-team">Winner</th><th class="th-balance">Amount</th></tr></thead>
         <tbody>${rows || '<tr><td colspan="3" style="color:rgba(170,170,170,.3);text-align:center;padding:30px;">No bids this week</td></tr>'}</tbody>
@@ -384,9 +362,8 @@
   function canBidOnProspect(prospectId, bids) {
     if (!_myTeam) return false;
     const ob = getOB(prospectId, bids);
-    if (!ob || ob.team === _myTeam) return false;
-    // CBs only allowed during cb_window (backend rejects during ob_window)
-    if (_phase === 'cb_window') {
+    if (!ob || ob.team === _myTeam) return false;  // no OB or it's mine
+    if (_phase === 'ob_window' || _phase === 'cb_window') {
       return !alreadyCBToday(_myTeam, prospectId, bids);
     }
     return false;
@@ -402,7 +379,7 @@
     const myOB  = bids.find(b => b.team === _myTeam && b.type === 'OB');
 
     const allowOB = _phase === 'ob_window' && !myOB && !ob;
-    const allowCB = _phase === 'cb_window'
+    const allowCB = (_phase === 'ob_window' || _phase === 'cb_window')
                     && ob && ob.team !== _myTeam
                     && !alreadyCBToday(_myTeam, prospectId, bids);
 
@@ -445,16 +422,16 @@
 
     if (bidType === 'OB') {
       minAmt = 10;
-      info = 'Originating bid \u00B7 $10 minimum \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
+      info = 'Originating bid · $10 minimum · ⚠️ Committed bids cannot be removed.';
     } else {
       const high = winner?.amount ?? (ob ? Number(ob.amount) : 10);
       minAmt = high + 5;
-      info = `Current high: $${high} \u00B7 Minimum raise: $5 \u2192 bid at least $${minAmt}`;
-      if (myBid) info += ` \u00B7 Your current bid: $${myBid.amount}`;
-      info += ' \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
+      info = `Current high: $${high} · Minimum raise: $5 → bid at least $${minAmt}`;
+      if (myBid) info += ` · Your current bid: $${myBid.amount}`;
+      info += ' · ⚠️ Committed bids cannot be removed.';
     }
 
-    if (hintEl)  hintEl.textContent  = `$5 increments \u00B7 min $${minAmt}`;
+    if (hintEl)  hintEl.textContent  = `$5 increments · min $${minAmt}`;
     if (infoEl)  infoEl.textContent  = info;
     if (amtEl) {
       amtEl.min   = minAmt;
@@ -462,7 +439,7 @@
     }
   }
 
-  // ── Submit — sends UPID as prospect_id ─────────────────────────────────────
+  // ── Submit ──────────────────────────────────────────────────────────────────
   async function submitBid() {
     const btn    = document.getElementById('bidSubmitBtn');
     const errEl  = document.getElementById('bidModalError');
@@ -486,7 +463,7 @@
     if (!token) { window.location.href = 'login.html'; return; }
 
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting\u2026';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
 
     try {
       const res = await fetch(`${API}/api/auction/bid`, {
@@ -500,7 +477,7 @@
       }
       document.getElementById('bidModal').style.display = 'none';
       if (typeof window.showToast === 'function')
-        window.showToast(`\u2705 ${bidType} of $${amount} placed on ${_modal.prospectName}`);
+        window.showToast(`✅ ${bidType} of $${amount} placed on ${_modal.prospectName}`);
       await refresh();
     } catch (err) {
       showErr(errEl, String(err.message || err));
@@ -513,9 +490,8 @@
   // ── Match / Forfeit ────────────────────────────────────────────────────────
   async function handleMatchForfeit(prospectId, action) {
     if (!_myTeam) return;
-    const name = resolveName(prospectId);
     const label = action === 'match' ? 'MATCH' : 'FORFEIT';
-    if (!confirm(`Confirm ${label} for ${name}?\nThis cannot be undone.`)) return;
+    if (!confirm(`Confirm ${label} for ${prospectId}?\nThis cannot be undone.`)) return;
 
     const session = typeof authManager !== 'undefined' ? authManager.getSession?.() : null;
     const token   = session?.token;
@@ -532,7 +508,7 @@
         throw new Error(body.detail || body.error || `HTTP ${res.status}`);
       }
       if (typeof window.showToast === 'function')
-        window.showToast(action === 'match' ? `\u2705 Matched bid for ${name}` : `\u274C Forfeited ${name}`);
+        window.showToast(action === 'match' ? `✅ Matched bid for ${prospectId}` : `❌ Forfeited ${prospectId}`);
       await refresh();
     } catch (err) {
       alert('Error: ' + (err.message || err));

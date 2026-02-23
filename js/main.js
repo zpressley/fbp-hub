@@ -192,14 +192,14 @@ function updateUserMenuForAuth() {
             <i class="fas fa-clipboard-list"></i>
             Draft Board
         </a>
+        <a href="auction.html">
+            <i class="fas fa-gavel"></i>
+            Auction
+        </a>
         ${authManager.isAdmin && authManager.isAdmin() ? `
             <a href="admin.html">
                 <i class="fas fa-shield-alt"></i>
                 Admin Portal
-            </a>
-            <a href="auction.html">
-                <i class="fas fa-gavel"></i>
-                Auction
             </a>
             <a href="season-dates.html">
                 <i class="fas fa-calendar-alt"></i>

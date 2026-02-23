@@ -1007,29 +1007,31 @@ async function loadDraftPicksSummary() {
             }
         });
         
-        // STEP 2: Calculate picks needed based on keeper count
-        const keeperCount = KAP_STATE.selectedKeepers.length;
-        const picksNeeded = 26 - keeperCount;
-        
-        // STEP 3: Take first N picks (drop last picks based on roster limit)
-        const availablePicks = buyinFilteredPicks.slice(0, picksNeeded);
-        const rosterRemovedPicks = buyinFilteredPicks.slice(picksNeeded);
-        
-        // STEP 4: Apply tax bracket to available picks
+        // STEP 2: Determine tax bracket (needed before roster-limit calc)
         const taxableSpend = calculateTaxableSpend();
         const taxBracket = calculateTaxBracket(taxableSpend);
         const taxedRounds = taxBracket.rounds || [];
         
-        const finalPicks = [];
-        const taxedPicks = [];
+        // STEP 3: Calculate picks to keep
+        // Taxed picks don't fill roster spots, so we need extra picks to compensate
+        const keeperCount = KAP_STATE.selectedKeepers.length;
+        const picksNeeded = 26 - keeperCount;
         
-        availablePicks.forEach(pick => {
-            if (taxedRounds.includes(pick.round)) {
-                taxedPicks.push(pick);
+        // Walk picks in round order: keep going until we have picksNeeded non-taxed picks
+        const availablePicks = [];
+        const rosterRemovedPicks = [];
+        let usableSoFar = 0;
+        
+        for (const pick of buyinFilteredPicks) {
+            const isTaxed = taxedRounds.includes(pick.round);
+            if (usableSoFar >= picksNeeded && !isTaxed) {
+                // Already have enough usable picks, drop non-taxed extras
+                rosterRemovedPicks.push(pick);
             } else {
-                finalPicks.push(pick);
+                availablePicks.push(pick);
+                if (!isTaxed) usableSoFar++;
             }
-        });
+        }
         
         // Display in compact list format with sections
         let html = '';
@@ -1065,35 +1067,33 @@ async function loadDraftPicksSummary() {
             `;
         }
         
-        // Section 3: Taxed picks (if any)
-        if (taxedPicks.length > 0) {
+        // Section 3: Tax bracket info (if any)
+        if (taxedRounds.length > 0) {
             html += `
                 <div class="picks-section taxed">
                     <h5><i class="fas fa-exclamation-triangle"></i> Taxed Out - $${taxableSpend} Bracket</h5>
                     <p class="section-note">Lose Rounds ${taxedRounds.join(', ')}</p>
-                    ${taxedPicks.map(pick => {
-                        const traded = pick.traded || (pick.current_owner !== pick.original_owner);
-                        return `
-                            <div class="pick-summary-row taxed">
-                                <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
-                                <span class="pick-summary-status">${traded ? `from ${pick.original_owner} - ` : ''}TAXED</span>
-                            </div>
-                        `;
-                    }).join('')}
                 </div>
             `;
         }
         
-        // Section 4: Final available picks
+        // Section 4: All available picks (taxed ones marked inline)
+        const taxedCount = availablePicks.filter(p => taxedRounds.includes(p.round)).length;
         html += `
             <div class="picks-section final">
                 <h5><i class="fas fa-check-circle"></i> Your Draft Picks</h5>
-                ${finalPicks.map(pick => {
+                ${availablePicks.map(pick => {
                     const traded = pick.traded || (pick.current_owner !== pick.original_owner);
+                    const isTaxed = taxedRounds.includes(pick.round);
+                    const rowClass = isTaxed ? 'taxed' : 'final';
+                    let status = '';
+                    if (traded && isTaxed) status = `from ${pick.original_owner} - TAXED`;
+                    else if (traded) status = `from ${pick.original_owner}`;
+                    else if (isTaxed) status = 'TAXED';
                     return `
-                        <div class="pick-summary-row final">
+                        <div class="pick-summary-row ${rowClass}">
                             <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
-                            ${traded ? `<span class="pick-summary-status">from ${pick.original_owner}</span>` : ''}
+                            ${status ? `<span class="pick-summary-status">${status}</span>` : ''}
                         </div>
                     `;
                 }).join('')}
@@ -1102,7 +1102,7 @@ async function loadDraftPicksSummary() {
         
         html += `
             <div class="picks-summary-footer">
-                <strong>Total Picks:</strong> ${finalPicks.length} available
+                <strong>Total Picks:</strong> ${availablePicks.length} available${taxedCount > 0 ? ` (${taxedCount} taxed)` : ''}
             </div>
         `;
         
