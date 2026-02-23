@@ -22,15 +22,22 @@ let buyinStatus = {
  */
 async function initKAPBuyins(team) {
     currentTeam = team;
-    
+
     // Load current buy-in status
     await loadBuyinStatus();
-    
+
     // Display buy-in cards
     displayBuyinCards();
-    
+
     // Update taxable spend if buy-ins already purchased
     updateTaxableSpendFromBuyins();
+
+    // Ensure budget bar reflects buy-ins immediately after load.
+    try {
+        if (typeof updateKAPBudgetDisplay === 'function') {
+            updateKAPBudgetDisplay();
+        }
+    } catch (e) {}
 }
 
 /**
@@ -38,29 +45,48 @@ async function initKAPBuyins(team) {
  */
 async function loadBuyinStatus() {
     try {
-        const response = await fetch('./data/draft_order_2026.json');
+        // no-store so KAP reflects recently committed/synced buy-in purchases
+        const response = await fetch('./data/draft_order_2026.json', { cache: 'no-store' });
         const draftOrder = await response.json();
-        
+
         // Check rounds 1-3 for this team's buy-in status
-        // Store ALL picks for each round (teams may have multiple from trades)
         [1, 2, 3].forEach(round => {
-            const picks = draftOrder.filter(p => 
-                p.draft === 'keeper' && 
-                p.round === round && 
-                p.current_owner === currentTeam &&
-                !p._comment
-            );
-            
-            // Store all picks for this round
+            // Buy-ins are tied to the ORIGINAL OWNER's pick for that round.
+            // If you acquire other teams' picks, you cannot (and should not need to)
+            // purchase their buy-in.
+            const picks = draftOrder.filter(p => {
+                if (!p || p._comment) return false;
+                if (p.draft !== 'keeper') return false;
+
+                const r = parseInt(p.round, 10);
+                if (r !== round) return false;
+
+                if (!p.buyin_required) return false;
+
+                return String(p.original_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase();
+            });
+
             buyinStatus[round].picks = picks;
-            
-            // Mark as purchased if ANY pick is purchased
-            // (In practice, if you have multiple picks, you buy them individually)
-            buyinStatus[round].purchased = picks.some(p => p.buyin_purchased);
-            buyinStatus[round].allPurchased = picks.length > 0 && picks.every(p => p.buyin_purchased);
+
+            // Use file cost if present, otherwise fallback to configured cost.
+            const fileCost = picks && picks[0] && typeof picks[0].buyin_cost === 'number'
+                ? picks[0].buyin_cost
+                : BUYIN_COSTS[round];
+            buyinStatus[round].cost = fileCost;
+
+            // With the original-owner model, there should be exactly 1 pick per round.
+            buyinStatus[round].purchased = picks.some(p => !!p.buyin_purchased);
+            buyinStatus[round].allPurchased = picks.length > 0 && picks.every(p => !!p.buyin_purchased);
             buyinStatus[round].hasMultiple = picks.length > 1;
+
+            // Keep legacy KAP_STATE in sync so the Review step + budget table match.
+            try {
+                if (typeof KAP_STATE !== 'undefined' && KAP_STATE.buyIns && typeof KAP_STATE.buyIns === 'object') {
+                    KAP_STATE.buyIns[round] = !!buyinStatus[round].purchased;
+                }
+            } catch (e) {}
         });
-        
+
         console.log('✅ Buy-in status loaded:', buyinStatus);
     } catch (error) {
         console.error('Error loading buy-in status:', error);
@@ -104,16 +130,17 @@ function displayBuyinCards() {
                 cardEl?.classList.remove('purchased');
 
                 // In practice, a team should only ever have ONE eligible (unpurchased) buy-in per round:
-                // the pick they own that still needs the buy-in. Any extra picks acquired via trade should
-                // already be purchased (auto-buyin on approval).
-                //
-                // So instead of a pick-selection modal, deterministically choose the unpurchased pick.
+                // their own original pick. If that pick has been traded away before purchase,
+                // the original owner should NOT be able to purchase via KAP (trade approval auto-buyin handles it).
                 let targetPick = null;
-                if (unpurchasedPicks.length === 1) {
-                    targetPick = unpurchasedPicks[0];
-                } else if (unpurchasedPicks.length > 1) {
-                    // If something is off and there are multiple, prefer the team's original pick.
-                    const native = unpurchasedPicks.filter(p => String(p?.original_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase());
+
+                const eligibleUnpurchased = unpurchasedPicks.filter(p => String(p?.current_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase());
+
+                if (eligibleUnpurchased.length === 1) {
+                    targetPick = eligibleUnpurchased[0];
+                } else if (eligibleUnpurchased.length > 1) {
+                    // If something is off and there are multiple, prefer the pick where original_owner == currentTeam.
+                    const native = eligibleUnpurchased.filter(p => String(p?.original_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase());
                     if (native.length === 1) {
                         targetPick = native[0];
                     }
@@ -130,17 +157,25 @@ function displayBuyinCards() {
                         }
                     };
                 } else {
-                    // Safety: ambiguous state; don't guess.
-                    btnEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Cannot determine pick (${purchasedCount}/${status.picks.length})`;
-                    btnEl.onclick = (e) => {
-                        try { e?.preventDefault?.(); } catch (err) {}
-                        try { e?.stopPropagation?.(); } catch (err) {}
-                        const msg = 'Multiple unpurchased buy-in picks found for this round. Please refresh and try again, or contact an admin.';
-                        try {
-                            if (typeof showToast === 'function') showToast(msg, 'error');
-                            else alert(msg);
-                        } catch (err2) {}
-                    };
+                    // If there are unpurchased picks but none are currently owned by this team, they can't purchase.
+                    if (unpurchasedPicks.length > 0) {
+                        btnEl.disabled = true;
+                        btnEl.classList.add('purchased');
+                        btnEl.innerHTML = '<i class="fas fa-lock"></i> Not eligible (pick traded away)';
+                        btnEl.onclick = null;
+                    } else {
+                        // Safety: ambiguous state; don't guess.
+                        btnEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Cannot determine pick (${purchasedCount}/${status.picks.length})`;
+                        btnEl.onclick = (e) => {
+                            try { e?.preventDefault?.(); } catch (err) {}
+                            try { e?.stopPropagation?.(); } catch (err) {}
+                            const msg = 'Multiple unpurchased buy-in picks found for this round. Please refresh and try again, or contact an admin.';
+                            try {
+                                if (typeof showToast === 'function') showToast(msg, 'error');
+                                else alert(msg);
+                            } catch (err2) {}
+                        };
+                    }
                 }
             }
         } else if (status.purchased) {
@@ -157,19 +192,30 @@ function displayBuyinCards() {
             statusEl.textContent = 'Not Purchased';
             statusEl.classList.remove('active');
             btnEl.classList.remove('purchased');
-            btnEl.disabled = false;
-            btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
             cardEl?.classList.remove('purchased');
 
-            // Attach click handler (pass pick number if available)
-            btnEl.onclick = (e) => {
-                try { e?.preventDefault?.(); } catch (err) {}
-                try { e?.stopPropagation?.(); } catch (err) {}
-                const pickNum = status.picks && status.picks[0] ? status.picks[0].pick : null;
-                if (typeof window.purchaseBuyinFromKAP === 'function') {
-                    window.purchaseBuyinFromKAP(round, status.cost, pickNum);
-                }
-            };
+            const pickRec = status.picks && status.picks[0] ? status.picks[0] : null;
+            const canPurchase = pickRec && String(pickRec.current_owner || '').toUpperCase() === String(currentTeam || '').toUpperCase();
+
+            if (!canPurchase) {
+                btnEl.disabled = true;
+                btnEl.classList.add('purchased');
+                btnEl.innerHTML = '<i class="fas fa-lock"></i> Not eligible (pick traded away)';
+                btnEl.onclick = null;
+            } else {
+                btnEl.disabled = false;
+                btnEl.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase';
+
+                // Attach click handler (pass pick number if available)
+                btnEl.onclick = (e) => {
+                    try { e?.preventDefault?.(); } catch (err) {}
+                    try { e?.stopPropagation?.(); } catch (err) {}
+                    const pickNum = pickRec ? pickRec.pick : null;
+                    if (typeof window.purchaseBuyinFromKAP === 'function') {
+                        window.purchaseBuyinFromKAP(round, status.cost, pickNum);
+                    }
+                };
+            }
         }
     });
 }
@@ -342,7 +388,25 @@ function showBuyinConfirmationModal(round, cost, kapBalance, pickNumber = null) 
 /**
  * Confirm buy-in purchase
  */
+let __BUYIN_PURCHASE_IN_FLIGHT = false;
+
 window.confirmBuyinPurchase = async function(round, cost, pickNumber = null) {
+    if (__BUYIN_PURCHASE_IN_FLIGHT) {
+        return;
+    }
+
+    __BUYIN_PURCHASE_IN_FLIGHT = true;
+
+    // Best-effort disable confirm button to prevent double-clicks.
+    let confirmBtn = null;
+    try {
+        confirmBtn = document.querySelector('#kapBuyinModal .btn-primary');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        }
+    } catch (e) {}
+
     try {
         // Build request payload
         const payload = {
@@ -368,8 +432,21 @@ window.confirmBuyinPurchase = async function(round, cost, pickNumber = null) {
         });
         
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Purchase failed');
+            const error = await response.json().catch(() => ({}));
+            const msg = error.detail || error.error || 'Purchase failed';
+
+            // If the user double-clicked, treat "already purchased" as a success path.
+            if (String(msg).toLowerCase().includes('already purchased')) {
+                showSuccessToast(`Round ${round} buy-in already purchased.`);
+                closeBuyinModal();
+                await loadBuyinStatus();
+                displayBuyinCards();
+                updateTaxableSpendFromBuyins();
+                try { if (typeof saveDraft === 'function') saveDraft(); } catch (e) {}
+                return;
+            }
+
+            throw new Error(msg);
         }
         
         const result = await response.json();
@@ -417,7 +494,21 @@ window.confirmBuyinPurchase = async function(round, cost, pickNumber = null) {
         
     } catch (error) {
         console.error('Buy-in purchase error:', error);
-        alert(`Failed to purchase buy-in: ${error.message}`);
+        try {
+            if (typeof showToast === 'function') {
+                showToast(`Failed to purchase buy-in: ${error.message}`, 'error');
+            } else {
+                alert(`Failed to purchase buy-in: ${error.message}`);
+            }
+        } catch (e) {}
+    } finally {
+        __BUYIN_PURCHASE_IN_FLIGHT = false;
+        try {
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Purchase';
+            }
+        } catch (e) {}
     }
 };
 
@@ -440,8 +531,11 @@ function getTotalBuyins() {
  */
 function getTotalBuyinSpend() {
     return Object.entries(buyinStatus)
-        .filter(([_, status]) => status.purchased)
-        .reduce((sum, [_, status]) => sum + status.cost, 0);
+        .filter(([_, status]) => status && status.purchased)
+        .reduce((sum, [_, status]) => {
+            const c = (status && typeof status.cost === 'number') ? status.cost : 0;
+            return sum + c;
+        }, 0);
 }
 
 /**

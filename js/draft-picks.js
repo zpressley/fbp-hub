@@ -193,8 +193,12 @@ function createPickRow(pick, allPicks) {
     const pickNumber = pick.pick;
     const purchased = pick.buyin_purchased || false;
     const traded = pick.traded || (team !== pick.original_owner);
-    const isUserTeam = currentUser && team === currentUser;
-    const canPurchase = isUserTeam && !purchased && round <= 3;
+    const isUserCurrentOwner = currentUser && team === currentUser;
+    const isUserOriginalOwner = currentUser && String(pick.original_owner || '').toUpperCase() === String(currentUser || '').toUpperCase();
+
+    // Buy-ins can only be purchased by the ORIGINAL OWNER (and only while they still own the pick).
+    // If you acquire another team's pick, you cannot purchase their buy-in.
+    const canPurchase = isUserCurrentOwner && isUserOriginalOwner && !purchased && round <= 3;
     
     // Use taxed_out field from data
     const isEliminated = pick.taxed_out || false;
@@ -230,12 +234,17 @@ function createPickRow(pick, allPicks) {
             }
         } else if (canPurchase) {
             actionHTML = `
-                <button class="buyin-btn" onclick="showBuyinModal(${round}, ${pick.buyin_cost}, '${team}', ${pickNumber})">
+                <button class="buyin-btn" onclick="showBuyinModal(${round}, ${pick.buyin_cost}, '${pick.original_owner}', ${pickNumber})">
                     <i class="fas fa-shopping-cart"></i> Purchase ($${pick.buyin_cost})
                 </button>
             `;
         } else if (!purchased) {
-            actionHTML = '<span class="pick-status not-purchased"><i class="fas fa-lock"></i> Not Purchased</span>';
+            // If the current owner isn't the original owner, they cannot purchase this buy-in.
+            if (isUserCurrentOwner && !isUserOriginalOwner) {
+                actionHTML = `<span class="pick-status not-purchased"><i class="fas fa-lock"></i> Buy-in required (original owner: ${pick.original_owner})</span>`;
+            } else {
+                actionHTML = '<span class="pick-status not-purchased"><i class="fas fa-lock"></i> Not Purchased</span>';
+            }
         }
     }
     
@@ -365,8 +374,19 @@ async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
         });
         
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Purchase failed');
+            const error = await response.json().catch(() => ({}));
+            const msg = error.detail || error.error || 'Purchase failed';
+
+            if (String(msg).toLowerCase().includes('already purchased')) {
+                if (typeof showToast === 'function') {
+                    showToast(`Round ${round} buy-in already purchased.`, 'success');
+                }
+                await loadDraftData();
+                displayKeeperDraft();
+                return;
+            }
+
+            throw new Error(msg);
         }
         
         const result = await response.json();
@@ -391,38 +411,43 @@ async function confirmBuyinPurchase(round, cost, team, pickNumber = null) {
 /**
  * Show refund modal (admin only)
  */
-window.showRefundModal = function(round, team) {
+window.showRefundModal = function(round, currentOwner, pickNumber) {
     if (!isAdmin) {
         alert('Admin access required');
         return;
     }
-    
-    const pick = keeperPicks.find(p => p.round === round && p.current_owner === team);
+
+    // Identify the specific pick by round+pick number (teams can have multiple per round).
+    const pick = keeperPicks.find(p => p.round === round && p.pick === pickNumber);
     if (!pick || !pick.buyin_purchased) {
         alert('This buy-in has not been purchased');
         return;
     }
-    
+
+    // Refunds go back to the ORIGINAL OWNER's wallet.
+    const refundTeam = pick.original_owner;
     const cost = BUY_IN_COSTS[round];
-    
+
     const modalBody = document.getElementById('refundModalBody');
     modalBody.innerHTML = `
         <div class="modal-info">
             <p><strong>Refund Round ${round} Buy-In</strong></p>
-            <p>Team: <strong>${team}</strong></p>
+            <p>Pick: <strong>${pickNumber}</strong></p>
+            <p>Original Owner (refunded): <strong>${refundTeam}</strong></p>
+            <p>Current Owner: <strong>${pick.current_owner}</strong></p>
             <p>Refund Amount: <strong>$${cost}</strong></p>
             ${pick.buyin_purchased_at ? `<p>Purchased: ${formatDate(pick.buyin_purchased_at)}</p>` : ''}
         </div>
         
         <div class="modal-warning">
             <strong>Administrator Action</strong>
-            <p>This will reverse the buy-in purchase and restore $${cost} to ${team}'s KAP balance.</p>
+            <p>This will reverse the buy-in purchase and restore $${cost} to ${refundTeam}'s WizBucks wallet.</p>
         </div>
     `;
-    
+
     const confirmBtn = document.getElementById('confirmRefundBtn');
-    confirmBtn.onclick = () => confirmRefund(round, team, cost);
-    
+    confirmBtn.onclick = () => confirmRefund(round, refundTeam, cost);
+
     document.getElementById('refundModal').classList.add('active');
 };
 
@@ -461,8 +486,8 @@ async function confirmRefund(round, team, cost) {
         });
         
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Refund failed');
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.detail || error.error || 'Refund failed');
         }
         
         const result = await response.json();
