@@ -11,8 +11,24 @@ let BOARD_STATE = {
     selectedPlayer: null,
     draggedElement: null,
     draftType: 'keeper',
-    draftStatus: 'pre'
+    draftStatus: 'pre',
+    cipherK: 0  // Caesar shift value from API
 };
+
+// ---- Cipher helpers ----
+function decodeUpid(encoded, k) {
+    return String(encoded).split('').map(ch => {
+        const d = parseInt(ch);
+        return isNaN(d) ? ch : String((d - k + 10) % 10);
+    }).join('');
+}
+
+function encodeUpid(upid, k) {
+    return String(upid).split('').map(ch => {
+        const d = parseInt(ch);
+        return isNaN(d) ? ch : String((d + k) % 10);
+    }).join('');
+}
 
 
 /**
@@ -71,16 +87,20 @@ async function loadBoardData() {
             });
             if (response.ok) {
                 const data = await response.json();
-                const names = data.board || [];
+                const encodedIds = data.board || [];
+                const k = data.k || 0;
+                BOARD_STATE.cipherK = k;
 
-                // Map plain names -> rich target objects using combined_players.
+                // Decode shifted UPIDs and resolve to player objects
                 const players = (FBPHub.data && FBPHub.data.players) || [];
-                BOARD_STATE.targets = names.map((name, idx) => {
-                    const player = players.find(p => (p.name || '').toLowerCase() === String(name).toLowerCase()) || {};
+                BOARD_STATE.targets = encodedIds.map((encoded, idx) => {
+                    const realUpid = decodeUpid(encoded, k);
+                    const player = players.find(p => String(p.upid) === realUpid) || {};
                     return {
                         rank: idx + 1,
-                        player_name: name,
-                        upid: player.upid,
+                        player_name: player.name || `Unknown (${realUpid})`,
+                        upid: realUpid,
+                        encoded: encoded,
                         position: player.position,
                         mlb_team: player.team,
                         target_round: null,
@@ -494,6 +514,7 @@ function removeFromWatch(index) {
  */
 function saveBoard() {
     const teamAbbr = BOARD_STATE.userTeam.abbreviation;
+    const k = BOARD_STATE.cipherK || 0;
 
     // Always persist locally first
     persistBoardLocal();
@@ -504,11 +525,12 @@ function saveBoard() {
 
     if (apiBase) {
         const url = new URL(`/api/draft/boards/${teamAbbr}`, apiBase);
-        const names = BOARD_STATE.targets.map(t => t.player_name);
+        // Send encoded UPIDs (re-encode real UPIDs before sending)
+        const encodedBoard = BOARD_STATE.targets.map(t => encodeUpid(t.upid, k));
         fetch(url.toString(), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ team: teamAbbr, board: names }),
+            body: JSON.stringify({ team: teamAbbr, board: encodedBoard }),
         }).catch(err => {
             console.warn('Failed to sync board to API:', err);
         });

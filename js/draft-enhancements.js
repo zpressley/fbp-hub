@@ -286,10 +286,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 let DRAFT_BOARD_STATE = {
-    board: [],
+    board: [],          // resolved player names (for display)
+    encodedBoard: [],   // encoded UPIDs (for API sync)
+    cipherK: 0,         // Caesar shift value
     loaded: false,
     syncing: false,
 };
+
+// Cipher helpers (same as draft-board.js, duplicated for pages that
+// load only this file)
+function _decodeBoardUpid(encoded, k) {
+    return String(encoded).split('').map(ch => {
+        const d = parseInt(ch);
+        return isNaN(d) ? ch : String((d - k + 10) % 10);
+    }).join('');
+}
+function _encodeBoardUpid(upid, k) {
+    return String(upid).split('').map(ch => {
+        const d = parseInt(ch);
+        return isNaN(d) ? ch : String((d + k) % 10);
+    }).join('');
+}
 
 async function loadDraftBoard() {
     const team = DRAFT_STATE?.userTeam?.abbreviation;
@@ -321,7 +338,18 @@ async function loadDraftBoard() {
         });
         if (res.ok) {
             const data = await res.json();
-            DRAFT_BOARD_STATE.board = data.board || [];
+            const encodedIds = data.board || [];
+            const k = data.k || 0;
+            DRAFT_BOARD_STATE.cipherK = k;
+            DRAFT_BOARD_STATE.encodedBoard = encodedIds;
+
+            // Decode UPIDs and resolve to player names
+            const allPlayers = FBPHub?.data?.players || [];
+            DRAFT_BOARD_STATE.board = encodedIds.map(encoded => {
+                const realUpid = _decodeBoardUpid(encoded, k);
+                const player = allPlayers.find(p => String(p.upid) === realUpid);
+                return player?.name || `Unknown (${realUpid})`;
+            });
         }
     } catch (e) {
         console.warn('Failed to load draft board:', e.message);
@@ -449,15 +477,25 @@ async function addToBoardFromPanel(playerName) {
         return;
     }
 
+    // Resolve player name -> UPID -> encoded value
+    const allPlayers = FBPHub?.data?.players || [];
+    const player = allPlayers.find(p => (p.name || '').toLowerCase() === playerName.toLowerCase());
+    const upid = player?.upid ? String(player.upid) : '';
+    const k = DRAFT_BOARD_STATE.cipherK || 0;
+    const encoded = upid ? _encodeBoardUpid(upid, k) : '';
+
     DRAFT_BOARD_STATE.board.push(playerName);
+    if (encoded) {
+        DRAFT_BOARD_STATE.encodedBoard.push(encoded);
+    }
 
     const apiBase = FBPHub?.config?.apiBase;
-    if (apiBase) {
+    if (apiBase && encoded) {
         try {
             await fetch(`${apiBase}/api/draft/boards/${team}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ team, board: DRAFT_BOARD_STATE.board }),
+                body: JSON.stringify({ team, board: DRAFT_BOARD_STATE.encodedBoard }),
             });
         } catch (e) {
             console.warn('Board sync failed:', e.message);
@@ -470,9 +508,9 @@ async function addToBoardFromPanel(playerName) {
     existing.targets.push({
         rank: existing.targets.length + 1,
         player_name: playerName,
-        upid: '',
-        position: '',
-        mlb_team: '',
+        upid: upid,
+        position: player?.position || '',
+        mlb_team: player?.team || '',
         target_round: null,
         notes: '',
         taken: false,
