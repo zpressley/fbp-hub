@@ -259,9 +259,15 @@
 
 .roster-preview {
     background-color: var(--bg-charcoal);
-    border: var(--border-width) solid var(--primary-red);
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .roster-preview {
+    padding: var(--space-md) var(--space-lg);
+  }
 }
 
 /* Depth Chart Roster Layout (FanGraphs Style) */

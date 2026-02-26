@@ -1,235 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - FBP Hub</title>
-    <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#EF3E42">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/contract-purchase.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – FBP Hub</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#EF3E42">
+  <!-- Site-wide base -->
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Dashboard depth-chart styles (existing) -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- Contract purchase modal (existing) -->
+  <link rel="stylesheet" href="css/contract-purchase.css">
+  <!-- Auction phase banner + bid cells (existing) -->
+  <link rel="stylesheet" href="css/auction.css">
+  <!-- Transaction feed cards (existing) -->
+  <link rel="stylesheet" href="css/transactions-feed.css">
+  <!-- Tab bar, panels, quick actions, notes -->
+  <link rel="stylesheet" href="css/dashboard-tabs.css">
+  <!-- Advanced lineup builder with real stats -->
+  <link rel="stylesheet" href="css/lineup-builder.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="mobile-nav">
-        <div class="nav-container">
-            <button class="nav-toggle" id="navToggle">
-                <i class="fas fa-bars"></i>
+
+<!-- Navigation -->
+<nav class="mobile-nav">
+    <div class="nav-container">
+        <button class="nav-toggle" id="navToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-brand">
+            <h1>FBP HUB 3.0</h1>
+            <p class="season-year">Est. 2012</p>
+        </div>
+        <div class="user-menu" id="userMenu">
+            <button class="user-menu-toggle" id="userMenuToggle">
+                <i class="fas fa-user-circle"></i>
+                <span>Menu</span>
+                <i class="fas fa-chevron-down"></i>
             </button>
-            <div class="nav-brand">
-                <h1>FBP HUB 3.0</h1>
-                <p class="season-year">Est. 2012</p>
-            </div>
-            <div class="user-menu" id="userMenu">
-                <!-- Guest state -->
-                <button class="user-menu-toggle" id="userMenuToggle">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Menu</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="user-menu-dropdown" id="userMenuDropdown">
-                    <a href="login.html">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Login
-                    </a>
-                </div>
+            <div class="user-menu-dropdown" id="userMenuDropdown">
+                <a href="login.html">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
             </div>
         </div>
-                <div class="nav-menu" id="navMenu">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="constitution.html" class="nav-link">
-                <i class="fas fa-scroll"></i>
-                <span>Constitution</span>
-            </a>
-            <a href="players.html" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>Players</span>
-            </a>
-            <a href="rosters.html" class="nav-link">
-                <i class="fas fa-baseball-ball"></i>
-                <span>Rosters</span>
-            </a>
-            <a href="transactions.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
-
-            <a href="wizbucks.html" class="nav-link">
-                <i class="fas fa-coins"></i>
-                <span>WizBucks</span>
-            </a>
-            <div class="nav-item-dropdown">
-                <button class="nav-dropdown-toggle" id="draftDropdownToggle">
-                    <span>
-                        <i class="fas fa-table-list"></i>
-                        <span>Draft</span>
-                    </span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="nav-dropdown-menu" id="draftDropdownMenu">
-                    <a href="draft.html" class="nav-dropdown-item">
-                        <i class="fas fa-list-ol"></i>
-                        <span>Live Draft</span>
-                    </a>
-                    <a href="draft-preview.html" class="nav-dropdown-item">
-                        <i class="fas fa-eye"></i>
-                        <span>Draft Preview</span>
-                    </a>
-                    <a href="draft-picks.html" class="nav-dropdown-item">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Draft Picks</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container-generous">
-        <!-- Welcome Header -->
-        <section class="dashboard-header" id="dashboardHeader">
-            <div class="welcome-message">
-                <h2>Loading...</h2>
-                <p>Please wait...</p>
-            </div>
-        </section>
-
-        <!-- Quick Stats Grid -->
-        <section class="dashboard-stats-grid" id="teamStats">
-            <!-- Populated by JS -->
-            <div class="loading-message">
-                <div class="spinner"></div>
-                <p>Loading your stats...</p>
-            </div>
-        </section>
-
-        <!-- Quick Actions -->
-        <section class="quick-actions-section">
-            <h3><i class="fas fa-bolt"></i> QUICK ACTIONS</h3>
-            <div class="action-grid">
-                <a href="rosters.html?type=keepers" class="action-card" id="viewKeepersLink">
-                    <i class="fas fa-baseball-ball"></i>
-                    <span>MY KEEPERS</span>
-                </a>
-                <a href="rosters.html?type=prospects" class="action-card" id="viewProspectsLink">
-                    <i class="fas fa-seedling"></i>
-                    <span>MY PROSPECTS</span>
-                </a>
-                <a href="players.html" class="action-card">
-                    <i class="fas fa-search"></i>
-                    <span>SEARCH PLAYERS</span>
-                </a>
-                <a href="draft.html" class="action-card">
-                    <i class="fas fa-table-list"></i>
-                    <span>DRAFT</span>
-                </a>
-                <a href="constitution.html" class="action-card">
-                    <i class="fas fa-scroll"></i>
-                    <span>CONSTITUTION</span>
-                </a>
-                <a href="kap.html" class="action-card">
-                    <i class="fas fa-calculator"></i>
-                    <span>SALARY CALC</span>
-                </a>
-                <button type="button" class="action-card" onclick="showContractPurchaseModal()">
-                    <i class="fas fa-file-contract"></i>
-                    <span>BUY CONTRACTS</span>
-                </button>
-                <a href="pad.html" class="action-card">
-                    <i class="fas fa-receipt"></i>
-                    <span>PAD</span>
-                </a>
-                <a href="kap.html" class="action-card">
-                    <i class="fas fa-trophy"></i>
-                    <span>KAP</span>
-                </a>
-                <a href="settings.html" class="action-card">
-                    <i class="fas fa-cog"></i>
-                    <span>SETTINGS</span>
-                </a>
-                <a href="admin.html" class="action-card" id="adminDashboardLink" style="display: none;">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>ADMIN</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- Your Team Overview -->
-        <section class="team-overview" id="teamOverview">
-            <h3><i class="fas fa-users"></i> YOUR ROSTER</h3>
-            <div class="roster-filter-bar" id="rosterFilterBar">
-                <div class="roster-filter-group">
-                    <span class="roster-filter-label">Section</span>
-                    <button type="button" class="roster-filter-chip active" data-section-filter="all">All</button>
-                    <button type="button" class="roster-filter-chip" data-section-filter="catcher">Catcher</button>
-                    <button type="button" class="roster-filter-chip" data-section-filter="infield">Infield</button>
-                    <button type="button" class="roster-filter-chip" data-section-filter="outfield">Outfield</button>
-                    <button type="button" class="roster-filter-chip" data-section-filter="sp">SP</button>
-                    <button type="button" class="roster-filter-chip" data-section-filter="rp">RP</button>
-                </div>
-                <div class="roster-filter-group">
-                    <span class="roster-filter-label">Roster</span>
-                    <button type="button" class="roster-filter-chip active" data-roster-filter="all">All</button>
-                    <button type="button" class="roster-filter-chip" data-roster-filter="keepers">Keepers</button>
-                    <button type="button" class="roster-filter-chip" data-roster-filter="prospects">Prospects</button>
-                </div>
-            </div>
-            <div class="roster-preview" id="rosterPreview">
-                <!-- Populated by JS -->
-            </div>
-        </section>
-
-        <!-- Recent Activity -->
-        <section class="recent-activity">
-            <h3><i class="fas fa-history"></i> RECENT LEAGUE ACTIVITY</h3>
-            <div class="activity-list" id="activityList">
-                <div class="empty-state">
-                    <i class="fas fa-clipboard-list"></i>
-                    <p>Transaction tracking coming soon</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Bottom Navigation (mobile) -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item">
+    </div>
+    <div class="nav-menu" id="navMenu">
+        <a href="index.html" class="nav-link">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="players.html" class="bottom-nav-item">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
+        <a href="constitution.html" class="nav-link">
+            <i class="fas fa-scroll"></i>
+            <span>Constitution</span>
         </a>
-        <a href="rosters.html" class="bottom-nav-item">
+        <a href="players.html" class="nav-link">
+            <i class="fas fa-users"></i>
+            <span>Players</span>
+        </a>
+        <a href="rosters.html" class="nav-link">
             <i class="fas fa-baseball-ball"></i>
             <span>Rosters</span>
         </a>
-        <a href="dashboard.html" class="bottom-nav-item is-active">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-        </a>
-        <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
-            <i class="fas fa-bars"></i>
-            <span>Menu</span>
-        </button>
-    </nav>
+        <a href="transactions.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
-    </footer>
+        <div class="nav-item-dropdown" id="frontOfficeDropdown">
+            <button class="nav-dropdown-toggle" id="frontOfficeDropdownToggle">
+                <span>
+                    <i class="fas fa-briefcase"></i>
+                    <span>Front Office</span>
+                </span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="nav-dropdown-menu" id="frontOfficeDropdownMenu">
+                <a href="trade.html" class="nav-dropdown-item">
+                    <i class="fas fa-handshake"></i>
+                    <span>Trade Portal</span>
+                </a>
+                <a href="auction.html" class="nav-dropdown-item">
+                    <i class="fas fa-gavel"></i>
+                    <span>Auction</span>
+                </a>
+                <a href="team-builder.html" class="nav-dropdown-item">
+                    <i class="fas fa-drafting-compass"></i>
+                    <span>Team Builder</span>
+                </a>
+                <a href="wizbucks.html" class="nav-dropdown-item">
+                    <i class="fas fa-coins"></i>
+                    <span>WizBucks</span>
+                </a>
+                <a href="pad.html" class="nav-dropdown-item">
+                    <i class="fas fa-receipt"></i>
+                    <span>PAD</span>
+                </a>
+                <a href="kap.html" class="nav-dropdown-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>KAP</span>
+                </a>
+            </div>
+        </div>
+        <div class="nav-item-dropdown">
+            <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+                <span>
+                    <i class="fas fa-table-list"></i>
+                    <span>Draft</span>
+                </span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="nav-dropdown-menu" id="draftDropdownMenu">
+                <a href="draft.html" class="nav-dropdown-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>Live Draft</span>
+                </a>
+                <a href="draft-preview.html" class="nav-dropdown-item">
+                    <i class="fas fa-eye"></i>
+                    <span>Draft Preview</span>
+                </a>
+                <a href="draft-picks.html" class="nav-dropdown-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Draft Picks</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
 
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
+<!-- Dashboard -->
+<main class="container-generous" id="dashboardApp">
+
+  <!-- Team header (rendered by dashboard-tabs.js) -->
+  <div class="dash-header" id="dashHeader">
+    <div class="dash-team-info">
+      <div class="dash-team-name" id="dashTeamName">Loading…</div>
+      <div class="dash-team-meta" id="dashTeamMeta">FBP Hub 3.0</div>
+    </div>
+    <div class="dash-matchup-badge">
+      <div class="dash-matchup-rec" id="dashMatchupRec">—</div>
+      <div class="dash-matchup-vs"  id="dashMatchupVs">vs —</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions (buttons only at top) -->
+  <div id="dashQASection" style="display:none">
+    <div class="dash-qa-section">
+      <div class="dash-qa-label">
+        Quick Actions
+        <span class="dash-preseason-badge" id="dashPreseasonBadge" style="display:none">PRE-SEASON</span>
+      </div>
+      <div class="dash-qa-grid" id="dashQAGrid"></div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="dash-tabs" id="dashTabBar">
+    <button class="dash-tab active" data-tab="0"><i class="fas fa-baseball-ball"></i>Roster</button>
+    <button class="dash-tab" data-tab="1"><i class="fas fa-gavel"></i>Auction</button>
+    <button class="dash-tab" data-tab="2"><i class="fas fa-exchange-alt"></i>Transactions</button>
+    <button class="dash-tab" data-tab="3"><i class="fas fa-star"></i>Watch List</button>
+  </div>
+
+  <!-- Swipeable panels -->
+  <div class="dash-panels-outer" id="dashPanelsOuter">
+    <div class="dash-panels" id="dashPanels">
+
+      <!-- PANEL 0: ADVANCED ROSTER with real stats -->
+      <div class="dash-panel" id="dashPanel0">
+        <div class="roster-preview" id="rosterPreview">
+          <div class="dash-loading"><div class="spinner"></div><span>Loading lineup…</span></div>
+        </div>
+      </div>
+
+      <!-- PANEL 1: AUCTION -->
+      <div class="dash-panel" id="dashPanel1">
+        <div class="auc-phase-banner phase-off" id="dashAucPhaseBanner">
+          <div class="auc-phase-icon"><i class="fas fa-clock"></i></div>
+          <div class="auc-phase-content">
+            <div class="auc-phase-title" id="dashAucPhaseTitle">Loading…</div>
+            <div class="auc-phase-sub"   id="dashAucPhaseSub"></div>
+          </div>
+        </div>
+        <div class="dash-wb-row">
+          <div class="dash-wb-cell"><span class="dash-wb-label">Balance</span><span class="dash-wb-val purple" id="dashAucWBTotal">—</span></div>
+          <div class="dash-wb-cell"><span class="dash-wb-label">Committed</span><span class="dash-wb-val red" id="dashAucWBCommitted">—</span></div>
+          <div class="dash-wb-cell"><span class="dash-wb-label">Available</span><span class="dash-wb-val green" id="dashAucWBAvailable">—</span></div>
+        </div>
+        <div>
+          <div class="dash-section-hdr"><i class="fas fa-user-check"></i> YOUR BIDS THIS WEEK</div>
+          <div id="dashMyBids"><div class="dash-loading"><div class="spinner"></div><span>Loading…</span></div></div>
+        </div>
+        <div>
+          <div class="dash-section-hdr"><i class="fas fa-eye"></i> ACTIVE AUCTION</div>
+          <div id="dashAllBids"><div class="dash-loading"><div class="spinner"></div><span>Loading…</span></div></div>
+        </div>
+        <a href="auction.html" class="dash-link-btn"><i class="fas fa-arrow-right"></i> Full Auction Portal</a>
+      </div>
+
+      <!-- PANEL 2: TRANSACTIONS (filtered to your team) -->
+      <div class="dash-panel" id="dashPanel2">
+        <div class="dash-txn-filter-bar" id="dashTxnFilters">
+          <button class="dash-txn-chip active" data-filter="my-team">My Team</button>
+          <button class="dash-txn-chip" data-filter="all">All League</button>
+        </div>
+        <div id="dashTxnFeed">
+          <div class="dash-loading"><div class="spinner"></div><span>Loading transactions…</span></div>
+        </div>
+        <a href="transactions.html" class="dash-link-btn"><i class="fas fa-arrow-right"></i> All Transactions</a>
+      </div>
+
+      <!-- PANEL 3: WATCH LIST -->
+      <div class="dash-panel" id="dashPanel3">
+        <div class="dash-board-type-toggle" id="dashBoardTypeToggle">
+          <button class="dash-board-type-btn active" data-type="keeper">Keeper Draft</button>
+          <button class="dash-board-type-btn" data-type="prospect">Prospect Draft</button>
+        </div>
+        <div class="dash-board-controls">
+          <input type="text" class="dash-board-search" id="dashBoardSearch" placeholder="Search available players…">
+          <button class="dash-board-save-btn" id="dashBoardSaveBtn"><i class="fas fa-save"></i> Save</button>
+        </div>
+        <div class="dash-board-split">
+          <div>
+            <div class="dash-board-col-hdr">My Watch List <span class="dash-board-count" id="dashBoardCount">0</span></div>
+            <div class="dash-targets-list" id="dashBoardTargets">
+              <div class="dash-empty"><i class="fas fa-star"></i>Add players to track</div>
+            </div>
+          </div>
+          <div>
+            <div class="dash-board-col-hdr">Available <span class="dash-board-count" id="dashAvailCount">0</span></div>
+            <div class="dash-avail-list" id="dashBoardAvail">
+              <div class="dash-empty"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+        <a href="draft-board.html" class="dash-link-btn" style="margin-top:var(--space-lg)"><i class="fas fa-arrow-right"></i> Full Draft Board</a>
+      </div>
+
+    </div><!-- /dash-panels -->
+  </div><!-- /dash-panels-outer -->
+
+  <!-- Quick Actions + Notes (bottom) -->
+  <div id="dashQABottomSection" style="display:none">
+    <div class="dash-qa-section">
+      <div class="dash-qa-label">Quick Actions</div>
+      <div class="dash-qa-grid" id="dashQAGridBottom"></div>
+      <div class="dash-notes-section">
+        <div class="dash-notes-header">
+          <span class="dash-notes-label"><i class="fas fa-sticky-note"></i> Manager Notes</span>
+          <span class="dash-notes-private"><i class="fas fa-eye-slash"></i> Private notes</span>
+        </div>
+        <textarea class="dash-notes-textarea" id="dashNotesTextarea"
+          maxlength="500"
+          placeholder="Private strategy notes — only stored locally on this device…"></textarea>
+        <div class="dash-notes-footer">
+          <span class="dash-notes-count" id="dashNotesCount">0/500</span>
+          <button class="dash-notes-save" id="dashNotesSaveBtn"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Bottom Navigation (mobile) -->
+<nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <a href="players.html" class="bottom-nav-item">
+        <i class="fas fa-search"></i>
+        <span>Search</span>
+    </a>
+    <a href="rosters.html" class="bottom-nav-item">
+        <i class="fas fa-baseball-ball"></i>
+        <span>Rosters</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-item is-active">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+        <i class="fas fa-bars"></i>
+        <span>Menu</span>
+    </button>
+</nav>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+</footer>
+
+<!-- Scripts -->
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<!-- Advanced lineup builder -->
+<script src="js/lineup-builder.js"></script>
+<!-- Tab system -->
+<script src="js/dashboard-tabs.js"></script>
+<!-- Module bridge for transactions -->
+<script type="module">
+  import { loadTransactionFeed, renderFeedHTML } from './js/transactions.js';
+  window._dashLoadTxn = loadTransactionFeed;
+  window._dashRenderFeed = renderFeedHTML;
+</script>
+
 </body>
 </html>

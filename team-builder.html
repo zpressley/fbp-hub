@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Builder – FBP Hub</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#EF3E42">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/team-builder.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="mobile-nav">
+  <div class="nav-container">
+    <button class="nav-toggle" id="navToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="nav-brand">
+      <h1>FBP HUB 3.0</h1>
+      <p class="season-year">Est. 2012</p>
+    </div>
+    <div class="user-menu" id="userMenu">
+      <button class="user-menu-toggle" id="userMenuToggle">
+        <i class="fas fa-user-circle"></i>
+        <span>Menu</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <a href="login.html">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html" class="nav-link">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="constitution.html" class="nav-link">
+      <i class="fas fa-scroll"></i>
+      <span>Constitution</span>
+    </a>
+    <a href="players.html" class="nav-link">
+      <i class="fas fa-users"></i>
+      <span>Players</span>
+    </a>
+    <a href="rosters.html" class="nav-link">
+      <i class="fas fa-baseball-ball"></i>
+      <span>Rosters</span>
+    </a>
+    <a href="transactions.html" class="nav-link">
+      <i class="fas fa-exchange-alt"></i>
+      <span>Transactions</span>
+    </a>
+    <div class="nav-item-dropdown" id="frontOfficeDropdown">
+        <button class="nav-dropdown-toggle" id="frontOfficeDropdownToggle">
+            <span>
+                <i class="fas fa-briefcase"></i>
+                <span>Front Office</span>
+            </span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="nav-dropdown-menu" id="frontOfficeDropdownMenu">
+            <a href="trade.html" class="nav-dropdown-item">
+                <i class="fas fa-handshake"></i>
+                <span>Trade Portal</span>
+            </a>
+            <a href="auction.html" class="nav-dropdown-item">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
+            <a href="team-builder.html" class="nav-dropdown-item">
+                <i class="fas fa-drafting-compass"></i>
+                <span>Team Builder</span>
+            </a>
+            <a href="wizbucks.html" class="nav-dropdown-item">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="pad.html" class="nav-dropdown-item">
+                <i class="fas fa-receipt"></i>
+                <span>PAD</span>
+            </a>
+            <a href="kap.html" class="nav-dropdown-item">
+                <i class="fas fa-trophy"></i>
+                <span>KAP</span>
+            </a>
+        </div>
+    </div>
+    <div class="nav-item-dropdown">
+      <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+        <span>
+          <i class="fas fa-table-list"></i>
+          <span>Draft</span>
+        </span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="nav-dropdown-menu" id="draftDropdownMenu">
+        <a href="draft.html" class="nav-dropdown-item">
+          <i class="fas fa-list-ol"></i>
+          <span>Live Draft</span>
+        </a>
+        <a href="draft-preview.html" class="nav-dropdown-item">
+          <i class="fas fa-eye"></i>
+          <span>Draft Preview</span>
+        </a>
+        <a href="draft-picks.html" class="nav-dropdown-item">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Draft Picks</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main Content ───────────────────────────────────────────────────────── -->
+<div class="app">
+
+  <!-- Page Header -->
+  <div class="page-hdr">
+    <h1><i class="fas fa-drafting-compass"></i> Team Builder</h1>
+    <p>Multi-season salary planning · KAP spend · Tax brackets · Prospect projections</p>
+  </div>
+
+  <!-- Controls: Team + Season + Reset -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Team</span>
+      <select class="ctrl-select" id="teamSelect">
+        <option value="">— Select Team —</option>
+        <option value="WIZ">Whiz Kids (WIZ)</option>
+        <option value="B2J">Btwn2Jackies (B2J)</option>
+        <option value="CFL">Country Fried Lamb (CFL)</option>
+        <option value="HAM">Hammers (HAM)</option>
+        <option value="RV">Rick Vaughn (RV)</option>
+        <option value="LFB">La Flama Blanca (LFB)</option>
+        <option value="JEP">Jepordizers! (JEP)</option>
+        <option value="TBB">The Bluke Blokes (TBB)</option>
+        <option value="DRO">Andromedans (DRO)</option>
+        <option value="SAD">not much of a donkey (SAD)</option>
+        <option value="WAR">Weekend Warriors (WAR)</option>
+        <option value="DMN">The Damn Yankees (DMN)</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">View Season</span>
+      <div class="season-tabs" id="seasonTabs">
+        <button class="s-tab active" data-yr="0">2026</button>
+        <button class="s-tab" data-yr="1">2027</button>
+        <button class="s-tab" data-yr="2">2028</button>
+        <button class="s-tab" data-yr="3">2029</button>
+      </div>
+    </div>
+    <button class="btn-reset" id="btnReset"><i class="fas fa-undo"></i> Reset Changes</button>
+  </div>
+
+  <!-- Budget Bar -->
+  <div class="budget-bar">
+    <div class="budget-top">
+      <div class="b-cell">
+        <span class="b-label">KAP Budget</span>
+        <span class="b-val purple" id="bKapBudget">$375</span>
+        <span class="b-sub" id="bKapSub">base only</span>
+      </div>
+      <div class="b-cell">
+        <span class="b-label">KAP Spent</span>
+        <span class="b-val" id="bKapSpent">$0</span>
+        <span class="b-sub" id="bKapSpentSub">0 keepers</span>
+      </div>
+      <div class="b-cell">
+        <span class="b-label">KAP Remaining</span>
+        <span class="b-val green" id="bKapLeft">$375</span>
+        <span class="b-sub" id="bKapLeftSub">rolls $100 max to APA</span>
+      </div>
+      <div class="b-cell">
+        <span class="b-label">PAD Budget</span>
+        <span class="b-val cyan" id="bPadBudget">$120</span>
+        <span class="b-sub" id="bPadSub">consolation bracket</span>
+      </div>
+      <div class="b-cell" style="padding:0">
+        <button class="budget-settings-btn" id="budgetSettingsBtn">
+          <i class="fas fa-sliders-h"></i> Budget Settings
+        </button>
+      </div>
+    </div>
+
+    <!-- Tax bar -->
+    <div class="tax-row">
+      <span class="tax-label">Draft Tax:</span>
+      <div class="tax-brackets" id="taxBrackets"></div>
+      <span id="taxNoneMsg" class="tax-none" style="display:none">✅ No tax (≤$325 taxable)</span>
+    </div>
+
+    <!-- Spend meters -->
+    <div class="spend-meters">
+      <div class="meter-wrap">
+        <div class="meter-title">
+          <span>KAP Taxable Spend</span>
+          <span id="mKapText">$0 / $435 max</span>
+        </div>
+        <div class="meter-bar"><div class="meter-fill kap" id="mKapFill" style="width:0%"></div></div>
+      </div>
+      <div class="meter-wrap">
+        <div class="meter-title">
+          <span>PAD Spend</span>
+          <span id="mPadText">$0 used</span>
+        </div>
+        <div class="meter-bar"><div class="meter-fill pad" id="mPadFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Budget Settings Panel -->
+    <div class="budget-settings-panel" id="budgetSettingsPanel">
+      <div class="bs-grid">
+        <div class="bs-row">
+          <span class="bs-label">Finish Bracket</span>
+          <select class="bs-input" id="bsBracket">
+            <option value="championship">Championship ($100 PAD)</option>
+            <option value="consolation" selected>Consolation ($120 PAD)</option>
+            <option value="elimination">Elimination ($140 PAD)</option>
+          </select>
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">Season Rollover (to each)</span>
+          <input type="number" class="bs-input" id="bsSeasonRoll" value="0" min="0" max="25" placeholder="0–$25">
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">PAD → KAP Rollover</span>
+          <input type="number" class="bs-input" id="bsPadRoll" value="0" min="0" max="30" placeholder="0–$30">
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">Consolation Bonus (KAP)</span>
+          <select class="bs-input" id="bsConsolBonus">
+            <option value="0">None</option>
+            <option value="25">Runner-Up (+$25)</option>
+            <option value="50">Winner (+$50)</option>
+          </select>
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">Elimination Bonus (PAD)</span>
+          <select class="bs-input" id="bsElimBonus">
+            <option value="0">None</option>
+            <option value="10">Runner-Up (+$10)</option>
+            <option value="20">Winner (+$20)</option>
+          </select>
+        </div>
+        <div class="bs-row">
+          <span class="bs-label">RaT Uses This Season</span>
+          <input type="number" class="bs-input" id="bsRatBudget" value="0" min="0" max="10" placeholder="× $75 each">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Season Overview Cards -->
+  <div class="overview-cards" id="overviewCards"></div>
+
+  <!-- ── Keepers Section ─────────────────────────────────────────────── -->
+  <div class="section-hdr">
+    <h3><i class="fas fa-baseball-ball"></i> Keeper Contracts
+      <span class="count-badge" id="keeperCount">0</span>
+    </h3>
+    <button class="btn-add" id="btnAddKeeper"><i class="fas fa-plus"></i> Add Player</button>
+  </div>
+
+  <div class="tb-wrap">
+    <table class="tb-table" id="keeperTable">
+      <thead>
+        <tr>
+          <th style="width:46px">Pos</th>
+          <th>Player</th>
+          <th>Contract</th>
+          <th class="r">2026 Cost</th>
+          <th class="c">Tools</th>
+          <th class="r">2027</th>
+          <th class="r">2028</th>
+          <th class="r">2029</th>
+          <th class="c" style="width:60px">Drop</th>
+        </tr>
+      </thead>
+      <tbody id="keeperBody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="color:var(--dim)">Keeper Totals</td>
+          <td class="r" id="keeperTotalCost" style="font-family:var(--M);font-weight:700;color:var(--white)">$0</td>
+          <td></td>
+          <td class="r" id="keeperTotal1" style="font-family:var(--M);color:var(--dimmer)">$0</td>
+          <td class="r" id="keeperTotal2" style="font-family:var(--M);color:var(--dimmer)">$0</td>
+          <td class="r" id="keeperTotal3" style="font-family:var(--M);color:var(--dimmer)">$0</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- ── Prospects Section ──────────────────────────────────────────── -->
+  <div class="section-hdr" style="margin-top:22px">
+    <h3><i class="fas fa-seedling"></i> Farm System
+      <span class="count-badge" id="prospectCount">0</span>
+    </h3>
+    <button class="btn-add" id="btnAddProspect"><i class="fas fa-plus"></i> Add Prospect</button>
+  </div>
+
+  <div class="tb-wrap">
+    <table class="tb-table" id="prospectTable">
+      <thead>
+        <tr>
+          <th style="width:46px">Pos</th>
+          <th>Prospect</th>
+          <th>Current</th>
+          <th>PAD Action</th>
+          <th class="r">PAD Cost</th>
+          <th>Grad Year</th>
+          <th>Grad Contract</th>
+          <th class="r">KAP Cost (yr)</th>
+          <th class="c" style="width:60px">Drop</th>
+        </tr>
+      </thead>
+      <tbody id="prospectBody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" style="color:var(--dim)">Prospect Totals</td>
+          <td class="r" id="prospectPadTotal" style="font-family:var(--M);font-weight:700;color:#06b6d4">$0</td>
+          <td colspan="3"></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ── Add Player Modal ─────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title"><i class="fas fa-plus-circle"></i> <span id="modalTitleText">Add Player</span></div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="keeper" id="tabKeeper">MLB Keeper</button>
+      <button class="modal-tab" data-tab="prospect" id="tabProspect">Farm Prospect</button>
+    </div>
+
+    <!-- Keeper form -->
+    <div id="formKeeper">
+      <div class="modal-grid">
+        <div class="modal-row">
+          <label class="modal-label">Player Name</label>
+          <input type="text" class="modal-input" id="addName" placeholder="e.g. Ronald Acuna Jr.">
+        </div>
+        <div class="modal-row">
+          <label class="modal-label">Position</label>
+          <select class="modal-select" id="addPos">
+            <option>OF</option><option>1B</option><option>2B</option><option>3B</option>
+            <option>SS</option><option>C</option><option>DH</option>
+            <option>SP</option><option>RP</option><option>SP/RP</option>
+          </select>
+        </div>
+      </div>
+      <!-- Original contract -->
+      <div class="modal-row">
+        <label class="modal-label">Current Contract <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--dimmer);font-size:.62rem;margin-left:4px">what they hold now (or at acquisition)</span></label>
+        <select class="modal-select" id="addContract" onchange="syncProjectedContract()">
+          <option value="TC R">TC R - $5 (Rookie / Grad)</option>
+          <option value="TC BC 1">TC BC 1 - $5 (BC Grad yr 1)</option>
+          <option value="TC BC 2">TC BC 2 - $5 (BC Grad yr 2)</option>
+          <option value="TC 1">TC 1 - $15</option>
+          <option value="TC 2">TC 2 - $25</option>
+          <option value="VC 1" selected>VC 1 - $35</option>
+          <option value="VC 2">VC 2 - $55</option>
+          <option value="FC 1">FC 1 - $85</option>
+          <option value="FC 2+">FC 2+ - $125</option>
+        </select>
+      </div>
+
+      <!-- Projected contract (editable, drives all math) -->
+      <div class="modal-row">
+        <label class="modal-label" style="display:flex;align-items:center;gap:8px">
+          Projected Contract for Your Roster
+          <span id="projContractChanged" style="display:none;font-family:var(--T);font-size:.62rem;font-weight:700;color:var(--amber)">overriding original</span>
+        </label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select class="modal-select" id="addProjectedContract" style="flex:1" onchange="updateProjPreview()">
+            <option value="TC R">TC R - $5</option>
+            <option value="TC BC 1">TC BC 1 - $5</option>
+            <option value="TC BC 2">TC BC 2 - $5</option>
+            <option value="TC 1">TC 1 - $15</option>
+            <option value="TC 2">TC 2 - $25</option>
+            <option value="VC 1" selected>VC 1 - $35</option>
+            <option value="VC 2">VC 2 - $55</option>
+            <option value="FC 1">FC 1 - $85</option>
+            <option value="FC 2+">FC 2+ - $125</option>
+          </select>
+          <span id="projCostPreview" style="font-family:var(--M);font-weight:700;font-size:1rem;color:var(--purple);white-space:nowrap">$35 KAP</span>
+        </div>
+        <div id="projContractNote" style="font-family:var(--T);font-size:.7rem;color:var(--dimmer);margin-top:5px">
+          Matches current contract. Future year projections use this contract as the baseline.
+        </div>
+      </div>
+      <div class="modal-row" style="font-size:.72rem;color:var(--dimmer);font-family:var(--T);background:rgba(255,255,255,.03);padding:7px 10px;border-radius:4px">
+        <i class="fas fa-info-circle" style="color:var(--amber);margin-right:5px"></i>
+        Simulated players show with a purple row border and a "sim" badge. Drop or reset to remove.
+      </div>
+    </div>
+
+    <!-- Prospect form -->
+    <div id="formProspect" style="display:none">
+      <div class="modal-grid">
+        <div class="modal-row">
+          <label class="modal-label">Prospect Name</label>
+          <input type="text" class="modal-input" id="addPName" placeholder="e.g. Jackson Holliday">
+        </div>
+        <div class="modal-row">
+          <label class="modal-label">Position</label>
+          <select class="modal-select" id="addPPos">
+            <option>OF</option><option>1B</option><option>2B</option><option>3B</option>
+            <option>SS</option><option>C</option><option>DH</option>
+            <option>SP</option><option>RP</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-row">
+          <label class="modal-label">Contract</label>
+          <select class="modal-select" id="addPContract">
+            <option value="DC">DC — $5 (no MLB service)</option>
+            <option value="PC" selected>PC — $10</option>
+            <option value="BC">BC — $20</option>
+          </select>
+        </div>
+        <div class="modal-row">
+          <label class="modal-label">Expected Graduation</label>
+          <select class="modal-select" id="addPGrad">
+            <option value="0">This Season (2026)</option>
+            <option value="1" selected>Next Season (2027)</option>
+            <option value="2">2028</option>
+            <option value="3">2029+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="modal-submit" id="modalSubmit"><i class="fas fa-plus"></i> Add to Roster</button>
+  </div>
+</div>
+
+<!-- ── Bottom Navigation ──────────────────────────────────────────────────── -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="players.html" class="bottom-nav-item">
+    <i class="fas fa-search"></i>
+    <span>Search</span>
+  </a>
+  <a href="rosters.html" class="bottom-nav-item">
+    <i class="fas fa-baseball-ball"></i>
+    <span>Rosters</span>
+  </a>
+  <a href="dashboard.html" class="bottom-nav-item">
+    <i class="fas fa-tachometer-alt"></i>
+    <span>Dashboard</span>
+  </a>
+  <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+    <i class="fas fa-bars"></i>
+    <span>Menu</span>
+  </button>
+</nav>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+</footer>
+
+<!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/team-builder.js"></script>
+
+</body>
+</html>

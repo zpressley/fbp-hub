@@ -1,0 +1,514 @@
+/* ================================================================
+   FBP Hub – lineup-builder.css
+   Synchronized scroll with TIGHT stat spacing
+   Mobile: 32px width, 1px padding
+   Desktop: 38px width, 2px padding
+   ================================================================ */
+
+.lb-container {
+  background: var(--bg-charcoal);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* ── Season picker ────────────────────────────────────────────── */
+.lb-season-picker {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 10px;
+  background: rgba(0,0,0,.15);
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+.lb-season-label {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: .62rem;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  color: rgba(200,200,200,.6);
+  margin-right: 6px;
+}
+
+.lb-season-btn {
+  padding: 4px 11px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 3px;
+  color: rgba(200,200,200,.6);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .7rem;
+  cursor: pointer;
+  transition: all .12s;
+}
+
+.lb-season-btn.active {
+  background: rgba(239,62,66,.11);
+  border-color: rgba(239,62,66,.35);
+  color: var(--text-white);
+}
+
+/* ── Section headers ────────────────────────────────────────────── */
+.lb-section-hdr {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: .7rem;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+  color: #FFB612;
+  padding: 9px 10px 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  background: rgba(0,0,0,.12);
+}
+
+.lb-section-hdr i {
+  color: #FFB612;
+  font-size: .6rem;
+}
+
+.lb-section-pitch,
+.lb-section-bench,
+.lb-section-farm {
+  margin-top: 6px;
+}
+
+/* ── Scroll container ─────────────────────────────────────────── */
+.lb-scroll-container {
+  background: rgba(0,0,0,.08);
+}
+
+/* ── Header row ───────────────────────────────────────────────── */
+.lb-header-row {
+  display: flex;
+  background: rgba(0,0,0,.25);
+  border-bottom: 1px solid rgba(239,62,66,.18);
+}
+
+.lb-hdr-pos {
+  width: 42px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .58rem;
+  color: rgba(200,200,200,.55);
+  padding: 4px 0;
+}
+
+.lb-hdr-player {
+  width: 140px;
+  flex-shrink: 0;
+  padding: 4px 6px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: .58rem;
+  color: rgba(200,200,200,.55);
+  text-align: left;
+}
+
+.lb-hdr-stats {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 6px 4px 0;
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+
+.lb-hdr-stats::-webkit-scrollbar { display: none; }
+
+.lb-hdr-stat {
+  display: inline-block;
+  width: 32px;
+  flex-shrink: 0;
+  text-align: right;
+  padding: 0 1px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .68rem;
+  color: #FFB612;
+  white-space: nowrap;
+}
+
+/* ── Player row ───────────────────────────────────────────────── */
+.lb-player-row {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,.025);
+  min-height: 38px;
+}
+
+.lb-row-bench {
+  background: rgba(0,0,0,.15);
+}
+
+.lb-row-pos {
+  width: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .66rem;
+  color: var(--primary-red);
+}
+
+.lb-pos-bench {
+  color: rgba(200,200,200,.45);
+}
+
+.lb-row-player {
+  width: 140px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  padding: 2px 4px;
+}
+
+.lb-player-select {
+  width: 100%;
+  background: rgba(0,0,0,.2);
+  border: none;
+  border-radius: 3px;
+  color: var(--text-white);
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: .8rem;
+  padding: 4px 20px 4px 6px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: all .12s;
+}
+
+.lb-player-select:hover {
+  background: rgba(0,0,0,.35);
+}
+
+.lb-player-select:focus {
+  outline: none;
+  background: rgba(239,62,66,.08);
+  box-shadow: 0 0 0 1px rgba(239,62,66,.3);
+}
+
+.lb-player-select option {
+  background: #1a1a1a;
+  color: var(--text-white);
+}
+
+.lb-bench-name {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: .8rem;
+  color: var(--text-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lb-player-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 0 0;
+}
+
+.lb-inline-contract {
+  font-family: var(--font-mono);
+  font-size: .48rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  border: 1px solid;
+  letter-spacing: .2px;
+}
+
+.lb-inline-contract.tc  { color: #bbb; border-color: #555; }
+.lb-inline-contract.vc  { color: #FFB612; border-color: rgba(255,182,18,.35); }
+.lb-inline-contract.fc  { color: #EF3E42; border-color: rgba(239,62,66,.35); }
+.lb-inline-contract.rookie { color: #22c55e; border-color: rgba(34,197,94,.3); }
+.lb-inline-contract.bc  { color: #FFB612; border-color: rgba(255,182,18,.35); }
+.lb-inline-contract.pc  { color: #5bb8f5; border-color: rgba(91,184,245,.35); }
+.lb-inline-contract.dc  { color: #EF3E42; border-color: rgba(239,62,66,.35); }
+
+.lb-inline-team {
+  font-family: var(--font-mono);
+  font-size: .5rem;
+  color: rgba(200,200,200,.55);
+  letter-spacing: .3px;
+}
+
+/* ── Stats row (tight spacing) ────────────────────────────────── */
+.lb-row-stats {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 6px 2px 0;
+  touch-action: pan-x;
+  scrollbar-width: none;
+}
+
+.lb-row-stats::-webkit-scrollbar { display: none; }
+
+.lb-sv {
+  display: inline-block;
+  width: 38px;
+  flex-shrink: 0;
+  text-align: right;
+  padding: 0 2px;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: rgba(255,255,255,.85);
+  white-space: nowrap;
+}
+
+.lb-sv.hot {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.lb-sv.dim {
+  color: rgba(170,170,170,.18);
+}
+
+/* ── Farm system ──────────────────────────────────────────────── */
+.lb-farm-groups {
+  padding: 0 10px 10px;
+  background: rgba(0,0,0,.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lb-farm-group {
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.04);
+  overflow: hidden;
+}
+
+.lb-farm-hdr {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: .58rem;
+  padding: 4px 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lb-farm-hdr.bc {
+  color: #FFB612;
+  background: rgba(255,182,18,.08);
+  border-bottom: 1px solid rgba(255,182,18,.15);
+}
+
+.lb-farm-hdr.pc {
+  color: #fff;
+  background: rgba(30,136,199,.15);
+  border-bottom: 1px solid rgba(30,136,199,.25);
+}
+
+.lb-farm-hdr.dc {
+  color: #EF3E42;
+  background: rgba(239,62,66,.04);
+  border-bottom: 1px solid rgba(239,62,66,.12);
+}
+
+.lb-farm-count {
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  opacity: .6;
+  margin-left: auto;
+}
+
+.lb-farm-players {
+  background: rgba(0,0,0,.08);
+}
+
+.lb-farm-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+  border-bottom: 1px solid rgba(255,255,255,.02);
+}
+
+.lb-farm-row:last-child {
+  border-bottom: none;
+}
+
+.lb-farm-pos {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: .58rem;
+  color: rgba(170,170,170,.35);
+  min-width: 22px;
+}
+
+.lb-farm-name {
+  flex: 1;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: .78rem;
+  color: var(--text-white);
+}
+
+.lb-farm-org {
+  font-family: var(--font-mono);
+  font-size: .52rem;
+  color: rgba(170,170,170,.3);
+}
+
+.lb-farm-rank {
+  font-family: var(--font-mono);
+  font-size: .54rem;
+  color: #FFB612;
+  background: rgba(255,182,18,.06);
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,182,18,.15);
+}
+
+/* ── Empty states ─────────────────────────────────────────────── */
+.lb-empty,
+.lb-empty-bench {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  color: rgba(170,170,170,.3);
+  font-family: var(--font-title);
+  font-size: .78rem;
+  background: rgba(0,0,0,.08);
+}
+
+/* ── Mobile (< 768px) ─────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .lb-container {
+    border-radius: 0;
+  }
+
+  .lb-season-picker {
+    padding: 8px 4px;
+  }
+
+  .lb-section-hdr {
+    padding: 9px 4px 4px;
+  }
+
+  .lb-hdr-pos,
+  .lb-row-pos {
+    width: 30px;
+    padding: 0;
+    font-size: .78rem;
+  }
+
+  .lb-hdr-player,
+  .lb-row-player {
+    width: 120px;
+    padding: 2px 2px;
+  }
+
+  .lb-player-select {
+    font-size: .88rem;
+    padding: 4px 16px 4px 2px;
+  }
+
+  .lb-bench-name {
+    font-size: .95rem;
+  }
+
+  .lb-player-row {
+    min-height: 44px;
+  }
+
+  .lb-hdr-stats {
+    padding: 4px 2px 4px 0;
+  }
+
+  .lb-row-stats {
+    padding: 2px 2px 2px 0;
+  }
+
+  .lb-sv,
+  .lb-hdr-stat {
+    width: 34px;
+    padding: 0 1px;
+  }
+
+  .lb-sv.lb-sv-wide,
+  .lb-hdr-stat.lb-hdr-wide {
+    width: 52px;
+    min-width: 52px;
+  }
+
+  .lb-sv {
+    font-size: .8rem;
+  }
+
+  .lb-hdr-stat {
+    font-size: .7rem;
+  }
+
+  .lb-inline-contract {
+    font-size: .55rem;
+  }
+
+  .lb-inline-team {
+    font-size: .55rem;
+  }
+
+  .lb-hdr-pos,
+  .lb-hdr-player {
+    font-size: .65rem;
+  }
+}
+
+/* ── Desktop (≥ 768px) ────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .lb-hdr-player,
+  .lb-row-player {
+    width: 160px;
+  }
+
+  .lb-player-select {
+    font-size: .82rem;
+  }
+
+  .lb-hdr-stats,
+  .lb-row-stats {
+    justify-content: space-between;
+  }
+
+  .lb-sv,
+  .lb-hdr-stat {
+    min-width: 38px;
+    width: auto;
+    flex: 1 1 38px;
+    padding: 0 3px;
+  }
+
+  .lb-sv {
+    font-size: .7rem;
+  }
+
+  .lb-hdr-stat {
+    font-size: .56rem;
+  }
+}

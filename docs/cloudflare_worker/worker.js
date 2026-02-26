@@ -118,6 +118,11 @@ export default {
         return await proxyToBot('/api/auction/current', env);
       }
 
+      // --- Manager Notes ---
+      if (path === '/api/notes' && (request.method === 'GET' || request.method === 'POST')) {
+        return await proxyToBotAsManager(`/api/notes${url.search}`, env, request);
+      }
+
       // --- Manager Self-Service APIs ---
       if (path === '/api/manager/contract-purchase' && request.method === 'POST') {
         return await proxyToBot('/api/manager/contract-purchase', env, request);

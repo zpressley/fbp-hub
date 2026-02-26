@@ -516,6 +516,10 @@ function addUserMenu() {
                 <i class="fas fa-clipboard-list"></i>
                 Draft Board
             </a>
+            <a href="team-builder.html">
+                <i class="fas fa-drafting-compass"></i>
+                Team Builder
+            </a>
             ${authManager.isAdmin() ? `
                 <a href="admin.html">
                     <i class="fas fa-shield-alt"></i>

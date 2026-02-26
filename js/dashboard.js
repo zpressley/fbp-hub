@@ -1,505 +1,23 @@
 /**
- * FBP Hub - Dashboard JavaScript
- * Displays personalized manager dashboard
+ * FBP Hub - Dashboard JavaScript (Minimal Version)
+ * Most dashboard logic moved to dashboard-tabs.js and lineup-builder.js
+ * This file only handles auth guard and provides helper functions
  */
-
-// Dashboard roster filter state
-let dashboardRosterFilters = {
-    section: 'all',      // all | infield | outfield | sp | rp
-    rosterType: 'all'    // all | keepers | prospects
-};
 
 document.addEventListener('DOMContentLoaded', () => {
     // Require authentication
     if (!AuthUI.requireAuth()) {
         return;
     }
-    
-    // Initialize dashboard
-    initDashboard();
 });
 
 /**
- * Initialize dashboard
- */
-function initDashboard() {
-    const user = authManager.getUser();
-    const team = authManager.getTeam();
-    
-    // Apply team color theme (if configured)
-    applyDashboardTeamTheme(team);
-    
-    // Update welcome message
-    updateWelcomeMessage(user, team);
-    
-    // Load team stats
-    loadTeamStats(team);
-    
-    // Update quick action links
-    updateQuickActions(team);
-    
-    // Show admin link for admins only
-    const adminLink = document.getElementById('adminDashboardLink');
-    if (adminLink && typeof authManager !== 'undefined' && authManager.isAdmin && authManager.isAdmin()) {
-        adminLink.style.display = 'flex';
-    }
-    
-    // Setup roster filters + load roster preview
-    setupRosterFilters(team);
-    loadRosterPreview(team);
-}
-
-/**
- * Update welcome message
- */
-function updateWelcomeMessage(user, team) {
-    const header = document.getElementById('dashboardHeader');
-    if (!header) return;
-    
-    const greeting = getGreeting();
-    const teamName = team ? team.name : 'Manager';
-    
-    header.innerHTML = `
-        <div class="welcome-message">
-            <h2>${greeting}, ${teamName}!</h2>
-            <p>Welcome to your FBP Hub dashboard</p>
-        </div>
-        <div class="user-badge">
-            <img src="${authManager.getAvatarUrl(64)}" alt="${user.username}" class="avatar-large">
-            <div class="user-info-dashboard">
-                <div class="username">${user.username}</div>
-                ${team ? `<div class="team-name">${team.abbreviation}</div>` : ''}
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Get time-appropriate greeting
- */
-function getGreeting() {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-}
-
-/**
- * Load auction state for the dashboard (safe wrapper).
- * Returns an object with { bidCount, phaseLabel } for the given team.
- */
-async function getAuctionBidSummary(teamAbbr) {
-    const DATA_PATH = window.FBPHub?.config?.dataPath || './data/';
-
-    try {
-        const res = await fetch(`${DATA_PATH}auction_current.json`, { cache: 'no-store' });
-        if (!res.ok) {
-            return { bidCount: 0, phaseLabel: 'Auction off week' };
-        }
-
-        const state = await res.json();
-        const phase = state?.phase || 'off_week';
-        const allBids = Array.isArray(state?.bids) ? state.bids : [];
-
-        const myBids = allBids.filter(b => String(b.team).toUpperCase() === String(teamAbbr).toUpperCase());
-        let phaseLabel;
-        switch (phase) {
-            case 'ob_window':
-                phaseLabel = 'OB window open';
-                break;
-            case 'cb_window':
-                phaseLabel = 'CB window open';
-                break;
-            case 'ob_final':
-                phaseLabel = 'OB match/forfeit window';
-                break;
-            case 'processing':
-                phaseLabel = 'Processing results';
-                break;
-            case 'off_week':
-            default:
-                phaseLabel = 'Auction off week';
-                break;
-        }
-
-        return { bidCount: myBids.length, phaseLabel };
-    } catch (e) {
-        console.warn('Dashboard: auction_current.json not available or invalid', e);
-        return { bidCount: 0, phaseLabel: 'Auction data unavailable' };
-    }
-}
-
-/**
- * Load team statistics
- */
-async function loadTeamStats(team) {
-    const statsGrid = document.getElementById('teamStats');
-    if (!statsGrid || !team) return;
-    
-    // Filter players for this team - FBP_Team uses abbreviations, manager uses full team names
-    const teamPlayers = FBPHub.data.players.filter(p => 
-        p.FBP_Team === team.abbreviation || p.manager === team.name
-    );
-    const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
-    const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
-    
-    // Get WizBucks balance (wizbucks.json is keyed by full team name)
-    let wizbucks = 0;
-    const wizData = FBPHub.data.wizbucks || {};
-    if (team.name && Object.prototype.hasOwnProperty.call(wizData, team.name)) {
-        wizbucks = wizData[team.name];
-    } else if (Object.prototype.hasOwnProperty.call(wizData, team.abbreviation)) {
-        wizbucks = wizData[team.abbreviation];
-    }
-
-    // Prospect contract breakdown
-    const purchasedProspects = prospects.filter(p => (p.contract_type || '').includes('Purchased')).length;
-
-    // Auction bids this week
-    const { bidCount, phaseLabel } = await getAuctionBidSummary(team.abbreviation);
-    
-    statsGrid.innerHTML = `
-        <div class="stat-card-large">
-            <div class="stat-icon">
-                <i class="fas fa-gavel"></i>
-            </div>
-            <div class="stat-content">
-                <div class="stat-label">Auction Bids</div>
-                <div class="stat-value-large">${bidCount}</div>
-                <div class="stat-meta">${phaseLabel}</div>
-            </div>
-        </div>
-        
-        <div class="stat-card-large">
-            <div class="stat-icon">
-                <i class="fas fa-baseball-ball"></i>
-            </div>
-            <div class="stat-content">
-                <div class="stat-label">Keepers</div>
-                <div class="stat-value-large">${keepers.length}</div>
-                <div class="stat-meta">${keepers.length} / 26 roster</div>
-            </div>
-        </div>
-        
-        <div class="stat-card-large">
-            <div class="stat-icon">
-                <i class="fas fa-seedling"></i>
-            </div>
-            <div class="stat-content">
-                <div class="stat-label">Prospects</div>
-                <div class="stat-value-large">${prospects.length}</div>
-                <div class="stat-meta">${purchasedProspects} purchased</div>
-            </div>
-        </div>
-        
-        <div class="stat-card-large">
-            <div class="stat-icon">
-                <i class="fas fa-coins"></i>
-            </div>
-            <div class="stat-content">
-                <div class="stat-label">WizBucks</div>
-                <div class="stat-value-large">$${wizbucks}</div>
-                <div class="stat-meta">Current balance</div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Update quick action links
- */
-function updateQuickActions(team) {
-    if (!team) return;
-    
-    const viewKeepersLink = document.getElementById('viewKeepersLink');
-    const viewProspectsLink = document.getElementById('viewProspectsLink');
-    
-    if (viewKeepersLink) {
-        viewKeepersLink.href = `rosters.html?type=keepers&team=${team.abbreviation}`;
-    }
-    
-    if (viewProspectsLink) {
-        viewProspectsLink.href = `rosters.html?type=prospects&team=${team.abbreviation}`;
-    }
-}
-
-/**
- * Load roster preview
- */
-function loadRosterPreview(team) {
-    const preview = document.getElementById('rosterPreview');
-    if (!preview || !team) return;
-    
-    // FBP_Team uses abbreviations, manager uses full team names - check both
-    const teamPlayers = FBPHub.data.players.filter(p => 
-        p.FBP_Team === team.abbreviation || p.manager === team.name
-    );
-    const keepers = teamPlayers.filter(p => p.player_type === 'MLB');
-    const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
-    
-    let html = '';
-
-    const wantKeepers = dashboardRosterFilters.rosterType === 'all' || dashboardRosterFilters.rosterType === 'keepers';
-    const wantProspects = dashboardRosterFilters.rosterType === 'all' || dashboardRosterFilters.rosterType === 'prospects';
-    
-    if (wantKeepers && keepers.length > 0) {
-        html += renderDashboardRosterSection(keepers, 'Keepers');
-    }
-    
-    if (wantProspects && prospects.length > 0) {
-        html += renderDashboardRosterSection(prospects, 'Prospects');
-    }
-    
-    if (!html) {
-        html = `
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>No players on your roster yet</p>
-            </div>
-        `;
-    }
-    
-    preview.innerHTML = html;
-}
-
-/**
- * Group players into dashboard roster buckets (batters vs pitchers)
- */
-function groupPlayersForDashboard(players) {
-    const batters = {
-        'Catcher': [],
-        'Infield': [],
-        'Outfield': [],
-        'DH': [],
-        'Utility': []
-    };
-    
-    const pitchers = {
-        'Starting Pitcher': [],
-        'Relief Pitcher': [],
-        'Pitcher': []
-    };
-
-    players.forEach(player => {
-        const posStr = player.position || '';
-        const tokens = posStr.split(',').map(p => p.trim()).filter(Boolean);
-        const normalizedTokens = tokens.map(t => t.toUpperCase());
-
-        // DH can coexist with other positions (e.g., DH/SP like Ohtani)
-        if (normalizedTokens.includes('DH')) {
-            batters['DH'].push(player);
-        }
-
-        // Batters (mutually exclusive buckets besides DH)
-        if (normalizedTokens.includes('C')) {
-            batters['Catcher'].push(player);
-        } else if (normalizedTokens.some(p => ['1B', '2B', '3B', 'SS'].includes(p))) {
-            batters['Infield'].push(player);
-        } else if (normalizedTokens.some(p => ['LF', 'CF', 'RF', 'OF'].includes(p))) {
-            batters['Outfield'].push(player);
-        } else if (normalizedTokens.includes('UTIL')) {
-            batters['Utility'].push(player);
-        }
-        
-        // Pitchers (handle SP/RP/P plus RHP/LHP styles)
-        const isGenericPitcher = normalizedTokens.includes('P');
-        const isStarter = normalizedTokens.includes('SP');
-        const isReliever = normalizedTokens.includes('RP');
-        const isHandedPitcher = normalizedTokens.includes('RHP') || normalizedTokens.includes('LHP');
-
-        if (isStarter) {
-            pitchers['Starting Pitcher'].push(player);
-        } else if (isReliever) {
-            pitchers['Relief Pitcher'].push(player);
-        } else if (isGenericPitcher || isHandedPitcher) {
-            pitchers['Pitcher'].push(player);
-        }
-    });
-
-    return { batters, pitchers };
-}
-
-/**
- * Get contract type code for a prospect (same logic as rosters.js)
- */
-function getDashboardContractCode(player) {
-    const ct = (player.contract_type || '').toLowerCase();
-    if (ct.includes('purchased')) return 'PC';
-    if (ct.includes('development')) return 'DC';
-    if (ct.includes('blue chip') || ct.includes('farm')) return 'BC';
-    return 'BC';  // Default uncontracted to BC
-}
-
-/**
- * Group prospects by contract type for dashboard
- */
-function groupProspectsByContract(players) {
-    const groups = {
-        'Blue Chip (BC)': [],
-        'Purchased (PC)': [],
-        'Development (DC)': []
-    };
-    
-    players.forEach(player => {
-        const code = getDashboardContractCode(player);
-        if (code === 'PC') {
-            groups['Purchased (PC)'].push(player);
-        } else if (code === 'DC') {
-            groups['Development (DC)'].push(player);
-        } else {
-            groups['Blue Chip (BC)'].push(player);
-        }
-    });
-    
-    return groups;
-}
-
-/**
- * Render a full roster section in depth-chart style (batters left, pitchers right)
- * For prospects, groups by contract type instead
- */
-function renderDashboardRosterSection(players, title) {
-    if (!players || players.length === 0) return '';
-    
-    // Check if this is prospects section - group by contract type
-    const isProspects = title === 'Prospects';
-    
-    if (isProspects) {
-        const contractGroups = groupProspectsByContract(players);
-        const groupsHTML = Object.entries(contractGroups)
-            .filter(([, list]) => list.length > 0)
-            .map(([groupName, list]) => renderProspectContractGroup(groupName, list))
-            .join('');
-        
-        return `
-            <div class="dashboard-roster-section">
-                <h4>${title}</h4>
-                <div class="dash-roster-contracts">
-                    ${groupsHTML || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No prospects</div>'}
-                </div>
-            </div>
-        `;
-    }
-
-    const { batters, pitchers } = groupPlayersForDashboard(players);
-
-    // Apply section-level filters (Catcher/Infield/Outfield/SP/RP)
-    const section = dashboardRosterFilters.section || 'all';
-
-    const filteredBattersEntries = Object.entries(batters).filter(([groupName, list]) => {
-        if (!list.length) return false;
-        if (section === 'catcher') return groupName === 'Catcher';
-        if (section === 'infield') return groupName === 'Infield';
-        if (section === 'outfield') return groupName === 'Outfield';
-        if (section === 'sp' || section === 'rp') return false; // pitching-only filter
-        return true; // 'all'
-    });
-
-    const filteredPitchersEntries = Object.entries(pitchers).filter(([groupName, list]) => {
-        if (!list.length) return false;
-        if (section === 'sp') return groupName === 'Starting Pitcher';
-        if (section === 'rp') return groupName === 'Relief Pitcher';
-        if (section === 'catcher' || section === 'infield' || section === 'outfield') return false; // hitting-only filter
-        return true; // 'all'
-    });
-    
-    // Render batters column (left)
-    const batterGroups = filteredBattersEntries
-        .map(([groupName, list]) => renderPositionGroup(groupName, list))
-        .join('');
-    
-    // Render pitchers column (right)
-    const pitcherGroups = filteredPitchersEntries
-        .map(([groupName, list]) => renderPositionGroup(groupName, list))
-        .join('');
-
-    return `
-        <div class="dashboard-roster-section">
-            <h4>${title}</h4>
-            <div class="dash-roster-grid">
-                <div class="dash-roster-column">
-                    ${batterGroups || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No batters</div>'}
-                </div>
-                <div class="dash-roster-column">
-                    ${pitcherGroups || '<div style="color: var(--text-gray); text-align: center; padding: var(--space-lg);">No pitchers</div>'}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Render a prospect contract group for dashboard
- */
-function renderProspectContractGroup(groupName, players) {
-    const playersHTML = players.map(player => {
-        const pos = player.position || '';
-        const org = player.team || 'FA';
-        const profileLink = window.createPlayerLink ? createPlayerLink(player) : '#';
-        
-        return `
-            <div class="dash-roster-player">
-                <a href="${profileLink}" class="dash-player-name">${player.name}</a>
-                <span class="dash-player-meta">${org} • ${pos}</span>
-            </div>
-        `;
-    }).join('');
-    
-    return `
-        <div class="dash-contract-group">
-            <div class="dash-contract-header">${groupName} <span class="group-count">(${players.length})</span></div>
-            <div class="dash-contract-players">
-                ${playersHTML}
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Attach click handlers for roster filters
- */
-function setupRosterFilters(team) {
-    const filterBar = document.getElementById('rosterFilterBar');
-    if (!filterBar || !team) return;
-
-    filterBar.addEventListener('click', (event) => {
-        const chip = event.target.closest('.roster-filter-chip');
-        if (!chip) return;
-
-        const sectionFilter = chip.getAttribute('data-section-filter');
-        const rosterFilter = chip.getAttribute('data-roster-filter');
-
-        if (sectionFilter) {
-            dashboardRosterFilters.section = sectionFilter;
-            const sectionChips = filterBar.querySelectorAll('[data-section-filter]');
-            sectionChips.forEach(el => {
-                el.classList.toggle('active', el === chip);
-            });
-        }
-
-        if (rosterFilter) {
-            dashboardRosterFilters.rosterType = rosterFilter;
-            const rosterChips = filterBar.querySelectorAll('[data-roster-filter]');
-            rosterChips.forEach(el => {
-                el.classList.toggle('active', el === chip);
-            });
-        }
-
-        loadRosterPreview(team);
-    });
-}
-
-/**
- * Render a single position group
- */
-/**
- * Apply team color scheme to dashboard using CSS variables
+ * Apply team color scheme using CSS variables
  */
 function applyDashboardTeamTheme(team) {
     const root = document.documentElement;
 
     if (!team || typeof FBPHub === 'undefined') {
-        // Clear any previous overrides and fall back to global theme
         root.style.removeProperty('--team-primary');
         root.style.removeProperty('--team-secondary');
         root.style.removeProperty('--team-accent-1');
@@ -517,7 +35,6 @@ function applyDashboardTeamTheme(team) {
         if (colors.accent2) root.style.setProperty('--team-accent-2', colors.accent2);
         if (colors.accent3) root.style.setProperty('--team-accent-3', colors.accent3);
     } else {
-        // No custom colors for this team; clear overrides
         root.style.removeProperty('--team-primary');
         root.style.removeProperty('--team-secondary');
         root.style.removeProperty('--team-accent-1');
@@ -527,61 +44,35 @@ function applyDashboardTeamTheme(team) {
 }
 
 /**
- * Get eligible prospects for contract upgrades
- * Note: DC contracts can only be purchased during PAD
- * Self-service allows upgrading FROM DC to PC/BC, or FROM PC to BC
+ * Show toast notification
  */
-function getEligibleContractUpgrades(team) {
-    // FBP_Team uses abbreviations, manager uses full team names - check both
-    const teamPlayers = FBPHub.data.players.filter(p => 
-        p.FBP_Team === team.abbreviation || p.manager === team.name
-    );
-    const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
     
-    const eligible = [];
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-circle',
+        warning: 'exclamation-triangle'
+    };
     
-    prospects.forEach(p => {
-        const contract = (p.contract_type || '').toLowerCase();
-        
-        if (contract.includes('development')) {
-            // DC prospects can upgrade to PC ($5) or BC ($15)
-            eligible.push({ ...p, upgradeCost: 5, upgradeType: 'DC → PC', newContract: 'Purchased Contract' });
-            eligible.push({ ...p, upgradeCost: 15, upgradeType: 'DC → BC', newContract: 'Blue Chip Contract' });
-        } else if (contract.includes('purchased')) {
-            // PC prospects can upgrade to BC ($10)
-            eligible.push({ ...p, upgradeCost: 10, upgradeType: 'PC → BC', newContract: 'Blue Chip Contract' });
-        }
-        // BC prospects are already max tier - no upgrades available
-        // Uncontracted/Farm prospects need DC first (PAD only)
-    });
+    toast.innerHTML = `
+        <i class="fas fa-${icons[type]}"></i>
+        <span>${message}</span>
+    `;
     
-    return eligible;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
 }
 
 /**
- * Check if self-service contract purchases are enabled (after PAD deadline)
- */
-async function isContractPurchaseEnabled() {
-    try {
-        const res = await fetch('./data/season_dates.json');
-        if (!res.ok) return true; // Default to enabled if file not found
-        const dates = await res.json();
-        const padDate = dates.prospect_draft;
-        if (!padDate) return true;
-        
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const padDeadline = new Date(padDate + 'T00:00:00');
-        
-        return today > padDeadline;
-    } catch (e) {
-        console.warn('Could not check PAD deadline:', e);
-        return true; // Default to enabled on error
-    }
-}
-
-/**
- * Show contract purchase modal
+ * Contract purchase modal (legacy - still used by Quick Actions)
  */
 async function showContractPurchaseModal() {
     // Check if self-service is enabled (after PAD deadline)
@@ -594,14 +85,31 @@ async function showContractPurchaseModal() {
     const team = authManager.getTeam();
     if (!team) return;
     
-    const eligible = getEligibleContractUpgrades(team);
+    // Filter to prospects eligible for upgrade
+    const teamPlayers = FBPHub.data.players.filter(p => 
+        p.FBP_Team === team.abbreviation || p.manager === team.name
+    );
+    const prospects = teamPlayers.filter(p => p.player_type === 'Farm');
+    
+    const eligible = [];
+    
+    prospects.forEach(p => {
+        const contract = (p.contract_type || '').toLowerCase();
+        
+        if (contract.includes('development')) {
+            eligible.push({ ...p, upgradeCost: 5, upgradeType: 'DC → PC', newContract: 'Purchased Contract' });
+            eligible.push({ ...p, upgradeCost: 15, upgradeType: 'DC → BC', newContract: 'Blue Chip Contract' });
+        } else if (contract.includes('purchased')) {
+            eligible.push({ ...p, upgradeCost: 10, upgradeType: 'PC → BC', newContract: 'Blue Chip Contract' });
+        }
+    });
     
     if (eligible.length === 0) {
         showToast('No prospects available for contract upgrade', 'warning');
         return;
     }
     
-    // Get current WizBucks balance
+    // Get WizBucks balance
     const wizData = FBPHub.data.wizbucks || {};
     let balance = 0;
     if (team.name && wizData[team.name] !== undefined) {
@@ -636,9 +144,6 @@ async function showContractPurchaseModal() {
                         <span class="info-label">⭐ PC → BC:</span>
                         <span class="info-value">$10</span>
                     </div>
-                    <div class="info-note">
-                        💡 DC contracts can only be assigned during PAD
-                    </div>
                 </div>
                 
                 <div class="upgrade-options">
@@ -646,16 +151,12 @@ async function showContractPurchaseModal() {
                     <div class="upgrade-list">
                         ${eligible.map(p => {
                             const canAfford = balance >= p.upgradeCost;
-                            const currentContract = p.contract_type || 'None';
                             return `
                                 <div class="upgrade-option ${canAfford ? '' : 'insufficient-funds'}" 
                                      ${canAfford ? `onclick="selectContractUpgrade('${p.upid}', '${p.upgradeType}', ${p.upgradeCost}, '${p.newContract}')"` : ''}>
                                     <div class="upgrade-player-info">
                                         <div class="upgrade-player-name">${p.name}</div>
-                                        <div class="upgrade-player-meta">
-                                            ${p.position || 'N/A'} - ${p.team || 'FA'} • 
-                                            Current: ${currentContract}
-                                        </div>
+                                        <div class="upgrade-player-meta">${p.position || 'N/A'} - ${p.team || 'FA'}</div>
                                     </div>
                                     <div class="upgrade-action">
                                         <div class="upgrade-type">${p.upgradeType}</div>
@@ -682,16 +183,13 @@ async function showContractPurchaseModal() {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
-/**
- * Close contract purchase modal
- */
 function closeContractPurchaseModal() {
     const modal = document.getElementById('contractPurchaseModal');
     if (modal) modal.remove();
 }
 
 /**
- * Select a contract upgrade and confirm
+ * Select a contract upgrade and show confirmation modal
  */
 function selectContractUpgrade(upid, upgradeType, cost, newContract) {
     const player = FBPHub.data.players.find(p => p.upid === upid);
@@ -761,7 +259,30 @@ function closeContractConfirmModal() {
 }
 
 /**
- * Confirm and execute contract purchase
+ * Check if self-service contract purchases are enabled (after PAD deadline)
+ */
+async function isContractPurchaseEnabled() {
+    try {
+        const base = window.FBPHub?.config?.dataPath || './data/';
+        const res = await fetch(base + 'season_dates.json');
+        if (!res.ok) return true;
+        const dates = await res.json();
+        const padDate = dates.prospect_draft;
+        if (!padDate) return true;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const padDeadline = new Date(padDate + 'T00:00:00');
+        
+        return today > padDeadline;
+    } catch (e) {
+        console.warn('Could not check PAD deadline:', e);
+        return true;
+    }
+}
+
+/**
+ * Confirm and execute contract purchase via API
  */
 async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
     const btn = document.getElementById('confirmPurchaseBtn');
@@ -795,8 +316,6 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
     
     const currentSeason = new Date().getFullYear();
     
-    // Manager self-service contract purchase payload
-    // Server computes cost and validates the upgrade path.
     const payload = {
         season: currentSeason,
         team: team.abbreviation,
@@ -835,7 +354,6 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
         const result = await res.json();
         const chargedCost = (result.cost !== null && result.cost !== undefined) ? result.cost : cost;
         
-        // Validate response structure - backend should return { player, wizbucks_balance }
         if (!result.player) {
             console.error('Contract purchase: unexpected response', result);
             showToast(`Contract purchase failed: Invalid response from server`, 'error');
@@ -861,17 +379,16 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
             }
         }
         
-        // Close modals
         closeContractConfirmModal();
         closeContractPurchaseModal();
         
-        // Show success
         const contractName = newContract === 'Purchased Contract' ? 'PC' : 'BC';
         showToast(`✅ ${player.name} - ${contractName} purchased! -$${chargedCost} WB`, 'success');
         
-        // Refresh dashboard
-        loadTeamStats(team);
-        loadRosterPreview(team);
+        // Reload lineup if available
+        if (window.LineupBuilder?.reload) {
+            window.LineupBuilder.reload();
+        }
         
     } catch (err) {
         console.error('Contract purchase error', err);
@@ -884,111 +401,12 @@ async function confirmContractPurchase(upid, upgradeType, cost, newContract) {
     }
 }
 
-/**
- * Show toast notification
- */
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    
-    const icons = {
-        success: 'check-circle',
-        error: 'exclamation-circle',
-        warning: 'exclamation-triangle'
-    };
-    
-    toast.innerHTML = `
-        <i class="fas fa-${icons[type]}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Trigger animation
-    setTimeout(() => toast.classList.add('show'), 10);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 5000);
-}
-
-// Expose functions to global scope
+// Expose functions globally
+window.applyDashboardTeamTheme = applyDashboardTeamTheme;
+window.showToast = showToast;
 window.showContractPurchaseModal = showContractPurchaseModal;
 window.closeContractPurchaseModal = closeContractPurchaseModal;
 window.selectContractUpgrade = selectContractUpgrade;
 window.closeContractConfirmModal = closeContractConfirmModal;
 window.confirmContractPurchase = confirmContractPurchase;
-
-function renderPositionGroup(groupName, players) {
-    const rows = players.map(p => {
-        // For prospects, display their prospect contract code (PC / DC / BC)
-        let status;
-        if (p.player_type === 'Farm') {
-            const ct = (p.contract_type || '').toLowerCase();
-            if (ct.includes('purchased')) {
-                status = 'PC';
-            } else if (ct.includes('development')) {
-                status = 'DC';
-            } else if (ct.includes('blue chip')) {
-                status = 'BC';
-            } else if (ct.includes('farm')) {
-                status = 'FC';
-            } else {
-                status = p.years_simple || p.status || '';
-            }
-        } else {
-            status = p.years_simple || p.status || '';
-        }
-
-        const team = p.team || 'FA';
-        const pos = p.position || '';
-        const age = p.age || '--';
-        
-        // Determine contract tier for color coding
-        const normalized = (status || '').toUpperCase().replace(/\s+/g, '');
-        let statusClass = 'tc';
-
-        const isRookie = normalized === 'R' || normalized.startsWith('R-') || normalized.startsWith('TC-R');
-        if (normalized.includes('VC')) {
-            statusClass = 'vc';
-        } else if (normalized.startsWith('FC') || normalized.startsWith('F')) {
-            statusClass = 'fc';
-        } else if (isRookie) {
-            statusClass = 'rookie';
-        }
-        
-        const profileLink = window.createPlayerLink ? createPlayerLink(p) : '#';
-
-        return `
-            <tr>
-                <td><span class="dash-roster-status ${statusClass}">${status}</span></td>
-                <td class="dash-roster-name"><a href="${profileLink}">${p.name}</a></td>
-                <td class="dash-roster-team">${team}</td>
-                <td class="dash-roster-pos">${pos}</td>
-                <td class="dash-roster-age">${age}</td>
-            </tr>
-        `;
-    }).join('');
-
-    return `
-        <div class="dash-roster-group">
-            <div class="dash-roster-group-header">${groupName}</div>
-            <table class="dash-roster-table">
-                <thead>
-                    <tr>
-                        <th>STATUS</th>
-                        <th>PLAYER</th>
-                        <th>TEAM</th>
-                        <th>POS</th>
-                        <th>AGE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rows}
-                </tbody>
-            </table>
-        </div>
-    `;
-}
+window.isContractPurchaseEnabled = isContractPurchaseEnabled;

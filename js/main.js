@@ -102,8 +102,9 @@ function setupNavigation() {
     // Setup user menu
     setupUserMenu();
     
-    // Setup draft dropdown
+    // Setup dropdown menus
     setupDraftDropdown();
+    setupFrontOfficeDropdown();
     
     // Highlight active page
     highlightActivePage();
@@ -176,6 +177,10 @@ function updateUserMenuForAuth() {
             <i class="fas fa-handshake"></i>
             Trade Portal
         </a>
+        <a href="draft-board.html">
+            <i class="fas fa-clipboard-list"></i>
+            Draft Board
+        </a>
         <a href="pad.html">
             <i class="fas fa-receipt"></i>
             PAD
@@ -184,28 +189,16 @@ function updateUserMenuForAuth() {
             <i class="fas fa-trophy"></i>
             KAP
         </a>
-        <a href="settings.html">
-            <i class="fas fa-cog"></i>
-            Settings
-        </a>
-        <a href="draft-board.html">
-            <i class="fas fa-clipboard-list"></i>
-            Draft Board
-        </a>
-        <a href="auction.html">
-            <i class="fas fa-gavel"></i>
-            Auction
-        </a>
         ${authManager.isAdmin && authManager.isAdmin() ? `
             <a href="admin.html">
                 <i class="fas fa-shield-alt"></i>
                 Admin Portal
             </a>
-            <a href="season-dates.html">
-                <i class="fas fa-calendar-alt"></i>
-                Season Dates
-            </a>
         ` : ''}
+        <a href="settings.html">
+            <i class="fas fa-cog"></i>
+            Settings
+        </a>
         <a href="#" id="headerLogout">
             <i class="fas fa-sign-out-alt"></i>
             Logout
@@ -250,29 +243,55 @@ function setupDraftDropdown() {
 }
 
 /**
+ * Setup Front Office dropdown navigation
+ */
+function setupFrontOfficeDropdown() {
+    const dropdownToggle = document.getElementById('frontOfficeDropdownToggle');
+    const dropdownMenu = document.getElementById('frontOfficeDropdownMenu');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (!dropdownToggle || !dropdownMenu) return;
+    
+    // Toggle dropdown
+    dropdownToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownToggle.classList.toggle('open');
+        dropdownMenu.classList.toggle('active');
+    });
+    
+    // Close dropdown when clicking menu items on mobile
+    const dropdownItems = dropdownMenu.querySelectorAll('.nav-dropdown-item');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth < 768 && navMenu) {
+                navMenu.classList.remove('active');
+            }
+        });
+    });
+}
+
+/**
  * Highlight the active navigation link
  */
 function highlightActivePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link');
     const draftPages = ['draft.html', 'draft-preview.html', 'draft-picks.html', 'draft-board.html'];
-    const effectiveCurrent = currentPage === 'draft-board.html' ? 'draft.html' : currentPage;
+    const frontOfficePages = ['trade.html', 'auction.html', 'team-builder.html', 'wizbucks.html', 'pad.html', 'kap.html'];
     
     // Handle regular nav links
     navLinks.forEach(link => {
         const linkPage = link.getAttribute('href').split('?')[0];
         link.classList.remove('active');
         
-        if (linkPage === effectiveCurrent || 
-            (effectiveCurrent === '' && linkPage === 'index.html')) {
+        if (linkPage === currentPage || 
+            (currentPage === '' && linkPage === 'index.html')) {
             link.classList.add('active');
         }
     });
     
-    // Handle draft dropdown items
+    // Handle all dropdown items
     const dropdownItems = document.querySelectorAll('.nav-dropdown-item');
-    const dropdownToggle = document.getElementById('draftDropdownToggle');
-    
     dropdownItems.forEach(item => {
         const itemPage = item.getAttribute('href').split('?')[0];
         item.classList.remove('active');
@@ -282,9 +301,16 @@ function highlightActivePage() {
         }
     });
     
-    // Mark dropdown toggle as active if on any draft page
-    if (dropdownToggle && draftPages.includes(currentPage)) {
-        dropdownToggle.classList.add('active');
+    // Mark Draft dropdown toggle as active if on any draft page
+    const draftToggle = document.getElementById('draftDropdownToggle');
+    if (draftToggle && draftPages.includes(currentPage)) {
+        draftToggle.classList.add('active');
+    }
+    
+    // Mark Front Office dropdown toggle as active if on any front office page
+    const foToggle = document.getElementById('frontOfficeDropdownToggle');
+    if (foToggle && frontOfficePages.includes(currentPage)) {
+        foToggle.classList.add('active');
     }
 }
 
