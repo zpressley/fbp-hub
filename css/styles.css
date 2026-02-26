@@ -258,6 +258,7 @@ a:hover {
     grid-column: 3;
     justify-self: end;
     position: relative;
+    z-index: 400;
 }
 
 .user-menu-toggle {
@@ -304,8 +305,8 @@ a:hover {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     min-width: 200px;
-    /* Keep well above any in-page sticky elements */
-    z-index: 250;
+    /* Keep above nav dropdowns (z-index 302) */
+    z-index: 400;
     overflow: hidden;
 }
 
