@@ -1568,19 +1568,7 @@
       "thread_url": "https://discord.com/channels/875592505926758480/1476308481362628773",
       "admin_review_message_id": null
     },
-    "manager_approved_at": "2026-02-25T20:03:05.085648Z",
-    "admin_decision_by": "WAR",
-    "processed_at": "2026-02-26T18:44:52.036769Z",
-    "data_applied_at": "2026-02-26T18:44:52.069041Z",
-    "data_applied_by": "WAR",
-    "data_applied_summary": {
-      "player_moves": 0,
-      "player_log_entries": 0,
-      "pick_moves": 4,
-      "wb_transfers": 0,
-      "buyins_purchased": 2,
-      "warnings": []
-    }
+    "manager_approved_at": "2026-02-25T20:03:05.085648Z"
   },
   "TRADE-250226_2338-008": {
     "trade_id": "TRADE-250226_2338-008",
@@ -1726,6 +1714,121 @@
       "pick_moves": 1,
       "wb_transfers": 1,
       "buyins_purchased": 1,
+      "warnings": []
+    }
+  },
+  "TRADE-270226_0022-009": {
+    "trade_id": "TRADE-270226_0022-009",
+    "teams": [
+      "LFB",
+      "B2J"
+    ],
+    "initiator_team": "LFB",
+    "status": "approved",
+    "created_at": "2026-02-27T05:22:00.645294Z",
+    "expires_at": "2026-03-13T05:22:00.645294Z",
+    "transfers": [
+      {
+        "type": "player",
+        "upid": "4016",
+        "from_team": "LFB",
+        "to_team": "B2J"
+      },
+      {
+        "type": "player",
+        "upid": "3399",
+        "from_team": "B2J",
+        "to_team": "LFB"
+      },
+      {
+        "type": "wizbucks",
+        "amount": 10,
+        "from_team": "B2J",
+        "to_team": "LFB"
+      }
+    ],
+    "acceptances": [
+      "LFB"
+    ],
+    "receives": {
+      "LFB": [
+        "1B Yandy D\u00edaz [TB] [TC 1]",
+        "$10 WB via B2J"
+      ],
+      "B2J": [
+        "SP Joe Ryan [MIN] [VC 1]"
+      ]
+    },
+    "discord": {
+      "thread_id": null,
+      "thread_url": null,
+      "admin_review_message_id": null
+    },
+    "admin_decision_by": "WAR",
+    "processed_at": "2026-02-27T20:18:49.196776Z",
+    "data_applied_at": "2026-02-27T20:18:49.243164Z",
+    "data_applied_by": "WAR",
+    "data_applied_summary": {
+      "player_moves": 2,
+      "player_log_entries": 2,
+      "pick_moves": 0,
+      "wb_transfers": 1,
+      "buyins_purchased": 0,
+      "warnings": []
+    }
+  },
+  "TRADE-280226_0007-010": {
+    "trade_id": "TRADE-280226_0007-010",
+    "teams": [
+      "WAR",
+      "LFB"
+    ],
+    "initiator_team": "WAR",
+    "status": "approved",
+    "created_at": "2026-02-28T05:07:04.799160Z",
+    "expires_at": "2026-03-14T05:07:04.799160Z",
+    "transfers": [
+      {
+        "type": "player",
+        "upid": "4445",
+        "from_team": "LFB",
+        "to_team": "WAR"
+      },
+      {
+        "type": "player",
+        "upid": "6725",
+        "from_team": "WAR",
+        "to_team": "LFB"
+      }
+    ],
+    "acceptances": [
+      "WAR",
+      "LFB"
+    ],
+    "receives": {
+      "WAR": [
+        "1B Spencer Torkelson [DET] [TC 1]"
+      ],
+      "LFB": [
+        "SP Jaxon Wiggins [CHC] [DC]"
+      ]
+    },
+    "discord": {
+      "thread_id": "1477170219347607634",
+      "thread_url": "https://discord.com/channels/875592505926758480/1477170219347607634",
+      "admin_review_message_id": null
+    },
+    "manager_approved_at": "2026-02-28T05:07:21.930817Z",
+    "admin_decision_by": "WAR",
+    "processed_at": "2026-02-28T12:23:48.642956Z",
+    "data_applied_at": "2026-02-28T12:23:48.687047Z",
+    "data_applied_by": "WAR",
+    "data_applied_summary": {
+      "player_moves": 2,
+      "player_log_entries": 2,
+      "pick_moves": 0,
+      "wb_transfers": 0,
+      "buyins_purchased": 0,
       "warnings": []
     }
   }
