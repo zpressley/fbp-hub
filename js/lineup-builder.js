@@ -105,7 +105,17 @@
         season: _selectedSeason,
         updated: new Date().toISOString(),
       }));
+      showSaveIndicator();
     } catch {}
+  }
+
+  function showSaveIndicator() {
+    const indicator = document.getElementById('lbSaveIndicator');
+    if (!indicator) return;
+    indicator.style.opacity = '1';
+    setTimeout(() => {
+      indicator.style.opacity = '0';
+    }, 2000);
   }
 
   function loadAssignments(teamAbbr) {
@@ -186,6 +196,9 @@
       <button class="lb-season-btn${c24}" data-season="2024">2024</button>
       <button class="lb-season-btn${c25}" data-season="2025">2025</button>
       <button class="lb-season-btn${c26}" data-season="2026">2026</button>
+      <span class="lb-save-indicator" id="lbSaveIndicator" style="opacity:0;color:#22c55e;font-size:0.8rem;margin-left:12px;transition:opacity 0.3s ease;">
+        <i class="fas fa-check-circle"></i> Saved
+      </span>
     </div>`;
   }
 

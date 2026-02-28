@@ -123,14 +123,26 @@
     const outer = document.getElementById('dashPanelsOuter');
     if (!outer) return;
 
+    let _touchTarget = null;
+
     outer.addEventListener('touchstart', e => {
       _touchStartX = e.touches[0].clientX;
       _touchStartY = e.touches[0].clientY;
+      _touchTarget = e.target;
     }, { passive: true });
 
     outer.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - _touchStartX;
       const dy = e.changedTouches[0].clientY - _touchStartY;
+      
+      // Ignore swipe if user is scrolling within specific containers
+      const inScrollArea = _touchTarget?.closest(
+        '.lb-scroll-container, .lb-bench-grid, .lb-farm-list, .lb-farm-groups, ' +
+        '.auc-grid-wrapper, .dash-txn-feed, #dashMyBids, #dashAllBids, ' +
+        '.dash-board-split, .dash-targets-list, .dash-avail-list'
+      );
+      if (inScrollArea) return;
+      
       if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
       const tabs = document.querySelectorAll('.dash-tab');
       if (dx < 0 && _tab < tabs.length - 1) goTab(_tab + 1);
