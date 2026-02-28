@@ -12,9 +12,8 @@
  * UPID is the canonical prospect identifier stored in bids.
  * Player names are resolved from combined_players.json for display only.
  *
- * Column order = _state.priority_order (set by AuctionManager each Monday from
- * managers.json 'standing' field).  Left = rank 12 = worst record = highest
- * CB tiebreak priority.
+ * Column order derived from standings.json rank (worst → best).
+ * Left = highest rank number = worst record = highest CB tiebreak priority.
  */
 
 (function () {
@@ -30,7 +29,7 @@
   let _wizbucks = {};
   let _myTeam   = null;
   let _phase    = 'off_week';
-  let _priority = [];     // column order from _state.priority_order
+  let _priority = [];     // column order derived from standings (worst → best)
   let _modal    = { prospectId: null, prospectName: null };
   let _tick     = null;
   let _teamColorData = {};     // loaded from team_colors.json
@@ -92,10 +91,19 @@
       fetchJSON(`${DATA}wizbucks.json`),
     ]);
 
-    _state    = auc     || { phase: 'off_week', bids: [], priority_order: [] };
+    _state    = auc     || { phase: 'off_week', bids: [] };
     _phase    = _state.phase || 'off_week';
-    _priority = (_state.priority_order || []).filter(Boolean);
     _wizbucks = wb      || {};
+
+    // Derive priority order from standings (worst rank → best = highest CB tiebreak priority)
+    const standings = window.FBPHub?.data?.standings?.standings;
+    if (Array.isArray(standings) && standings.length) {
+      _priority = [...standings]
+        .sort((a, b) => b.rank - a.rank)
+        .map(t => t.manager);
+    } else {
+      _priority = [];
+    }
 
     // Build UPID lookup from ALL players (for resolving bid prospect_ids)
     const allPlayers = Array.isArray(players) ? players : [];
@@ -192,7 +200,7 @@
       return { team: obs[0].team, amount: maxAmt, type: 'OB' };
     }
 
-    const cols = _priority.length ? _priority : FALLBACK_ORDER;
+    const cols = _priority;
     for (const t of cols) {
       if (tied.some(b => b.team === t)) return { team: t, amount: maxAmt, type: 'CB' };
     }
@@ -277,7 +285,7 @@
 
     const bids        = _state?.bids || [];
     const prospectIds = getActiveProspectIds(bids);
-    const cols        = _priority.length ? _priority : FALLBACK_ORDER;
+    const cols        = _priority;
 
     if (_phase === 'off_week') {
       wrapper.innerHTML = `<div class="auc-off-week"><i class="fas fa-moon"></i><p>No auction this week. Check back Monday at 3pm ET.</p></div>`;
@@ -591,7 +599,7 @@
   }
 
   // ── Utils ──────────────────────────────────────────────────────────────────
-  const FALLBACK_ORDER = ['WAR','JEP','RV','HAM','CFL','DMN','B2J','TBB','DRO','SAD','LFB','WIZ'];
+  // No hardcoded fallback — priority is always derived from standings at load time
 
   function badgeStyle(abbr) {
     if (!_badgeColorCache[abbr]) {
