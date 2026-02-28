@@ -176,7 +176,9 @@ function parsePlayerLine(line) {
     return { raw: line || '', name: line || '', pos: '', mlb: '', contract: '' };
   const t = line.trim();
   if (/^\$\d+\s*WB/i.test(t)) {
-    return { raw: t, isWB: true, amount: parseInt(t.replace(/[^0-9]/g, ''), 10) || 0 };
+    const match = t.match(/^\$(\d+)/);
+    const amount = match ? parseInt(match[1], 10) : 0;
+    return { raw: t, isWB: true, amount };
   }
   const m = t.match(/^(\S+)\s+(.+?)\s*\[([^\]]*)\](?:\s*\[([^\]]*)\])?/);
   if (m) return { raw: t, pos: m[1], name: m[2].trim(), mlb: m[3], contract: m[4] || '', isWB: false };
