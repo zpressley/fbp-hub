@@ -99,14 +99,40 @@
 
   // ── Persistence ────────────────────────────────────────────────
   function saveAssignments(teamAbbr) {
+    const data = {
+      assignments: _assignments,
+      season: _selectedSeason,
+      updated: new Date().toISOString(),
+    };
+
+    // Save to localStorage immediately (fast)
     try {
-      localStorage.setItem(`roster_slots_${teamAbbr}`, JSON.stringify({
-        assignments: _assignments,
-        season: _selectedSeason,
-        updated: new Date().toISOString(),
-      }));
-      showSaveIndicator();
+      localStorage.setItem(`roster_slots_${teamAbbr}`, JSON.stringify(data));
     } catch {}
+
+    showSaveIndicator();
+
+    // Save to backend (async, no await)
+    saveToBackend(data);
+  }
+
+  async function saveToBackend(data) {
+    const token = window.authManager?.getSession?.()?.token;
+    const apiBase = window.AUTH_CONFIG?.workerUrl || '';
+    if (!token || !apiBase) return;
+
+    try {
+      await fetch(`${apiBase}/api/roster`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roster: data }),
+      });
+    } catch (e) {
+      console.warn('Backend roster save failed (localStorage still saved):', e);
+    }
   }
 
   function showSaveIndicator() {
@@ -118,7 +144,12 @@
     }, 2000);
   }
 
-  function loadAssignments(teamAbbr) {
+  async function loadAssignments(teamAbbr) {
+    // Try backend first (authoritative source)
+    const loaded = await loadFromBackend();
+    if (loaded) return;
+
+    // Fallback to localStorage
     try {
       const raw = localStorage.getItem(`roster_slots_${teamAbbr}`);
       if (!raw) return;
@@ -126,6 +157,37 @@
       _assignments = data.assignments || {};
       if (data.season) _selectedSeason = data.season;
     } catch {}
+  }
+
+  async function loadFromBackend() {
+    const token = window.authManager?.getSession?.()?.token;
+    const apiBase = window.AUTH_CONFIG?.workerUrl || '';
+    if (!token || !apiBase) return false;
+
+    try {
+      const r = await fetch(`${apiBase}/api/roster`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!r.ok) return false;
+
+      const data = await r.json();
+      if (data.roster) {
+        _assignments = data.roster.assignments || {};
+        if (data.roster.season) _selectedSeason = data.roster.season;
+
+        // Sync backend data to localStorage
+        const team = window.authManager?.getTeam?.();
+        if (team) {
+          try {
+            localStorage.setItem(`roster_slots_${team.abbreviation}`, JSON.stringify(data.roster));
+          } catch {}
+        }
+        return true;
+      }
+    } catch (e) {
+      console.warn('Backend roster load failed, using localStorage:', e);
+    }
+    return false;
   }
 
   // ── Helpers ────────────────────────────────────────────────────
