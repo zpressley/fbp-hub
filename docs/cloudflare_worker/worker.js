@@ -123,6 +123,11 @@ export default {
         return await proxyToBotAsManager(`/api/notes${url.search}`, env, request);
       }
 
+      // --- Manager Roster ---
+      if (path === '/api/roster' && (request.method === 'GET' || request.method === 'POST')) {
+        return await proxyToBotAsManager(`/api/roster${url.search}`, env, request);
+      }
+
       // --- Manager Self-Service APIs ---
       if (path === '/api/manager/contract-purchase' && request.method === 'POST') {
         return await proxyToBot('/api/manager/contract-purchase', env, request);
