@@ -1051,16 +1051,16 @@ async function loadDraftPicksSummary() {
             `;
         }
         
-        // Section 2: Roster limit removed (if any)
+        // Section 2: Picks filled by keepers (from the bottom up)
         if (rosterRemovedPicks.length > 0) {
             html += `
                 <div class="picks-section removed">
-                    <h5><i class="fas fa-times-circle"></i> Excluded - Roster Limit</h5>
-                    <p class="section-note">With ${keeperCount} keepers, you need ${picksNeeded} picks. ${rosterRemovedPicks.length} pick(s) dropped from the end.</p>
+                    <h5><i class="fas fa-user-shield"></i> Filled by Keepers</h5>
+                    <p class="section-note">With ${keeperCount} keepers, you need ${picksNeeded} draft picks. ${rosterRemovedPicks.length} pick(s) filled by keepers from the bottom up.</p>
                     ${rosterRemovedPicks.map(pick => `
                         <div class="pick-summary-row removed">
                             <span class="pick-summary-label">R${pick.round} - P${pick.pick}</span>
-                            <span class="pick-summary-status">Excess pick</span>
+                            <span class="pick-summary-status">Keeper</span>
                         </div>
                     `).join('')}
                 </div>
@@ -1329,6 +1329,18 @@ function showConfirmation() {
         </div>
     `;
     
+    // Draft picks section – reuse the already-rendered summary panel content
+    const draftPicksEl = document.getElementById('summaryDraftPicks');
+    const draftPicksHTML = draftPicksEl ? draftPicksEl.innerHTML : '';
+    if (draftPicksHTML) {
+        summaryHTML += `
+            <div class="confirmation-section">
+                <h4>Draft Picks</h4>
+                <div class="draft-picks-summary">${draftPicksHTML}</div>
+            </div>
+        `;
+    }
+
     document.getElementById('confirmationSummary').innerHTML = summaryHTML;
     document.getElementById('confirmationModal').classList.add('active');
 }
@@ -1341,12 +1353,73 @@ function cancelSubmit() {
 }
 
 /**
- * Confirm and submit KAP
+ * Build the payload expected by the bot's /api/kap/submit endpoint.
+ */
+function buildKAPSubmissionPayload() {
+    const taxableSpend = calculateTaxableSpend();
+
+    const keepers = KAP_STATE.selectedKeepers.map(upid => {
+        const p = KAP_STATE.mlbPlayers.find(pl => pl.upid === upid);
+        if (!p) return null;
+        return {
+            upid: String(p.upid),
+            name: p.name,
+            contract: p.effectiveContract || p.contract,
+            has_il_tag: !!p.hasILTag,
+            has_rat: !!p.hasRaT,
+        };
+    }).filter(Boolean);
+
+    const buyins_purchased = [];
+    Object.entries(KAP_STATE.buyIns).forEach(([round, purchased]) => {
+        if (purchased) buyins_purchased.push(Number(round));
+    });
+
+    return {
+        team: KAP_STATE.team,
+        season: 2026,
+        keepers,
+        il_tags: KAP_STATE.ilTags || {},
+        rat_applications: KAP_STATE.ratApplications.map(r => r.upid),
+        buyins_purchased,
+        taxable_spend: taxableSpend,
+        submitted_by: KAP_STATE.team,
+    };
+}
+
+/**
+ * Helper to toggle submitting state on the confirmation button.
+ */
+function setKAPSubmitting(isSubmitting) {
+    const btn = document.getElementById('confirmKAPBtn');
+    if (!btn) return;
+    if (isSubmitting) {
+        if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    } else {
+        btn.disabled = false;
+        if (btn.dataset.originalHtml) {
+            btn.innerHTML = btn.dataset.originalHtml;
+            delete btn.dataset.originalHtml;
+        }
+    }
+}
+
+/**
+ * Confirm and submit KAP via the bot API.
  */
 async function confirmSubmit() {
-    console.log('🚀 Submitting KAP - Logging all transactions...');
+    console.log('🚀 Submitting KAP to backend...');
 
-    // Double-check submission window in case dates changed while page was open
+    // Block duplicate submits
+    if (KAP_STATE.submitted) {
+        showToast('KAP has already been submitted for this team.', 'error');
+        cancelSubmit();
+        return;
+    }
+
+    // Double-check submission window
     const now = new Date();
     if (KAP_STATE.kapOpenDate && now < KAP_STATE.kapOpenDate) {
         const formatted = typeof formatDate === 'function' ? formatDate(KAP_STATE.kapOpenDate) : KAP_STATE.kapOpenDate.toISOString().slice(0, 10);
@@ -1355,132 +1428,80 @@ async function confirmSubmit() {
         return;
     }
     if (KAP_STATE.kapEndDate && now > KAP_STATE.kapEndDate) {
-        showToast('The KAP submission window has closed. You can no longer submit changes.', 'error');
+        showToast('The KAP submission window has closed.', 'error');
         cancelSubmit();
         return;
     }
-    
-    const taxableSpend = calculateTaxableSpend();
-    const taxFreeSpend = calculateTaxFreeSpend();
+
+    // Check budget
     const totalSpend = calculateTotalSpend();
-    const remaining = KAP_STATE.totalAvailable - totalSpend;
-    const rollover = Math.min(remaining, 100);
-    
-    let currentBalance = KAP_STATE.totalAvailable;
-    
-    // Log keeper selections
-    KAP_STATE.selectedKeepers.forEach(upid => {
-        const player = KAP_STATE.mlbPlayers.find(p => p.upid === upid);
-        if (!player) return;
-        
-        const baseCost = KEEPER_SALARIES[player.contract] || 0;
-        const ilDiscount = player.hasILTag ? (IL_DISCOUNTS[getContractTier(player.contract)] || 0) : 0;
-        const finalCost = baseCost - ilDiscount;
-        
-        const wbTxnId = logWizBucksTransaction({
-            amount: -finalCost,
-            transaction_type: player.hasILTag ? 'keeper_salary_il' : 'keeper_salary',
-            description: `Keeper salary: ${player.name} - ${player.contract}${player.hasILTag ? ' (IL)' : ''}`,
-            related_player: { upid: player.upid, name: player.name },
-            balance_before: currentBalance,
-            balance_after: currentBalance - finalCost
-        });
-        
-        currentBalance -= finalCost;
-        
-        logPlayerChange({
-            upid: player.upid,
-            player_name: player.name,
-            update_type: 'keeper_selected',
-            changes: {
-                status: { from: 'Rostered', to: 'Keeper' },
-                contract: { from: player.contract, to: CONTRACT_ADVANCEMENT[player.contract] }
-            },
-            event: `Selected as keeper - ${player.contract}${player.hasILTag ? ' with IL Tag' : ''}`,
-            player_data: player,
-            wizbucks_txn_id: wbTxnId
-        });
-    });
-    
-    // Log RaT applications
-    KAP_STATE.ratApplications.forEach(rat => {
-        const wbTxnId = logWizBucksTransaction({
-            amount: -75,
-            transaction_type: 'reduce_tier',
-            description: `Reduce-a-Tier: ${rat.name} (${rat.fromContract} → ${rat.toContract})`,
-            related_player: { upid: rat.upid, name: rat.name },
-            balance_before: currentBalance,
-            balance_after: currentBalance - 75
-        });
-        
-        currentBalance -= 75;
-        
-        logPlayerChange({
-            upid: rat.upid,
-            player_name: rat.name,
-            update_type: 'tier_reduced',
-            changes: {
-                effective_contract: { from: rat.fromContract, to: rat.toContract }
-            },
-            event: `Tier reduced via RaT (${rat.fromContract} → ${rat.toContract})`,
-            player_data: KAP_STATE.mlbPlayers.find(p => p.upid === rat.upid),
-            wizbucks_txn_id: wbTxnId
-        });
-    });
-    
-    // Log buy-ins
-    Object.entries(KAP_STATE.buyIns).forEach(([round, purchased]) => {
-        if (!purchased) return;
-        
-        const costs = { 1: 55, 2: 35, 3: 10 };
-        const cost = costs[round];
-        
-        logWizBucksTransaction({
-            amount: -cost,
-            transaction_type: 'round_buyin',
-            description: `Round ${round} buy-in`,
-            balance_before: currentBalance,
-            balance_after: currentBalance - cost
-        });
-        
-        currentBalance -= cost;
-    });
-    
-    // Log rollover
-    if (rollover > 0) {
-        logWizBucksTransaction({
-            amount: -rollover,
-            transaction_type: 'rollover_to_apa',
-            description: `Rollover $${rollover} from KAP to APA`,
-            balance_before: currentBalance,
-            balance_after: currentBalance - rollover
-        });
+    if (totalSpend > KAP_STATE.totalAvailable) {
+        showToast('KAP spend exceeds available balance. Please adjust.', 'error');
+        return;
     }
-    
-    // Mark as submitted
-    const submission = {
-        team: KAP_STATE.team,
-        timestamp: new Date().toISOString(),
-        keepers: KAP_STATE.selectedKeepers.map(upid => {
-            const p = KAP_STATE.mlbPlayers.find(pl => pl.upid === upid);
-            return { upid: p.upid, name: p.name, contract: p.contract };
-        }),
-        spending: { taxable: taxableSpend, taxFree: taxFreeSpend, total: totalSpend, rollover },
-        taxBracket: taxBracket.rounds
-    };
-    
-    const submissions = JSON.parse(localStorage.getItem('kap_submissions_2026') || '{}');
-    submissions[KAP_STATE.team] = submission;
-    localStorage.setItem('kap_submissions_2026', JSON.stringify(submissions));
-    
-    localStorage.removeItem(`kap_draft_${KAP_STATE.team}_2026`);
-    
-    document.getElementById('confirmationModal').classList.remove('active');
-    showToast('✅ KAP Submitted! Redirecting...', 'success');
-    
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 2000);
+
+    setKAPSubmitting(true);
+
+    const apiBase = window.FBPHub?.config?.apiBase || null;
+    const payload = buildKAPSubmissionPayload();
+
+    if (!apiBase) {
+        showToast('No API configured. Contact the commissioner.', 'error');
+        setKAPSubmitting(false);
+        return;
+    }
+
+    try {
+        const url = new URL('/api/kap/submit', apiBase);
+        const response = await fetch(url.toString(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (response.status === 409) {
+            showToast('KAP has already been submitted for this team.', 'error');
+            KAP_STATE.submitted = true;
+            document.getElementById('confirmationModal').classList.remove('active');
+            showSubmittedView();
+            setKAPSubmitting(false);
+            return;
+        }
+
+        if (!response.ok) {
+            let detail = '';
+            try {
+                const parsed = await response.json();
+                if (parsed?.detail) detail = String(parsed.detail);
+            } catch (_) {}
+            const msg = detail
+                ? `KAP submission failed: ${detail}`
+                : `KAP submission failed (status ${response.status})`;
+            showToast(msg, 'error');
+            setKAPSubmitting(false);
+            return;
+        }
+
+        const result = await response.json();
+        console.log('✅ KAP submitted successfully:', result);
+
+        // Mark as submitted locally
+        KAP_STATE.submitted = true;
+        KAP_STATE.submittedAt = new Date().toISOString();
+        localStorage.removeItem(`kap_draft_${KAP_STATE.team}_2026`);
+
+        document.getElementById('confirmationModal').classList.remove('active');
+        showToast('✅ KAP Submitted Successfully!', 'success');
+
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+
+    } catch (error) {
+        console.error('KAP submission error:', error);
+        showToast('Failed to submit KAP. Please try again.', 'error');
+        setKAPSubmitting(false);
+    }
 }
 
 /**
