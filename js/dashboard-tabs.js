@@ -124,26 +124,41 @@
     if (!outer) return;
 
     let _touchTarget = null;
+    let _scrollableContainer = null;
 
     outer.addEventListener('touchstart', e => {
       _touchStartX = e.touches[0].clientX;
       _touchStartY = e.touches[0].clientY;
       _touchTarget = e.target;
+      
+      // Check if starting touch is inside a horizontally scrollable container
+      _scrollableContainer = _touchTarget?.closest(
+        '.lb-scroll-container, .lb-hdr-stats, .lb-row-stats, ' +
+        '.lb-bench-grid, .lb-farm-list, .lb-farm-groups, ' +
+        '.auc-grid-wrapper, .auc-table, .dash-txn-feed, ' +
+        '#dashMyBids, #dashAllBids, .dash-board-split, ' +
+        '.dash-targets-list, .dash-avail-list'
+      );
     }, { passive: true });
 
     outer.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - _touchStartX;
       const dy = e.changedTouches[0].clientY - _touchStartY;
       
-      // Ignore swipe if user is scrolling within specific containers
-      const inScrollArea = _touchTarget?.closest(
-        '.lb-scroll-container, .lb-bench-grid, .lb-farm-list, .lb-farm-groups, ' +
-        '.auc-grid-wrapper, .dash-txn-feed, #dashMyBids, #dashAllBids, ' +
-        '.dash-board-split, .dash-targets-list, .dash-avail-list'
-      );
-      if (inScrollArea) return;
+      // If touch started in a scrollable area, check if horizontal scroll is possible
+      if (_scrollableContainer) {
+        const hasHorizontalScroll = _scrollableContainer.scrollWidth > _scrollableContainer.clientWidth;
+        const isHorizontalSwipe = Math.abs(dx) > Math.abs(dy);
+        
+        // Block tab swipe if container can scroll horizontally and user is swiping horizontally
+        if (hasHorizontalScroll && isHorizontalSwipe) {
+          return;
+        }
+      }
       
+      // Require minimum 40px swipe and must be more horizontal than vertical
       if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
+      
       const tabs = document.querySelectorAll('.dash-tab');
       if (dx < 0 && _tab < tabs.length - 1) goTab(_tab + 1);
       if (dx > 0 && _tab > 0) goTab(_tab - 1);
