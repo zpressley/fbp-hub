@@ -1294,7 +1294,7 @@ function showConfirmation() {
     const rollover = Math.min(remaining, 100);
     const taxBracket = calculateTaxBracket(taxableSpend);
     
-    const summaryHTML = `
+    let summaryHTML = `
         <div class="confirmation-section">
             <h4>Keepers (${getSelectedKeeperSlots()})</h4>
             <ul>
