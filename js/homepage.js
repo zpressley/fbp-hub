@@ -65,7 +65,7 @@ function displayStandings() {
     standingsBody.innerHTML = standings.standings.map(team => `
         <tr>
             <td><strong>${team.rank}</strong></td>
-            <td>${createTeamBadge(team.team)}</td>
+            <td>${createTeamBadge(team.manager)}</td>
             <td>${team.record}</td>
             <td>${team.win_pct.toFixed(3)}</td>
         </tr>
