@@ -62,25 +62,11 @@
     "accent2": "#F8EED9",
     "accent3": "#000000"
   },
-  "LFB": {
-    "primary": "#EF3E42",
-    "secondary": "#FFFFFF",
-    "accent1": "#FF6B6B",
-    "accent2": "#000000",
-    "accent3": "#8B0000"
-  },
   "WAR": {
     "primary": "#0F521A",
     "secondary": "#901904",
     "accent1": "#FFFFFF",
     "accent2": "#000000",
     "accent3": "#E6E033"
-  },
-  "DRO": {
-    "primary": "#EF3E42",
-    "secondary": "#FFD700",
-    "accent1": "#FF6B6B",
-    "accent2": "#000000",
-    "accent3": "#8B0000"
   }
 }
