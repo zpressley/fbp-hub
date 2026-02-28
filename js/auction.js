@@ -33,8 +33,10 @@
   let _priority = [];     // column order from _state.priority_order
   let _modal    = { prospectId: null, prospectName: null };
   let _tick     = null;
+  let _teamColorData = {};     // loaded from team_colors.json
+  let _badgeColorCache = {};   // memoized computed badge colors
 
-  // ── Fetch helpers ──────────────────────────────────────────────────────────
+  // ── Fetch helpers ────────────────────────────────────────────────────────────
   async function fetchJSON(path) {
     try {
       const r = await fetch(path, { cache: 'no-store' });
@@ -42,7 +44,48 @@
     } catch { return null; }
   }
 
+  async function loadTeamColors() {
+    try {
+      const r = await fetch(`${DATA}team_colors.json`, { cache: 'no-store' });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (data && typeof data === 'object') {
+        _teamColorData = data;
+        _badgeColorCache = {}; // clear memoization
+      }
+    } catch { /* keep fallback */ }
+  }
+
+  function _lum(hex) {
+    hex = hex.replace('#', '');
+    const [r, g, b] = [0, 2, 4].map(i => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+
+  function _contrast(hex) {
+    const bg = 0.0118; // luminance of #1e1e1e
+    const fg = _lum(hex);
+    return fg > bg ? (fg + 0.05) / (bg + 0.05) : (bg + 0.05) / (fg + 0.05);
+  }
+
+  function _pickBadgeColor(teamColors) {
+    const candidates = [
+      teamColors.primary,
+      teamColors.secondary,
+      teamColors.accent1,
+      teamColors.accent2,
+      teamColors.accent3,
+    ].filter(Boolean);
+    const readable = candidates.find(c => _contrast(c) >= 3.5);
+    if (readable) return readable;
+    return candidates.reduce((best, c) => _contrast(c) > _contrast(best) ? c : best, candidates[0]);
+  }
+
   async function loadAll() {
+    await loadTeamColors();
     const [auc, players, wb] = await Promise.all([
       fetchJSON(`${DATA}auction_current.json`),
       fetchJSON(`${DATA}combined_players.json`),
@@ -550,14 +593,13 @@
   // ── Utils ──────────────────────────────────────────────────────────────────
   const FALLBACK_ORDER = ['WAR','JEP','RV','HAM','CFL','DMN','B2J','TBB','DRO','SAD','LFB','WIZ'];
 
-  const BADGE_COLORS = {
-    WIZ:'#EB9486',RV:'#FFFFFF',B2J:'#F1E9DA',JEP:'#DDD06A',
-    HAM:'#DDA15E',DMN:'#F9FBFF',CFL:'#C4B24B',TBB:'#FCD7AD',
-    SAD:'#7D99C9',LFB:'#EF3E42',WAR:'#EF3E42',DRO:'#EF3E42',
-  };
-
   function badgeStyle(abbr) {
-    const c = BADGE_COLORS[abbr] || '#EF3E42';
+    if (!_badgeColorCache[abbr]) {
+      const teamColors = _teamColorData[abbr];
+      const color = teamColors ? _pickBadgeColor(teamColors) : '#EF3E42';
+      _badgeColorCache[abbr] = color;
+    }
+    const c = _badgeColorCache[abbr];
     return `color:${c};background:${c}24;border-color:${c}4D`;
   }
 
