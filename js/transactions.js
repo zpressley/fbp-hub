@@ -299,6 +299,8 @@ export async function loadTransactionFeed() {
           taxedRounds:   meta.taxed_rounds   || [],
           wbSpent:       Math.abs(txn.amount),
           wbRemaining:   txn.balance_after,
+          // Player lists populated in section 3 after player_log is processed
+          keepers: [], released: [],
         });
         continue;
       }
@@ -377,10 +379,12 @@ export async function loadTransactionFeed() {
     }
   }
 
-  // Find PAD event objects so we can populate their player lists below
+  // Find PAD / KAP event objects so we can populate their player lists below
   const padEventByTeam = {};
+  const kapEventByTeam = {};
   for (const ev of events) {
     if (ev.type === 'pad') padEventByTeam[ev.team] = ev;
+    if (ev.type === 'kap') kapEventByTeam[ev.team] = ev;
   }
 
   if (Array.isArray(logRaw)) {
@@ -415,9 +419,15 @@ export async function loadTransactionFeed() {
         continue; // suppress individual card
       }
 
-      // ── KAP keeper_selection entries → suppress (shown in KAP card) ──────
-      if ((ut === 'keeper_selection' || e.action === 'keeper_selection') &&
-          kapSubmissionTeams.has(team)) {
+      // ── KAP player entries → fold into KAP card ────────────────────────
+      const isKapEntry = (ut === 'KAP_Keeper' || ut === 'KAP_Release');
+      if (isKapEntry && kapSubmissionTeams.has(team)) {
+        const kapEv = kapEventByTeam[team];
+        if (kapEv) {
+          const player = { name: e.player_name || '?', pos: e.pos || '', mlbTeam: e.team || '', years: e.years || '', contract: e.contract || '' };
+          if (ut === 'KAP_Keeper')  kapEv.keepers.push(player);
+          if (ut === 'KAP_Release') kapEv.released.push(player);
+        }
         continue;
       }
 
@@ -856,6 +866,27 @@ function renderKAP(ev, c) {
     <span class="txn-kap-value ${ev.taxedRounds?.length ? 'txn-kap-taxed' : 'txn-kap-safe'}">${taxLine}</span>
   </div>`);
 
+  // Player lists (populated from player_log entries)
+  const playerSections = [];
+
+  if (ev.keepers?.length) {
+    playerSections.push(`<div class="txn-pad-section">
+      <span class="txn-pad-section-label kap-keeper">Keepers</span>
+      <ul class="txn-pad-player-list">${ev.keepers.map(p =>
+        `<li>${p.pos ? `<span class="txn-pos">${p.pos}</span>` : ''} <span class="txn-player-name">${p.name}</span>${p.mlbTeam ? ` <span class="txn-mlb">[${p.mlbTeam}]</span>` : ''} ${contractBadgeHTML(p.contract, p.years || p.contract)}</li>`
+      ).join('')}</ul>
+    </div>`);
+  }
+
+  if (ev.released?.length) {
+    playerSections.push(`<div class="txn-pad-section">
+      <span class="txn-pad-section-label dropped">Released</span>
+      <ul class="txn-pad-player-list dropped-list">${ev.released.map(p =>
+        `<li>${p.pos ? `<span class="txn-pos">${p.pos}</span>` : ''} <span class="txn-player-name">${p.name}</span>${p.mlbTeam ? ` <span class="txn-mlb">[${p.mlbTeam}]</span>` : ''}</li>`
+      ).join('')}</ul>
+    </div>`);
+  }
+
   const footer = `<div class="txn-pad-footer">
     <span class="txn-wb-delta neg">-$${ev.wbSpent} WB</span>
     <span class="txn-pad-remaining">$${ev.wbRemaining} remaining</span>
@@ -873,6 +904,7 @@ function renderKAP(ev, c) {
       <span class="txn-time">${timeStr(ev.timestamp)}</span>
     </div>
     <div class="txn-kap-grid">${stats.join('')}</div>
+    ${playerSections.length ? `<div class="txn-pad-body">${playerSections.join('')}</div>` : ''}
     ${footer}
   </div>`;
 }

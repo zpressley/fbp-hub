@@ -378,10 +378,11 @@
   display: inline-block;
   width: fit-content;
 }
-.txn-pad-section-label.bc      { color: var(--accent-yellow); background: rgba(255,182,18,.12); border: 1px solid rgba(255,182,18,.35); }
-.txn-pad-section-label.pc      { color: #fff; background: var(--legacy-blue, #1E88C7); }
-.txn-pad-section-label.dc      { color: var(--primary-red); border: 1px solid rgba(239,62,66,.3); }
-.txn-pad-section-label.dropped { color: rgba(170,170,170,.5); border: 1px solid rgba(170,170,170,.2); }
+.txn-pad-section-label.bc         { color: var(--accent-yellow); background: rgba(255,182,18,.12); border: 1px solid rgba(255,182,18,.35); }
+.txn-pad-section-label.pc         { color: #fff; background: var(--legacy-blue, #1E88C7); }
+.txn-pad-section-label.dc         { color: var(--primary-red); border: 1px solid rgba(239,62,66,.3); }
+.txn-pad-section-label.dropped    { color: rgba(170,170,170,.5); border: 1px solid rgba(170,170,170,.2); }
+.txn-pad-section-label.kap-keeper { color: #f59e0b; background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.35); }
 
 .txn-pad-player-list {
   list-style: none;
