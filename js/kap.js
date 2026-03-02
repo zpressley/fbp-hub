@@ -1375,11 +1375,17 @@ function buildKAPSubmissionPayload() {
         if (purchased) buyins_purchased.push(Number(round));
     });
 
+    // Convert IL tags from objects to simple tier -> upid mapping
+    const il_tags = {};
+    Object.entries(KAP_STATE.ilTags || {}).forEach(([tier, ilTag]) => {
+        il_tags[tier] = ilTag ? ilTag.upid : null;
+    });
+
     return {
         team: KAP_STATE.team,
         season: 2026,
         keepers,
-        il_tags: KAP_STATE.ilTags || {},
+        il_tags,
         rat_applications: KAP_STATE.ratApplications.map(r => r.upid),
         buyins_purchased,
         taxable_spend: taxableSpend,
