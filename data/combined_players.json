@@ -23,7 +23,7 @@
   },
   {
     "name": "Amed Rosario",
-    "team": "NYY",
+    "team": "WSH",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -67,7 +67,7 @@
   },
   {
     "name": "Bailey Falter",
-    "team": "KC",
+    "team": "PIT",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -155,7 +155,7 @@
   },
   {
     "name": "Zack Littell",
-    "team": "CIN",
+    "team": "TB",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -178,7 +178,7 @@
   },
   {
     "name": "Caleb Ferguson",
-    "team": "CIN",
+    "team": "PIT",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -200,7 +200,7 @@
   },
   {
     "name": "Mickey Moniak",
-    "team": "COL",
+    "team": "LAA",
     "position": "CF",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
@@ -384,7 +384,7 @@
   },
   {
     "name": "Brandon Sproat",
-    "team": "MIL",
+    "team": "NYM",
     "position": "SP",
     "manager": "Andromedans",
     "player_type": "Farm",
@@ -501,7 +501,7 @@
   },
   {
     "name": "Gavin Sheets",
-    "team": "SD",
+    "team": "CWS",
     "position": "1B,OF",
     "manager": "",
     "player_type": "MLB",
@@ -754,7 +754,7 @@
   },
   {
     "name": "Slade Cecconi",
-    "team": "CLE",
+    "team": "AZ",
     "position": "SP",
     "manager": "",
     "player_type": "MLB",
@@ -868,7 +868,7 @@
   },
   {
     "name": "Luis Robert",
-    "team": "NYM",
+    "team": "CWS",
     "position": "CF",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -961,7 +961,7 @@
   },
   {
     "name": "Camilo Doval",
-    "team": "NYY",
+    "team": "SF",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -1147,7 +1147,7 @@
   },
   {
     "name": "Joe Boyle",
-    "team": "TB",
+    "team": "ATH",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -1312,7 +1312,7 @@
   },
   {
     "name": "Jurrangelo Cijntje",
-    "team": "STL",
+    "team": "SEA",
     "position": "SP",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
@@ -1452,7 +1452,7 @@
   },
   {
     "name": "Nick Castellanos",
-    "team": "SD",
+    "team": "PHI",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -1818,7 +1818,7 @@
   },
   {
     "name": "Willi Castro",
-    "team": "COL",
+    "team": "MIN",
     "position": "2B,3B,OF",
     "manager": "",
     "player_type": "MLB",
@@ -2077,7 +2077,7 @@
   },
   {
     "name": "Jett Williams",
-    "team": "MIL",
+    "team": "NYM",
     "position": "2B,SS,OF",
     "manager": "Btwn2Jackies",
     "player_type": "Farm",
@@ -2126,7 +2126,7 @@
   },
   {
     "name": "Brendan Donovan",
-    "team": "SEA",
+    "team": "STL",
     "position": "2B,SS,OF",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -2149,7 +2149,7 @@
   },
   {
     "name": "Robert Suarez",
-    "team": "ATL",
+    "team": "SD",
     "position": "RP",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -2614,7 +2614,7 @@
   },
   {
     "name": "Alex Bregman",
-    "team": "CHC",
+    "team": "BOS",
     "position": "3B",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
@@ -3182,7 +3182,7 @@
   },
   {
     "name": "MacKenzie Gore",
-    "team": "TEX",
+    "team": "WSH",
     "position": "SP",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
@@ -3230,7 +3230,7 @@
   },
   {
     "name": "Justin Verlander",
-    "team": "DET",
+    "team": "SF",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -3299,7 +3299,7 @@
   },
   {
     "name": "Ranger Su\u00e1rez",
-    "team": "BOS",
+    "team": "PHI",
     "position": "SP",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
@@ -3322,7 +3322,7 @@
   },
   {
     "name": "Ryan Helsley",
-    "team": "BAL",
+    "team": "STL",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -3606,7 +3606,7 @@
   },
   {
     "name": "Walker Buehler",
-    "team": "SD",
+    "team": "PHI",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -3742,7 +3742,7 @@
   },
   {
     "name": "Framber Valdez",
-    "team": "DET",
+    "team": "HOU",
     "position": "SP",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -3880,7 +3880,7 @@
   },
   {
     "name": "David Bednar",
-    "team": "NYY",
+    "team": "PIT",
     "position": "RP",
     "manager": "not much of a donkey",
     "player_type": "MLB",
@@ -4586,7 +4586,7 @@
   },
   {
     "name": "Jhostynxon Garcia",
-    "team": "PIT",
+    "team": "BOS",
     "position": "CF",
     "manager": "Hammers",
     "player_type": "Farm",
@@ -4940,7 +4940,7 @@
   },
   {
     "name": "Isiah Kiner-Falefa",
-    "team": "BOS",
+    "team": "TOR",
     "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -5030,7 +5030,7 @@
   },
   {
     "name": "Kirby Yates",
-    "team": "LAA",
+    "team": "LAD",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -5075,7 +5075,7 @@
   },
   {
     "name": "Luis Garc\u00eda",
-    "team": "NYM",
+    "team": "LAA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -5098,7 +5098,7 @@
   },
   {
     "name": "Nick Pivetta",
-    "team": "SD",
+    "team": "BOS",
     "position": "SP",
     "manager": "Jepordizers!",
     "player_type": "MLB",
@@ -5144,7 +5144,7 @@
   },
   {
     "name": "Taylor Ward",
-    "team": "BAL",
+    "team": "LAA",
     "position": "OF",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -5310,7 +5310,7 @@
   },
   {
     "name": "Owen Caissie",
-    "team": "MIA",
+    "team": "CHC",
     "position": "CF",
     "manager": "Jepordizers!",
     "player_type": "Farm",
@@ -5405,7 +5405,7 @@
   },
   {
     "name": "Luisangel Acu\u00f1a",
-    "team": "CWS",
+    "team": "NYM",
     "position": "2B",
     "manager": "",
     "player_type": "MLB",
@@ -5753,7 +5753,7 @@
   },
   {
     "name": "Tobias Myers",
-    "team": "NYM",
+    "team": "MIL",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -6113,7 +6113,7 @@
   },
   {
     "name": "Gavin Lux",
-    "team": "TB",
+    "team": "CIN",
     "position": "2B,3B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -6205,7 +6205,7 @@
   },
   {
     "name": "Kyle Finnegan",
-    "team": "DET",
+    "team": "WSH",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -6391,7 +6391,7 @@
   },
   {
     "name": "Grayson Rodriguez",
-    "team": "LAA",
+    "team": "BAL",
     "position": "SP",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
@@ -6437,7 +6437,7 @@
   },
   {
     "name": "Taj Bradley",
-    "team": "MIN",
+    "team": "TB",
     "position": "SP",
     "manager": "Andromedans",
     "player_type": "MLB",
@@ -6483,7 +6483,7 @@
   },
   {
     "name": "Harry Ford",
-    "team": "WSH",
+    "team": "SEA",
     "position": "C",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
@@ -6698,7 +6698,7 @@
   },
   {
     "name": "Drew Gilbert",
-    "team": "SF",
+    "team": "NYM",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -6817,7 +6817,7 @@
   },
   {
     "name": "Jhoan Duran",
-    "team": "PHI",
+    "team": "MIN",
     "position": "RP",
     "manager": "The Damn Yankees",
     "player_type": "MLB",
@@ -6840,7 +6840,7 @@
   },
   {
     "name": "Alexis D\u00edaz",
-    "team": "TEX",
+    "team": "CIN",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -7248,7 +7248,7 @@
   },
   {
     "name": "Elian Pe\u00f1a",
-    "team": "MIL",
+    "team": "NYM",
     "position": "OF",
     "manager": "La Flama Blanca",
     "player_type": "Farm",
@@ -8705,7 +8705,7 @@
   },
   {
     "name": "Luis Arraez",
-    "team": "SF",
+    "team": "SD",
     "position": "1B,2B",
     "manager": "not much of a donkey",
     "player_type": "MLB",
@@ -8797,7 +8797,7 @@
   },
   {
     "name": "Mason Miller",
-    "team": "SD",
+    "team": "ATH",
     "position": "RP",
     "manager": "not much of a donkey",
     "player_type": "MLB",
@@ -9460,7 +9460,7 @@
   },
   {
     "name": "Jedixson Paez",
-    "team": "CWS",
+    "team": "BOS",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -9625,7 +9625,7 @@
   },
   {
     "name": "Bo Bichette",
-    "team": "NYM",
+    "team": "TOR",
     "position": "SS",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -9648,7 +9648,7 @@
   },
   {
     "name": "Freddy Peralta",
-    "team": "NYM",
+    "team": "MIL",
     "position": "SP",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
@@ -9671,7 +9671,7 @@
   },
   {
     "name": "Kyle Tucker",
-    "team": "LAD",
+    "team": "CHC",
     "position": "OF",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
@@ -9740,7 +9740,7 @@
   },
   {
     "name": "Eugenio Su\u00e1rez",
-    "team": "CIN",
+    "team": "AZ",
     "position": "3B",
     "manager": "Rick Vaughn",
     "player_type": "MLB",
@@ -9763,7 +9763,7 @@
   },
   {
     "name": "Luis Rengifo",
-    "team": "MIL",
+    "team": "LAA",
     "position": "2B,3B,OF",
     "manager": "",
     "player_type": "MLB",
@@ -9786,7 +9786,7 @@
   },
   {
     "name": "Luke Weaver",
-    "team": "NYM",
+    "team": "NYY",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -9831,7 +9831,7 @@
   },
   {
     "name": "Ryan Weathers",
-    "team": "NYY",
+    "team": "MIA",
     "position": "SP",
     "manager": "Weekend Warriors",
     "player_type": "MLB",
@@ -10111,7 +10111,7 @@
   },
   {
     "name": "Tyler Locklear",
-    "team": "AZ",
+    "team": "SEA",
     "position": "1B",
     "manager": "",
     "player_type": "Farm",
@@ -10349,7 +10349,7 @@
   },
   {
     "name": "Shane Baz",
-    "team": "BAL",
+    "team": "TB",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -10395,7 +10395,7 @@
   },
   {
     "name": "Yoniel Curet",
-    "team": "PHI",
+    "team": "TB",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -10878,7 +10878,7 @@
   },
   {
     "name": "Nolan Arenado",
-    "team": "AZ",
+    "team": "STL",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -10946,7 +10946,7 @@
   },
   {
     "name": "Chris Bassitt",
-    "team": "BAL",
+    "team": "TOR",
     "position": "SP",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
@@ -11197,7 +11197,7 @@
   },
   {
     "name": "Marcell Ozuna",
-    "team": "PIT",
+    "team": "ATL",
     "position": "Util",
     "manager": "",
     "player_type": "MLB",
@@ -11220,7 +11220,7 @@
   },
   {
     "name": "Rhys Hoskins",
-    "team": "CLE",
+    "team": "MIL",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -11288,7 +11288,7 @@
   },
   {
     "name": "Kyle Harrison",
-    "team": "MIL",
+    "team": "SF",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -11310,7 +11310,7 @@
   },
   {
     "name": "Orelvis Martinez",
-    "team": "WSH",
+    "team": "TOR",
     "position": "2B,3B",
     "manager": "",
     "player_type": "Farm",
@@ -11334,7 +11334,7 @@
   },
   {
     "name": "Mick Abel",
-    "team": "MIN",
+    "team": "PHI",
     "position": "SP",
     "manager": "The Bluke Blokes",
     "player_type": "Farm",
@@ -11359,7 +11359,7 @@
   },
   {
     "name": "Curtis Mead",
-    "team": "CWS",
+    "team": "TB",
     "position": "1B,2B,3B",
     "manager": "",
     "player_type": "MLB",
@@ -11495,7 +11495,7 @@
   },
   {
     "name": "Forrest Whitley",
-    "team": "TB",
+    "team": "HOU",
     "position": "P",
     "manager": "",
     "player_type": "MLB",
@@ -11653,7 +11653,7 @@
   },
   {
     "name": "Kameron Misner",
-    "team": "KC",
+    "team": "TB",
     "position": "CF",
     "manager": "",
     "player_type": "MLB",
@@ -12385,7 +12385,7 @@
   },
   {
     "name": "David Robertson",
-    "team": "PHI",
+    "team": "TEX",
     "position": "RP",
     "manager": "Whiz Kids",
     "player_type": "MLB",
@@ -12609,7 +12609,7 @@
   },
   {
     "name": "Jacob Melton",
-    "team": "TB",
+    "team": "HOU",
     "position": "CF",
     "manager": "Weekend Warriors",
     "player_type": "Farm",
@@ -12680,7 +12680,7 @@
   },
   {
     "name": "JJ Bleday",
-    "team": "CIN",
+    "team": "ATH",
     "position": "CF",
     "manager": "",
     "player_type": "MLB",
@@ -13034,7 +13034,7 @@
   },
   {
     "name": "Richard Fitts",
-    "team": "STL",
+    "team": "BOS",
     "position": "SP",
     "manager": "",
     "player_type": "MLB",
@@ -13663,7 +13663,7 @@
   },
   {
     "name": "Griffin Jax",
-    "team": "TB",
+    "team": "MIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -13734,7 +13734,7 @@
   },
   {
     "name": "Josh Naylor",
-    "team": "SEA",
+    "team": "AZ",
     "position": "1B",
     "manager": "Country Fried Lamb",
     "player_type": "MLB",
@@ -13780,7 +13780,7 @@
   },
   {
     "name": "Matt Strahm",
-    "team": "KC",
+    "team": "PHI",
     "position": "RP",
     "manager": "Whiz Kids",
     "player_type": "MLB",
@@ -13898,7 +13898,7 @@
   },
   {
     "name": "Mason Montgomery",
-    "team": "PIT",
+    "team": "TB",
     "position": "RP",
     "manager": "(empty)",
     "player_type": "MLB",
@@ -14380,7 +14380,7 @@
   },
   {
     "name": "Leodalis De Vries",
-    "team": "ATH",
+    "team": "SD",
     "position": "SS",
     "manager": "Andromedans",
     "player_type": "Farm",
@@ -14521,7 +14521,7 @@
   },
   {
     "name": "James Tibbs III",
-    "team": "LAD",
+    "team": "SF",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -14685,7 +14685,7 @@
   },
   {
     "name": "Mike Clevinger",
-    "team": "PIT",
+    "team": "CWS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -14707,7 +14707,7 @@
   },
   {
     "name": "Starling Marte",
-    "team": "KC",
+    "team": "NYM",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -14797,7 +14797,7 @@
   },
   {
     "name": "Alan Roden",
-    "team": "MIN",
+    "team": "TOR",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -14842,7 +14842,7 @@
   },
   {
     "name": "Alex Verdugo",
-    "team": "SD",
+    "team": "ATL",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -14887,7 +14887,7 @@
   },
   {
     "name": "Cal Quantrill",
-    "team": "TEX",
+    "team": "ATL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -14976,7 +14976,7 @@
   },
   {
     "name": "Eloy Jim\u00e9nez",
-    "team": "TOR",
+    "team": "TB",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -15020,7 +15020,7 @@
   },
   {
     "name": "Germ\u00e1n M\u00e1rquez",
-    "team": "SD",
+    "team": "COL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -15177,7 +15177,7 @@
   },
   {
     "name": "Liam Hendriks",
-    "team": "MIN",
+    "team": "BOS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -15311,7 +15311,7 @@
   },
   {
     "name": "Ty France",
-    "team": "SD",
+    "team": "TOR",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -15466,7 +15466,7 @@
   },
   {
     "name": "Aaron Civale",
-    "team": "ATH",
+    "team": "CHC",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -15573,7 +15573,7 @@
   },
   {
     "name": "Adalberto Mondesi",
-    "team": "BOS",
+    "team": "KC",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -15617,7 +15617,7 @@
   },
   {
     "name": "Adam Duvall",
-    "team": "ATL",
+    "team": "BOS",
     "position": "LF",
     "manager": null,
     "player_type": "MLB",
@@ -15907,7 +15907,7 @@
   },
   {
     "name": "Alex Jackson",
-    "team": "MIN",
+    "team": "NYY",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -16129,7 +16129,7 @@
   },
   {
     "name": "Andrew Chafin",
-    "team": "MIN",
+    "team": "LAA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -16151,7 +16151,7 @@
   },
   {
     "name": "Andrew Heaney",
-    "team": "LAD",
+    "team": "TEX",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -16218,7 +16218,7 @@
   },
   {
     "name": "Andrew Knizner",
-    "team": "SEA",
+    "team": "TEX",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -16285,7 +16285,7 @@
   },
   {
     "name": "Andrew Wantz",
-    "team": "TB",
+    "team": "LAA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -16307,7 +16307,7 @@
   },
   {
     "name": "Andy Ib\u00e1\u00f1ez",
-    "team": "ATH",
+    "team": "DET",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -16346,7 +16346,7 @@
   },
   {
     "name": "Angel Perdomo",
-    "team": "LAA",
+    "team": "ATL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -16456,7 +16456,7 @@
   },
   {
     "name": "Anthony Rizzo",
-    "team": "CHC",
+    "team": "NYY",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -16656,7 +16656,7 @@
   },
   {
     "name": "Austin Hays",
-    "team": "CWS",
+    "team": "CIN",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -16855,7 +16855,7 @@
   },
   {
     "name": "Ben Rortvedt",
-    "team": "NYM",
+    "team": "TB",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -16943,7 +16943,7 @@
   },
   {
     "name": "Brad Keller",
-    "team": "PHI",
+    "team": "CHC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -17070,7 +17070,7 @@
   },
   {
     "name": "Brendan Rodgers",
-    "team": "BOS",
+    "team": "HOU",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -17092,7 +17092,7 @@
   },
   {
     "name": "Brent Suter",
-    "team": "LAA",
+    "team": "CIN",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -17224,7 +17224,7 @@
   },
   {
     "name": "Bryan De La Cruz",
-    "team": "PHI",
+    "team": "NYY",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -17316,7 +17316,7 @@
   },
   {
     "name": "Bryse Wilson",
-    "team": "PHI",
+    "team": "CWS",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -17471,7 +17471,7 @@
   },
   {
     "name": "Carlos Santana",
-    "team": "AZ",
+    "team": "CHC",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -17560,7 +17560,7 @@
   },
   {
     "name": "Cavan Biggio",
-    "team": "HOU",
+    "team": "KC",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -17846,7 +17846,7 @@
   },
   {
     "name": "Chris Paddack",
-    "team": "MIA",
+    "team": "DET",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -18068,7 +18068,7 @@
   },
   {
     "name": "Connor Brogdon",
-    "team": "CLE",
+    "team": "PHI",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -18136,7 +18136,7 @@
   },
   {
     "name": "Cooper Criswell",
-    "team": "SEA",
+    "team": "BOS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -18226,7 +18226,7 @@
   },
   {
     "name": "Craig Kimbrel",
-    "team": "NYM",
+    "team": "HOU",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -18427,7 +18427,7 @@
   },
   {
     "name": "Daniel Johnson",
-    "team": "MIA",
+    "team": "BAL",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -18541,7 +18541,7 @@
   },
   {
     "name": "Danny Coulombe",
-    "team": "TEX",
+    "team": "MIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -18563,7 +18563,7 @@
   },
   {
     "name": "Danny Jansen",
-    "team": "TEX",
+    "team": "TB",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -18631,7 +18631,7 @@
   },
   {
     "name": "Dasan Brown",
-    "team": "MIL",
+    "team": "TOR",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -18901,7 +18901,7 @@
   },
   {
     "name": "Derek Hill",
-    "team": "CWS",
+    "team": "MIA",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -18945,7 +18945,7 @@
   },
   {
     "name": "Dillon Tate",
-    "team": "TOR",
+    "team": "BAL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -19109,7 +19109,7 @@
   },
   {
     "name": "Donovan Solano",
-    "team": "TEX",
+    "team": "SEA",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -19131,7 +19131,7 @@
   },
   {
     "name": "Donovan Walton",
-    "team": "LAA",
+    "team": "NYM",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -19177,7 +19177,7 @@
   },
   {
     "name": "Drew Smith",
-    "team": "WSH",
+    "team": "NYM",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -19532,7 +19532,7 @@
   },
   {
     "name": "Eli Morgan",
-    "team": "KC",
+    "team": "CHC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -19576,7 +19576,7 @@
   },
   {
     "name": "Elias D\u00edaz",
-    "team": "KC",
+    "team": "SD",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -19687,7 +19687,7 @@
   },
   {
     "name": "Enyel De Los Santos",
-    "team": "HOU",
+    "team": "SD",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -19753,7 +19753,7 @@
   },
   {
     "name": "Erick Fedde",
-    "team": "CWS",
+    "team": "MIL",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -19866,7 +19866,7 @@
   },
   {
     "name": "Euribiel Angeles",
-    "team": "ATH",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -20006,7 +20006,7 @@
   },
   {
     "name": "Gage Workman",
-    "team": "DET",
+    "team": "CHC",
     "position": "3B,SS,CF",
     "manager": null,
     "player_type": "MLB",
@@ -20139,7 +20139,7 @@
   },
   {
     "name": "Gary S\u00e1nchez",
-    "team": "MIL",
+    "team": "BAL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -20161,7 +20161,7 @@
   },
   {
     "name": "G\u00e9nesis Cabrera",
-    "team": "PHI",
+    "team": "MIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -20183,7 +20183,7 @@
   },
   {
     "name": "Geoff Hartlieb",
-    "team": "ATH",
+    "team": "NYY",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -20316,7 +20316,7 @@
   },
   {
     "name": "Grant Holman",
-    "team": "AZ",
+    "team": "ATH",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -20340,7 +20340,7 @@
   },
   {
     "name": "Gregory Soto",
-    "team": "PIT",
+    "team": "BAL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -20362,7 +20362,7 @@
   },
   {
     "name": "Griffin Canning",
-    "team": "SD",
+    "team": "NYM",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -20384,7 +20384,7 @@
   },
   {
     "name": "Ha-Seong Kim",
-    "team": "ATL",
+    "team": "TB",
     "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -20429,7 +20429,7 @@
   },
   {
     "name": "Harrison Bader",
-    "team": "SF",
+    "team": "MIN",
     "position": "CF",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -20474,7 +20474,7 @@
   },
   {
     "name": "H\u00e9ctor Neris",
-    "team": "KC",
+    "team": "HOU",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -20496,7 +20496,7 @@
   },
   {
     "name": "Hoby Milner",
-    "team": "CHC",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -20676,7 +20676,7 @@
   },
   {
     "name": "Ildemaro Vargas",
-    "team": "AZ",
+    "team": "WSH",
     "position": "1B,2B",
     "manager": null,
     "player_type": "MLB",
@@ -20847,7 +20847,7 @@
   },
   {
     "name": "Jackson Kowar",
-    "team": "BAL",
+    "team": "SEA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -20913,7 +20913,7 @@
   },
   {
     "name": "Jacob Webb",
-    "team": "CHC",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -21003,7 +21003,7 @@
   },
   {
     "name": "Jake Cave",
-    "team": "COL",
+    "team": "PHI",
     "position": "RF",
     "manager": null,
     "player_type": "MLB",
@@ -21025,7 +21025,7 @@
   },
   {
     "name": "Jake Diekman",
-    "team": "ATL",
+    "team": "NYM",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -21047,7 +21047,7 @@
   },
   {
     "name": "Jake Eder",
-    "team": "WSH",
+    "team": "CWS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -21069,7 +21069,7 @@
   },
   {
     "name": "Jake Fraley",
-    "team": "TB",
+    "team": "CIN",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -21175,7 +21175,7 @@
   },
   {
     "name": "Jakob Junis",
-    "team": "TEX",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -21241,7 +21241,7 @@
   },
   {
     "name": "James McCann",
-    "team": "AZ",
+    "team": "BAL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -21263,7 +21263,7 @@
   },
   {
     "name": "James Paxton",
-    "team": "BOS",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -21352,7 +21352,7 @@
   },
   {
     "name": "Jason Heyward",
-    "team": "SD",
+    "team": "LAD",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -21435,7 +21435,7 @@
   },
   {
     "name": "Jeff Criswell",
-    "team": "COL",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -21459,7 +21459,7 @@
   },
   {
     "name": "Jeff McNeil",
-    "team": "ATH",
+    "team": "NYM",
     "position": "2B,CF",
     "manager": null,
     "player_type": "MLB",
@@ -21545,7 +21545,7 @@
   },
   {
     "name": "Jes\u00fas S\u00e1nchez",
-    "team": "TOR",
+    "team": "MIA",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -21789,7 +21789,7 @@
   },
   {
     "name": "Joel Payamps",
-    "team": "ATL",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -21855,7 +21855,7 @@
   },
   {
     "name": "Joey Lucchesi",
-    "team": "SF",
+    "team": "NYM",
     "position": "RP",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -21921,7 +21921,7 @@
   },
   {
     "name": "Johan Oviedo",
-    "team": "BOS",
+    "team": "PIT",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -21966,7 +21966,7 @@
   },
   {
     "name": "John Brebbia",
-    "team": "COL",
+    "team": "CWS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -22010,7 +22010,7 @@
   },
   {
     "name": "John King",
-    "team": "MIA",
+    "team": "STL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -22032,7 +22032,7 @@
   },
   {
     "name": "John Means",
-    "team": "KC",
+    "team": "BAL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -22165,7 +22165,7 @@
   },
   {
     "name": "Jonah Heim",
-    "team": "ATL",
+    "team": "TEX",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -22187,7 +22187,7 @@
   },
   {
     "name": "Jonathan Hern\u00e1ndez",
-    "team": "PHI",
+    "team": "TB",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -22209,7 +22209,7 @@
   },
   {
     "name": "Jonathan Lo\u00e1isiga",
-    "team": "AZ",
+    "team": "NYY",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -22231,7 +22231,7 @@
   },
   {
     "name": "Jordan Hicks",
-    "team": "CWS",
+    "team": "SF",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -22341,7 +22341,7 @@
   },
   {
     "name": "Jorge Mateo",
-    "team": "ATL",
+    "team": "BAL",
     "position": "2B,SS,CF",
     "manager": null,
     "player_type": "MLB",
@@ -22387,7 +22387,7 @@
   },
   {
     "name": "Jose Barrero",
-    "team": "BAL",
+    "team": "CIN",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -22448,7 +22448,7 @@
   },
   {
     "name": "Jose Iglesias",
-    "team": "SD",
+    "team": "NYM",
     "position": "2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -22492,7 +22492,7 @@
   },
   {
     "name": "Jos\u00e9 Quintana",
-    "team": "COL",
+    "team": "NYM",
     "position": "SP",
     "manager": "Btwn2Jackies",
     "player_type": "MLB",
@@ -22601,7 +22601,7 @@
   },
   {
     "name": "Jos\u00e9 Suarez",
-    "team": "ATL",
+    "team": "LAA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -22645,7 +22645,7 @@
   },
   {
     "name": "Jos\u00e9 Urquidy",
-    "team": "PIT",
+    "team": "DET",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -22734,7 +22734,7 @@
   },
   {
     "name": "Josh Rojas",
-    "team": "KC",
+    "team": "CWS",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -22890,7 +22890,7 @@
   },
   {
     "name": "JT Brubaker",
-    "team": "SF",
+    "team": "NYY",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -23002,7 +23002,7 @@
   },
   {
     "name": "Justin Bruihl",
-    "team": "STL",
+    "team": "PIT",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -23024,7 +23024,7 @@
   },
   {
     "name": "Justin Lawrence",
-    "team": "PIT",
+    "team": "COL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -23135,7 +23135,7 @@
   },
   {
     "name": "Keegan Thompson",
-    "team": "COL",
+    "team": "CHC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -23180,7 +23180,7 @@
   },
   {
     "name": "Ken Waldichuk",
-    "team": "WSH",
+    "team": "ATH",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -23202,7 +23202,7 @@
   },
   {
     "name": "Kendall Graveman",
-    "team": "AZ",
+    "team": "HOU",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -23313,7 +23313,7 @@
   },
   {
     "name": "Kevin Kiermaier",
-    "team": "LAD",
+    "team": "TOR",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -23335,7 +23335,7 @@
   },
   {
     "name": "Kevin Newman",
-    "team": "KC",
+    "team": "LAA",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -23357,7 +23357,7 @@
   },
   {
     "name": "Kevin Pillar",
-    "team": "TEX",
+    "team": "LAA",
     "position": "LF",
     "manager": null,
     "player_type": "MLB",
@@ -23483,7 +23483,7 @@
   },
   {
     "name": "Kyle Farmer",
-    "team": "ATL",
+    "team": "COL",
     "position": "1B,2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -23660,7 +23660,7 @@
   },
   {
     "name": "LaMonte Wade Jr.",
-    "team": "CWS",
+    "team": "LAA",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -23728,7 +23728,7 @@
   },
   {
     "name": "Leody Taveras",
-    "team": "BAL",
+    "team": "TEX",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -24011,7 +24011,7 @@
   },
   {
     "name": "Luke Maile",
-    "team": "KC",
+    "team": "CIN",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -24165,7 +24165,7 @@
   },
   {
     "name": "Mark Canha",
-    "team": "TEX",
+    "team": "KC",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -24407,7 +24407,7 @@
   },
   {
     "name": "Mauricio Dub\u00f3n",
-    "team": "ATL",
+    "team": "HOU",
     "position": "2B,3B,SS,CF",
     "manager": null,
     "player_type": "MLB",
@@ -24518,7 +24518,7 @@
   },
   {
     "name": "Michael A. Taylor",
-    "team": "CWS",
+    "team": "PIT",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -24540,7 +24540,7 @@
   },
   {
     "name": "Michael Conforto",
-    "team": "CHC",
+    "team": "LAD",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -24578,7 +24578,7 @@
   },
   {
     "name": "Michael Lorenzen (Pitcher)",
-    "team": "COL",
+    "team": "KC",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -24640,7 +24640,7 @@
   },
   {
     "name": "Miguel Andujar",
-    "team": "SD",
+    "team": "ATH",
     "position": "3B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -24772,7 +24772,7 @@
   },
   {
     "name": "Mike Burrows",
-    "team": "HOU",
+    "team": "PIT",
     "position": "SP,RP",
     "manager": "The Damn Yankees",
     "player_type": "MLB",
@@ -24841,7 +24841,7 @@
   },
   {
     "name": "Miles Mikolas",
-    "team": "WSH",
+    "team": "STL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -24929,7 +24929,7 @@
   },
   {
     "name": "Myles Straw",
-    "team": "TOR",
+    "team": "CLE",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -24973,7 +24973,7 @@
   },
   {
     "name": "Nate Pearson",
-    "team": "HOU",
+    "team": "CHC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25062,7 +25062,7 @@
   },
   {
     "name": "Nick Anderson",
-    "team": "ATH",
+    "team": "KC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -25084,7 +25084,7 @@
   },
   {
     "name": "Nick Fortes",
-    "team": "TB",
+    "team": "MIA",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -25128,7 +25128,7 @@
   },
   {
     "name": "Nick Madrigal",
-    "team": "LAA",
+    "team": "NYM",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -25150,7 +25150,7 @@
   },
   {
     "name": "Nick Martinez",
-    "team": "TB",
+    "team": "CIN",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -25195,7 +25195,7 @@
   },
   {
     "name": "Nick Mears",
-    "team": "KC",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25261,7 +25261,7 @@
   },
   {
     "name": "Nick Sandlin",
-    "team": "LAA",
+    "team": "TOR",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25283,7 +25283,7 @@
   },
   {
     "name": "Nick Senzel",
-    "team": "LAD",
+    "team": "WSH",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -25349,7 +25349,7 @@
   },
   {
     "name": "Noah Murdock",
-    "team": "PIT",
+    "team": "ATH",
     "position": "SIRP",
     "manager": "",
     "player_type": "MLB",
@@ -25522,7 +25522,7 @@
   },
   {
     "name": "Patrick Corbin",
-    "team": "TEX",
+    "team": "WSH",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -25588,7 +25588,7 @@
   },
   {
     "name": "Paul Blackburn",
-    "team": "NYY",
+    "team": "NYM",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -25610,7 +25610,7 @@
   },
   {
     "name": "Paul Sewald",
-    "team": "AZ",
+    "team": "DET",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25677,7 +25677,7 @@
   },
   {
     "name": "Peter Lambert",
-    "team": "HOU",
+    "team": "COL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -25791,7 +25791,7 @@
   },
   {
     "name": "Phil Maton",
-    "team": "CHC",
+    "team": "TB",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25813,7 +25813,7 @@
   },
   {
     "name": "Pierce Johnson",
-    "team": "CIN",
+    "team": "ATL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -25901,7 +25901,7 @@
   },
   {
     "name": "Ram\u00f3n Laureano",
-    "team": "SD",
+    "team": "BAL",
     "position": "CF",
     "manager": "Whiz Kids",
     "player_type": "MLB",
@@ -25924,7 +25924,7 @@
   },
   {
     "name": "Ram\u00f3n Ur\u00edas",
-    "team": "STL",
+    "team": "BAL",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -26036,7 +26036,7 @@
   },
   {
     "name": "Richard Lovelady",
-    "team": "WSH",
+    "team": "TOR",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26125,7 +26125,7 @@
   },
   {
     "name": "Rob Refsnyder",
-    "team": "SEA",
+    "team": "BOS",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -26147,7 +26147,7 @@
   },
   {
     "name": "Robbie Grossman",
-    "team": "KC",
+    "team": "CWS",
     "position": "LF",
     "manager": null,
     "player_type": "MLB",
@@ -26283,7 +26283,7 @@
   },
   {
     "name": "Rowdy Tellez",
-    "team": "TEX",
+    "team": "PIT",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -26439,7 +26439,7 @@
   },
   {
     "name": "Ryan O'Hearn",
-    "team": "PIT",
+    "team": "BAL",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -26506,7 +26506,7 @@
   },
   {
     "name": "Ryne Stanek",
-    "team": "STL",
+    "team": "NYM",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26528,7 +26528,7 @@
   },
   {
     "name": "Sam Haggerty",
-    "team": "TEX",
+    "team": "SEA",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -26550,7 +26550,7 @@
   },
   {
     "name": "Sam Hentges",
-    "team": "SF",
+    "team": "CLE",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26633,7 +26633,7 @@
   },
   {
     "name": "Santiago Espinal",
-    "team": "LAD",
+    "team": "CIN",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -26677,7 +26677,7 @@
   },
   {
     "name": "Scott Barlow",
-    "team": "ATH",
+    "team": "CIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26766,7 +26766,7 @@
   },
   {
     "name": "Sean Newcomb",
-    "team": "CWS",
+    "team": "ATH",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -26854,7 +26854,7 @@
   },
   {
     "name": "Seth Martinez",
-    "team": "BOS",
+    "team": "AZ",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26898,7 +26898,7 @@
   },
   {
     "name": "Shawn Armstrong",
-    "team": "CLE",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -26921,7 +26921,7 @@
   },
   {
     "name": "Shelby Miller",
-    "team": "CHC",
+    "team": "DET",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -27056,7 +27056,7 @@
   },
   {
     "name": "Steven Okert",
-    "team": "HOU",
+    "team": "MIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -27168,7 +27168,7 @@
   },
   {
     "name": "Tayler Saucedo",
-    "team": "LAA",
+    "team": "SEA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -27190,7 +27190,7 @@
   },
   {
     "name": "Taylor Clarke",
-    "team": "AZ",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -27212,7 +27212,7 @@
   },
   {
     "name": "Taylor Rogers",
-    "team": "MIN",
+    "team": "CIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -27455,7 +27455,7 @@
   },
   {
     "name": "Tommy Mace",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -27700,7 +27700,7 @@
   },
   {
     "name": "Trevor Richards",
-    "team": "PHI",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -27855,7 +27855,7 @@
   },
   {
     "name": "Tyler Alexander",
-    "team": "TEX",
+    "team": "TB",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -27965,7 +27965,7 @@
   },
   {
     "name": "Tyler Kinley",
-    "team": "ATL",
+    "team": "COL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -28101,7 +28101,7 @@
   },
   {
     "name": "Tyler Zuber",
-    "team": "MIA",
+    "team": "NYM",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -28167,7 +28167,7 @@
   },
   {
     "name": "Victor Caratini",
-    "team": "MIN",
+    "team": "HOU",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -28278,7 +28278,7 @@
   },
   {
     "name": "Wade Miley",
-    "team": "CIN",
+    "team": "MIL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -28322,7 +28322,7 @@
   },
   {
     "name": "Wander Suero",
-    "team": "ATH",
+    "team": "ATL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -28546,7 +28546,7 @@
   },
   {
     "name": "Yohan Ramirez",
-    "team": "PIT",
+    "team": "NYM",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -28703,7 +28703,7 @@
   },
   {
     "name": "Zach Pop",
-    "team": "PHI",
+    "team": "TOR",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -28770,7 +28770,7 @@
   },
   {
     "name": "Marco Luciano",
-    "team": "NYY",
+    "team": "SF",
     "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -28792,7 +28792,7 @@
   },
   {
     "name": "Diego Cartaya",
-    "team": "SF",
+    "team": "MIN",
     "position": "C",
     "manager": "",
     "player_type": "Farm",
@@ -28931,7 +28931,7 @@
   },
   {
     "name": "Quinn Priester",
-    "team": "MIL",
+    "team": "PIT",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -28954,7 +28954,7 @@
   },
   {
     "name": "Oswald Peraza",
-    "team": "LAA",
+    "team": "NYY",
     "position": "1B,2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -28976,7 +28976,7 @@
   },
   {
     "name": "Liover Peguero",
-    "team": "PHI",
+    "team": "PIT",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -29134,7 +29134,7 @@
   },
   {
     "name": "Joey Wiemer",
-    "team": "WSH",
+    "team": "KC",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -29381,7 +29381,7 @@
   },
   {
     "name": "Tyler Freeman",
-    "team": "COL",
+    "team": "CLE",
     "position": "2B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -29461,7 +29461,7 @@
   },
   {
     "name": "Nolan Jones",
-    "team": "CLE",
+    "team": "COL",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -29507,7 +29507,7 @@
   },
   {
     "name": "Vaughn Grissom",
-    "team": "LAA",
+    "team": "BOS",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -29935,7 +29935,7 @@
   },
   {
     "name": "Kyle Stowers",
-    "team": "MIA",
+    "team": "BAL",
     "position": "CF",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
@@ -30065,7 +30065,7 @@
   },
   {
     "name": "Blaze Jordan",
-    "team": "STL",
+    "team": "BOS",
     "position": "1B,3B",
     "manager": "",
     "player_type": "Farm",
@@ -30111,7 +30111,7 @@
   },
   {
     "name": "Brandon Walter",
-    "team": "HOU",
+    "team": "BOS",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -30157,7 +30157,7 @@
   },
   {
     "name": "Chris Murphy",
-    "team": "CWS",
+    "team": "BOS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -30379,7 +30379,7 @@
   },
   {
     "name": "Bryan Ramos",
-    "team": "BAL",
+    "team": "CWS",
     "position": "3B",
     "manager": "",
     "player_type": "Farm",
@@ -30627,7 +30627,7 @@
   },
   {
     "name": "Bryan Lavastida",
-    "team": "ATH",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -30719,7 +30719,7 @@
   },
   {
     "name": "Ryan Rolison",
-    "team": "CHC",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -30743,7 +30743,7 @@
   },
   {
     "name": "Ryan Vilade",
-    "team": "TB",
+    "team": "STL",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -30916,7 +30916,7 @@
   },
   {
     "name": "Ryan Kreidler",
-    "team": "MIN",
+    "team": "DET",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -31026,7 +31026,7 @@
   },
   {
     "name": "Joey Wentz",
-    "team": "ATL",
+    "team": "PIT",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -31111,7 +31111,7 @@
   },
   {
     "name": "Pedro Leon",
-    "team": "PHI",
+    "team": "HOU",
     "position": "RF",
     "manager": null,
     "player_type": "MLB",
@@ -31205,7 +31205,7 @@
   },
   {
     "name": "Edouard Julien",
-    "team": "COL",
+    "team": "MIN",
     "position": "1B,2B",
     "manager": null,
     "player_type": "MLB",
@@ -31317,7 +31317,7 @@
   },
   {
     "name": "Jonathan Bowlan",
-    "team": "PHI",
+    "team": "KC",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -31409,7 +31409,7 @@
   },
   {
     "name": "Angel Zerpa",
-    "team": "MIL",
+    "team": "KC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -31621,7 +31621,7 @@
   },
   {
     "name": "Jeremiah Jackson",
-    "team": "BAL",
+    "team": "NYM",
     "position": "3B,OF",
     "manager": "",
     "player_type": "Farm",
@@ -31716,7 +31716,7 @@
   },
   {
     "name": "Janson Junk",
-    "team": "MIA",
+    "team": "MIL",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -31823,7 +31823,7 @@
   },
   {
     "name": "Eddys Leonard",
-    "team": "MIL",
+    "team": "DET",
     "position": "SS",
     "manager": "",
     "player_type": "Farm",
@@ -31888,7 +31888,7 @@
   },
   {
     "name": "Andre Jackson",
-    "team": "PIT",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -31958,7 +31958,7 @@
   },
   {
     "name": "Yanquiel Fernandez",
-    "team": "NYY",
+    "team": "COL",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -32187,7 +32187,7 @@
   },
   {
     "name": "Victor Mesa Jr.",
-    "team": "TB",
+    "team": "MIA",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -32211,7 +32211,7 @@
   },
   {
     "name": "Justyn-Henry Malloy",
-    "team": "TB",
+    "team": "DET",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -32233,7 +32233,7 @@
   },
   {
     "name": "Esteury Ruiz",
-    "team": "MIA",
+    "team": "ATH",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -32325,7 +32325,7 @@
   },
   {
     "name": "Jose Rodriguez",
-    "team": "PHI",
+    "team": "MIN",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -32349,7 +32349,7 @@
   },
   {
     "name": "Eduardo Garcia",
-    "team": "MIL",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -32512,7 +32512,7 @@
   },
   {
     "name": "Ronny Henriquez",
-    "team": "MIA",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -32537,7 +32537,7 @@
   },
   {
     "name": "Louie Varland",
-    "team": "TOR",
+    "team": "MIN",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -32688,7 +32688,7 @@
   },
   {
     "name": "Jose Butto",
-    "team": "SF",
+    "team": "",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -32734,7 +32734,7 @@
   },
   {
     "name": "Yoendrys G\u00f3mez",
-    "team": "TB",
+    "team": "NYY",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -32758,7 +32758,7 @@
   },
   {
     "name": "Everson Pereira",
-    "team": "CWS",
+    "team": "NYY",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -32782,7 +32782,7 @@
   },
   {
     "name": "Clayton Beeter",
-    "team": "WSH",
+    "team": "NYY",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -32897,7 +32897,7 @@
   },
   {
     "name": "Brandon Lockridge",
-    "team": "MIL",
+    "team": "SD",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -33056,7 +33056,7 @@
   },
   {
     "name": "Matt Gorski",
-    "team": "LAD",
+    "team": "PIT",
     "position": "OF",
     "manager": "",
     "player_type": "MLB",
@@ -33241,7 +33241,7 @@
   },
   {
     "name": "Griff McGarry",
-    "team": "WSH",
+    "team": "PHI",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -33538,7 +33538,7 @@
   },
   {
     "name": "Niko Kavadas",
-    "team": "LAA",
+    "team": "",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -33719,7 +33719,7 @@
   },
   {
     "name": "Brandon Valenzuela",
-    "team": "TOR",
+    "team": "SD",
     "position": "C,1B",
     "manager": "",
     "player_type": "Farm",
@@ -33864,7 +33864,7 @@
   },
   {
     "name": "Will Wagner",
-    "team": "SD",
+    "team": "TOR",
     "position": "1B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -33886,7 +33886,7 @@
   },
   {
     "name": "Osleivis Basabe",
-    "team": "SF",
+    "team": "TB",
     "position": "SS",
     "manager": "",
     "player_type": "Farm",
@@ -33980,7 +33980,7 @@
   },
   {
     "name": "Cade Marlowe",
-    "team": "ATH",
+    "team": "SEA",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -34304,7 +34304,7 @@
   },
   {
     "name": "Luken Baker",
-    "team": "AZ",
+    "team": "STL",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -34453,7 +34453,7 @@
   },
   {
     "name": "Cole Wilcox",
-    "team": "SEA",
+    "team": "TB",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -34477,7 +34477,7 @@
   },
   {
     "name": "Heriberto Hernandez",
-    "team": "MIA",
+    "team": "TB",
     "position": "OF",
     "manager": "",
     "player_type": "MLB",
@@ -34518,7 +34518,7 @@
   },
   {
     "name": "JJ Goss",
-    "team": "ATH",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -34590,7 +34590,7 @@
   },
   {
     "name": "Ricky Vanasco",
-    "team": "DET",
+    "team": "LAD",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -34686,7 +34686,7 @@
   },
   {
     "name": "Otto Lopez",
-    "team": "MIA",
+    "team": "SF",
     "position": "2B,SS",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
@@ -34798,7 +34798,7 @@
   },
   {
     "name": "CJ Van Eyk",
-    "team": "TOR",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -35287,7 +35287,7 @@
   },
   {
     "name": "Daniel Susac",
-    "team": "SF",
+    "team": "ATH",
     "position": "C",
     "manager": "",
     "player_type": "Farm",
@@ -35335,7 +35335,7 @@
   },
   {
     "name": "Blade Tidwell",
-    "team": "SF",
+    "team": "NYM",
     "position": "SP,RP",
     "manager": "",
     "player_type": "Farm",
@@ -35634,7 +35634,7 @@
   },
   {
     "name": "Jake Bennett",
-    "team": "BOS",
+    "team": "WSH",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -35763,7 +35763,7 @@
   },
   {
     "name": "Peyton Pallette",
-    "team": "CLE",
+    "team": "CWS",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -36165,7 +36165,7 @@
   },
   {
     "name": "Kenya Huggins",
-    "team": "ATH",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -36269,7 +36269,7 @@
   },
   {
     "name": "Andres Chaparro",
-    "team": "WSH",
+    "team": "",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -36673,7 +36673,7 @@
   },
   {
     "name": "Jordan Montgomery",
-    "team": "TEX",
+    "team": "AZ",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -36710,7 +36710,7 @@
   },
   {
     "name": "Yosver Zulueta",
-    "team": "SEA",
+    "team": "TOR",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -36734,7 +36734,7 @@
   },
   {
     "name": "Jack Leftwich",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -36782,7 +36782,7 @@
   },
   {
     "name": "Bryan Baker",
-    "team": "TB",
+    "team": "BAL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -36828,7 +36828,7 @@
   },
   {
     "name": "Hunter Harvey",
-    "team": "CHC",
+    "team": "KC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -36850,7 +36850,7 @@
   },
   {
     "name": "Seranthony Dom\u00ednguez",
-    "team": "CWS",
+    "team": "BAL",
     "position": "RP",
     "manager": "Andromedans",
     "player_type": "MLB",
@@ -36897,7 +36897,7 @@
   },
   {
     "name": "Brock Burke",
-    "team": "CIN",
+    "team": "LAA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -36919,7 +36919,7 @@
   },
   {
     "name": "Roansy Contreras",
-    "team": "COL",
+    "team": "NYY",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -37009,7 +37009,7 @@
   },
   {
     "name": "Jason Foley",
-    "team": "SF",
+    "team": "DET",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -37053,7 +37053,7 @@
   },
   {
     "name": "Hendry Mendez",
-    "team": "MIN",
+    "team": "PHI",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -37165,7 +37165,7 @@
   },
   {
     "name": "Jalen Beeks",
-    "team": "AZ",
+    "team": "COL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -37187,7 +37187,7 @@
   },
   {
     "name": "JP Sears",
-    "team": "SD",
+    "team": "ATH",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -37530,7 +37530,7 @@
   },
   {
     "name": "Colin Holderman",
-    "team": "CLE",
+    "team": "PIT",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -37590,7 +37590,7 @@
   },
   {
     "name": "Joel Kuhnel",
-    "team": "ATH",
+    "team": "HOU",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -37612,7 +37612,7 @@
   },
   {
     "name": "Edward Cabrera",
-    "team": "CHC",
+    "team": "MIA",
     "position": "SP",
     "manager": "Whiz Kids",
     "player_type": "MLB",
@@ -37635,7 +37635,7 @@
   },
   {
     "name": "Steven Wilson",
-    "team": "TB",
+    "team": "CWS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -37701,7 +37701,7 @@
   },
   {
     "name": "Mark Leiter Jr.",
-    "team": "ATH",
+    "team": "NYY",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -37926,7 +37926,7 @@
   },
   {
     "name": "Parker Mushinski",
-    "team": "COL",
+    "team": "HOU",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38106,7 +38106,7 @@
   },
   {
     "name": "Rob Zastryzny",
-    "team": "MIL",
+    "team": "CHC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38174,7 +38174,7 @@
   },
   {
     "name": "Matt Gage",
-    "team": "SF",
+    "team": "LAD",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38196,7 +38196,7 @@
   },
   {
     "name": "Kody Clemens",
-    "team": "MIN",
+    "team": "PHI",
     "position": "1B,2B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -38418,7 +38418,7 @@
   },
   {
     "name": "Anthony Banda",
-    "team": "MIN",
+    "team": "LAD",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38440,7 +38440,7 @@
   },
   {
     "name": "Gavin Hollowell",
-    "team": "CHC",
+    "team": "COL",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -38486,7 +38486,7 @@
   },
   {
     "name": "Brennan Bernardino",
-    "team": "COL",
+    "team": "BOS",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -38552,7 +38552,7 @@
   },
   {
     "name": "Brian Serven",
-    "team": "ATH",
+    "team": "TOR",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -38574,7 +38574,7 @@
   },
   {
     "name": "Blaze Alexander",
-    "team": "BAL",
+    "team": "AZ",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -38620,7 +38620,7 @@
   },
   {
     "name": "Danny Young",
-    "team": "ATL",
+    "team": "NYM",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38748,7 +38748,7 @@
   },
   {
     "name": "Jose Cuas",
-    "team": "KC",
+    "team": "CHC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -38770,7 +38770,7 @@
   },
   {
     "name": "Noah Davis",
-    "team": "PIT",
+    "team": "COL",
     "position": "SP",
     "manager": "",
     "player_type": "MLB",
@@ -38840,7 +38840,7 @@
   },
   {
     "name": "Austin Wynns",
-    "team": "ATH",
+    "team": "CIN",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -38998,7 +38998,7 @@
   },
   {
     "name": "Ian Hamilton",
-    "team": "ATL",
+    "team": "NYY",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -39287,7 +39287,7 @@
   },
   {
     "name": "Tsung-Che Cheng",
-    "team": "BOS",
+    "team": "PIT",
     "position": "2B,3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -39311,7 +39311,7 @@
   },
   {
     "name": "Mason Black",
-    "team": "KC",
+    "team": "SF",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -39466,7 +39466,7 @@
   },
   {
     "name": "Jake Bird",
-    "team": "NYY",
+    "team": "COL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -39704,7 +39704,7 @@
   },
   {
     "name": "Bryant Betancourt",
-    "team": "COL",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -39947,7 +39947,7 @@
   },
   {
     "name": "Jake McCarthy",
-    "team": "COL",
+    "team": "AZ",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -39969,7 +39969,7 @@
   },
   {
     "name": "Allan Winans",
-    "team": "NYY",
+    "team": "ATL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -40014,7 +40014,7 @@
   },
   {
     "name": "Jack Suwinski",
-    "team": "LAD",
+    "team": "PIT",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -40036,7 +40036,7 @@
   },
   {
     "name": "Gabriel Rincones Jr.",
-    "team": "PHI",
+    "team": "",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -40084,7 +40084,7 @@
   },
   {
     "name": "Oscar Gonzalez",
-    "team": "SD",
+    "team": "NYY",
     "position": "LF",
     "manager": null,
     "player_type": "MLB",
@@ -40106,7 +40106,7 @@
   },
   {
     "name": "Christopher Morel",
-    "team": "MIA",
+    "team": "TB",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -40128,7 +40128,7 @@
   },
   {
     "name": "Joey Meneses",
-    "team": "ATH",
+    "team": "WSH",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -40150,7 +40150,7 @@
   },
   {
     "name": "Mike Vasil",
-    "team": "CWS",
+    "team": "NYM",
     "position": "SP,RP",
     "manager": "Andromedans",
     "player_type": "MLB",
@@ -40219,7 +40219,7 @@
   },
   {
     "name": "Adam Frazier",
-    "team": "LAA",
+    "team": "PIT",
     "position": "2B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -40399,7 +40399,7 @@
   },
   {
     "name": "Alex Call",
-    "team": "LAD",
+    "team": "WSH",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -40531,7 +40531,7 @@
   },
   {
     "name": "Nick Allen",
-    "team": "HOU",
+    "team": "ATL",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -40643,7 +40643,7 @@
   },
   {
     "name": "James Outman",
-    "team": "MIN",
+    "team": "LAD",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -40687,7 +40687,7 @@
   },
   {
     "name": "Will Brennan",
-    "team": "SF",
+    "team": "CLE",
     "position": "RF",
     "manager": null,
     "player_type": "MLB",
@@ -40709,7 +40709,7 @@
   },
   {
     "name": "Josh Lowe",
-    "team": "LAA",
+    "team": "TB",
     "position": "CF",
     "manager": "La Flama Blanca",
     "player_type": "MLB",
@@ -40933,7 +40933,7 @@
   },
   {
     "name": "Ren\u00e9 Pinto",
-    "team": "PHI",
+    "team": "AZ",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -41113,7 +41113,7 @@
   },
   {
     "name": "Bryce Johnson",
-    "team": "SD",
+    "team": "",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -41267,7 +41267,7 @@
   },
   {
     "name": "Michael Stefanic",
-    "team": "ATH",
+    "team": "LAA",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -41333,7 +41333,7 @@
   },
   {
     "name": "Freddy Fermin",
-    "team": "SD",
+    "team": "KC",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -41380,7 +41380,7 @@
   },
   {
     "name": "MJ Melendez",
-    "team": "NYM",
+    "team": "KC",
     "position": "LF",
     "manager": null,
     "player_type": "MLB",
@@ -41402,7 +41402,7 @@
   },
   {
     "name": "Carlos P\u00e9rez",
-    "team": "HOU",
+    "team": "CWS",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -41502,7 +41502,7 @@
   },
   {
     "name": "Vidal Bruj\u00e1n",
-    "team": "NYM",
+    "team": "CHC",
     "position": "3B,SS,OF",
     "manager": null,
     "player_type": "MLB",
@@ -41681,7 +41681,7 @@
   },
   {
     "name": "Matt Festa",
-    "team": "CLE",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -41764,7 +41764,7 @@
   },
   {
     "name": "Michael Siani",
-    "team": "LAD",
+    "team": "STL",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -42124,7 +42124,7 @@
   },
   {
     "name": "Brent Honeywell Jr.",
-    "team": "LAD",
+    "team": "PIT",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -42194,7 +42194,7 @@
   },
   {
     "name": "Christian Franklin",
-    "team": "WSH",
+    "team": "CHC",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -42294,7 +42294,7 @@
   },
   {
     "name": "Noah Song",
-    "team": "BOS",
+    "team": "",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -42427,7 +42427,7 @@
   },
   {
     "name": "Cody Bolton",
-    "team": "HOU",
+    "team": "SEA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -42451,7 +42451,7 @@
   },
   {
     "name": "Robinson Ortiz",
-    "team": "SEA",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -42633,7 +42633,7 @@
   },
   {
     "name": "Jackson Wolf",
-    "team": "SD",
+    "team": "PIT",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -42994,7 +42994,7 @@
   },
   {
     "name": "Mitch Bratt",
-    "team": "AZ",
+    "team": "TEX",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -43325,7 +43325,7 @@
   },
   {
     "name": "Yendry Rojas",
-    "team": "MIN",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -43349,7 +43349,7 @@
   },
   {
     "name": "Adrian Sugastey",
-    "team": "LAD",
+    "team": "SF",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -43543,7 +43543,7 @@
   },
   {
     "name": "Cutter Coffey",
-    "team": "TOR",
+    "team": "",
     "position": "2B,3B",
     "manager": "",
     "player_type": "Farm",
@@ -43721,7 +43721,7 @@
   },
   {
     "name": "Drew Rom",
-    "team": "MIL",
+    "team": "STL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -43904,7 +43904,7 @@
   },
   {
     "name": "T.J. Rumfield",
-    "team": "COL",
+    "team": "NYY",
     "position": "1B",
     "manager": "",
     "player_type": "Farm",
@@ -44214,7 +44214,7 @@
   },
   {
     "name": "Austin Vernon",
-    "team": "TB",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -44352,7 +44352,7 @@
   },
   {
     "name": "Shane Drohan",
-    "team": "MIL",
+    "team": "CWS",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -44638,7 +44638,7 @@
   },
   {
     "name": "Luca Tresh",
-    "team": "KC",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -44686,7 +44686,7 @@
   },
   {
     "name": "Joe La Sorsa",
-    "team": "PIT",
+    "team": "CIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -44756,7 +44756,7 @@
   },
   {
     "name": "Zach Brzykcy",
-    "team": "MIA",
+    "team": "WSH",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -44948,7 +44948,7 @@
   },
   {
     "name": "Victor Bericoto",
-    "team": "SF",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -44972,7 +44972,7 @@
   },
   {
     "name": "Tyler McDonough",
-    "team": "BOS",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -45020,7 +45020,7 @@
   },
   {
     "name": "Troy Johnston",
-    "team": "COL",
+    "team": "MIA",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -45066,7 +45066,7 @@
   },
   {
     "name": "Tristan Peters",
-    "team": "CWS",
+    "team": "",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -45090,7 +45090,7 @@
   },
   {
     "name": "Tristan Gray",
-    "team": "MIN",
+    "team": "CWS",
     "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -45112,7 +45112,7 @@
   },
   {
     "name": "Trey Cabbage",
-    "team": "PIT",
+    "team": "HOU",
     "position": "RF",
     "manager": null,
     "player_type": "MLB",
@@ -45156,7 +45156,7 @@
   },
   {
     "name": "Trei Cruz",
-    "team": "DET",
+    "team": "",
     "position": "SS,CF",
     "manager": "",
     "player_type": "MLB",
@@ -45250,7 +45250,7 @@
   },
   {
     "name": "Steward Berroa",
-    "team": "MIL",
+    "team": "TOR",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -45337,7 +45337,7 @@
   },
   {
     "name": "Spencer Packard",
-    "team": "SEA",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -45383,7 +45383,7 @@
   },
   {
     "name": "Ryan Ward",
-    "team": "LAD",
+    "team": "",
     "position": "1B,OF",
     "manager": "",
     "player_type": "MLB",
@@ -45494,7 +45494,7 @@
   },
   {
     "name": "Ronny Simon",
-    "team": "PIT",
+    "team": "",
     "position": "2B,OF",
     "manager": "",
     "player_type": "Farm",
@@ -45629,7 +45629,7 @@
   },
   {
     "name": "Reed Trimble",
-    "team": "BAL",
+    "team": "",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -45747,7 +45747,7 @@
   },
   {
     "name": "Paul McIntosh",
-    "team": "PHI",
+    "team": "",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -46015,7 +46015,7 @@
   },
   {
     "name": "Milan Tolentino",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -46063,7 +46063,7 @@
   },
   {
     "name": "Miguel Palma",
-    "team": "NYY",
+    "team": "HOU",
     "position": "C",
     "manager": "",
     "player_type": "Farm",
@@ -46087,7 +46087,7 @@
   },
   {
     "name": "Mickey Gasper",
-    "team": "BOS",
+    "team": "MIN",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -46109,7 +46109,7 @@
   },
   {
     "name": "Michael Helman",
-    "team": "TEX",
+    "team": "STL",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -46131,7 +46131,7 @@
   },
   {
     "name": "Max Schuemann",
-    "team": "NYY",
+    "team": "ATH",
     "position": "2B,3B,SS,OF",
     "manager": null,
     "player_type": "MLB",
@@ -46201,7 +46201,7 @@
   },
   {
     "name": "Mason Englert",
-    "team": "TB",
+    "team": "DET",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -46271,7 +46271,7 @@
   },
   {
     "name": "Luke Waddell",
-    "team": "ATL",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -46448,7 +46448,7 @@
   },
   {
     "name": "Liam Hicks",
-    "team": "MIA",
+    "team": "",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -46516,7 +46516,7 @@
   },
   {
     "name": "Kyle McCann",
-    "team": "COL",
+    "team": "ATH",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -46761,7 +46761,7 @@
   },
   {
     "name": "Jose Fernandez",
-    "team": "AZ",
+    "team": "",
     "position": "SS",
     "manager": "",
     "player_type": "Farm",
@@ -46807,7 +46807,7 @@
   },
   {
     "name": "Jos\u00e9 Caballero",
-    "team": "NYY",
+    "team": "TB",
     "position": "2B,3B,SS,OF",
     "manager": null,
     "player_type": "MLB",
@@ -46854,7 +46854,7 @@
   },
   {
     "name": "Jose A. Ferrer",
-    "team": "SEA",
+    "team": "WSH",
     "position": "RP",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -46901,7 +46901,7 @@
   },
   {
     "name": "Chase Shugart",
-    "team": "PHI",
+    "team": "PIT",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -46947,7 +46947,7 @@
   },
   {
     "name": "Joey Loperfido",
-    "team": "HOU",
+    "team": "TOR",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -46969,7 +46969,7 @@
   },
   {
     "name": "Jhonny Pereda",
-    "team": "SEA",
+    "team": "ATH",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -46991,7 +46991,7 @@
   },
   {
     "name": "Jesus Rodriguez",
-    "team": "SF",
+    "team": "NYY",
     "position": "C",
     "manager": "",
     "player_type": "Farm",
@@ -47150,7 +47150,7 @@
   },
   {
     "name": "Jake Mangum",
-    "team": "PIT",
+    "team": "TB",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -47191,7 +47191,7 @@
   },
   {
     "name": "Jair Camargo",
-    "team": "ATL",
+    "team": "MIN",
     "position": "C",
     "manager": "",
     "player_type": "MLB",
@@ -47215,7 +47215,7 @@
   },
   {
     "name": "Jahmai Jones",
-    "team": "DET",
+    "team": "MIL",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -47261,7 +47261,7 @@
   },
   {
     "name": "Jadher Areinamo",
-    "team": "TB",
+    "team": "MIL",
     "position": "2B,3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -47421,7 +47421,7 @@
   },
   {
     "name": "Isaac Collins",
-    "team": "KC",
+    "team": "MIL",
     "position": "OF",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -47469,7 +47469,7 @@
   },
   {
     "name": "Hunter Feduccia",
-    "team": "TB",
+    "team": "LAD",
     "position": "C",
     "manager": "",
     "player_type": "MLB",
@@ -47561,7 +47561,7 @@
   },
   {
     "name": "Kade Strowd",
-    "team": "AZ",
+    "team": "BAL",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -47655,7 +47655,7 @@
   },
   {
     "name": "Eric Wagaman",
-    "team": "MIN",
+    "team": "MIA",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -47784,7 +47784,7 @@
   },
   {
     "name": "Dru Baker",
-    "team": "CWS",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -47808,7 +47808,7 @@
   },
   {
     "name": "Dominic Fletcher",
-    "team": "PIT",
+    "team": "CWS",
     "position": "RF",
     "manager": null,
     "player_type": "MLB",
@@ -47925,7 +47925,7 @@
   },
   {
     "name": "Davis Wendzel",
-    "team": "PIT",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -47995,7 +47995,7 @@
   },
   {
     "name": "David Hamilton",
-    "team": "MIL",
+    "team": "BOS",
     "position": "2B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -48109,7 +48109,7 @@
   },
   {
     "name": "Dane Myers",
-    "team": "CIN",
+    "team": "MIA",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -48393,7 +48393,7 @@
   },
   {
     "name": "Christian Cairo",
-    "team": "PHI",
+    "team": "ATL",
     "position": "SS",
     "manager": "",
     "player_type": "Farm",
@@ -48535,7 +48535,7 @@
   },
   {
     "name": "Carlos Narvaez",
-    "team": "BOS",
+    "team": "NYY",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -48630,7 +48630,7 @@
   },
   {
     "name": "Caleb Durbin",
-    "team": "BOS",
+    "team": "MIL",
     "position": "2B,3B",
     "manager": "Hammers",
     "player_type": "MLB",
@@ -48699,7 +48699,7 @@
   },
   {
     "name": "Brett Wisely",
-    "team": "ATL",
+    "team": "SF",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -48769,7 +48769,7 @@
   },
   {
     "name": "Braxton Fulford",
-    "team": "COL",
+    "team": "",
     "position": "C",
     "manager": "",
     "player_type": "MLB",
@@ -48975,7 +48975,7 @@
   },
   {
     "name": "Ben Peoples",
-    "team": "CWS",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -49047,7 +49047,7 @@
   },
   {
     "name": "Andruw Monasterio",
-    "team": "BOS",
+    "team": "MIL",
     "position": "1B,2B,3B,SS",
     "manager": null,
     "player_type": "MLB",
@@ -49093,7 +49093,7 @@
   },
   {
     "name": "Andre Granillo",
-    "team": "WSH",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -49213,7 +49213,7 @@
   },
   {
     "name": "Abimelec Ortiz",
-    "team": "WSH",
+    "team": "TEX",
     "position": "1B",
     "manager": "",
     "player_type": "Farm",
@@ -49488,7 +49488,7 @@
   },
   {
     "name": "Silas Ardoin",
-    "team": "BAL",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -49847,7 +49847,7 @@
   },
   {
     "name": "Nick Hernandez",
-    "team": "ATH",
+    "team": "HOU",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -49869,7 +49869,7 @@
   },
   {
     "name": "Andrew Hoffmann",
-    "team": "AZ",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -50023,7 +50023,7 @@
   },
   {
     "name": "Ryan Bergert",
-    "team": "KC",
+    "team": "SD",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -50047,7 +50047,7 @@
   },
   {
     "name": "Eric Orze",
-    "team": "MIN",
+    "team": "TB",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -50161,7 +50161,7 @@
   },
   {
     "name": "Coleman Crow",
-    "team": "MIL",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -50185,7 +50185,7 @@
   },
   {
     "name": "Nick Avila",
-    "team": "BAL",
+    "team": "SF",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -50270,7 +50270,7 @@
   },
   {
     "name": "Carter Baumler",
-    "team": "TEX",
+    "team": "BAL",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -50432,7 +50432,7 @@
   },
   {
     "name": "Luis Perales",
-    "team": "WSH",
+    "team": "BOS",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -50543,7 +50543,7 @@
   },
   {
     "name": "Zak Kent",
-    "team": "MIN",
+    "team": "TEX",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -50589,7 +50589,7 @@
   },
   {
     "name": "Roddery Munoz",
-    "team": "HOU",
+    "team": "MIA",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -50682,7 +50682,7 @@
   },
   {
     "name": "Ryan Loutos",
-    "team": "SEA",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -50983,7 +50983,7 @@
   },
   {
     "name": "Elvis Alvarado",
-    "team": "ATH",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -51031,7 +51031,7 @@
   },
   {
     "name": "Josh Simpson",
-    "team": "SEA",
+    "team": "MIA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -51151,7 +51151,7 @@
   },
   {
     "name": "Christian Roa",
-    "team": "HOU",
+    "team": "CIN",
     "position": "SP",
     "manager": "",
     "player_type": "MLB",
@@ -51245,7 +51245,7 @@
   },
   {
     "name": "McCade Brown",
-    "team": "COL",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -51269,7 +51269,7 @@
   },
   {
     "name": "Carson Coleman",
-    "team": "NYY",
+    "team": "TEX",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -51465,7 +51465,7 @@
   },
   {
     "name": "Evan Reifert",
-    "team": "TB",
+    "team": "",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -51604,7 +51604,7 @@
   },
   {
     "name": "Scott McGough",
-    "team": "ATH",
+    "team": "AZ",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -51626,7 +51626,7 @@
   },
   {
     "name": "Brock Stewart",
-    "team": "LAD",
+    "team": "MIN",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -51874,7 +51874,7 @@
   },
   {
     "name": "Trey Wingenter",
-    "team": "CHC",
+    "team": "BOS",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -52015,7 +52015,7 @@
   },
   {
     "name": "Tyler Phillips",
-    "team": "MIA",
+    "team": "PHI",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -52222,7 +52222,7 @@
   },
   {
     "name": "Dedniel N\u00fa\u00f1ez",
-    "team": "NYM",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -52453,7 +52453,7 @@
   },
   {
     "name": "Alan Rangel",
-    "team": "PHI",
+    "team": "",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -52658,7 +52658,7 @@
   },
   {
     "name": "Matt Krook",
-    "team": "ATH",
+    "team": "NYY",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -52774,7 +52774,7 @@
   },
   {
     "name": "Brent Headrick",
-    "team": "NYY",
+    "team": "MIN",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -52866,7 +52866,7 @@
   },
   {
     "name": "George Soriano",
-    "team": "STL",
+    "team": "MIA",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -52910,7 +52910,7 @@
   },
   {
     "name": "Colin Selby",
-    "team": "BAL",
+    "team": "PIT",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -53021,7 +53021,7 @@
   },
   {
     "name": "Gus Varland",
-    "team": "WSH",
+    "team": "LAD",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -53358,7 +53358,7 @@
   },
   {
     "name": "Brett Sullivan",
-    "team": "COL",
+    "team": "SD",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -53564,7 +53564,7 @@
   },
   {
     "name": "Osvaldo Bido",
-    "team": "NYY",
+    "team": "ATH",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -53586,7 +53586,7 @@
   },
   {
     "name": "Cam Sanders",
-    "team": "PIT",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -53748,7 +53748,7 @@
   },
   {
     "name": "Ryan Watson",
-    "team": "BOS",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -53789,7 +53789,7 @@
   },
   {
     "name": "Wuilfredo Antunez",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -53813,7 +53813,7 @@
   },
   {
     "name": "Angel Chivilli",
-    "team": "NYY",
+    "team": "COL",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -53930,7 +53930,7 @@
   },
   {
     "name": "Will Klein",
-    "team": "LAD",
+    "team": "ATH",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -54563,7 +54563,7 @@
   },
   {
     "name": "Tai Peete",
-    "team": "STL",
+    "team": "SEA",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -54629,7 +54629,7 @@
   },
   {
     "name": "Wade Meckler",
-    "team": "LAA",
+    "team": "SF",
     "position": "CF",
     "manager": "",
     "player_type": "Farm",
@@ -54810,7 +54810,7 @@
   },
   {
     "name": "Colton Ledbetter",
-    "team": "STL",
+    "team": "TB",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -54987,7 +54987,7 @@
   },
   {
     "name": "Bradley Blalock",
-    "team": "MIA",
+    "team": "COL",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -55117,7 +55117,7 @@
   },
   {
     "name": "Michael Arias",
-    "team": "NYY",
+    "team": "CHC",
     "position": "RHP",
     "manager": "",
     "player_type": "Farm",
@@ -55278,7 +55278,7 @@
   },
   {
     "name": "Spencer Miles",
-    "team": "TOR",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -55348,7 +55348,7 @@
   },
   {
     "name": "David Sandlin",
-    "team": "CWS",
+    "team": "BOS",
     "position": "SP,RP",
     "manager": "",
     "player_type": "Farm",
@@ -55762,7 +55762,7 @@
   },
   {
     "name": "Logan Workman",
-    "team": "TB",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -55845,7 +55845,7 @@
   },
   {
     "name": "Trenton Denholm",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -55932,7 +55932,7 @@
   },
   {
     "name": "T.J. Nichols",
-    "team": "TB",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -56052,7 +56052,7 @@
   },
   {
     "name": "Jake Miller",
-    "team": "DET",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -56093,7 +56093,7 @@
   },
   {
     "name": "Nasim Nu\u00f1ez",
-    "team": "MIA",
+    "team": "",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -56224,7 +56224,7 @@
   },
   {
     "name": "Matt Pushard",
-    "team": "STL",
+    "team": "MIA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -56248,7 +56248,7 @@
   },
   {
     "name": "Anthony Maldonado",
-    "team": "HOU",
+    "team": "MIA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -56409,7 +56409,7 @@
   },
   {
     "name": "Tyler Samaniego",
-    "team": "BOS",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -56864,7 +56864,7 @@
   },
   {
     "name": "Tyler Cleveland",
-    "team": "SEA",
+    "team": "",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -56886,7 +56886,7 @@
   },
   {
     "name": "Ty Adcock",
-    "team": "SD",
+    "team": "SEA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -57105,7 +57105,7 @@
   },
   {
     "name": "Riley Martin",
-    "team": "CHC",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -57187,7 +57187,7 @@
   },
   {
     "name": "Josh Rivera",
-    "team": "TOR",
+    "team": "CHC",
     "position": "SS",
     "manager": "",
     "player_type": "Farm",
@@ -57235,7 +57235,7 @@
   },
   {
     "name": "Tyler Schlaffer",
-    "team": "CHC",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -57344,7 +57344,7 @@
   },
   {
     "name": "William Kempner",
-    "team": "MIA",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -58140,7 +58140,7 @@
   },
   {
     "name": "Chris Campos",
-    "team": "LAD",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -58429,7 +58429,7 @@
   },
   {
     "name": "Alexander Alberto",
-    "team": "CWS",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -58501,7 +58501,7 @@
   },
   {
     "name": "Justin Sterner",
-    "team": "ATH",
+    "team": "",
     "position": "RP",
     "manager": "The Bluke Blokes",
     "player_type": "MLB",
@@ -58657,7 +58657,7 @@
   },
   {
     "name": "Nate Furman",
-    "team": "SF",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -58858,7 +58858,7 @@
   },
   {
     "name": "Nick Dombkowski",
-    "team": "PIT",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -58971,7 +58971,7 @@
   },
   {
     "name": "Grant Anderson",
-    "team": "MIL",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -58993,7 +58993,7 @@
   },
   {
     "name": "Chase Lee",
-    "team": "TOR",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -59034,7 +59034,7 @@
   },
   {
     "name": "Skylar Hales",
-    "team": "STL",
+    "team": "TEX",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -59189,7 +59189,7 @@
   },
   {
     "name": "PJ Poulin",
-    "team": "WSH",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -59466,7 +59466,7 @@
   },
   {
     "name": "Cole Paplham",
-    "team": "SD",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -59490,7 +59490,7 @@
   },
   {
     "name": "Alex Hoppe",
-    "team": "SEA",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -59779,7 +59779,7 @@
   },
   {
     "name": "Lazaro Estrada",
-    "team": "TOR",
+    "team": "",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -60174,7 +60174,7 @@
   },
   {
     "name": "Amos Willingham",
-    "team": "HOU",
+    "team": "WSH",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -60269,7 +60269,7 @@
   },
   {
     "name": "Connor Noland",
-    "team": "CHC",
+    "team": "",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -60397,7 +60397,7 @@
   },
   {
     "name": "AJ Ewing",
-    "team": "NYM",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -60528,7 +60528,7 @@
   },
   {
     "name": "Wilkin Ramos",
-    "team": "SF",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "Farm",
@@ -60569,7 +60569,7 @@
   },
   {
     "name": "Zach Thornton",
-    "team": "NYM",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -61298,7 +61298,7 @@
   },
   {
     "name": "Kyle Leahy",
-    "team": "STL",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -61322,7 +61322,7 @@
   },
   {
     "name": "Sammy Hernandez",
-    "team": "STL",
+    "team": "",
     "position": "C,1B",
     "manager": "",
     "player_type": "Farm",
@@ -61476,7 +61476,7 @@
   },
   {
     "name": "Michel Otanez",
-    "team": "TEX",
+    "team": "",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -61665,7 +61665,7 @@
   },
   {
     "name": "Michael Petersen",
-    "team": "MIA",
+    "team": "TOR",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -62563,7 +62563,7 @@
   },
   {
     "name": "Jake Brown",
-    "team": "SF",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -62611,7 +62611,7 @@
   },
   {
     "name": "Levi Wells",
-    "team": "BAL",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -63377,7 +63377,7 @@
   },
   {
     "name": "Ixan Henderson",
-    "team": "STL",
+    "team": "",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -64343,7 +64343,7 @@
   },
   {
     "name": "Matthew Etzel",
-    "team": "MIA",
+    "team": "",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -64548,7 +64548,7 @@
   },
   {
     "name": "John Peck",
-    "team": "DET",
+    "team": "",
     "position": "2B,3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -65004,7 +65004,7 @@
   },
   {
     "name": "Juan Baez",
-    "team": "MIL",
+    "team": "",
     "position": "2B,3B",
     "manager": "",
     "player_type": "Farm",
@@ -65135,7 +65135,7 @@
   },
   {
     "name": "Nerwilian Cede\u00f1o",
-    "team": "TB",
+    "team": "SD",
     "position": "C",
     "manager": "",
     "player_type": "Farm",
@@ -65159,7 +65159,7 @@
   },
   {
     "name": "Ben Williamson",
-    "team": "TB",
+    "team": "SEA",
     "position": "3B",
     "manager": "",
     "player_type": "Farm",
@@ -65201,7 +65201,7 @@
   },
   {
     "name": "Jacob Lopez",
-    "team": "ATH",
+    "team": "TB",
     "position": "SP",
     "manager": "The Damn Yankees",
     "player_type": "MLB",
@@ -65273,7 +65273,7 @@
   },
   {
     "name": "Kendry Rojas",
-    "team": "MIN",
+    "team": "TOR",
     "position": "SP",
     "manager": "Hammers",
     "player_type": "Farm",
@@ -65321,7 +65321,7 @@
   },
   {
     "name": "Caleb Boushley",
-    "team": "TB",
+    "team": "TEX",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -65439,7 +65439,7 @@
   },
   {
     "name": "Mitch Spence",
-    "team": "KC",
+    "team": "ATH",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -65485,7 +65485,7 @@
   },
   {
     "name": "Stephen Kolek",
-    "team": "KC",
+    "team": "SD",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -65508,7 +65508,7 @@
   },
   {
     "name": "Juan Nunez",
-    "team": "BAL",
+    "team": "SD",
     "position": "SP,RP",
     "manager": "",
     "player_type": "Farm",
@@ -65543,7 +65543,7 @@
   },
   {
     "name": "Adam Serwinowski",
-    "team": "LAD",
+    "team": "CIN",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -65801,7 +65801,7 @@
   },
   {
     "name": "Hunter Dobbins",
-    "team": "STL",
+    "team": "BOS",
     "position": "SP",
     "manager": "",
     "player_type": "MLB",
@@ -65825,7 +65825,7 @@
   },
   {
     "name": "Bailey Horn",
-    "team": "DET",
+    "team": "CHC",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -65849,7 +65849,7 @@
   },
   {
     "name": "Javier Mogollon",
-    "team": "CWS",
+    "team": "",
     "position": "2B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -65897,7 +65897,7 @@
   },
   {
     "name": "Mathias LaCombe",
-    "team": "CWS",
+    "team": "",
     "position": "SP,RP",
     "manager": "",
     "player_type": "Farm",
@@ -65945,7 +65945,7 @@
   },
   {
     "name": "Naibel Mariano",
-    "team": "CIN",
+    "team": "",
     "position": "3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -65985,7 +65985,7 @@
   },
   {
     "name": "Rafael Ramirez",
-    "team": "HOU",
+    "team": "WSH",
     "position": "SS",
     "manager": "",
     "player_type": "MLB",
@@ -66098,7 +66098,7 @@
   },
   {
     "name": "Nestor Miranda",
-    "team": "DET",
+    "team": "",
     "position": "Util",
     "manager": "",
     "player_type": "Farm",
@@ -66355,7 +66355,7 @@
   },
   {
     "name": "Hayden Alvarez",
-    "team": "LAA",
+    "team": "",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -66444,7 +66444,7 @@
   },
   {
     "name": "Jorge Quintana",
-    "team": "SD",
+    "team": "MIL",
     "position": "3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -66526,7 +66526,7 @@
   },
   {
     "name": "Ryan Gusto",
-    "team": "MIA",
+    "team": "HOU",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -66550,7 +66550,7 @@
   },
   {
     "name": "Andrew Cossetti",
-    "team": "MIN",
+    "team": "",
     "position": "",
     "manager": "",
     "player_type": "MLB",
@@ -66928,7 +66928,7 @@
   },
   {
     "name": "Brandan Bidois",
-    "team": "PIT",
+    "team": "",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -66969,7 +66969,7 @@
   },
   {
     "name": "Homer Bush",
-    "team": "NYY",
+    "team": "TB",
     "position": "OF",
     "manager": "",
     "player_type": "MLB",
@@ -66993,7 +66993,7 @@
   },
   {
     "name": "Braden Nett",
-    "team": "ATH",
+    "team": "SD",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -67063,7 +67063,7 @@
   },
   {
     "name": "Dawel Joseph",
-    "team": "SEA",
+    "team": "",
     "position": "3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -67487,7 +67487,7 @@
   },
   {
     "name": "Luis Suisbel",
-    "team": "SEA",
+    "team": "",
     "position": "3B,SS",
     "manager": "",
     "player_type": "Farm",
@@ -67587,7 +67587,7 @@
   },
   {
     "name": "Victor Arias",
-    "team": "TOR",
+    "team": "",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -67611,7 +67611,7 @@
   },
   {
     "name": "Waner Luciano",
-    "team": "HOU",
+    "team": "",
     "position": "2B,3B",
     "manager": "",
     "player_type": "Farm",
@@ -68002,7 +68002,7 @@
   },
   {
     "name": "Carson Ragsdale",
-    "team": "ATL",
+    "team": "SF",
     "position": "SP,RP",
     "manager": "",
     "player_type": "MLB",
@@ -68026,7 +68026,7 @@
   },
   {
     "name": "Kai-Wei Teng",
-    "team": "HOU",
+    "team": "SF",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -68518,7 +68518,7 @@
   },
   {
     "name": "Valente Bellozo",
-    "team": "COL",
+    "team": "MIA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -68659,7 +68659,7 @@
   },
   {
     "name": "Jesse Scholtens",
-    "team": "TB",
+    "team": "CWS",
     "position": "SP,RP",
     "manager": null,
     "player_type": "MLB",
@@ -68796,7 +68796,7 @@
   },
   {
     "name": "Joe Jacques",
-    "team": "NYM",
+    "team": "BOS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -68818,7 +68818,7 @@
   },
   {
     "name": "Sammy Peralta",
-    "team": "MIL",
+    "team": "CWS",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -68840,7 +68840,7 @@
   },
   {
     "name": "Bryan Hudson",
-    "team": "NYM",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -68906,7 +68906,7 @@
   },
   {
     "name": "Wes Parsons",
-    "team": "CLE",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -69139,7 +69139,7 @@
   },
   {
     "name": "Gerson Garabito",
-    "team": "MIL",
+    "team": "TEX",
     "position": "SP, RP",
     "manager": null,
     "player_type": "MLB",
@@ -69609,7 +69609,7 @@
   },
   {
     "name": "Garrett McDaniels",
-    "team": "LAD",
+    "team": "LAA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -69633,7 +69633,7 @@
   },
   {
     "name": "Eiberson Castellano",
-    "team": "COL",
+    "team": "MIN",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -70041,7 +70041,7 @@
   },
   {
     "name": "Pedro Le\u00f3n",
-    "team": "PHI",
+    "team": "AZ",
     "position": "RHP",
     "manager": "",
     "player_type": "MLB",
@@ -72217,7 +72217,7 @@
   },
   {
     "name": "Brandyn Garcia",
-    "team": "AZ",
+    "team": "SEA",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -72337,7 +72337,7 @@
   },
   {
     "name": "Guillo Zu\u00f1iga",
-    "team": "SEA",
+    "team": "PHI",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -72454,7 +72454,7 @@
   },
   {
     "name": "Kohl Drake",
-    "team": "AZ",
+    "team": "TEX",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -75793,7 +75793,7 @@
   },
   {
     "name": "Dillon Lewis",
-    "team": "MIA",
+    "team": "NYY",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -75817,7 +75817,7 @@
   },
   {
     "name": "Zach Ehrhard",
-    "team": "LAD",
+    "team": "BOS",
     "position": "OF",
     "manager": "",
     "player_type": "Farm",
@@ -76219,7 +76219,7 @@
   },
   {
     "name": "Anthony Nunez",
-    "team": "BAL",
+    "team": "NYM",
     "position": "RP",
     "manager": "",
     "player_type": "Farm",
@@ -76243,7 +76243,7 @@
   },
   {
     "name": "Juan Burgos",
-    "team": "AZ",
+    "team": "SEA",
     "position": "RP",
     "manager": "",
     "player_type": "MLB",
@@ -76267,7 +76267,7 @@
   },
   {
     "name": "Wellington Aracena",
-    "team": "AZ",
+    "team": "BAL",
     "position": "SP",
     "manager": "",
     "player_type": "Farm",
@@ -78953,7 +78953,7 @@
   },
   {
     "name": "Jared Jones",
-    "team": "PIT",
+    "team": "",
     "position": "1B",
     "manager": null,
     "player_type": "Farm",
@@ -79566,7 +79566,7 @@
   },
   {
     "name": "Sam Horn",
-    "team": "TEX",
+    "team": "",
     "position": "RHP",
     "manager": null,
     "player_type": "MLB",
@@ -83316,7 +83316,7 @@
   },
   {
     "name": "A.J. Pollock",
-    "team": "SF",
+    "team": "CWS",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -84460,7 +84460,7 @@
   },
   {
     "name": "AJ Pollock",
-    "team": "SF",
+    "team": "SEA",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -84702,7 +84702,7 @@
   },
   {
     "name": "Albert Pujols",
-    "team": "STL",
+    "team": "LAD",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -85714,7 +85714,7 @@
   },
   {
     "name": "Alfonsin Rosario",
-    "team": "CLE",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -86022,7 +86022,7 @@
   },
   {
     "name": "Anderson Severino",
-    "team": "NYM",
+    "team": "CWS",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -86242,7 +86242,7 @@
   },
   {
     "name": "Andrew Bechtold",
-    "team": "PHI",
+    "team": "MIN",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -86682,7 +86682,7 @@
   },
   {
     "name": "Andy Yerzy",
-    "team": "STL",
+    "team": "AZ",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -87144,7 +87144,7 @@
   },
   {
     "name": "Anthony Kay",
-    "team": "CWS",
+    "team": "CHC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -87277,7 +87277,7 @@
   },
   {
     "name": "Anthony Seigler",
-    "team": "BOS",
+    "team": "NYY",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -88312,7 +88312,7 @@
   },
   {
     "name": "Beau Burrows",
-    "team": "PIT",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -88774,7 +88774,7 @@
   },
   {
     "name": "Blaine Crim",
-    "team": "COL",
+    "team": "TEX",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -89127,7 +89127,7 @@
   },
   {
     "name": "Brad Hand",
-    "team": "ATL",
+    "team": "PHI",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -89172,7 +89172,7 @@
   },
   {
     "name": "Brad Miller",
-    "team": "SD",
+    "team": "TEX",
     "position": "3B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -89326,7 +89326,7 @@
   },
   {
     "name": "Bradley Zimmer",
-    "team": "COL",
+    "team": "LAD",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -89502,7 +89502,7 @@
   },
   {
     "name": "Braiden Ward",
-    "team": "BOS",
+    "team": "COL",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -89942,7 +89942,7 @@
   },
   {
     "name": "Brandon Waddell",
-    "team": "NYM",
+    "team": "STL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -90119,7 +90119,7 @@
   },
   {
     "name": "Braydon Fisher",
-    "team": "TOR",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -90384,7 +90384,7 @@
   },
   {
     "name": "Brent Honeywell",
-    "team": "LAD",
+    "team": "TB",
     "position": "RHP",
     "manager": null,
     "player_type": "MLB",
@@ -90802,7 +90802,7 @@
   },
   {
     "name": "Brian Navarreto",
-    "team": "MIA",
+    "team": "MIL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -90868,7 +90868,7 @@
   },
   {
     "name": "Brock Holt",
-    "team": "ATL",
+    "team": "TEX",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -90934,7 +90934,7 @@
   },
   {
     "name": "Brooks Kriske",
-    "team": "ATH",
+    "team": "KC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -91132,7 +91132,7 @@
   },
   {
     "name": "Bryan Torres",
-    "team": "STL",
+    "team": "SD",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -91836,7 +91836,7 @@
   },
   {
     "name": "Cam Devanney",
-    "team": "PIT",
+    "team": "MIL",
     "position": "SS,3B",
     "manager": null,
     "player_type": "MLB",
@@ -91991,7 +91991,7 @@
   },
   {
     "name": "Cameron Barstad",
-    "team": "CLE",
+    "team": "MIA",
     "position": "C",
     "manager": null,
     "player_type": "Farm",
@@ -92233,7 +92233,7 @@
   },
   {
     "name": "Carlos Cortes",
-    "team": "ATH",
+    "team": "NYM",
     "position": "2B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -92520,7 +92520,7 @@
   },
   {
     "name": "Carlos Rodr\u00edguez",
-    "team": "SD",
+    "team": "ATL",
     "position": "RF",
     "manager": null,
     "player_type": "Farm",
@@ -93026,7 +93026,7 @@
   },
   {
     "name": "Cedric Mullins II",
-    "team": "TB",
+    "team": "BAL",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -93291,7 +93291,7 @@
   },
   {
     "name": "Chad Stevens",
-    "team": "COL",
+    "team": "HOU",
     "position": "SS,3B",
     "manager": null,
     "player_type": "MLB",
@@ -93313,7 +93313,7 @@
   },
   {
     "name": "Chad Wallach",
-    "team": "ATH",
+    "team": "LAA",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -93357,7 +93357,7 @@
   },
   {
     "name": "Chance Sisco",
-    "team": "STL",
+    "team": "MIN",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -93467,7 +93467,7 @@
   },
   {
     "name": "Charlie Culberson",
-    "team": "ATL",
+    "team": "TB",
     "position": "2B,3B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -94237,7 +94237,7 @@
   },
   {
     "name": "Christian Koss",
-    "team": "SF",
+    "team": "BOS",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -94546,7 +94546,7 @@
   },
   {
     "name": "Clay Dungan",
-    "team": "SD",
+    "team": "KC",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -94768,7 +94768,7 @@
   },
   {
     "name": "Cody Ponce",
-    "team": "TOR",
+    "team": "PIT",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -95033,7 +95033,7 @@
   },
   {
     "name": "Cole Hamels",
-    "team": "PHI",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -95077,7 +95077,7 @@
   },
   {
     "name": "Cole Roederer",
-    "team": "SD",
+    "team": "CHC",
     "position": "CF",
     "manager": null,
     "player_type": "MLB",
@@ -95473,7 +95473,7 @@
   },
   {
     "name": "Connor Kaiser",
-    "team": "KC",
+    "team": "PIT",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -97300,7 +97300,7 @@
   },
   {
     "name": "Darin Ruf",
-    "team": "MIL",
+    "team": "NYM",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -97850,7 +97850,7 @@
   },
   {
     "name": "David McKay",
-    "team": "ATH",
+    "team": "OAK",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -98862,7 +98862,7 @@
   },
   {
     "name": "Dietrich Enns",
-    "team": "BAL",
+    "team": "TB",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -99369,7 +99369,7 @@
   },
   {
     "name": "Domingo Gonzalez",
-    "team": "SEA",
+    "team": "ATL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -99567,7 +99567,7 @@
   },
   {
     "name": "Drew Avans",
-    "team": "COL",
+    "team": "LAD",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -99809,7 +99809,7 @@
   },
   {
     "name": "Drew Pomeranz",
-    "team": "LAA",
+    "team": "SD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -100228,7 +100228,7 @@
   },
   {
     "name": "Easton McGee",
-    "team": "MIL",
+    "team": "SEA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -100911,7 +100911,7 @@
   },
   {
     "name": "Elih Marrero",
-    "team": "KC",
+    "team": "BOS",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -101087,7 +101087,7 @@
   },
   {
     "name": "Elvis Andrus",
-    "team": "TEX",
+    "team": "CWS",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -101329,7 +101329,7 @@
   },
   {
     "name": "Enrique Hern\u00e1ndez",
-    "team": "LAD",
+    "team": "BOS",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -101484,7 +101484,7 @@
   },
   {
     "name": "Eric Lauer",
-    "team": "TOR",
+    "team": "MIL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -102036,7 +102036,7 @@
   },
   {
     "name": "Esmerlyn Valdez",
-    "team": "PIT",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -102366,7 +102366,7 @@
   },
   {
     "name": "Evan Longoria",
-    "team": "TB",
+    "team": "AZ",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -102432,7 +102432,7 @@
   },
   {
     "name": "Evan Sisk",
-    "team": "PIT",
+    "team": "KC",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -102851,7 +102851,7 @@
   },
   {
     "name": "Foster Griffin",
-    "team": "WSH",
+    "team": "KC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -102939,7 +102939,7 @@
   },
   {
     "name": "Francisco Acuna",
-    "team": "SD",
+    "team": "PIT",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -103731,7 +103731,7 @@
   },
   {
     "name": "Garrett Acton",
-    "team": "MIA",
+    "team": "OAK",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -104502,7 +104502,7 @@
   },
   {
     "name": "Grant Wolfram",
-    "team": "BAL",
+    "team": "MIL",
     "position": "RP",
     "manager": null,
     "player_type": "MLB",
@@ -105560,7 +105560,7 @@
   },
   {
     "name": "Hobie Harris",
-    "team": "BOS",
+    "team": "WSH",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -106619,7 +106619,7 @@
   },
   {
     "name": "J.J. Bleday",
-    "team": "CIN",
+    "team": "MIA",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -107895,7 +107895,7 @@
   },
   {
     "name": "Jake McGee",
-    "team": "WSH",
+    "team": "SF",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -109061,7 +109061,7 @@
   },
   {
     "name": "Jason Alexander",
-    "team": "HOU",
+    "team": "MIL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -109436,7 +109436,7 @@
   },
   {
     "name": "Jax Biggers",
-    "team": "HOU",
+    "team": "TEX",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -109921,7 +109921,7 @@
   },
   {
     "name": "Jed Lowrie",
-    "team": "ATH",
+    "team": "OAK",
     "position": "Util",
     "manager": null,
     "player_type": "MLB",
@@ -111857,7 +111857,7 @@
   },
   {
     "name": "Joey Gerber",
-    "team": "NYM",
+    "team": "SEA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -112188,7 +112188,7 @@
   },
   {
     "name": "John Klein",
-    "team": "MIN",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -112453,7 +112453,7 @@
   },
   {
     "name": "Jon Duplantier",
-    "team": "MIL",
+    "team": "LAD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -113113,7 +113113,7 @@
   },
   {
     "name": "Jordan Qsar",
-    "team": "WSH",
+    "team": "TB",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -113245,7 +113245,7 @@
   },
   {
     "name": "Jorge Alfaro",
-    "team": "KC",
+    "team": "SD",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -113487,7 +113487,7 @@
   },
   {
     "name": "Jose Acosta",
-    "team": "CWS",
+    "team": "MIL",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -113641,7 +113641,7 @@
   },
   {
     "name": "Jos\u00e9 Castillo",
-    "team": "NYM",
+    "team": "SD",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -114279,7 +114279,7 @@
   },
   {
     "name": "Jose Reyes",
-    "team": "NYM",
+    "team": "LAA",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -114609,7 +114609,7 @@
   },
   {
     "name": "Josh Donaldson",
-    "team": "MIL",
+    "team": "NYY",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -115093,7 +115093,7 @@
   },
   {
     "name": "Jovani Moran",
-    "team": "BOS",
+    "team": "MIN",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -115489,7 +115489,7 @@
   },
   {
     "name": "Juan Pizarro",
-    "team": "PIT",
+    "team": "TOR",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -115577,7 +115577,7 @@
   },
   {
     "name": "Julian Fern\u00e1ndez",
-    "team": "WSH",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -115820,7 +115820,7 @@
   },
   {
     "name": "Junior Fern\u00e1ndez",
-    "team": "AZ",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -115996,7 +115996,7 @@
   },
   {
     "name": "Junior Perez",
-    "team": "ATH",
+    "team": "OAK",
     "position": "OF",
     "manager": null,
     "player_type": "Farm",
@@ -116128,7 +116128,7 @@
   },
   {
     "name": "Justin Dean",
-    "team": "CHC",
+    "team": "ATL",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -116393,7 +116393,7 @@
   },
   {
     "name": "Justin Upton",
-    "team": "SEA",
+    "team": "LAA",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -116789,7 +116789,7 @@
   },
   {
     "name": "Kellen Strahm",
-    "team": "HOU",
+    "team": "TEX",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -117097,7 +117097,7 @@
   },
   {
     "name": "Kervin Castro",
-    "team": "NYY",
+    "team": "DET",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -117713,7 +117713,7 @@
   },
   {
     "name": "Kodi Whitley",
-    "team": "TB",
+    "team": "STL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -117801,7 +117801,7 @@
   },
   {
     "name": "Kole Calhoun",
-    "team": "CLE",
+    "team": "SEA",
     "position": "OF",
     "manager": null,
     "player_type": "MLB",
@@ -118286,7 +118286,7 @@
   },
   {
     "name": "Kyle Hart",
-    "team": "SD",
+    "team": "PHI",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -119321,7 +119321,7 @@
   },
   {
     "name": "Logan Porter",
-    "team": "SF",
+    "team": "KC",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -119608,7 +119608,7 @@
   },
   {
     "name": "Lucas Wepf",
-    "team": "LAD",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -120070,7 +120070,7 @@
   },
   {
     "name": "Luis Mart\u00e9",
-    "team": "DET",
+    "team": "MIA",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -121060,7 +121060,7 @@
   },
   {
     "name": "Manny Pi\u00f1a",
-    "team": "ATH",
+    "team": "ATL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -121698,7 +121698,7 @@
   },
   {
     "name": "Mark Kolozsvary",
-    "team": "PHI",
+    "team": "BAL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -122138,7 +122138,7 @@
   },
   {
     "name": "Matt Bush",
-    "team": "TEX",
+    "team": "MIL",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -122754,7 +122754,7 @@
   },
   {
     "name": "Matthew Festa",
-    "team": "CLE",
+    "team": "SEA",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -122821,7 +122821,7 @@
   },
   {
     "name": "Max Ferguson",
-    "team": "BOS",
+    "team": "SD",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -123459,7 +123459,7 @@
   },
   {
     "name": "Michael Lorenzen",
-    "team": "COL",
+    "team": "LAA",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -123613,7 +123613,7 @@
   },
   {
     "name": "Michael Turner",
-    "team": "CWS",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -124295,7 +124295,7 @@
   },
   {
     "name": "Mike Moustakas",
-    "team": "CWS",
+    "team": "CIN",
     "position": "1B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -124647,7 +124647,7 @@
   },
   {
     "name": "Mitch Moreland",
-    "team": "ATH",
+    "team": "OAK",
     "position": "1B",
     "manager": null,
     "player_type": "MLB",
@@ -124933,7 +124933,7 @@
   },
   {
     "name": "Nate Eaton",
-    "team": "BOS",
+    "team": "KC",
     "position": "3B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -125242,7 +125242,7 @@
   },
   {
     "name": "Nelson Cruz",
-    "team": "SEA",
+    "team": "SD",
     "position": "Util",
     "manager": null,
     "player_type": "MLB",
@@ -125792,7 +125792,7 @@
   },
   {
     "name": "Nick Raposo",
-    "team": "SEA",
+    "team": "STL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -125814,7 +125814,7 @@
   },
   {
     "name": "Nick Raquet",
-    "team": "STL",
+    "team": "WSH",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -126673,7 +126673,7 @@
   },
   {
     "name": "Omar Martinez",
-    "team": "LAA",
+    "team": "NYY",
     "position": "C,1B",
     "manager": null,
     "player_type": "Farm",
@@ -126981,7 +126981,7 @@
   },
   {
     "name": "P.J. Higgins",
-    "team": "CIN",
+    "team": "AZ",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -127905,7 +127905,7 @@
   },
   {
     "name": "Phil Gosselin",
-    "team": "LAA",
+    "team": "ATL",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -128059,7 +128059,7 @@
   },
   {
     "name": "Pierson Ohl",
-    "team": "COL",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -129138,7 +129138,7 @@
   },
   {
     "name": "Reiver Sanmartin",
-    "team": "SF",
+    "team": "CIN",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -129271,7 +129271,7 @@
   },
   {
     "name": "Rhylan Thomas",
-    "team": "SEA",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -129558,7 +129558,7 @@
   },
   {
     "name": "Richie Martin",
-    "team": "TEX",
+    "team": "CIN",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -129624,7 +129624,7 @@
   },
   {
     "name": "Rico Garcia",
-    "team": "BAL",
+    "team": "OAK",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -129735,7 +129735,7 @@
   },
   {
     "name": "Riley Unroe",
-    "team": "HOU",
+    "team": "SEA",
     "position": "SS",
     "manager": null,
     "player_type": "MLB",
@@ -130395,7 +130395,7 @@
   },
   {
     "name": "Rodolfo Duran",
-    "team": "SD",
+    "team": "NYY",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -130989,7 +130989,7 @@
   },
   {
     "name": "Rowan Wick",
-    "team": "SF",
+    "team": "CHC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -131539,7 +131539,7 @@
   },
   {
     "name": "Ryan Tepera",
-    "team": "STL",
+    "team": "LAA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -131605,7 +131605,7 @@
   },
   {
     "name": "Ryan Weiss",
-    "team": "HOU",
+    "team": "KC",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -131869,7 +131869,7 @@
   },
   {
     "name": "Sam Carlson",
-    "team": "HOU",
+    "team": "SEA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -132397,7 +132397,7 @@
   },
   {
     "name": "Sauryn Lao",
-    "team": "WSH",
+    "team": "LAD",
     "position": "2B,3B",
     "manager": null,
     "player_type": "MLB",
@@ -133234,7 +133234,7 @@
   },
   {
     "name": "Shane McGuire",
-    "team": "ATH",
+    "team": "OAK",
     "position": "C,1B",
     "manager": null,
     "player_type": "MLB",
@@ -133278,7 +133278,7 @@
   },
   {
     "name": "Shane Murphy",
-    "team": "CWS",
+    "team": "",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -134026,7 +134026,7 @@
   },
   {
     "name": "Stephen Vogt",
-    "team": "ATH",
+    "team": "ATL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -134642,7 +134642,7 @@
   },
   {
     "name": "Tanner Murray",
-    "team": "CWS",
+    "team": "TB",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -134664,7 +134664,7 @@
   },
   {
     "name": "Tanner Roark",
-    "team": "ATL",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -135104,7 +135104,7 @@
   },
   {
     "name": "Thomas Hatch",
-    "team": "AZ",
+    "team": "TOR",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -135588,7 +135588,7 @@
   },
   {
     "name": "Tomoyuki Sugano",
-    "team": "COL",
+    "team": "BAL",
     "position": "SP",
     "manager": null,
     "player_type": "MLB",
@@ -136183,7 +136183,7 @@
   },
   {
     "name": "Trevor May",
-    "team": "ATH",
+    "team": "OAK",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -136315,7 +136315,7 @@
   },
   {
     "name": "Trey Mancini",
-    "team": "LAA",
+    "team": "CHC",
     "position": "1B,OF",
     "manager": null,
     "player_type": "MLB",
@@ -136359,7 +136359,7 @@
   },
   {
     "name": "Trey Supak",
-    "team": "TEX",
+    "team": "OAK",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -137328,7 +137328,7 @@
   },
   {
     "name": "Tzu-Chen Sha",
-    "team": "ATH",
+    "team": "OAK",
     "position": "P",
     "manager": null,
     "player_type": "Farm",
@@ -137702,7 +137702,7 @@
   },
   {
     "name": "Vimael Mach\u00edn",
-    "team": "COL",
+    "team": "PHI",
     "position": "3B",
     "manager": null,
     "player_type": "MLB",
@@ -138671,7 +138671,7 @@
   },
   {
     "name": "Willie MacIver",
-    "team": "TEX",
+    "team": "COL",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -138804,7 +138804,7 @@
   },
   {
     "name": "Wilson Alvarez",
-    "team": "LAD",
+    "team": "OAK",
     "position": "2B",
     "manager": null,
     "player_type": "MLB",
@@ -138936,7 +138936,7 @@
   },
   {
     "name": "Wyatt Mills",
-    "team": "LAD",
+    "team": "BOS",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -139773,7 +139773,7 @@
   },
   {
     "name": "Yohel Pozo",
-    "team": "STL",
+    "team": "TEX",
     "position": "C",
     "manager": null,
     "player_type": "MLB",
@@ -139796,7 +139796,7 @@
   },
   {
     "name": "Yohendrick Pinango",
-    "team": "TOR",
+    "team": "CHC",
     "position": "OF",
     "manager": null,
     "player_type": "Farm",
@@ -139818,7 +139818,7 @@
   },
   {
     "name": "Yolmer S\u00e1nchez",
-    "team": "LAA",
+    "team": "BOS",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -140302,7 +140302,7 @@
   },
   {
     "name": "Zach Britton",
-    "team": "NYY",
+    "team": "TOR",
     "position": "C,OF",
     "manager": null,
     "player_type": "MLB",
@@ -140456,7 +140456,7 @@
   },
   {
     "name": "Zach McAllister",
-    "team": "NYY",
+    "team": "AZ",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -140478,7 +140478,7 @@
   },
   {
     "name": "Zach McCambley",
-    "team": "PHI",
+    "team": "MIA",
     "position": "P",
     "manager": null,
     "player_type": "MLB",
@@ -142612,7 +142612,7 @@
   },
   {
     "name": "Elmer Rodr\u00edguez",
-    "team": "NYY",
+    "team": "RHP",
     "position": "NYY",
     "manager": "The Damn Yankees",
     "player_type": "Farm",
@@ -142986,7 +142986,7 @@
   },
   {
     "name": "Jos\u00e9 Pe\u00f1a",
-    "team": "LAD",
+    "team": "SS",
     "position": "",
     "manager": null,
     "player_type": "MLB",
@@ -143405,7 +143405,7 @@
   },
   {
     "name": "Parks Harber",
-    "team": "SF",
+    "team": "3B",
     "position": "",
     "manager": null,
     "player_type": "Farm",
@@ -143603,7 +143603,7 @@
   },
   {
     "name": "Jayvien Sandridge",
-    "team": "LAA",
+    "team": "SDP",
     "position": "SIRP",
     "manager": null,
     "player_type": "MLB",
@@ -144000,7 +144000,7 @@
   },
   {
     "name": "RJ Petit",
-    "team": "COL",
+    "team": "DET",
     "position": "SIRP",
     "manager": null,
     "player_type": "MLB",
@@ -144462,7 +144462,7 @@
   },
   {
     "name": "Daison Acosta",
-    "team": "SD",
+    "team": "WSN",
     "position": "SIRP",
     "manager": null,
     "player_type": "MLB",
@@ -144484,7 +144484,7 @@
   },
   {
     "name": "Abimelec  Ortiz",
-    "team": "WSH",
+    "team": "TEX",
     "position": "1B",
     "manager": null,
     "player_type": "Farm",
@@ -144528,7 +144528,7 @@
   },
   {
     "name": "Nolan Hoffman",
-    "team": "PHI",
+    "team": "BAL",
     "position": "SIRP",
     "manager": null,
     "player_type": "MLB",
@@ -144573,7 +144573,7 @@
   },
   {
     "name": "Rafael Flores Jr.",
-    "team": "PIT",
+    "team": "NYY",
     "position": "C",
     "manager": null,
     "player_type": "Farm",
@@ -144993,7 +144993,7 @@
   },
   {
     "name": "Alfred Morillo",
-    "team": "AZ",
+    "team": "ARI",
     "position": "SIRP",
     "manager": null,
     "player_type": "Farm",
@@ -145037,7 +145037,7 @@
   },
   {
     "name": "Justin King",
-    "team": "MIA",
+    "team": "MIL",
     "position": "SIRP",
     "manager": null,
     "player_type": "MLB",
@@ -145103,7 +145103,7 @@
   },
   {
     "name": "Alex Cook",
-    "team": "TB",
+    "team": "TBR",
     "position": "SIRP",
     "manager": null,
     "player_type": "Farm",
