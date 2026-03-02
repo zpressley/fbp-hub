@@ -243,7 +243,6 @@ async function loadDraftConfig() {
         const url = new URL('/api/draft/config', apiBase);
         const response = await fetch(url.toString(), {
             cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' },
         });
         if (!response.ok) return;
         const cfg = await response.json();
@@ -281,7 +280,6 @@ async function loadDraftData(draftType) {
 
             const response = await fetch(url.toString(), {
                 cache: 'no-store',
-                headers: { 'Cache-Control': 'no-cache' },
             });
             if (response.ok) {
                 const data = await response.json();
@@ -370,6 +368,8 @@ async function refreshDraftData() {
         updateOnTheClock();
         displayRecentPicks();
         displayUpcomingPicks();
+        // Re-render draft pool so the just-drafted player is removed
+        displayDraftPool();
 
         // Show notification
         showPickNotification();
