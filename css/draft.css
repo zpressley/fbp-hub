@@ -1564,11 +1564,12 @@ body.draft-preview-page .pick-number {
 }
 
 .keeper-stats-table tbody tr td.sticky-col-rk {
-    background-color: var(--card-bg);
+    background-color: #000000;
+    color: var(--primary-red);
 }
 
 .keeper-stats-table tbody tr:hover td.sticky-col-rk {
-    background-color: rgba(255, 255, 255, 0.06);
+    background-color: #1a1a1a;
 }
 
 /* Sticky PLAYER column */
@@ -1582,11 +1583,17 @@ body.draft-preview-page .pick-number {
 }
 
 .keeper-stats-table tbody tr td.sticky-col-name {
-    background-color: var(--card-bg);
+    background-color: #000000;
+    color: var(--primary-red);
+}
+
+.keeper-stats-table tbody tr td.sticky-col-name a,
+.keeper-stats-table tbody tr td.sticky-col-name .prospect-name-link {
+    color: var(--primary-red);
 }
 
 .keeper-stats-table tbody tr:hover td.sticky-col-name {
-    background-color: rgba(255, 255, 255, 0.06);
+    background-color: #1a1a1a;
 }
 
 /* Shadow on the last sticky column to show scroll boundary */
