@@ -63,6 +63,11 @@ function getDraftOrderSlotsForMode() {
     // For keeper draft, apply additional filtering
     if (mode === 'keeper') {
         filtered = filtered.filter(slot => {
+            // Exclude picks filled by keepers
+            if (slot.result === 'keeper') return false;
+            // Exclude taxed-out picks
+            if (slot.taxed_out === true) return false;
+
             const round = slot.round || 0;
             
             // Rounds 1-3: only show if buy-in purchased
@@ -70,8 +75,7 @@ function getDraftOrderSlotsForMode() {
                 return slot.buyin_purchased === true;
             }
             
-            // Rounds 4+: only show if not taxed out
-            return slot.taxed_out === false;
+            return true;
         });
     }
     
@@ -460,12 +464,16 @@ function updateOnTheClock() {
     if (teamEl) teamEl.textContent = clockTeam;
     // Show full name + abbreviation on a single line
     if (nameEl) nameEl.textContent = `${teamName} (${clockTeam})`;
-    // Use compact R# / PK# format so it fits better in constrained layouts
+    // Compact single-line OTC format (timer updates live via startPickTimer)
     const overall = getCurrentOverallPickNumber(draft);
-    if (clockRoundEl) clockRoundEl.textContent = draft.current_round != null ? `R${draft.current_round}` : '-';
-    if (clockPickEl) clockPickEl.textContent = overall != null ? `PK ${overall}` : '-';
+    if (clockRoundEl) clockRoundEl.textContent = '';
+    if (clockPickEl) {
+        const pk = overall != null ? `PK ${overall}` : '-';
+        const displayName = window.innerWidth <= 767 ? clockTeam : `${teamName} (${clockTeam})`;
+        clockPickEl.textContent = `OTC: ${displayName} - R${draft.current_round || '-'} - ${pk} - --:--`;
+    }
 
-    // Compute next pick for on-tile summary
+    // Compute next pick
     if (clockNextEl && Array.isArray(draft.draft_order)) {
         const order = draft.draft_order;
         const currentIndex = getCurrentPickIndex(draft);
@@ -474,7 +482,9 @@ function updateOnTheClock() {
         if (nextIndex != null && nextIndex >= 0 && nextIndex < order.length) {
             const nextTeam = order[nextIndex];
             const nextName = TEAM_NAMES[nextTeam] || nextTeam;
-            clockNextEl.textContent = `Next Pick: ${nextName} (PK ${nextIndex + 1})`;
+            clockNextEl.textContent = window.innerWidth <= 767
+                ? `Next Pick: ${nextTeam}`
+                : `Next Pick: ${nextName} (PK ${nextIndex + 1})`;
         } else {
             clockNextEl.textContent = 'Next Pick: —';
         }
@@ -570,17 +580,16 @@ function startPickTimer() {
         const timerEl = document.getElementById('timerDisplay');
         if (timerEl) timerEl.textContent = timeLabel;
 
-        // On narrow/mobile layouts, show "R# - P# - timer" on a single line
-        if (window.innerWidth <= 767) {
-            const clockRoundEl = document.getElementById('clockRound');
-            const clockPickEl = document.getElementById('clockPickOverall');
-            if (clockRoundEl && clockPickEl && draft?.current_round != null && draft.current_pick != null) {
-                // Hide separate round value; everything goes into the pick span
-                clockRoundEl.textContent = '';
-                const overall = getCurrentOverallPickNumber(draft);
-                const overallLabel = overall != null ? `PK ${overall}` : `P${draft.current_pick}`;
-                clockPickEl.textContent = `R${draft.current_round} - ${overallLabel} - ${timeLabel}`;
-            }
+        // Update compact OTC line with live timer (all screen sizes)
+        const clockRoundEl = document.getElementById('clockRound');
+        const clockPickEl = document.getElementById('clockPickOverall');
+        if (clockRoundEl && clockPickEl && draft?.current_round != null && draft.current_pick != null) {
+            clockRoundEl.textContent = '';
+            const overall = getCurrentOverallPickNumber(draft);
+            const overallLabel = overall != null ? `PK ${overall}` : `P${draft.current_pick}`;
+            const draftTeamName = TEAM_NAMES[draft.current_team] || draft.current_team;
+            const displayName = window.innerWidth <= 767 ? draft.current_team : `${draftTeamName} (${draft.current_team})`;
+            clockPickEl.textContent = `OTC: ${displayName} - R${draft.current_round} - ${overallLabel} - ${timeLabel}`;
         }
         
         // Update timer bar
@@ -1182,9 +1191,10 @@ function updateDraftPoolSortIndicators() {
 }
 
 /**
- * Make the On The Clock banner behave like a sticky bar, similar to the
- * PAD WizBucks sticky bar. We fall back to JS-driven fixed positioning so
- * it works reliably across browsers and nested scroll containers.
+ * Scroll behavior for the draft page:
+ * 1. Nav bar scrolls normally, then gets pushed off screen by the clock banner.
+ * 2. Clock banner becomes fixed at top:0 when scrolled past.
+ * 3. Draft pool table headers stick below the clock banner.
  */
 function setupClockSticky() {
     if (DRAFT_STATE.clockStickyInitialized) return;
@@ -1194,14 +1204,8 @@ function setupClockSticky() {
     DRAFT_STATE.clockStickyInitialized = true;
 
     const nav = document.querySelector('.mobile-nav');
-    const getOffsetTop = () => {
-        if (!nav) return 0;
-        const rect = nav.getBoundingClientRect();
-        return (rect.height || 0) + 8; // small gap below nav
-    };
 
-    // Capture the banner's original document Y offset so we know
-    // when we've scrolled "past" it and when we've scrolled back above it.
+    // Capture the banner's original document Y offset
     const initialRect = banner.getBoundingClientRect();
     const initialDocTop = initialRect.top + window.scrollY;
 
@@ -1213,43 +1217,49 @@ function setupClockSticky() {
     banner.parentNode.insertBefore(placeholder, banner.nextSibling);
 
     let isFixed = false;
-    let fixedLeft = null;
-    let fixedWidth = null;
+    let _rafId = null;
 
     const onScroll = () => {
-        const offset = getOffsetTop();
-        const scrollTop = window.scrollY || window.pageYOffset || 0;
-        const shouldStick = scrollTop + offset >= initialDocTop;
+        if (_rafId) return;
+        _rafId = requestAnimationFrame(() => {
+            _rafId = null;
 
-        // Keep spacer height in sync with the banner in case fonts/layout change
-        placeholder.style.height = `${banner.offsetHeight}px`;
+            const scrollTop = window.scrollY || window.pageYOffset || 0;
+            const navHeight = nav ? nav.offsetHeight : 0;
+            const shouldStick = scrollTop + navHeight >= initialDocTop;
 
-        if (shouldStick && !isFixed) {
-            // Capture geometry before fixing
-            const rect = banner.getBoundingClientRect();
-            fixedLeft = rect.left + window.scrollX;
-            fixedWidth = rect.width;
-            placeholder.style.display = 'block';
-            banner.style.position = 'fixed';
-            banner.style.top = `${offset}px`;
-            banner.style.left = `${fixedLeft}px`;
-            banner.style.width = `${fixedWidth}px`;
-            banner.style.zIndex = '110';
-            isFixed = true;
-        } else if (!shouldStick && isFixed) {
-            banner.style.position = '';
-            banner.style.top = '';
-            banner.style.left = '';
-            banner.style.width = '';
-            banner.style.zIndex = '';
-            placeholder.style.display = 'none';
-            isFixed = false;
-        }
+            placeholder.style.height = `${banner.offsetHeight}px`;
+
+            if (shouldStick && !isFixed) {
+                const rect = banner.getBoundingClientRect();
+                placeholder.style.display = 'block';
+                banner.style.position = 'fixed';
+                banner.style.top = '5px';
+                if (window.innerWidth <= 767) {
+                    banner.style.left = '0';
+                    banner.style.width = '100%';
+                } else {
+                    banner.style.left = `${rect.left + window.scrollX}px`;
+                    banner.style.width = `${rect.width}px`;
+                }
+                banner.style.zIndex = '190';
+                isFixed = true;
+                if (nav) nav.classList.add('nav-hidden');
+            } else if (!shouldStick && isFixed) {
+                banner.style.position = '';
+                banner.style.top = '';
+                banner.style.left = '';
+                banner.style.width = '';
+                banner.style.zIndex = '';
+                placeholder.style.display = 'none';
+                isFixed = false;
+                if (nav) nav.classList.remove('nav-hidden');
+            }
+        });
     };
 
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
-    // Run once to initialize state
     onScroll();
 }
 
@@ -1328,24 +1338,29 @@ async function loadDroppedProspectsForDraft() {
 }
 
 /**
- * Build the base eligible keeper pool from keeper_pool_2026.json.
- * Returns all unowned MLB players with 2025 stats, sorted by rank.
+ * Build the base eligible keeper pool from combined_players.json (source of truth).
+ * Stats are merged from keeper_pool_2026.json by UPID when available.
+ * Returns all unowned MLB players sorted by rank.
  */
 async function buildDraftPoolKeepers() {
     const draft = DRAFT_STATE.draftData;
-    
-    // Load keeper pool if not already cached
-    if (!DRAFT_STATE.keeperPoolData) {
+    if (!FBPHub?.data?.players) return [];
+
+    // Load stats lookup from keeper_pool_2026.json (cached)
+    if (!DRAFT_STATE._keeperStatsMap) {
+        DRAFT_STATE._keeperStatsMap = {};
         try {
             const response = await fetch('data/keeper_pool_2026.json');
-            if (!response.ok) {
-                console.error('Failed to load keeper pool');
-                return [];
+            if (response.ok) {
+                const pool = await response.json();
+                pool.forEach(p => {
+                    if (p.upid && p.stats_2025) {
+                        DRAFT_STATE._keeperStatsMap[String(p.upid)] = p.stats_2025;
+                    }
+                });
             }
-            DRAFT_STATE.keeperPoolData = await response.json();
         } catch (e) {
-            console.error('Error loading keeper pool:', e);
-            return [];
+            console.warn('Could not load keeper_pool_2026.json for stats:', e);
         }
     }
 
@@ -1357,15 +1372,24 @@ async function buildDraftPoolKeepers() {
 
     const keepers = [];
 
-    DRAFT_STATE.keeperPoolData.forEach(player => {
-        // Skip OWNED players (has a manager)
-        const hasManager = player.manager && player.manager !== 'None' && (player.manager || '').trim();
-        if (hasManager) return;
+    FBPHub.data.players.forEach(player => {
+        // Keeper pool = MLB player_type only
+        if (player.player_type !== 'MLB') return;
 
-        // Skip already drafted in this draft
+        // Skip OWNED players
+        const hasManager = (player.manager || '').trim();
+        const hasFbpTeam = (player.FBP_Team || '').trim();
+        const hasContract = (player.contract_type || '').trim();
+        if ((hasManager && hasManager !== 'None') || (hasFbpTeam && hasFbpTeam !== 'None') || hasContract) return;
+
+        // Skip already drafted
         if (draftedNames.has((player.name || '').toLowerCase())) return;
 
-        keepers.push({ ...player });
+        const upid = String(player.upid || '');
+        keepers.push({
+            ...player,
+            stats_2025: DRAFT_STATE._keeperStatsMap[upid] || null
+        });
     });
 
     // Sort by rank (lower is better), then alphabetically
@@ -1375,7 +1399,7 @@ async function buildDraftPoolKeepers() {
         if (aRank !== bRank) return aRank - bRank;
         return (a.name || '').localeCompare(b.name || '');
     });
-    
+
     // Add relative ranking (1-N based on available players)
     keepers.forEach((player, idx) => {
         player.relative_rank = idx + 1;
@@ -1629,7 +1653,7 @@ async function displayDraftPool() {
                                     data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
                                     <td class="prospect-rank sticky-col-rk">${p.relative_rank || idx + 1}</td>
                                     <td class="prospect-name sticky-col-name">
-                                        <a href="${profileLink}" class="prospect-name-link">${p.name || 'Unknown'}</a>
+                                        <a href="${profileLink}" class="prospect-name-link${(p.name || '').length > 17 ? ' long-name-shrink' : ''}">${p.name || 'Unknown'}</a>
                                     </td>
                                     <td class="prospect-org">${p.team || '-'}</td>
                                     <td class="prospect-pos">${p.position || '-'}</td>

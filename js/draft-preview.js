@@ -381,25 +381,46 @@ async function displayKeeperPreview() {
     const positionFilter = document.getElementById('keeperPositionFilter')?.value || 'any';
     const teamFilter = document.getElementById('keeperTeamFilter')?.value || 'any';
     
-    // Load keeper pool with stats if not already cached
-    if (!PREVIEW_STATE.keeperPoolData) {
+    // Load stats lookup from keeper_pool_2026.json (cached)
+    if (!PREVIEW_STATE.keeperStatsMap) {
+        PREVIEW_STATE.keeperStatsMap = {};
         try {
             const response = await fetch('data/keeper_pool_2026.json');
-            if (!response.ok) {
-                console.error('Failed to load keeper pool');
-                return;
+            if (response.ok) {
+                const pool = await response.json();
+                pool.forEach(p => {
+                    if (p.upid && p.stats_2025) {
+                        PREVIEW_STATE.keeperStatsMap[String(p.upid)] = p.stats_2025;
+                    }
+                });
             }
-            PREVIEW_STATE.keeperPoolData = await response.json();
         } catch (e) {
-            console.error('Error loading keeper pool:', e);
-            return;
+            console.warn('Could not load keeper_pool_2026.json for stats:', e);
         }
     }
     
-    // Filter: not owned players
-    let available = PREVIEW_STATE.keeperPoolData.filter(p => {
-        const hasManager = p.manager && p.manager !== 'None' && (p.manager || '').trim();
-        return !hasManager;
+    // Build eligible keeper pool from combined_players.json (source of truth)
+    if (!FBPHub?.data?.players) {
+        console.error('combined_players.json not loaded');
+        return;
+    }
+    
+    let available = [];
+    FBPHub.data.players.forEach(player => {
+        // Keeper pool = MLB player_type only
+        if (player.player_type !== 'MLB') return;
+        
+        // Skip OWNED players
+        const hasManager = (player.manager || '').trim();
+        const hasFbpTeam = (player.FBP_Team || '').trim();
+        const hasContract = (player.contract_type || '').trim();
+        if ((hasManager && hasManager !== 'None') || (hasFbpTeam && hasFbpTeam !== 'None') || hasContract) return;
+        
+        const upid = String(player.upid || '');
+        available.push({
+            ...player,
+            stats_2025: PREVIEW_STATE.keeperStatsMap?.[upid] || null
+        });
     });
     
     // Apply position filter
@@ -438,12 +459,12 @@ async function displayKeeperPreview() {
         );
     }
     
-    // Sort by draft rank when available, then name
+    // Sort by rank (lower is better), then alphabetically
     available.sort((a, b) => {
         const aRank = typeof a.rank === 'number' ? a.rank : Infinity;
         const bRank = typeof b.rank === 'number' ? b.rank : Infinity;
         if (aRank !== bRank) return aRank - bRank;
-        return a.name.localeCompare(b.name);
+        return (a.name || '').localeCompare(b.name || '');
     });
     
     // Add relative ranking (1-N based on available players)
@@ -487,10 +508,10 @@ async function displayKeeperPreview() {
     const getHitStat = (player, key) => isPitcher(player) ? '-' : getStat(player, key);
     const getPitchStat = (player, key) => isPitcher(player) ? getStat(player, key) : '-';
     
-    // Render table with grouped HITTING / PITCHING headers
+    // Render table with grouped HITTING / PITCHING headers (matches draft pool format)
     const tableHTML = `
         <div class="draft-pool-table-wrapper">
-            <table class="prospect-table keeper-stats-table">
+            <table class="prospect-table draft-pool-table keeper-stats-table">
                 <thead>
                     <tr class="stat-group-row">
                         <th class="sticky-col-rk" colspan="1"></th>
@@ -531,11 +552,15 @@ async function displayKeeperPreview() {
                 </thead>
                 <tbody>
                     ${available.map((p, idx) => {
+                        const profileLink = (typeof createPlayerLink === 'function') ? createPlayerLink(p) : '#';
+                        
                         return `
-                            <tr class="prospect-row">
+                            <tr class="prospect-row"
+                                data-player-id="${p.upid || ''}" 
+                                data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
                                 <td class="prospect-rank sticky-col-rk">${p.relative_rank || idx + 1}</td>
                                 <td class="prospect-name sticky-col-name">
-                                    <span class="prospect-name-link">${p.name || 'Unknown'}</span>
+                                    <a href="${profileLink}" class="prospect-name-link${(p.name || '').length > 17 ? ' long-name-shrink' : ''}">${p.name || 'Unknown'}</a>
                                 </td>
                                 <td class="prospect-org">${p.team || '-'}</td>
                                 <td class="prospect-pos">${p.position || '-'}</td>
@@ -574,6 +599,9 @@ async function displayKeeperPreview() {
     
     // Wire up sortable headers
     setupKeeperSorting();
+    
+    // Update sort indicators to reflect current state
+    updateKeeperSortIndicators();
 }
 
 /**
@@ -600,6 +628,33 @@ function setupKeeperSorting() {
             // Re-render with new sort
             displayKeeperPreview();
         });
+    });
+    
+    // Update sort indicators
+    updateKeeperSortIndicators();
+}
+
+/**
+ * Update sort indicators in keeper table headers
+ */
+function updateKeeperSortIndicators() {
+    const headers = document.querySelectorAll('.keeper-stats-table th.sortable');
+    if (!headers.length) return;
+    
+    const sort = PREVIEW_STATE.keeperSort || { field: 'relative_rank', direction: 'asc' };
+    
+    headers.forEach(header => {
+        const field = header.dataset.sort;
+        const icon = header.querySelector('i');
+        if (!icon) return;
+        
+        if (field === sort.field) {
+            icon.className = sort.direction === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
+            header.classList.add('sorted');
+        } else {
+            icon.className = 'fas fa-sort';
+            header.classList.remove('sorted');
+        }
     });
 }
 

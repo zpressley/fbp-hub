@@ -220,6 +220,7 @@ a:hover {
 
 .mobile-nav.nav-hidden {
     transform: translateY(-100%);
+    pointer-events: none;
 }
 
 .nav-container {
