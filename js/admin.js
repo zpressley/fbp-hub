@@ -496,6 +496,7 @@ function populateEditForm(player) {
     document.getElementById('editBats').value = player.bats || '';
     document.getElementById('editThrows').value = player.throws || '';
     document.getElementById('editFYPD').checked = player.fypd === true;
+    document.getElementById('editRank').value = player.rank || '';
     document.getElementById('editYahooId').value = player.yahoo_id || '';
     document.getElementById('editMlbId').value = player.mlb_id || '';
     
@@ -575,6 +576,7 @@ function buildCurrentPlayerInfo(player) {
         { label: 'Status', value: player.status || 'N/A' },
         { label: 'Bats', value: player.bats || 'N/A' },
         { label: 'Throws', value: player.throws || 'N/A' },
+        { label: 'Rank', value: player.rank || 'N/A' },
         { label: 'FYPD', value: player.fypd ? 'Yes' : 'No' },
         { label: 'Yahoo ID', value: player.yahoo_id || 'N/A' },
         { label: 'MLB ID', value: player.mlb_id || 'N/A' },
@@ -609,7 +611,7 @@ function setupChangeDetection() {
     const fields = [
         'editName', 'editPosition', 'editTeam', 'editAge', 'editLevel', 
         'editOwner', 'editPlayerType', 'editContract', 'editYears',
-        'editBats', 'editThrows', 'editFYPD', 'editYahooId', 'editMlbId'
+        'editBats', 'editThrows', 'editRank', 'editFYPD', 'editYahooId', 'editMlbId'
     ];
     
     fields.forEach(fieldId => {
@@ -639,6 +641,7 @@ function detectChanges() {
         editYears: 'years_simple',
         editBats: 'bats',
         editThrows: 'throws',
+        editRank: 'rank',
         editYahooId: 'yahoo_id',
         editMlbId: 'mlb_id'
     };
@@ -738,6 +741,7 @@ function detectChanges() {
         status: 'Status',
         bats: 'Bats',
         throws: 'Throws',
+        rank: 'Rank',
         fypd: 'FYPD'
     };
     

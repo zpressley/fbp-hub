@@ -554,6 +554,115 @@
 }
 
 /* ============================================
+   UPID Card Actions & Forms
+   ============================================ */
+
+.upid-card-actions {
+    display: flex;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: var(--space-md);
+}
+
+.upid-edit-form,
+.upid-merge-search {
+    margin-top: var(--space-md);
+    padding: var(--space-lg);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.upid-edit-form h5,
+.upid-merge-search h5 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-md);
+}
+
+.upid-edit-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+}
+
+.upid-merge-input-row {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.upid-merge-input-row .form-input {
+    flex: 1;
+}
+
+.upid-merge-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: var(--space-sm);
+}
+
+.upid-merge-target {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.upid-merge-target:hover {
+    background-color: rgba(66, 165, 245, 0.15);
+}
+
+.upid-merge-target strong {
+    color: var(--text-white);
+    font-size: var(--text-sm);
+}
+
+/* Add UPID Form */
+.upid-add-form {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(66, 165, 245, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.upid-add-form h4 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--accent-yellow);
+    margin-bottom: var(--space-md);
+    font-size: var(--text-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.upid-add-form h4 i {
+    color: var(--primary-red);
+}
+
+.upid-add-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 
@@ -615,6 +724,34 @@
     }
     
     .upid-alt-add .btn-sm {
+        width: 100%;
+    }
+    
+    .upid-card-actions {
+        flex-direction: column;
+    }
+    
+    .upid-card-actions .btn-sm {
+        width: 100%;
+    }
+    
+    .upid-merge-input-row {
+        flex-direction: column;
+    }
+    
+    .upid-add-actions {
+        flex-direction: column;
+    }
+    
+    .upid-add-actions button {
+        width: 100%;
+    }
+    
+    .upid-edit-actions {
+        flex-direction: column;
+    }
+    
+    .upid-edit-actions .btn-sm {
         width: 100%;
     }
 }

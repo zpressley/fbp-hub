@@ -155,6 +155,9 @@ body.draft-preview-page .pick-number {
 /* On The Clock — compact single-line layout at all sizes */
 .on-clock-section {
     margin-bottom: var(--space-md);
+    position: sticky;
+    top: 0;
+    z-index: 190;
 }
 
 .clock-banner {

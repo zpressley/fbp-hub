@@ -468,7 +468,7 @@ function updateOnTheClock() {
     const overall = getCurrentOverallPickNumber(draft);
     if (clockRoundEl) clockRoundEl.textContent = '';
     if (clockPickEl) {
-        const pk = overall != null ? `PK ${overall}` : '-';
+        const pk = overall != null ? `P ${overall}` : '-';
         const displayName = window.innerWidth <= 767 ? clockTeam : `${teamName} (${clockTeam})`;
         clockPickEl.textContent = `OTC: ${displayName} - R${draft.current_round || '-'} - ${pk} - --:--`;
     }
@@ -484,7 +484,7 @@ function updateOnTheClock() {
             const nextName = TEAM_NAMES[nextTeam] || nextTeam;
             clockNextEl.textContent = window.innerWidth <= 767
                 ? `Next Pick: ${nextTeam}`
-                : `Next Pick: ${nextName} (PK ${nextIndex + 1})`;
+                : `Next Pick: ${nextName} (P ${nextIndex + 1})`;
         } else {
             clockNextEl.textContent = 'Next Pick: —';
         }
@@ -586,7 +586,7 @@ function startPickTimer() {
         if (clockRoundEl && clockPickEl && draft?.current_round != null && draft.current_pick != null) {
             clockRoundEl.textContent = '';
             const overall = getCurrentOverallPickNumber(draft);
-            const overallLabel = overall != null ? `PK ${overall}` : `P${draft.current_pick}`;
+            const overallLabel = overall != null ? `P ${overall}` : `P ${draft.current_pick}`;
             const draftTeamName = TEAM_NAMES[draft.current_team] || draft.current_team;
             const displayName = window.innerWidth <= 767 ? draft.current_team : `${draftTeamName} (${draft.current_team})`;
             clockPickEl.textContent = `OTC: ${displayName} - R${draft.current_round} - ${overallLabel} - ${timeLabel}`;

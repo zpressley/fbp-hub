@@ -6,8 +6,8 @@
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cache-Control',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cache-Control, X-API-Key',
 };
 
 // Discord ID -> Team Abbreviation
@@ -211,7 +211,15 @@ export default {
         return await proxyToBot(pathAndQuery, env);
       }
 
-      if (path.match(/^\/api\/upid\/\d+/) && request.method === 'PUT') {
+      if (path === '/api/upid' && request.method === 'POST') {
+        return await proxyToBot('/api/upid', env, request);
+      }
+
+      if (path === '/api/upid/merge' && request.method === 'POST') {
+        return await proxyToBot('/api/upid/merge', env, request);
+      }
+
+      if (path.match(/^\/api\/upid\/\d+/) && (request.method === 'PUT' || request.method === 'DELETE')) {
         return await proxyToBot(path, env, request);
       }
 
