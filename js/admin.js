@@ -496,6 +496,17 @@ function populateEditForm(player) {
     document.getElementById('editBats').value = player.bats || '';
     document.getElementById('editThrows').value = player.throws || '';
     document.getElementById('editFYPD').checked = player.fypd === true;
+    document.getElementById('editYahooId').value = player.yahoo_id || '';
+    document.getElementById('editMlbId').value = player.mlb_id || '';
+    
+    // Load UPID alt_names from UPID database
+    ADMIN_STATE.currentAltNames = [];
+    ADMIN_STATE.originalAltNames = [];
+    if (player.upid) {
+        loadUpidAltNames(player.upid);
+    } else {
+        renderAltNameTags([]);
+    }
     
     // Clear log entry fields
     const updateTypeEl = document.getElementById('editUpdateType');
@@ -565,6 +576,8 @@ function buildCurrentPlayerInfo(player) {
         { label: 'Bats', value: player.bats || 'N/A' },
         { label: 'Throws', value: player.throws || 'N/A' },
         { label: 'FYPD', value: player.fypd ? 'Yes' : 'No' },
+        { label: 'Yahoo ID', value: player.yahoo_id || 'N/A' },
+        { label: 'MLB ID', value: player.mlb_id || 'N/A' },
     ];
     
     return `
@@ -596,7 +609,7 @@ function setupChangeDetection() {
     const fields = [
         'editName', 'editPosition', 'editTeam', 'editAge', 'editLevel', 
         'editOwner', 'editPlayerType', 'editContract', 'editYears',
-        'editBats', 'editThrows', 'editFYPD'
+        'editBats', 'editThrows', 'editFYPD', 'editYahooId', 'editMlbId'
     ];
     
     fields.forEach(fieldId => {
@@ -625,7 +638,9 @@ function detectChanges() {
         editContract: 'contract_type',
         editYears: 'years_simple',
         editBats: 'bats',
-        editThrows: 'throws'
+        editThrows: 'throws',
+        editYahooId: 'yahoo_id',
+        editMlbId: 'mlb_id'
     };
     
     Object.entries(fieldMap).forEach(([elementId, field]) => {
@@ -962,6 +977,20 @@ async function confirmPlayerUpdate() {
         
         // Close modal
         document.getElementById('editConfirmModal').classList.remove('active');
+        
+        // Save alt_names if changed (via UPID API)
+        if (ADMIN_STATE.selectedPlayer.upid && ADMIN_STATE.currentAltNames && ADMIN_STATE.originalAltNames) {
+            const altChanged = JSON.stringify(ADMIN_STATE.currentAltNames.sort()) !== JSON.stringify(ADMIN_STATE.originalAltNames.sort());
+            if (altChanged) {
+                try {
+                    await saveUpidAltNames(ADMIN_STATE.selectedPlayer.upid, ADMIN_STATE.currentAltNames, token);
+                    console.log('✅ Alt names saved');
+                } catch (altErr) {
+                    console.warn('⚠️ Alt names save failed:', altErr);
+                    showToast('Player updated but alt names save failed', 'warning');
+                }
+            }
+        }
         
         // Show success and reset form
         showToast(`✅ ${ADMIN_STATE.selectedPlayer.name} updated successfully!`, 'success');

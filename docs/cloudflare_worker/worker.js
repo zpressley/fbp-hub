@@ -6,7 +6,7 @@
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cache-Control',
 };
 
@@ -203,6 +203,16 @@ export default {
 
       if (path === '/api/admin/enrich-player' && request.method === 'POST') {
         return await proxyToBot('/api/admin/enrich-player', env, request);
+      }
+
+      // --- UPID Database APIs ---
+      if (path === '/api/upid/search' && request.method === 'GET') {
+        const pathAndQuery = `/api/upid/search${url.search}`;
+        return await proxyToBot(pathAndQuery, env);
+      }
+
+      if (path.match(/^\/api\/upid\/\d+/) && request.method === 'PUT') {
+        return await proxyToBot(path, env, request);
       }
 
       // --- Auth endpoints ---
