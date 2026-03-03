@@ -1293,7 +1293,7 @@ body.draft-preview-page .pick-number {
 
 .prospect-filters-section {
     background-color: var(--bg-charcoal);
-    border: var(--border-width) solid var(--primary-red);
+    border: none;
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     margin-bottom: var(--space-md);
@@ -1363,7 +1363,7 @@ body.draft-preview-page .pick-number {
 .prospect-table-container {
     background-color: var(--card-bg);
     border-radius: var(--radius-lg);
-    border: var(--border-width) solid var(--primary-red);
+    border: none;
     overflow: visible;
 }
 

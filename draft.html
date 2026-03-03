@@ -128,7 +128,9 @@
         // render either the active view or the "No Active Draft" box.
         (function () {
             var ACTIVE_STATUS = 'active_draft';
-            var API_BASE = 'https://fbp-auth.zpressley.workers.dev';
+            // ── TEST MODE: point to local bot. Flip back for production. ──
+            // var API_BASE = 'https://fbp-auth.zpressley.workers.dev';
+            var API_BASE = 'http://localhost:8000';
 
             function getProspectUrl() {
                 try {

@@ -18,7 +18,9 @@ const FBPHub = {
         githubRaw: 'https://raw.githubusercontent.com/zpressley/fbp-hub/main/data/',
         // Base URL for dynamic APIs (Cloudflare Worker → bot FastAPI)
         // Used by draft.html and js/draft.js for /api/draft/* endpoints.
-        apiBase: 'https://fbp-auth.zpressley.workers.dev',
+        // ── TEST MODE: point to local bot. Flip back for production. ──
+        // apiBase: 'https://fbp-auth.zpressley.workers.dev',
+        apiBase: 'http://localhost:8000',
         // API key for backend authentication (should match BOT_API_KEY in fbp-trade-bot)
         apiKey: 'tRXTQC42CJQNnKNPOyqzb5jQrVFq3S-7kTey9CgL8QQ'
     },

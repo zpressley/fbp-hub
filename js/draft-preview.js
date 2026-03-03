@@ -1211,13 +1211,19 @@ async function loadKeeperPicksForTeam(teamAbbr) {
                 if (p.draft !== 'keeper') return false;
                 if (p.current_owner !== teamAbbr) return false;
                 
+                // Exclude picks already filled by keepers
+                if (p.result === 'keeper') return false;
+                
+                // Exclude taxed out picks
+                if (p.taxed_out === true) return false;
+                
                 // Rounds 1-3: only purchased buy-ins
                 if (p.round <= 3) {
                     return p.buyin_purchased === true;
                 }
                 
-                // Rounds 4+: only not taxed out
-                return p.taxed_out === false;
+                // Rounds 4+: already filtered by taxed_out above
+                return true;
             })
             .map(p => ({ round: p.round, pick: p.pick, draft: 'keeper' }))
             .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
@@ -1239,7 +1245,19 @@ async function loadProspectPicksForTeam(teamAbbr) {
         if (!Array.isArray(data)) return [];
         
         return data
-            .filter(p => p.draft === 'prospect' && p.current_owner === teamAbbr)
+            .filter(p => {
+                // Filter for prospect draft picks
+                if (p.draft !== 'prospect') return false;
+                if (p.current_owner !== teamAbbr) return false;
+                
+                // Exclude picks already filled by keepers
+                if (p.result === 'keeper') return false;
+                
+                // Exclude taxed out picks
+                if (p.taxed_out === true) return false;
+                
+                return true;
+            })
             .map(p => ({ round: p.round, pick: p.pick, round_type: p.round_type || 'prospect' }))
             .sort((a, b) => (a.round - b.round) || (a.pick - b.pick));
     } catch (e) {
