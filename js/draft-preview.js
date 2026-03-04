@@ -467,10 +467,6 @@ async function displayKeeperPreview() {
         return (a.name || '').localeCompare(b.name || '');
     });
     
-    // Add relative ranking (1-N based on available players)
-    available.forEach((player, idx) => {
-        player.relative_rank = idx + 1;
-    });
     
     // Apply sorting if keeper sort state exists
     if (PREVIEW_STATE.keeperSort) {
@@ -521,7 +517,7 @@ async function displayKeeperPreview() {
                         <th colspan="11" class="stat-group-header stat-group-pitching">PITCHING</th>
                     </tr>
                     <tr>
-                        <th class="sortable sticky-col-rk" data-sort="relative_rank">RK <i class="fas fa-sort"></i></th>
+                        <th class="sortable sticky-col-rk" data-sort="rank">RK <i class="fas fa-sort"></i></th>
                         <th class="sortable sticky-col-name" data-sort="name">PLAYER <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="team">TEAM <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-sort="position">POS <i class="fas fa-sort"></i></th>
@@ -558,7 +554,7 @@ async function displayKeeperPreview() {
                             <tr class="prospect-row"
                                 data-player-id="${p.upid || ''}" 
                                 data-player-name="${(p.name || '').replace(/"/g, '&quot;')}">
-                                <td class="prospect-rank sticky-col-rk">${p.relative_rank || idx + 1}</td>
+                                <td class="prospect-rank sticky-col-rk">${typeof p.rank === 'number' ? p.rank : '-'}</td>
                                 <td class="prospect-name sticky-col-name">
                                     <a href="${profileLink}" class="prospect-name-link${(p.name || '').length > 17 ? ' long-name-shrink' : ''}">${p.name || 'Unknown'}</a>
                                 </td>
