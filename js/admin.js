@@ -699,8 +699,8 @@ function detectChanges() {
         // Only show manager change if it actually changed (compare abbreviations)
         if (newManager !== originalManagerAbbrev) {
             changes['manager'] = {
-                from: originalManagerAbbrev || '(empty)',
-                to: newManager || '(empty)'
+                from: originalManagerAbbrev || '',
+                to: newManager || ''
             };
             
             // Also update FBP_Team when manager changes
@@ -877,8 +877,8 @@ async function confirmPlayerUpdate() {
             fieldPatch[field] = change.to === 'Yes';
         // Convert manager abbreviation to full name
         } else if (field === 'manager') {
-            const abbrev = change.to;
-            fieldPatch[field] = abbrev ? (ADMIN_STATE.managers[abbrev]?.name || abbrev) : '';
+            const abbrev = change.to || '';
+            fieldPatch[field] = (abbrev && abbrev !== '(empty)') ? (ADMIN_STATE.managers[abbrev]?.name || abbrev) : '';
         } else {
             fieldPatch[field] = change.to;
         }

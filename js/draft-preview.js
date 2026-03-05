@@ -414,7 +414,8 @@ async function displayKeeperPreview() {
         const hasManager = (player.manager || '').trim();
         const hasFbpTeam = (player.FBP_Team || '').trim();
         const hasContract = (player.contract_type || '').trim();
-        if ((hasManager && hasManager !== 'None') || (hasFbpTeam && hasFbpTeam !== 'None') || hasContract) return;
+        const emptyValues = ['None', '(empty)', 'none', ''];
+        if ((hasManager && !emptyValues.includes(hasManager)) || (hasFbpTeam && !emptyValues.includes(hasFbpTeam)) || hasContract) return;
         
         const upid = String(player.upid || '');
         available.push({
