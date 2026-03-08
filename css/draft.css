@@ -1861,6 +1861,13 @@ body.draft-preview-page .pick-number {
 
 /* ---- Keeper stats table: mobile compact stats ---- */
 @media (max-width: 767px) {
+    /* Override prospect-table's table-layout:fixed so the 27-column
+       keeper table uses content-based sizing and scrolls horizontally. */
+    .keeper-stats-table {
+        table-layout: auto;
+        width: max-content;
+    }
+
     .keeper-stats-table th,
     .keeper-stats-table td {
         padding: var(--space-xs) 6px;
