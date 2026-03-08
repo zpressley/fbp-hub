@@ -2003,8 +2003,16 @@ body.draft-preview-page .pick-number {
    Draft Mobile Fixes + New Features (appended)
    ============================================ */
 /* ---- FIX 1: Draft page horizontal overflow ---- */
+/* Allow the page to clip non-table overflow but let the table wrapper scroll */
 .container-draft {
-    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+.draft-pool-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 calc(-1 * var(--space-md));
+    padding: 0 var(--space-md);
 }
 
 /* ---- FIX 2: Draft header + mode toggle stacking on mobile ---- */
