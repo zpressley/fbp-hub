@@ -60,21 +60,17 @@ function getDraftOrderSlotsForMode() {
 
     let filtered = slots.filter(s => (s.draft || '').toLowerCase() === mode);
     
-    // For keeper draft, apply additional filtering
+    // For keeper draft, apply additional filtering.
+    // Must match backend (draft_manager.py load_draft_order) exactly so
+    // that pick_index values align between API and frontend slots.
     if (mode === 'keeper') {
         filtered = filtered.filter(slot => {
             // Exclude picks filled by keepers
             if (slot.result === 'keeper') return false;
             // Exclude taxed-out picks
             if (slot.taxed_out === true) return false;
-
-            const round = slot.round || 0;
-            
-            // Rounds 1-3: only show if buy-in purchased
-            if (round <= 3) {
-                return slot.buyin_purchased === true;
-            }
-            
+            // Exclude unpurchased buy-in picks
+            if (slot.buyin_required && !slot.buyin_purchased) return false;
             return true;
         });
     }
@@ -851,21 +847,15 @@ function displayDraftGrid() {
         return;
     }
 
-    // Build a map of made picks by overall pick index for easy lookup.
-    // The draft order file defines the canonical sequence.
+    // Build a map of made picks by slot index for easy lookup.
+    // pick_index from the API is the 0-based index into the filtered
+    // draft order, which matches orderSlots exactly.
     const picksByIndex = new Map();
     if (draft && Array.isArray(draft.picks)) {
         draft.picks.forEach(p => {
-            const playerName = (p.player_name || '').toLowerCase();
-            if (!playerName) return;
-
-            // Find the matching slot in draft order by team + round.
-            for (let i = 0; i < orderSlots.length; i++) {
-                const slot = orderSlots[i];
-                if (slot.round === p.round && slot.team === p.team) {
-                    picksByIndex.set(i, p);
-                    break;
-                }
+            const idx = p.pick_index;
+            if (idx != null && (p.player_name || '')) {
+                picksByIndex.set(idx, p);
             }
         });
     }
@@ -897,10 +887,10 @@ function displayDraftGrid() {
         scrollToRound(roundNum);
     };
 
-    // Determine current pick index for highlighting (only meaningful when active)
-    const currentPickIndex = (draft && draft.current_pick && draft.current_pick > 0)
-        ? draft.current_pick - 1
-        : -1;
+    // Determine current pick index for highlighting (only meaningful when active).
+    // current_pick_index from the API is the 0-based slot index into the
+    // filtered draft order, matching orderSlots / globalIndex.
+    const currentPickIndex = getCurrentPickIndex(draft) ?? -1;
 
     // Build grid HTML using draft order as the source of truth
     let gridHTML = '';
