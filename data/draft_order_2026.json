@@ -3226,7 +3226,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Kerry Carpenter",
+      "timestamp": "2026-03-09T02:14:05.417735",
+      "pick_index": 84,
+      "upid": "4333"
+    },
     "round_type": "standard"
   },
   {
@@ -3243,7 +3248,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Alex Vesia",
+      "timestamp": "2026-03-09T02:14:27.682860",
+      "pick_index": 85,
+      "upid": "2061"
+    },
     "round_type": "standard"
   },
   {
@@ -3260,7 +3270,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Quinn Priester",
+      "timestamp": "2026-03-09T02:14:57.371616",
+      "pick_index": 86,
+      "upid": "3465"
+    },
     "round_type": "standard"
   },
   {
@@ -3277,7 +3292,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Adolis Garc\u00eda",
+      "timestamp": "2026-03-09T02:15:58.985287",
+      "pick_index": 87,
+      "upid": "2022"
+    },
     "round_type": "standard"
   },
   {
@@ -3311,7 +3331,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Tanner Scott",
+      "timestamp": "2026-03-09T02:16:14.763496",
+      "pick_index": 88,
+      "upid": "3265"
+    },
     "round_type": "standard"
   },
   {
