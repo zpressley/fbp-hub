@@ -3050,7 +3050,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Jasson Dom\u00ednguez",
+      "timestamp": "2026-03-09T02:08:36.618411",
+      "pick_index": 76,
+      "upid": "3470"
+    },
     "round_type": "standard"
   },
   {
@@ -3067,7 +3072,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Cody Ponce",
+      "timestamp": "2026-03-09T02:09:07.531727",
+      "pick_index": 77,
+      "upid": "2282"
+    },
     "round_type": "standard"
   },
   {
@@ -3084,7 +3094,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Mark Vientos",
+      "timestamp": "2026-03-09T02:09:23.713140",
+      "pick_index": 78,
+      "upid": "3732"
+    },
     "round_type": "standard"
   },
   {
