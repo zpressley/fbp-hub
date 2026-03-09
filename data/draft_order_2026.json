@@ -4556,7 +4556,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Jeff McNeil",
+      "timestamp": "2026-03-09T03:16:25.288652",
+      "pick_index": 129,
+      "upid": "2643"
+    },
     "round_type": "standard"
   },
   {
@@ -4573,7 +4578,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Luis Robert",
+      "timestamp": "2026-03-09T03:17:18.830316",
+      "pick_index": 130,
+      "upid": "2907"
+    },
     "round_type": "standard"
   },
   {
@@ -4675,7 +4685,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Aaron Ashby",
+      "timestamp": "2026-03-09T03:17:29.519189",
+      "pick_index": 131,
+      "upid": "1995"
+    },
     "round_type": "standard"
   },
   {
@@ -4709,7 +4724,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Sean Manaea",
+      "timestamp": "2026-03-09T03:17:50.253449",
+      "pick_index": 132,
+      "upid": "1978"
+    },
     "round_type": "standard"
   },
   {
