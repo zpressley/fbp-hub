@@ -1324,7 +1324,12 @@
     "buyin_purchased": true,
     "buyin_purchased_at": "2026-02-26T18:21:09.755936Z",
     "buyin_purchased_by": "WAR",
-    "result": null,
+    "result": {
+      "player": "Raisel Iglesias",
+      "timestamp": "2026-03-09T00:56:20.951601",
+      "pick_index": 20,
+      "upid": "1916"
+    },
     "taxed_out": false,
     "round_type": "standard"
   },
@@ -1358,7 +1363,12 @@
     "buyin_purchased": true,
     "buyin_purchased_at": "2026-02-23T15:50:32.679966Z",
     "buyin_purchased_by": "WAR",
-    "result": null,
+    "result": {
+      "player": "Sal Frelick",
+      "timestamp": "2026-03-09T00:56:58.747090",
+      "pick_index": 21,
+      "upid": "3479"
+    },
     "taxed_out": false,
     "round_type": "standard"
   },
@@ -1392,7 +1402,12 @@
     "buyin_purchased": true,
     "buyin_purchased_at": "2026-02-26T18:44:52.069041Z",
     "buyin_purchased_by": "WAR",
-    "result": null,
+    "result": {
+      "player": "Alec Burleson",
+      "timestamp": "2026-03-09T00:57:10.181651",
+      "pick_index": 22,
+      "upid": "3831"
+    },
     "taxed_out": false,
     "round_type": "standard"
   },
@@ -1410,7 +1425,12 @@
     "buyin_purchased_at": null,
     "buyin_purchased_by": null,
     "taxed_out": false,
-    "result": null,
+    "result": {
+      "player": "Xavier Edwards",
+      "timestamp": "2026-03-09T00:59:49.139883",
+      "pick_index": 23,
+      "upid": "3840"
+    },
     "round_type": "standard"
   },
   {
