@@ -2100,5 +2100,56 @@
       "admin": "zpressley",
       "source": "admin_portal"
     }
+  },
+  {
+    "txn_id": "wb_WIZ_admin_adjustment_1773359776",
+    "timestamp": "2026-03-12T23:56:16.174256Z",
+    "team": "WIZ",
+    "amount": 125,
+    "balance_before": 5,
+    "balance_after": 130,
+    "transaction_type": "admin_adjustment",
+    "description": "APA + EOS Rollover",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "kylek_japisx",
+      "source": "admin_portal"
+    }
+  },
+  {
+    "txn_id": "wb_WAR_admin_adjustment_1773359797",
+    "timestamp": "2026-03-12T23:56:37.713157Z",
+    "team": "WAR",
+    "amount": 100,
+    "balance_before": 0,
+    "balance_after": 100,
+    "transaction_type": "admin_adjustment",
+    "description": "APA",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "kylek_japisx",
+      "source": "admin_portal"
+    }
+  },
+  {
+    "txn_id": "wb_TBB_admin_adjustment_1773359822",
+    "timestamp": "2026-03-12T23:57:02.834857Z",
+    "team": "TBB",
+    "amount": 120,
+    "balance_before": 0,
+    "balance_after": 120,
+    "transaction_type": "admin_adjustment",
+    "description": "APA + Rollover",
+    "related_player": null,
+    "metadata": {
+      "season": 2026,
+      "installment": "admin",
+      "admin": "kylek_japisx",
+      "source": "admin_portal"
+    }
   }
 ]
