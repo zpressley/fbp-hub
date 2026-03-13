@@ -216,6 +216,17 @@ The Worker is still deployed/configured separately in your Cloudflare account; t
 - Deployments are triggered by `git push` to the configured branch; there is no separate CLI deployment step in this repo.
 - `data/README.md` includes an example GitHub Actions workflow (`.github/workflows/deploy.yml`) for automating data updates and commits; that workflow file is not currently present in this repo by default but can be added if you want automated daily refreshes.
 
+## Trade portal draft-pick UI (temporarily disabled)
+
+Draft-pick add buttons are intentionally hidden in `trade.html` for the current season.
+The underlying picker modal and logic still exist in `js/trade.js`.
+
+To re-enable draft-pick buttons next year:
+1. In `trade.html`, re-add the `Add Pick` buttons in each trade column (`team1`, `team2`, `team3`) with IDs `team1AddPick`, `team2AddPick`, `team3AddPick` and `onclick="showPickPicker('teamX')"`.
+2. Restore the empty-state copy in trade receive lists if desired (for example: “Add players, picks, or WizBucks...”).
+3. In `js/trade.js`, ensure both `setTeamSelectionDirect()` and `handleTeamSelect()` also toggle the `teamXAddPick` button disabled state (parallel to Add Player/Add WB).
+4. Keep backend enforcement in `fbp-trade-bot` as the source of truth for when draft-pick transfers are actually allowed.
+
 ## Implementation Notes & Gotchas for Agents
 
 - **No build/test tooling**: Do not assume `npm`, `jest`, `eslint`, or similar tooling exists. Any changes should be directly in HTML/CSS/JS/JSON.
