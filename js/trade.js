@@ -199,8 +199,10 @@ function setTeamSelectionDirect(teamKey, abbr) {
   TRADE_STATE.teams[teamKey] = normalized || null;
 
   const addPlayerBtn = document.getElementById(`${teamKey}AddPlayer`);
+  const addPickBtn = document.getElementById(`${teamKey}AddPick`);
   const addWBBtn = document.getElementById(`${teamKey}AddWB`);
   if (addPlayerBtn) addPlayerBtn.disabled = !TRADE_STATE.teams[teamKey];
+  if (addPickBtn) addPickBtn.disabled = !TRADE_STATE.teams[teamKey];
   if (addWBBtn) addWBBtn.disabled = !TRADE_STATE.teams[teamKey];
 }
 
@@ -286,8 +288,10 @@ function handleTeamSelect(teamKey) {
 
   // enable buttons
   const addPlayerBtn = document.getElementById(`${teamKey}AddPlayer`);
+  const addPickBtn = document.getElementById(`${teamKey}AddPick`);
   const addWBBtn = document.getElementById(`${teamKey}AddWB`);
   if (addPlayerBtn) addPlayerBtn.disabled = !TRADE_STATE.teams[teamKey];
+  if (addPickBtn) addPickBtn.disabled = !TRADE_STATE.teams[teamKey];
   if (addWBBtn) addWBBtn.disabled = !TRADE_STATE.teams[teamKey];
 
   // remove transfers for unselected teams
@@ -405,7 +409,7 @@ function displayTradeBuilder() {
       .filter(({ t }) => t.to_team === abbr);
 
     if (items.length === 0) {
-      list.innerHTML = '<div class="empty-trade-list">Add players or WizBucks...</div>';
+      list.innerHTML = '<div class="empty-trade-list">Add players, picks, or WizBucks...</div>';
       continue;
     }
 

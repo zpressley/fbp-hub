@@ -375,6 +375,12 @@
     cursor: not-allowed;
 }
 
+/* Draft-pick UI is intentionally disabled for this season.
+   Keep markup in place for layout stability and easy re-enable later. */
+.trade-pick-btn {
+    display: none !important;
+}
+
 /* Trade Actions */
 .trade-actions {
     display: flex;
