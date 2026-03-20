@@ -9,6 +9,7 @@ const FBPHub = {
         players: [],
         standings: null,
         wizbucks: null,
+        managers: null,
         teamColors: {}
     },
     config: {
@@ -430,6 +431,12 @@ async function loadAllData() {
         FBPHub.data.players = playersData || [];
         FBPHub.data.standings = standingsData;
         FBPHub.data.wizbucks = wizbucksData;
+        
+        // Load managers config (needed for abbr → name mapping in WB lookups)
+        try {
+            const mgr = await fetch('./config/managers.json');
+            if (mgr.ok) FBPHub.data.managers = await mgr.json();
+        } catch { /* non-critical */ }
         
         // Load team color configuration (defaults + any local overrides)
         await FBPHub.loadTeamColors();

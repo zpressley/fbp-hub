@@ -162,7 +162,7 @@
   function getActiveProspectIds(bids) {
     const seen = new Set(), out = [];
     for (const b of bids) {
-      if (b.type === 'OB') {
+      if (b.bid_type === 'OB') {
         const pid = String(b.prospect_id);
         if (!seen.has(pid)) { seen.add(pid); out.push(pid); }
       }
@@ -191,9 +191,9 @@
     const maxAmt = Math.max(...Object.values(byTeam).map(b => Number(b.amount)));
     const tied   = Object.values(byTeam).filter(b => Number(b.amount) === maxAmt);
 
-    if (tied.length === 1) return { team: tied[0].team, amount: maxAmt, type: tied[0].type };
+    if (tied.length === 1) return { team: tied[0].team, amount: maxAmt, type: tied[0].bid_type };
 
-    const obs = tied.filter(b => b.type === 'OB');
+    const obs = tied.filter(b => b.bid_type === 'OB');
     if (obs.length === 1) return { team: obs[0].team, amount: maxAmt, type: 'OB' };
     if (obs.length > 1) {
       obs.sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''));
@@ -214,7 +214,7 @@
   }
 
   function getOB(prospectId, bids) {
-    return bids.find(b => String(b.prospect_id) === String(prospectId) && b.type === 'OB') || null;
+    return bids.find(b => String(b.prospect_id) === String(prospectId) && b.bid_type === 'OB') || null;
   }
 
   function alreadyCBToday(team, prospectId, bids) {
@@ -222,7 +222,7 @@
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
     return bids.some(b =>
       b.team === team && String(b.prospect_id) === pid &&
-      b.type === 'CB' && (b.timestamp || '').slice(0, 10) === today
+      b.bid_type === 'CB' && (b.timestamp || '').slice(0, 10) === today
     );
   }
 
@@ -335,7 +335,7 @@
 
         let cls = 'auc-bid-cell' + (isWinner ? ' winning' : isMyBid ? ' my-bid' : '') + (canClick ? ' clickable' : '');
         const content = bid
-          ? `<span class="auc-bid-amount">$${bid.amount}</span><span class="auc-bid-marker">${bid.type}</span>`
+          ? `<span class="auc-bid-amount">$${bid.amount}</span><span class="auc-bid-marker">${bid.bid_type}</span>`
           : `<span class="auc-bid-empty">\u2013</span>`;
 
         body += `<td class="${cls}" data-pid="${esc(pid)}" data-team="${esc(team)}">${content}</td>`;
@@ -355,7 +355,7 @@
     }
 
     // New OB row — uses UPID as option value, displays name
-    const myHasOB = bids.some(b => b.team === _myTeam && b.type === 'OB');
+    const myHasOB = bids.some(b => b.team === _myTeam && b.bid_type === 'OB');
     let newRow = '';
     if (_phase === 'ob_window' && _myTeam && !myHasOB) {
       const activeUpids = new Set(prospectIds);
@@ -450,7 +450,7 @@
 
     const bids  = _state?.bids || [];
     const ob    = getOB(prospectId, bids);
-    const myOB  = bids.find(b => b.team === _myTeam && b.type === 'OB');
+    const myOB  = bids.find(b => b.team === _myTeam && b.bid_type === 'OB');
 
     const allowOB = _phase === 'ob_window' && !myOB && !ob;
     const allowCB = _phase === 'cb_window'

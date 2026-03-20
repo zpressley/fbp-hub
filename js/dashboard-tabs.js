@@ -612,7 +612,7 @@
     
     actions.push({ href: 'team-builder.html', icon: 'fa-drafting-compass', label: 'Team Builder' });
     actions.push({ action: 'purchase', icon: 'fa-file-contract', label: 'Purchase Contracts' });
-    actions.push({ href: 'trade-portal.html', icon: 'fa-handshake', label: 'Trade Portal' });
+    actions.push({ href: 'trade.html', icon: 'fa-handshake', label: 'Trade Portal' });
     
     if (window.authManager?.isAdmin?.()) {
       actions.push({ href: 'admin.html', icon: 'fa-shield-alt', label: 'Admin' });
