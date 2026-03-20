@@ -226,6 +226,14 @@
     );
   }
 
+  /** Friday spoiler-bid check: on Friday ET, team must have a prior CB on this prospect. */
+  function isFridaySpoiler(team, prospectId, bids) {
+    const dow = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long' }).format(new Date());
+    if (dow !== 'Friday') return false;
+    const pid = String(prospectId);
+    return !bids.some(b => b.team === team && String(b.prospect_id) === pid && b.bid_type === 'CB');
+  }
+
   // ── Phase rendering ────────────────────────────────────────────────────────
   function renderPhase() {
     const banner  = document.getElementById('phaseBanner');
@@ -436,9 +444,10 @@
     if (!_myTeam) return false;
     const ob = getOB(prospectId, bids);
     if (!ob || ob.team === _myTeam) return false;
-    // CBs only allowed during cb_window (backend rejects during ob_window)
     if (_phase === 'cb_window') {
-      return !alreadyCBToday(_myTeam, prospectId, bids);
+      if (alreadyCBToday(_myTeam, prospectId, bids)) return false;
+      if (isFridaySpoiler(_myTeam, prospectId, bids)) return false;
+      return true;
     }
     return false;
   }
@@ -455,10 +464,12 @@
     const allowOB = _phase === 'ob_window' && !myOB && !ob;
     const allowCB = _phase === 'cb_window'
                     && ob && ob.team !== _myTeam
-                    && !alreadyCBToday(_myTeam, prospectId, bids);
+                    && !alreadyCBToday(_myTeam, prospectId, bids)
+                    && !isFridaySpoiler(_myTeam, prospectId, bids);
 
     if (!allowOB && !allowCB) {
       const reason = _phase === 'ob_window' && myOB ? 'You already placed your OB this week.'
+        : isFridaySpoiler(_myTeam, prospectId, bids) ? 'Friday bids require a prior CB on this prospect earlier in the week.'
         : alreadyCBToday(_myTeam, prospectId, bids) ? 'You already challenged this prospect today.'
         : ob?.team === _myTeam ? "You can't challenge your own OB."
         : 'No bid action available right now.';
@@ -505,11 +516,15 @@
       info += ' \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
     }
 
-    if (hintEl)  hintEl.textContent  = `$5 increments \u00B7 min $${minAmt}`;
+    const available = _myTeam ? Math.max(0, getBalance(_myTeam) - computeCommitted(_myTeam, bids)) : 0;
+    const maxAmt = Math.max(minAmt, Math.floor(available / 5) * 5);
+
+    if (hintEl)  hintEl.textContent  = `$5 increments \u00B7 min $${minAmt} \u00B7 max $${maxAmt}`;
     if (infoEl)  infoEl.textContent  = info;
     if (amtEl) {
       amtEl.min   = minAmt;
-      amtEl.value = Math.ceil(Math.max(minAmt, Number(amtEl.value) || minAmt) / 5) * 5;
+      amtEl.max   = maxAmt;
+      amtEl.value = Math.min(maxAmt, Math.ceil(Math.max(minAmt, Number(amtEl.value) || minAmt) / 5) * 5);
     }
   }
 
@@ -656,8 +671,9 @@
       if (!btn) return;
       const input = document.getElementById('bidAmount');
       const min   = Number(input.min) || 10;
+      const max = Number(input.max) || 9999;
       let val = Math.round(((Number(input.value) || min) + Number(btn.dataset.delta)) / 5) * 5;
-      input.value = Math.max(min, val);
+      input.value = Math.min(max, Math.max(min, val));
     });
   };
 

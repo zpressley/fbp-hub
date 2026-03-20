@@ -357,16 +357,16 @@
   color: rgba(170,170,170,.35);
   display: block;
 }
-/* OB marker */
+/* OB / CB marker */
 .auc-bid-marker {
-  font-size: 0.55rem;
-  letter-spacing: 0.4px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   font-family: var(--font-title);
   font-weight: 700;
-  color: rgba(170,170,170,.3);
+  color: rgba(170,170,170,.35);
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* Winning bid cell — highlighted */

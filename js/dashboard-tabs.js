@@ -245,6 +245,7 @@
     const myBids   = abbr ? bids.filter(b => String(b.team).toUpperCase() === abbr.toUpperCase()) : [];
 
     if (!myBids.length) {
+      if (myBidsEl) myBidsEl.className = 'dash-bids-empty';
       setHTML(myBidsEl, '<div class="dash-empty"><i class="fas fa-gavel"></i>No bids this week</div>');
     } else {
       setHTML(myBidsEl, myBids.map(b => {
@@ -279,6 +280,7 @@
         </div>`;
       }).join(''));
     }
+    requestAnimationFrame(updatePanelHeight);
   }
 
   function _resolveProspectName(upid) {

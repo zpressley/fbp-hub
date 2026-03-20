@@ -244,6 +244,12 @@
 .dash-wb-val.red    { color: var(--primary-red); }
 .dash-wb-val.green  { color: #22c55e; }
 
+/* ── Compact "no bids" state ────────────────────────────────────── */
+.dash-bids-empty .dash-empty {
+  padding: 10px 0;
+  font-size: .8rem;
+}
+
 /* ── Auction bid rows ──────────────────────────────────────────── */
 .dash-bid-row {
   display: flex;
