@@ -234,7 +234,8 @@ export async function loadTransactionFeed() {
   // Track which player_log entries belong to PAD/KAP grouped cards so we
   // can suppress individual contract/drop cards for those entries.
   const padSubmissionTeams = new Set();  // teams that have a PAD submission card
-  const kapSubmissionTeams = new Set();  // teams that have a KAP submission card
+  const kapSubmissionTeams = new Set();
+  const auctionWeeks = {};  // week_start → grouped auction card
 
   if (Array.isArray(wbRaw)) {
     const BUCKET_MS = 10000;
@@ -337,6 +338,28 @@ export async function loadTransactionFeed() {
         continue;
       }
 
+      // ── Auction winner — group per week ──────────────────────────────────
+      if (tt === 'auction_winner') {
+        const weekStart = txn.metadata?.week_start || '';
+        const key = weekStart || ts.slice(0, 10);
+        if (!auctionWeeks[key]) {
+          auctionWeeks[key] = {
+            id:        `auction-${key}`,
+            type:      'auction',
+            timestamp: ts,
+            weekStart: weekStart,
+            winners:   [],
+          };
+        }
+        auctionWeeks[key].winners.push({
+          team,
+          amount:  Math.abs(txn.amount),
+          name:    txn.related_player?.name || txn.description || '',
+          balance: txn.balance_after,
+        });
+        continue;
+      }
+
       // ── Admin / manual adjustments ────────────────────────────────────────
       if (tt === 'admin_adjustment' || tt === 'manual_adjustment_refund') {
         events.push({
@@ -352,6 +375,11 @@ export async function loadTransactionFeed() {
         });
         continue;
       }
+    }
+
+    // Emit grouped auction cards
+    for (const auc of Object.values(auctionWeeks)) {
+      events.push(auc);
     }
 
     for (const bucket of Object.values(allotmentBuckets)) {
@@ -394,6 +422,12 @@ export async function loadTransactionFeed() {
       const team   = toAbbr(e.owner);
 
       if (SKIP_LOG.has(ut)) continue;
+
+      // ── Auction player entries → fold into auction card ────────────────
+      if (ut === 'Auction') {
+        // Suppressed — the auction card from WB ledger already shows winners
+        continue;
+      }
 
       // ── PAD player entries → fold into the PAD submission card ───────────
       // Identify by event field containing "PAD" (e.g. "26 PAD")
@@ -498,7 +532,7 @@ export async function loadTransactionFeed() {
 
 // ─── COUNT HELPER ─────────────────────────────────────────────────────────────
 export function countByType(events) {
-  const counts = { all: events.length, trade: 0, wizbucks: 0, buyin: 0, graduation: 0, contract: 0, drop: 0, draft: 0, pad: 0, kap: 0 };
+  const counts = { all: events.length, trade: 0, wizbucks: 0, buyin: 0, graduation: 0, contract: 0, drop: 0, draft: 0, pad: 0, kap: 0, auction: 0 };
   for (const e of events) if (e.type in counts) counts[e.type]++;
   return counts;
 }
@@ -539,6 +573,7 @@ function renderCard(ev, compact) {
     case 'draft':      return renderDraft(ev, c);
     case 'pad':        return renderPAD(ev, c);
     case 'kap':        return renderKAP(ev, c);
+    case 'auction':    return renderAuction(ev, c);
     default:           return '';
   }
 }
@@ -909,7 +944,38 @@ function renderKAP(ev, c) {
   </div>`;
 }
 
-// ─── Date / time helpers ──────────────────────────────────────────────────────
+// ─── Auction Results ────────────────────────────────────────────────────────────
+function renderAuction(ev, c) {
+  const rows = (ev.winners || []).map(w =>
+    `<div class="txn-auction-row">
+      ${teamBadgeHTML(w.team)}
+      <span class="txn-player-name">${w.name}</span>
+      <span class="txn-wb-delta neg">-$${w.amount} WB</span>
+    </div>`
+  ).join('');
+
+  const total = (ev.winners || []).reduce((s, w) => s + w.amount, 0);
+  const weekLabel = ev.weekStart ? `Week of ${ev.weekStart}` : 'Weekly Results';
+
+  return `<div class="txn-card txn-auction${c}">
+    <div class="txn-card-header">
+      <div class="txn-header-left">
+        <span class="txn-icon-wrap auction"><i class="fas fa-gavel"></i></span>
+        <div>
+          <span class="txn-type-label">Prospect Auction</span>
+          <span class="txn-headline">${weekLabel} · ${ev.winners?.length || 0} winner${ev.winners?.length !== 1 ? 's' : ''}</span>
+        </div>
+      </div>
+      <span class="txn-time">${timeStr(ev.timestamp)}</span>
+    </div>
+    <div class="txn-auction-body">${rows || '<p style="color:rgba(170,170,170,.4);padding:8px;">No winners</p>'}</div>
+    <div class="txn-pad-footer">
+      <span class="txn-wb-delta neg">-$${total} WB total</span>
+    </div>
+  </div>`;
+}
+
+// ─── Date / time helpers ──────────────────────────────────────────────────────────
 function dateKey(ts) {
   if (!ts) return 'Unknown Date';
   try {
