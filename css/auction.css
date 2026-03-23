@@ -445,22 +445,74 @@
   background: rgba(239,62,66,.08);
 }
 
-/* ─── PROSPECT SELECT (in new bid row) ───────────────────────────────────── */
-.auc-prospect-select {
+/* ─── PROSPECT SEARCH (in new bid row) ───────────────────────────────────────── */
+.auc-prospect-search-wrap {
+  position: relative;
+  max-width: 240px;
+}
+.auc-prospect-search {
+  width: 100%;
   background: #141414;
   border: 1px solid rgba(255,255,255,.1);
   color: var(--text-white);
-  padding: 5px 8px;
+  padding: 6px 10px;
   border-radius: 4px;
   font-family: var(--font-title);
   font-size: 0.82rem;
   font-weight: 600;
-  max-width: 200px;
-  cursor: pointer;
+  box-sizing: border-box;
 }
-.auc-prospect-select:focus {
+.auc-prospect-search::placeholder {
+  color: rgba(170,170,170,.35);
+  font-weight: 400;
+}
+.auc-prospect-search:focus {
   outline: none;
   border-color: var(--primary-red);
+}
+.auc-prospect-results {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,.12);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 100;
+  box-shadow: 0 6px 16px rgba(0,0,0,.5);
+}
+.auc-sr-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.auc-sr-item:hover {
+  background: rgba(239,62,66,.1);
+}
+.auc-sr-name {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-white);
+}
+.auc-sr-pos {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(170,170,170,.45);
+}
+.auc-sr-empty {
+  padding: 10px;
+  text-align: center;
+  color: rgba(170,170,170,.35);
+  font-family: var(--font-title);
+  font-size: 0.78rem;
 }
 
 /* ─── MODAL ──────────────────────────────────────────────────────────────── */

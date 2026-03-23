@@ -20,7 +20,7 @@
   'use strict';
 
   const DATA = window.FBPHub?.config?.dataPath || './data/';
-  const API  = window.AUTH_CONFIG?.workerUrl   || '';
+  const API  = (typeof AUTH_CONFIG !== 'undefined' && AUTH_CONFIG?.workerUrl) || '';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let _state    = null;
@@ -32,6 +32,7 @@
   let _priority = [];     // column order derived from standings (worst → best)
   let _modal    = { prospectId: null, prospectName: null };
   let _tick     = null;
+  let _obEligible = [];  // sorted eligible prospects for OB search
   let _teamColorData = {};     // loaded from team_colors.json
   let _badgeColorCache = {};   // memoized computed badge colors
 
@@ -367,17 +368,18 @@
     let newRow = '';
     if (_phase === 'ob_window' && _myTeam && !myHasOB) {
       const activeUpids = new Set(prospectIds);
-      const opts = _players
+      _obEligible = _players
         .filter(p => p.upid && !activeUpids.has(String(p.upid)))
-        .map(p => `<option value="${esc(String(p.upid))}">${esc(p.name)}${p.position ? ` (${p.position})` : ''}</option>`)
-        .join('');
+        .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
       const emptyCols = cols.map(() => '<td></td>').join('');
       newRow = `<tr class="auc-new-prospect-row">
         <td></td><td class="td-team">${esc(_myTeam)}</td><td></td><td></td>
         <td class="td-claim">
-          <select class="auc-prospect-select" id="newProspectSelect">
-            <option value="">\u2014 Select prospect \u2014</option>${opts}
-          </select>
+          <div class="auc-prospect-search-wrap">
+            <input type="text" class="auc-prospect-search" id="newProspectSearch" placeholder="Search prospect\u2026" autocomplete="off">
+            <input type="hidden" id="newProspectUpid">
+            <div class="auc-prospect-results" id="prospectResults"></div>
+          </div>
         </td>
         <td></td>${emptyCols.slice(0,-4)}
         <td colspan="4" style="text-align:right;padding-right:10px;">
@@ -412,10 +414,11 @@
       cell.addEventListener('click', () => openBidModal(cell.dataset.pid, resolveName(cell.dataset.pid), 'CB'));
     });
     document.getElementById('placeNewOB')?.addEventListener('click', () => {
-      const upid = document.getElementById('newProspectSelect')?.value;
-      if (!upid) { document.getElementById('newProspectSelect')?.focus(); return; }
+      const upid = document.getElementById('newProspectUpid')?.value;
+      if (!upid) { document.getElementById('newProspectSearch')?.focus(); return; }
       openBidModal(upid, resolveName(upid), 'OB');
     });
+    _bindProspectSearch();
     wrapper.querySelectorAll('[data-action]').forEach(btn => {
       btn.addEventListener('click', () => handleMatchForfeit(btn.dataset.pid, btn.dataset.action));
     });
@@ -439,7 +442,62 @@
       </table>`;
   }
 
-  // ── Can bid on prospect? ───────────────────────────────────────────────────
+  // ── Prospect search (OB row) ─────────────────────────────────────────────────────
+  function _bindProspectSearch() {
+    const input   = document.getElementById('newProspectSearch');
+    const hidden  = document.getElementById('newProspectUpid');
+    const results = document.getElementById('prospectResults');
+    if (!input || !results) return;
+
+    let _debounce = null;
+
+    input.addEventListener('input', () => {
+      clearTimeout(_debounce);
+      hidden.value = '';  // clear selection when typing
+      _debounce = setTimeout(() => _showResults(input.value.trim()), 120);
+    });
+
+    input.addEventListener('focus', () => {
+      if (input.value.trim()) _showResults(input.value.trim());
+    });
+
+    // Close on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.auc-prospect-search-wrap')) results.style.display = 'none';
+    });
+
+    function _showResults(q) {
+      if (!q) { results.style.display = 'none'; return; }
+      const lower = q.toLowerCase();
+      const hits = _obEligible.filter(p =>
+        (p.name || '').toLowerCase().includes(lower)
+      ).slice(0, 25);
+
+      if (!hits.length) {
+        results.innerHTML = '<div class="auc-sr-empty">No matching prospects</div>';
+        results.style.display = 'block';
+        return;
+      }
+
+      results.innerHTML = hits.map(p =>
+        `<div class="auc-sr-item" data-upid="${esc(String(p.upid))}">
+          <span class="auc-sr-name">${esc(p.name)}</span>
+          ${p.position ? `<span class="auc-sr-pos">${esc(p.position)}</span>` : ''}
+        </div>`
+      ).join('');
+      results.style.display = 'block';
+
+      results.querySelectorAll('.auc-sr-item').forEach(item => {
+        item.addEventListener('click', () => {
+          hidden.value = item.dataset.upid;
+          input.value = item.querySelector('.auc-sr-name').textContent;
+          results.style.display = 'none';
+        });
+      });
+    }
+  }
+
+  // ── Can bid on prospect? ─────────────────────────────────────────────────────────────
   function canBidOnProspect(prospectId, bids) {
     if (!_myTeam) return false;
     const ob = getOB(prospectId, bids);
