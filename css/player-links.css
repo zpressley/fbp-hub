@@ -6,10 +6,10 @@
 .ext-link {
   display: inline-flex;
   align-items: center;
-  padding: 1px 7px;
+  padding: 3px 10px;
   border-radius: 3px;
   font-family: var(--font-title, 'Barlow Condensed', sans-serif);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -68,12 +68,9 @@
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 360px) {
+@media (max-width: 480px) {
   .ext-link {
-    font-size: 0.58rem;
-    padding: 1px 5px;
-  }
-  .ext-links-row {
-    gap: 3px;
+    font-size: 0.68rem;
+    padding: 3px 8px;
   }
 }
