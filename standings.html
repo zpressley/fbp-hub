@@ -123,6 +123,10 @@
         .td-bat-start { border-left: 2px solid rgba(255,255,255,.04); }
         .td-pitch-start { border-left: 2px solid rgba(255,255,255,.04); }
 
+        /* Display-only categories (H/AB, IP) — slightly muted */
+        .th-display { color: rgba(170,170,170,.35); font-style: italic; }
+        .td-display { color: rgba(170,170,170,.45); }
+
         .scroll-hint {
             text-align: center;
             color: rgba(170,170,170,.3);
@@ -246,8 +250,8 @@
                 myTeam = authManager.getTeam?.()?.abbreviation?.toUpperCase();
         } catch {}
 
-        // Separate batting vs pitching categories (skip display-only)
-        const cats = (data.stat_categories || []).filter(c => !c.display_only);
+        // All categories including display-only (H/AB, IP)
+        const cats = data.stat_categories || [];
         // First category with stat_id >= 24 is pitching
         const pitchIdx = cats.findIndex(c => parseInt(c.stat_id) >= 24);
         const batCats = pitchIdx > 0 ? cats.slice(0, pitchIdx) : cats;
@@ -267,11 +271,11 @@
             html += `<th data-sort="score">Score</th>`;
 
             batCats.forEach((c, i) => {
-                const cls = i === 0 ? ' th-bat-start' : '';
+                const cls = (i === 0 ? ' th-bat-start' : '') + (c.display_only ? ' th-display' : '');
                 html += `<th class="${cls}" data-sort="cat_${c.display_name}" title="${c.name}">${c.display_name}</th>`;
             });
             pitchCats.forEach((c, i) => {
-                const cls = i === 0 ? ' th-pitch-start' : '';
+                const cls = (i === 0 ? ' th-pitch-start' : '') + (c.display_only ? ' th-display' : '');
                 html += `<th class="${cls}" data-sort="cat_${c.display_name}" title="${c.name}">${c.display_name}</th>`;
             });
 
@@ -331,12 +335,12 @@
                 html += `<td class="td-score"><span class="win">${w}</span>-<span class="loss">${l}</span>-<span class="tie">${t}</span></td>`;
 
                 batCats.forEach((c, i) => {
-                    const cls = i === 0 ? ' td-bat-start' : '';
+                    const cls = (i === 0 ? ' td-bat-start' : '') + (c.display_only ? ' td-display' : '');
                     const val = s.categories?.[c.display_name] ?? '—';
                     html += `<td class="td-cat${cls}">${val}</td>`;
                 });
                 pitchCats.forEach((c, i) => {
-                    const cls = i === 0 ? ' td-pitch-start' : '';
+                    const cls = (i === 0 ? ' td-pitch-start' : '') + (c.display_only ? ' td-display' : '');
                     const val = s.categories?.[c.display_name] ?? '—';
                     html += `<td class="td-cat${cls}">${val}</td>`;
                 });
