@@ -106,8 +106,6 @@ function displayMatchups() {
         </div>`;
     }).join('');
 
-    // Update Live Rank tile for logged-in user
-    updateLiveRankTile(standings);
 }
 
 /**
@@ -163,6 +161,7 @@ function displayQuickStats() {
     }
 
     updateAuctionTile();
+    updateLiveRankTile(FBPHub.data.standings);
 
     const totalWizBucksEl = document.getElementById('totalWizBucks');
     if (totalWizBucksEl && FBPHub.data.wizbucks) {
