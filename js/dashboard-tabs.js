@@ -737,11 +737,15 @@
       const standings = await fetchJ('standings.json');
       if (standings?.standings) {
         const entry = standings.standings.find(s => String(s.team).toUpperCase() === (abbr || '').toUpperCase());
-        if (entry && recEl) recEl.textContent = entry.record || '—';
-      }
-      if (standings?.matchups?.length && vsEl) {
-        const matchup = standings.matchups.find(m => m.includes(abbr || ''));
-        if (matchup) vsEl.textContent = matchup;
+        if (entry) {
+          // Show live record (W-L-T this week) as a link to standings
+          if (recEl) {
+            recEl.innerHTML = `<a href="standings.html" style="color:inherit;text-decoration:none;">${entry.live_record || entry.record || '—'}</a>`;
+          }
+          if (vsEl) {
+            vsEl.textContent = entry.opponent ? `vs ${entry.opponent} · ${entry.score}-${entry.opponent_score}` : '';
+          }
+        }
       }
     } catch {}
   }

@@ -84,7 +84,18 @@ function displayMatchups() {
         return;
     }
     matchupsGrid.innerHTML = standings.matchups.map(matchup => {
-        const parts = matchup.split(' vs ');
+        // New format: {team1: {team, score}, team2: {team, score}}
+        if (matchup.team1 && matchup.team2) {
+            const t1 = matchup.team1;
+            const t2 = matchup.team2;
+            return `<div class="matchup-card">
+                <div class="matchup-team"><div class="matchup-team-name">${createTeamBadge(t1.team)}</div><div class="matchup-team-score">${t1.score || '0'}</div></div>
+                <div class="matchup-vs">vs</div>
+                <div class="matchup-team"><div class="matchup-team-name">${createTeamBadge(t2.team)}</div><div class="matchup-team-score">${t2.score || '0'}</div></div>
+            </div>`;
+        }
+        // Legacy string format fallback
+        const parts = String(matchup).split(' vs ');
         if (parts.length !== 2) return '';
         const [t1n, t1s] = parts[0].trim().split(' ');
         const [t2n, t2s] = parts[1].trim().split(' ');
@@ -94,6 +105,24 @@ function displayMatchups() {
             <div class="matchup-team"><div class="matchup-team-name">${createTeamBadge(t2n)}</div><div class="matchup-team-score">${t2s || '0'}</div></div>
         </div>`;
     }).join('');
+
+    // Update Live Rank tile for logged-in user
+    updateLiveRankTile(standings);
+}
+
+/**
+ * Update Live Rank tile for the logged-in user.
+ */
+function updateLiveRankTile(standings) {
+    const el = document.getElementById('liveRank');
+    if (!el) return;
+    try {
+        const team = (typeof authManager !== 'undefined' && authManager.isAuthenticated?.())
+            ? authManager.getTeam?.()?.abbreviation : null;
+        if (!team || !standings?.standings) { el.textContent = '—'; return; }
+        const entry = standings.standings.find(s => String(s.team).toUpperCase() === team.toUpperCase());
+        el.textContent = entry?.live_rank ? `#${entry.live_rank}` : '—';
+    } catch { el.textContent = '—'; }
 }
 
 /**
