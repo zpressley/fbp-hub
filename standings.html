@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Standings - FBP Hub</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#EF3E42">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .standings-header {
+            padding: var(--space-lg) 0 var(--space-md);
+            border-bottom: 2px solid var(--primary-red);
+            margin-bottom: var(--space-lg);
+        }
+        .standings-header h2 { margin-bottom: 4px; }
+        .standings-meta {
+            font-family: var(--font-title);
+            font-size: .85rem;
+            color: var(--text-gray);
+            letter-spacing: .5px;
+        }
+        .standings-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .standings-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+            font-family: var(--font-title);
+            font-size: .88rem;
+        }
+        .standings-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .standings-table th {
+            background: #1a1a1a;
+            color: rgba(170,170,170,.6);
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            transition: color .15s;
+        }
+        .standings-table th:hover { color: var(--accent-yellow); }
+        .standings-table th.sort-active { color: var(--primary-red); }
+        .standings-table th.sort-active::after {
+            content: ' ▾';
+            font-size: .6rem;
+        }
+        .standings-table th.sort-active.sort-asc::after { content: ' ▴'; }
+        .standings-table th.th-rank { width: 36px; text-align: center; }
+        .standings-table th.th-team { text-align: left; min-width: 80px; }
+        .standings-table th.th-record { min-width: 70px; }
+
+        .standings-table td {
+            padding: 9px 8px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            color: var(--text-white);
+            vertical-align: middle;
+        }
+        .standings-table tbody tr { transition: background .12s; }
+        .standings-table tbody tr:hover { background: rgba(255,255,255,.03); }
+        .standings-table tbody tr.my-team { background: rgba(255,182,18,.06); }
+        .standings-table tbody tr.my-team:hover { background: rgba(255,182,18,.1); }
+
+        .td-rank {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--primary-red);
+        }
+        .td-team {
+            text-align: left;
+            font-weight: 700;
+        }
+        .td-team-abbr {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: .85rem;
+        }
+        .td-record {
+            font-family: var(--font-mono);
+            font-size: .82rem;
+        }
+        .td-opponent {
+            font-family: var(--font-mono);
+            font-size: .78rem;
+            color: var(--text-gray);
+        }
+        .td-score {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: .85rem;
+        }
+        .td-score .win { color: #22c55e; }
+        .td-score .loss { color: var(--primary-red); }
+        .td-score .tie { color: var(--text-gray); }
+        .td-cat {
+            font-family: var(--font-mono);
+            font-size: .8rem;
+            color: rgba(170,170,170,.7);
+        }
+
+        /* Category group dividers */
+        .th-bat-start { border-left: 2px solid rgba(255,255,255,.08); }
+        .th-pitch-start { border-left: 2px solid rgba(255,255,255,.08); }
+        .td-bat-start { border-left: 2px solid rgba(255,255,255,.04); }
+        .td-pitch-start { border-left: 2px solid rgba(255,255,255,.04); }
+
+        .scroll-hint {
+            text-align: center;
+            color: rgba(170,170,170,.3);
+            font-family: var(--font-title);
+            font-size: .7rem;
+            padding: 6px 0;
+            letter-spacing: .5px;
+        }
+
+        @media (max-width: 768px) {
+            .standings-table { font-size: .78rem; }
+            .standings-table th { font-size: .6rem; padding: 8px 5px; }
+            .standings-table td { padding: 7px 5px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Copy nav from index.html pattern -->
+    <nav class="mobile-nav">
+        <div class="nav-container">
+            <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+            <div class="nav-brand">
+                <h1>FBP HUB 3.0</h1>
+                <p class="season-year">Est. 2012</p>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <button class="user-menu-toggle" id="userMenuToggle">
+                    <i class="fas fa-user-circle"></i><span>Menu</span><i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="constitution.html" class="nav-link"><i class="fas fa-scroll"></i><span>Constitution</span></a>
+            <a href="players.html" class="nav-link"><i class="fas fa-users"></i><span>Players</span></a>
+            <a href="rosters.html" class="nav-link"><i class="fas fa-baseball-ball"></i><span>Rosters</span></a>
+            <a href="transactions.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span>Transactions</span></a>
+            <div class="nav-item-dropdown" id="frontOfficeDropdown">
+                <button class="nav-dropdown-toggle" id="frontOfficeDropdownToggle">
+                    <span><i class="fas fa-briefcase"></i><span>Front Office</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="frontOfficeDropdownMenu">
+                    <a href="trade.html" class="nav-dropdown-item"><i class="fas fa-handshake"></i><span>Trade Portal</span></a>
+                    <a href="auction.html" class="nav-dropdown-item"><i class="fas fa-gavel"></i><span>Auction</span></a>
+                    <a href="wizbucks.html" class="nav-dropdown-item"><i class="fas fa-coins"></i><span>WizBucks</span></a>
+                </div>
+            </div>
+            <div class="nav-item-dropdown">
+                <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+                    <span><i class="fas fa-table-list"></i><span>Draft</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="draftDropdownMenu">
+                    <a href="draft.html" class="nav-dropdown-item"><i class="fas fa-list-ol"></i><span>Live Draft</span></a>
+                    <a href="draft-preview.html" class="nav-dropdown-item"><i class="fas fa-eye"></i><span>Draft Preview</span></a>
+                    <a href="draft-picks.html" class="nav-dropdown-item"><i class="fas fa-shopping-cart"></i><span>Draft Picks</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="standings-header">
+            <h2><i class="fas fa-chart-line"></i> LIVE STANDINGS</h2>
+            <div class="standings-meta" id="standingsMeta">Loading…</div>
+        </div>
+
+        <div class="scroll-hint"><i class="fas fa-arrows-left-right"></i> Scroll to see all categories</div>
+        <div class="standings-scroll">
+            <table class="standings-table" id="standingsTable">
+                <thead id="standingsHead"></thead>
+                <tbody id="standingsBody"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="players.html" class="bottom-nav-item"><i class="fas fa-search"></i><span>Search</span></a>
+        <a href="rosters.html" class="bottom-nav-item"><i class="fas fa-baseball-ball"></i><span>Rosters</span></a>
+        <a href="dashboard.html" class="bottom-nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <button class="bottom-nav-item" id="bottomMenuToggle" type="button"><i class="fas fa-bars"></i><span>Menu</span></button>
+    </nav>
+
+    <footer class="site-footer">
+        <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+    (async function () {
+        'use strict';
+
+        const DATA = window.FBPHub?.config?.dataPath || './data/';
+
+        // Load standings
+        let data;
+        try {
+            const r = await fetch(DATA + 'standings.json', { cache: 'no-store' });
+            data = r.ok ? await r.json() : null;
+        } catch { data = null; }
+
+        if (!data || !data.standings) {
+            document.getElementById('standingsMeta').textContent = 'No standings data available.';
+            return;
+        }
+
+        // Meta
+        document.getElementById('standingsMeta').textContent =
+            `Week ${data.week || '?'} · Updated ${data.date || '?'}`;
+
+        // Get user team for highlighting
+        let myTeam = null;
+        try {
+            if (typeof authManager !== 'undefined' && authManager.isAuthenticated?.())
+                myTeam = authManager.getTeam?.()?.abbreviation?.toUpperCase();
+        } catch {}
+
+        // Separate batting vs pitching categories (skip display-only)
+        const cats = (data.stat_categories || []).filter(c => !c.display_only);
+        // First category with stat_id >= 24 is pitching
+        const pitchIdx = cats.findIndex(c => parseInt(c.stat_id) >= 24);
+        const batCats = pitchIdx > 0 ? cats.slice(0, pitchIdx) : cats;
+        const pitchCats = pitchIdx > 0 ? cats.slice(pitchIdx) : [];
+
+        // Sort state
+        let sortKey = 'live_rank';
+        let sortAsc = true;
+
+        // Build header
+        function renderHead() {
+            let html = '<tr>';
+            html += `<th class="th-rank" data-sort="live_rank">LR</th>`;
+            html += `<th class="th-team" data-sort="team">Team</th>`;
+            html += `<th class="th-record" data-sort="live_win_pct">Record</th>`;
+            html += `<th data-sort="opponent">vs</th>`;
+            html += `<th data-sort="score">Score</th>`;
+
+            batCats.forEach((c, i) => {
+                const cls = i === 0 ? ' th-bat-start' : '';
+                html += `<th class="${cls}" data-sort="cat_${c.display_name}" title="${c.name}">${c.display_name}</th>`;
+            });
+            pitchCats.forEach((c, i) => {
+                const cls = i === 0 ? ' th-pitch-start' : '';
+                html += `<th class="${cls}" data-sort="cat_${c.display_name}" title="${c.name}">${c.display_name}</th>`;
+            });
+
+            html += '</tr>';
+            document.getElementById('standingsHead').innerHTML = html;
+
+            // Mark active sort
+            document.querySelectorAll('.standings-table th').forEach(th => {
+                th.classList.remove('sort-active', 'sort-asc');
+                if (th.dataset.sort === sortKey) {
+                    th.classList.add('sort-active');
+                    if (sortAsc) th.classList.add('sort-asc');
+                }
+            });
+        }
+
+        // Build body
+        function renderBody() {
+            const sorted = [...data.standings].sort((a, b) => {
+                let va, vb;
+                if (sortKey.startsWith('cat_')) {
+                    const catName = sortKey.slice(4);
+                    va = parseFloat(a.categories?.[catName]) || 0;
+                    vb = parseFloat(b.categories?.[catName]) || 0;
+                } else if (sortKey === 'score') {
+                    va = parseInt(a.score) || 0;
+                    vb = parseInt(b.score) || 0;
+                } else if (sortKey === 'live_win_pct') {
+                    va = a.live_win_pct || 0;
+                    vb = b.live_win_pct || 0;
+                } else if (sortKey === 'live_rank') {
+                    va = a.live_rank || 99;
+                    vb = b.live_rank || 99;
+                } else if (sortKey === 'team' || sortKey === 'opponent') {
+                    va = (a[sortKey] || '').toLowerCase();
+                    vb = (b[sortKey] || '').toLowerCase();
+                    return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+                } else {
+                    va = a[sortKey] || 0;
+                    vb = b[sortKey] || 0;
+                }
+                return sortAsc ? va - vb : vb - va;
+            });
+
+            let html = '';
+            for (const s of sorted) {
+                const isMe = myTeam && s.team.toUpperCase() === myTeam;
+                const w = parseInt(s.score) || 0;
+                const l = parseInt(s.opponent_score) || 0;
+                const t = parseInt(s.ties) || 0;
+
+                html += `<tr class="${isMe ? 'my-team' : ''}">`;
+                html += `<td class="td-rank">${s.live_rank || '—'}</td>`;
+                html += `<td class="td-team"><span class="td-team-abbr">${s.team}</span></td>`;
+                html += `<td class="td-record">${s.live_record || s.record}</td>`;
+                html += `<td class="td-opponent">${s.opponent || '—'}</td>`;
+                html += `<td class="td-score"><span class="win">${w}</span>-<span class="loss">${l}</span>-<span class="tie">${t}</span></td>`;
+
+                batCats.forEach((c, i) => {
+                    const cls = i === 0 ? ' td-bat-start' : '';
+                    const val = s.categories?.[c.display_name] ?? '—';
+                    html += `<td class="td-cat${cls}">${val}</td>`;
+                });
+                pitchCats.forEach((c, i) => {
+                    const cls = i === 0 ? ' td-pitch-start' : '';
+                    const val = s.categories?.[c.display_name] ?? '—';
+                    html += `<td class="td-cat${cls}">${val}</td>`;
+                });
+
+                html += '</tr>';
+            }
+            document.getElementById('standingsBody').innerHTML = html;
+        }
+
+        // Sort click handler
+        document.getElementById('standingsTable').addEventListener('click', e => {
+            const th = e.target.closest('th[data-sort]');
+            if (!th) return;
+            const key = th.dataset.sort;
+            if (sortKey === key) {
+                sortAsc = !sortAsc;
+            } else {
+                sortKey = key;
+                // Default descending for stats, ascending for rank/team
+                sortAsc = (key === 'live_rank' || key === 'team' || key === 'opponent');
+            }
+            renderHead();
+            renderBody();
+        });
+
+        renderHead();
+        renderBody();
+    })();
+    </script>
+</body>
+</html>
