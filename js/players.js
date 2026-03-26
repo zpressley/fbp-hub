@@ -450,6 +450,9 @@ function openPlayerDetail(playerId) {
                 ${player.years_simple ? createContractBadgeWithClass(player.years_simple) : ''}
                 ${player.FBP_Team ? createTeamBadge(player.FBP_Team) : ''}
             </div>
+            <div class="ext-links-row">
+                ${typeof window.PlayerLinks?.renderBadges === 'function' ? window.PlayerLinks.renderBadges(player) : ''}
+            </div>
             <div class="player-detail-actions">
                 ${getAddToTradeActionHTML(player)}
                 <a href="${profileLink}" class="btn btn-profile-accent">

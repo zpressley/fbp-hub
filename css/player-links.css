@@ -1,0 +1,79 @@
+/* ================================================================
+   FBP Hub — External Player Link Badges
+   ================================================================ */
+
+/* Base badge */
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-family: var(--font-title, 'Barlow Condensed', sans-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+  line-height: 1.7;
+}
+
+.ext-link:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Baseball Reference — maroon */
+.ext-link--bbref {
+  background: #8b1a1a;
+  color: #fff;
+  border: 1px solid #6b1212;
+}
+
+/* FanGraphs — green */
+.ext-link--fg {
+  background: #1a6b2e;
+  color: #fff;
+  border: 1px solid #145424;
+}
+
+/* MLB.com — blue */
+.ext-link--mlb {
+  background: #002d72;
+  color: #fff;
+  border: 1px solid #001d4e;
+}
+
+/* Yahoo — purple */
+.ext-link--yahoo {
+  background: #6001d2;
+  color: #fff;
+  border: 1px solid #4a00a8;
+}
+
+/* ── Row container ─────────────────────────────────────────── */
+.ext-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Inside player-subtitle: tighten spacing */
+.player-subtitle .ext-links-row {
+  margin-top: 6px;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .ext-link {
+    font-size: 0.58rem;
+    padding: 1px 5px;
+  }
+  .ext-links-row {
+    gap: 3px;
+  }
+}

@@ -3,9 +3,9 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Constitution Art 5 Sec 4 enforced on the frontend:
  *
- *   OB  • Mon 3pm – Tue EOD  · min $10  · 1 per team per week
+ *   OB  • Mon 3pm – Tue 6:00am  · min $10  · 1 per team per week
  *        · OBs win ALL tiebreaks
- *   CB  • Wed – Fri 9pm  · min current high + $5  · 1 per team per prospect per day
+ *   CB  • Tue 6:00am – Fri 9:00pm  · min current high + $5  · 1 per team per prospect per day
  *   Match/Forfeit  • Saturday only, OB manager only
  *   Processing     • Sunday — read-only results view
  *
@@ -56,6 +56,16 @@
     } catch { /* keep fallback */ }
   }
 
+  async function loadAuctionState() {
+    if (API) {
+      try {
+        const r = await fetch(`${API}/api/auction/current`, { cache: 'no-store' });
+        if (r.ok) return await r.json();
+      } catch { /* fall through to static JSON */ }
+    }
+    return fetchJSON(`${DATA}auction_current.json`);
+  }
+
   function _lum(hex) {
     hex = hex.replace('#', '');
     const [r, g, b] = [0, 2, 4].map(i => {
@@ -87,7 +97,7 @@
   async function loadAll() {
     await loadTeamColors();
     const [auc, players, wb] = await Promise.all([
-      fetchJSON(`${DATA}auction_current.json`),
+      loadAuctionState(),
       fetchJSON(`${DATA}combined_players.json`),
       fetchJSON(`${DATA}wizbucks.json`),
     ]);
@@ -244,8 +254,8 @@
     if (!banner) return;
 
     const cfgs = {
-      ob_window:  { cls:'phase-ob',    icon:'fas fa-circle-dot', title:'\u{1F7E2} Originating Bid Window Open',    sub:'Mon 3pm \u2013 Tue EOD ET \u00B7 Min $10 \u00B7 1 OB per team per week' },
-      cb_window:  { cls:'phase-cb',    icon:'fas fa-swords',     title:'\u{1F7E1} Challenge Bid Window Open',       sub:'Wed \u2013 Fri 9pm ET \u00B7 Min current high +$5 \u00B7 1 CB per prospect per day' },
+      ob_window:  { cls:'phase-ob',    icon:'fas fa-circle-dot', title:'\u{1F7E2} Originating Bid Window Open',    sub:'Mon 3pm \u2013 Tue 6:00am ET \u00B7 Min $10 \u00B7 1 OB per team per week' },
+      cb_window:  { cls:'phase-cb',    icon:'fas fa-swords',     title:'\u{1F7E1} Challenge Bid Window Open',       sub:'Tue 6:00am \u2013 Fri 9:00pm ET \u00B7 Min current high +$5 \u00B7 1 CB per prospect per day' },
       ob_final:   { cls:'phase-match', icon:'fas fa-handshake',  title:'\u{1F7E3} Match / Forfeit Window',          sub:'Saturday \u00B7 OB managers: match the high challenge bid or forfeit' },
       processing: { cls:'phase-proc',  icon:'fas fa-gears',      title:'\u{1F535} Processing Results',              sub:'Sunday \u00B7 Results being finalized \u00B7 Transactions page will update' },
       off_week:   { cls:'phase-off',   icon:'fas fa-moon',       title:'No Auction This Week',               sub:'Portal opens Monday at 3pm ET during the regular season' },

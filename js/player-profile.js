@@ -246,6 +246,12 @@ function displayPlayerHeader() {
     // Service-time based progress has been deprecated; keep the service card hidden for now.
 
     renderAddToTradeButton();
+
+    // External research links (BBRef, FG, MLB, Yahoo)
+    const linksRow = document.getElementById('externalLinksRow');
+    if (linksRow && typeof window.PlayerLinks?.renderBadges === 'function') {
+        linksRow.innerHTML = window.PlayerLinks.renderBadges(player);
+    }
 }
 
 function renderAddToTradeButton() {

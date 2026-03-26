@@ -63,6 +63,9 @@ function openDraftPlayerDetail(playerId) {
                 ${contractBadgeHTML}
                 ${teamBadgeHTML}
             </div>
+            <div class="ext-links-row">
+                ${typeof window.PlayerLinks?.renderBadges === 'function' ? window.PlayerLinks.renderBadges(player) : ''}
+            </div>
             <div class="player-detail-actions">
                 <a href="${profileLink}" class="btn btn-profile-accent">
                     <i class="fas fa-user"></i> View Full Profile
