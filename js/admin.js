@@ -140,6 +140,9 @@ async function initAdminPortal() {
     setupTabs();
     loadRecentLogs();
     loadTeamBalances();
+    if (typeof initAuctionAdminTools === 'function') {
+        initAuctionAdminTools();
+    }
 }
 
 /**
@@ -1271,6 +1274,9 @@ function setupTabs() {
             // Refresh data when switching to logs
             if (targetTab === 'logs') {
                 loadRecentLogs();
+            }
+            if (targetTab === 'auction-admin' && typeof loadAuctionAdminBids === 'function') {
+                loadAuctionAdminBids();
             }
         });
     });

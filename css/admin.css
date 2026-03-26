@@ -1094,6 +1094,95 @@
     gap: var(--space-sm);
 }
 
+/* Auction Admin */
+.auction-admin-section {
+    background-color: var(--bg-charcoal);
+    border: var(--border-width) solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+}
+
+.auction-admin-meta {
+    display: flex;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+    color: var(--text-gray);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+}
+
+.auction-admin-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.auction-admin-card {
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.auction-admin-card h4 {
+    margin-bottom: var(--space-md);
+    color: var(--accent-yellow);
+}
+
+.auction-admin-notes {
+    margin: 0;
+    padding-left: var(--space-lg);
+    color: var(--text-gray);
+    font-size: var(--text-sm);
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.auction-admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+}
+
+.auction-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.auction-admin-table th,
+.auction-admin-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+    font-size: var(--text-sm);
+}
+
+.auction-admin-table th {
+    color: var(--text-gray);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.auction-admin-table td {
+    color: var(--text-white);
+}
+
+.auction-admin-empty {
+    text-align: center;
+    color: var(--text-gray);
+    padding: var(--space-lg);
+}
+
+.auction-admin-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -1157,6 +1246,10 @@
     .search-results-meta {
         flex-direction: column;
         gap: var(--space-sm);
+    }
+
+    .auction-admin-grid {
+        grid-template-columns: 1fr;
     }
 }
 

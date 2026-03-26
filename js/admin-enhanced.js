@@ -46,6 +46,9 @@ async function initAdminPortal() {
     initQueryTab();         // NEW: Paste Query tab
     loadRecentLogs();
     loadTeamBalances();
+    if (typeof initAuctionAdminTools === 'function') {
+        initAuctionAdminTools();
+    }
 }
 
 /**
@@ -1102,6 +1105,9 @@ function setupTabs() {
             
             if (targetTab === 'logs') loadRecentLogs();
             if (targetTab === 'wizbucks') loadTeamBalances();
+            if (targetTab === 'auction-admin' && typeof loadAuctionAdminBids === 'function') {
+                loadAuctionAdminBids();
+            }
         });
     });
     

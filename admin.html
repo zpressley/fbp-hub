@@ -180,6 +180,10 @@
                     <i class="fas fa-coins"></i>
                     <span>WizBucks</span>
                 </button>
+                <button class="admin-tab" data-tab="auction-admin">
+                    <i class="fas fa-gavel"></i>
+                    <span>Auction Admin</span>
+                </button>
                 <button class="admin-tab" data-tab="logs">
                     <i class="fas fa-clipboard-list"></i>
                     <span>Recent Logs</span>
@@ -546,6 +550,91 @@
                                 </button>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Auction Admin -->
+            <div class="admin-tab-content" id="auction-admin-tab">
+                <div class="auction-admin-section">
+                    <div class="search-header">
+                        <div>
+                            <h3><i class="fas fa-gavel"></i> Auction Bid Admin Tools</h3>
+                            <p class="section-subtitle">Add bids, remove bids, and update bid amounts</p>
+                        </div>
+                        <button class="btn-secondary" id="auctionAdminRefreshBtn" onclick="loadAuctionAdminBids()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="auction-admin-meta" id="auctionAdminMeta">
+                        <span>Week: <strong id="auctionAdminWeek">-</strong></span>
+                        <span>Phase: <strong id="auctionAdminPhase">-</strong></span>
+                        <span>Bids: <strong id="auctionAdminCount">0</strong></span>
+                    </div>
+
+                    <div class="auction-admin-grid">
+                        <div class="auction-admin-card">
+                            <h4><i class="fas fa-plus-circle"></i> Add Bid</h4>
+                            <form id="auctionAdminAddForm" onsubmit="return false;">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Team</label>
+                                        <select id="auctionAdminTeam" class="form-input" required>
+                                            <option value="">Select Team...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Bid Type</label>
+                                        <select id="auctionAdminBidType" class="form-input" required>
+                                            <option value="OB">OB</option>
+                                            <option value="CB">CB</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Prospect UPID</label>
+                                        <input type="text" id="auctionAdminProspectId" class="form-input" placeholder="e.g., 12345" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                        <input type="number" id="auctionAdminAmount" class="form-input" min="1" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary" onclick="submitAuctionAdminAddBid()">
+                                    <i class="fas fa-plus"></i> Add Bid
+                                </button>
+                            </form>
+                        </div>
+                        <div class="auction-admin-card">
+                            <h4><i class="fas fa-info-circle"></i> Notes</h4>
+                            <ul class="auction-admin-notes">
+                                <li>Use UPID for all prospect references.</li>
+                                <li>Amount edits are intended for correction-only workflows.</li>
+                                <li>Each action snapshots and commits <code>data/auction_current.json</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="auction-admin-table-wrap">
+                        <table class="auction-admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Bid ID</th>
+                                    <th>Team</th>
+                                    <th>Type</th>
+                                    <th>Prospect</th>
+                                    <th>UPID</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auctionAdminRows">
+                                <tr>
+                                    <td colspan="8" class="auction-admin-empty">No bids loaded.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1145,5 +1234,6 @@
     <script src="js/admin-enhanced.js"></script>
     <script src="js/admin-query.js"></script>
     <script src="js/admin-upid.js"></script>
+    <script src="js/admin-auction.js"></script>
 </body>
 </html>

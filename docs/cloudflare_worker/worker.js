@@ -183,6 +183,22 @@ export default {
         return await proxyToBot(path, env, request);
       }
 
+      if (path === '/api/admin/auction/bids' && request.method === 'GET') {
+        return await proxyToBot('/api/admin/auction/bids', env);
+      }
+
+      if (path === '/api/admin/auction/bids/add' && request.method === 'POST') {
+        return await proxyToBot('/api/admin/auction/bids/add', env, request);
+      }
+
+      if (path === '/api/admin/auction/bids/remove' && request.method === 'POST') {
+        return await proxyToBot('/api/admin/auction/bids/remove', env, request);
+      }
+
+      if (path === '/api/admin/auction/bids/update-amount' && request.method === 'POST') {
+        return await proxyToBot('/api/admin/auction/bids/update-amount', env, request);
+      }
+
       // --- Bulk Admin Operations ---
       if (path === '/api/admin/bulk-graduate' && request.method === 'POST') {
         return await proxyToBot('/api/admin/bulk-graduate', env, request);
