@@ -118,6 +118,10 @@ export default {
         return await proxyToBot('/api/auction/current', env);
       }
 
+      if (path === '/api/auction/match' && request.method === 'POST') {
+        return await proxyToBot('/api/auction/match', env, request);
+      }
+
       // --- Manager Notes ---
       if (path === '/api/notes' && (request.method === 'GET' || request.method === 'POST')) {
         return await proxyToBotAsManager(`/api/notes${url.search}`, env, request);
@@ -197,6 +201,10 @@ export default {
 
       if (path === '/api/admin/auction/bids/update-amount' && request.method === 'POST') {
         return await proxyToBot('/api/admin/auction/bids/update-amount', env, request);
+      }
+
+      if (path === '/api/admin/auction/resolve-now' && request.method === 'POST') {
+        return await proxyToBot('/api/admin/auction/resolve-now', env, request);
       }
 
       // --- Bulk Admin Operations ---
