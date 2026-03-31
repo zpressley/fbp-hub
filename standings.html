@@ -261,6 +261,30 @@
         let sortKey = 'live_rank';
         let sortAsc = true;
 
+        function parseRecord(rec) {
+            try {
+                const parts = String(rec || '0-0-0').split('-').map(x => parseInt(x, 10) || 0);
+                return [parts[0] || 0, parts[1] || 0, parts[2] || 0];
+            } catch {
+                return [0, 0, 0];
+            }
+        }
+
+        function computeOverallRecord(s) {
+            if (s?.overall_live_record) return s.overall_live_record;
+            const [rw, rl, rt] = parseRecord(s?.record);
+            const [lw, ll, lt] = parseRecord(s?.live_record);
+            return `${rw + lw}-${rl + ll}-${rt + lt}`;
+        }
+
+        function computeOverallPct(s) {
+            const explicit = Number(s?.overall_live_win_pct);
+            if (Number.isFinite(explicit)) return explicit;
+            const [w, l, t] = parseRecord(computeOverallRecord(s));
+            const total = w + l + t;
+            return total > 0 ? (w + 0.5 * t) / total : 0;
+        }
+
         // Build header
         function renderHead() {
             let html = '<tr>';
@@ -304,8 +328,8 @@
                     va = parseInt(a.score) || 0;
                     vb = parseInt(b.score) || 0;
                 } else if (sortKey === 'live_win_pct') {
-                    va = (a.overall_live_win_pct ?? a.live_win_pct ?? 0);
-                    vb = (b.overall_live_win_pct ?? b.live_win_pct ?? 0);
+                    va = computeOverallPct(a);
+                    vb = computeOverallPct(b);
                 } else if (sortKey === 'live_rank') {
                     va = a.live_rank || 99;
                     vb = b.live_rank || 99;
@@ -330,7 +354,7 @@
                 html += `<tr class="${isMe ? 'my-team' : ''}">`;
                 html += `<td class="td-rank">${s.live_rank || '—'}</td>`;
                 html += `<td class="td-team"><span class="td-team-abbr">${s.team}</span></td>`;
-                html += `<td class="td-record">${s.overall_live_record || s.live_record || s.record}</td>`;
+                html += `<td class="td-record">${computeOverallRecord(s)}</td>`;
                 html += `<td class="td-opponent">${s.opponent || '—'}</td>`;
                 html += `<td class="td-score"><span class="win">${w}</span>-<span class="loss">${l}</span>-<span class="tie">${t}</span></td>`;
 
