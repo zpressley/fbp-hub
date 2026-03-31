@@ -285,6 +285,20 @@
             return total > 0 ? (w + 0.5 * t) / total : 0;
         }
 
+        function buildDerivedRankMap(rows) {
+            const ranked = [...rows].sort((a, b) => {
+                const pa = computeOverallPct(a);
+                const pb = computeOverallPct(b);
+                if (pb !== pa) return pb - pa;
+                const sa = parseInt(a?.score) || 0;
+                const sb = parseInt(b?.score) || 0;
+                return sb - sa;
+            });
+            const map = new Map();
+            ranked.forEach((row, idx) => map.set(row.team, idx + 1));
+            return map;
+        }
+
         // Build header
         function renderHead() {
             let html = '<tr>';
@@ -318,6 +332,7 @@
 
         // Build body
         function renderBody() {
+            const derivedRankMap = buildDerivedRankMap(data.standings || []);
             const sorted = [...data.standings].sort((a, b) => {
                 let va, vb;
                 if (sortKey.startsWith('cat_')) {
@@ -331,8 +346,8 @@
                     va = computeOverallPct(a);
                     vb = computeOverallPct(b);
                 } else if (sortKey === 'live_rank') {
-                    va = a.live_rank || 99;
-                    vb = b.live_rank || 99;
+                    va = derivedRankMap.get(a.team) || a.live_rank || 99;
+                    vb = derivedRankMap.get(b.team) || b.live_rank || 99;
                 } else if (sortKey === 'team' || sortKey === 'opponent') {
                     va = (a[sortKey] || '').toLowerCase();
                     vb = (b[sortKey] || '').toLowerCase();
@@ -350,9 +365,10 @@
                 const w = parseInt(s.score) || 0;
                 const l = parseInt(s.opponent_score) || 0;
                 const t = parseInt(s.ties) || 0;
+                const rank = derivedRankMap.get(s.team) || s.live_rank || '—';
 
                 html += `<tr class="${isMe ? 'my-team' : ''}">`;
-                html += `<td class="td-rank">${s.live_rank || '—'}</td>`;
+                html += `<td class="td-rank">${rank}</td>`;
                 html += `<td class="td-team"><span class="td-team-abbr">${s.team}</span></td>`;
                 html += `<td class="td-record">${computeOverallRecord(s)}</td>`;
                 html += `<td class="td-opponent">${s.opponent || '—'}</td>`;
