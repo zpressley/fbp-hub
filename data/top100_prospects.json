@@ -31,7 +31,7 @@
   },
   {
     "rank": 3,
-    "name": "Jes\u00fas Made",
+    "name": "Jesús Made",
     "position": "SS/2B",
     "org": "Milwaukee Brewers",
     "level": "AA",
@@ -56,7 +56,7 @@
     "throws": "R",
     "mlb_id": 815888,
     "upid": "7173",
-    "yahoo_id": "",
+    "yahoo_id": "64101",
     "FBP_Team": "WIZ"
   },
   {
@@ -376,7 +376,7 @@
   },
   {
     "rank": 26,
-    "name": "Luis Pe\u00f1a",
+    "name": "Luis Peña",
     "position": "INF",
     "org": "Milwaukee Brewers",
     "level": "A+",
@@ -536,7 +536,7 @@
     "throws": "R",
     "mlb_id": 695731,
     "upid": "7657",
-    "yahoo_id": "",
+    "yahoo_id": "64314",
     "FBP_Team": "HAM"
   },
   {
@@ -581,12 +581,12 @@
     "throws": "L",
     "mlb_id": 702281,
     "upid": "3940",
-    "yahoo_id": "",
+    "yahoo_id": "60346",
     "FBP_Team": "RV"
   },
   {
     "rank": 40,
-    "name": "Josue Brice\u00f1o",
+    "name": "Josue Briceño",
     "position": "C/1B",
     "org": "Detroit Tigers",
     "level": "AA",
@@ -626,7 +626,7 @@
     "throws": "R",
     "mlb_id": 683357,
     "upid": "3584",
-    "yahoo_id": "",
+    "yahoo_id": "12127",
     "FBP_Team": "JEP"
   },
   {
@@ -761,7 +761,7 @@
     "throws": "R",
     "mlb_id": 702518,
     "upid": "3899",
-    "yahoo_id": "",
+    "yahoo_id": "60279",
     "FBP_Team": "B2J"
   },
   {
@@ -811,7 +811,7 @@
   },
   {
     "rank": 55,
-    "name": "Mois\u00e9s Ballesteros",
+    "name": "Moisés Ballesteros",
     "position": "C",
     "org": "Chicago Cubs",
     "level": "MLB",
@@ -896,7 +896,7 @@
     "throws": "R",
     "mlb_id": 701527,
     "upid": "7605",
-    "yahoo_id": "",
+    "yahoo_id": "64369",
     "FBP_Team": "WIZ"
   },
   {
@@ -971,7 +971,7 @@
     "throws": "R",
     "mlb_id": 806953,
     "upid": "7146",
-    "yahoo_id": "",
+    "yahoo_id": "63618",
     "FBP_Team": "WIZ"
   },
   {
@@ -1061,7 +1061,7 @@
     "throws": "R",
     "mlb_id": 695670,
     "upid": "3499",
-    "yahoo_id": "",
+    "yahoo_id": "12532",
     "FBP_Team": "LFB"
   },
   {
@@ -1216,7 +1216,7 @@
   },
   {
     "rank": 82,
-    "name": "Elmer Rodr\u00edguez",
+    "name": "Elmer Rodríguez",
     "position": "RHP",
     "org": "New York Yankees",
     "level": "MLB",
@@ -1226,7 +1226,7 @@
     "throws": "R",
     "mlb_id": 695684,
     "upid": "8319",
-    "yahoo_id": "",
+    "yahoo_id": "60115",
     "FBP_Team": "DMN"
   },
   {
@@ -1496,7 +1496,7 @@
     "throws": "R",
     "mlb_id": 687075,
     "upid": "3930",
-    "yahoo_id": "",
+    "yahoo_id": "63017",
     "FBP_Team": "DRO"
   }
 ]
