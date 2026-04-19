@@ -513,8 +513,12 @@
     const ob = getOB(prospectId, bids);
     if (!ob || ob.team === _myTeam) return false;
     if (_phase === 'cb_window') {
-      if (alreadyCBToday(_myTeam, prospectId, bids)) return false;
       if (isFridaySpoiler(_myTeam, prospectId, bids)) return false;
+      if (alreadyCBToday(_myTeam, prospectId, bids)) {
+        // Same-day raises are allowed only when the team is still the high bidder.
+        const winner = computeWinner(prospectId, bids);
+        if (winner?.team !== _myTeam) return false;
+      }
       return true;
     }
     return false;
@@ -530,9 +534,10 @@
     const myOB  = bids.find(b => b.team === _myTeam && b.bid_type === 'OB');
 
     const allowOB = _phase === 'ob_window' && !myOB && !ob;
+    const isHighBidder = computeWinner(prospectId, bids)?.team === _myTeam;
     const allowCB = _phase === 'cb_window'
                     && ob && ob.team !== _myTeam
-                    && !alreadyCBToday(_myTeam, prospectId, bids)
+                    && (!alreadyCBToday(_myTeam, prospectId, bids) || isHighBidder)
                     && !isFridaySpoiler(_myTeam, prospectId, bids);
 
     if (!allowOB && !allowCB) {
