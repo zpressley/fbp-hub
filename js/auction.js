@@ -256,7 +256,7 @@
     const cfgs = {
       ob_window:  { cls:'phase-ob',    icon:'fas fa-circle-dot', title:'\u{1F7E2} Originating Bid Window Open',    sub:'Mon 3pm \u2013 Tue 6:00am ET \u00B7 Min $10 \u00B7 1 OB per team per week' },
       cb_window:  { cls:'phase-cb',    icon:'fas fa-swords',     title:'\u{1F7E1} Challenge Bid Window Open',       sub:'Tue 6:00am \u2013 Fri 9:00pm ET \u00B7 Min current high +$5 \u00B7 1 CB per prospect per day' },
-      ob_final:   { cls:'phase-match', icon:'fas fa-handshake',  title:'\u{1F7E3} Match / Forfeit Window',          sub:'Saturday \u00B7 OB managers: match the high challenge bid or forfeit' },
+      ob_final:   { cls:'phase-match', icon:'fas fa-handshake',  title:'\u{1F7E3} Match / Forfeit Window',          sub:'Sat \u2013 Sun 2pm ET \u00B7 OB managers: match the high challenge bid or forfeit' },
       processing: { cls:'phase-proc',  icon:'fas fa-gears',      title:'\u{1F535} Processing Results',              sub:'Sunday \u00B7 Results being finalized \u00B7 Transactions page will update' },
       off_week:   { cls:'phase-off',   icon:'fas fa-moon',       title:'No Auction This Week',               sub:'Portal opens Monday at 3pm ET during the regular season' },
     };
@@ -584,7 +584,12 @@
       info += ' \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
     }
 
-    const available = _myTeam ? Math.max(0, getBalance(_myTeam) - computeCommitted(_myTeam, bids)) : 0;
+    let available = _myTeam ? Math.max(0, getBalance(_myTeam) - computeCommitted(_myTeam, bids)) : 0;
+    // For CB raises: if team's existing bid is the current winner, that committed
+    // amount is replaced (not added to) by the new bid — add it back to available.
+    if (bidType === 'CB' && myBid && winner && winner.team === _myTeam) {
+      available = Math.max(0, available + winner.amount);
+    }
     const maxAmt = Math.max(minAmt, Math.floor(available / 5) * 5);
 
     if (hintEl)  hintEl.textContent  = `$5 increments \u00B7 min $${minAmt} \u00B7 max $${maxAmt}`;
@@ -611,7 +616,15 @@
       return showErr(errEl, 'Amount must be a positive multiple of $5.');
 
     const bids      = _state?.bids || [];
-    const available = getBalance(_myTeam) - computeCommitted(_myTeam, bids);
+    let available = getBalance(_myTeam) - computeCommitted(_myTeam, bids);
+    // For CB raises: if team's existing bid is the current winner, the new bid
+    // replaces that commitment — adjust available to reflect the incremental cost.
+    if (bidType === 'CB') {
+      const existingWin = computeWinner(_modal.prospectId, bids);
+      if (existingWin && existingWin.team === _myTeam) {
+        available += existingWin.amount;
+      }
+    }
     if (amount > available)
       return showErr(errEl, `Insufficient WizBucks. You have $${Math.max(0, available)} available.`);
 
