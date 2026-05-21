@@ -1093,6 +1093,126 @@ input::placeholder {
 }
 
 /* ============================================
+   MANAGER PLAYER MODALS
+   ============================================ */
+.manager-player-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.manager-player-modal.active {
+    display: flex;
+}
+
+.manager-player-modal-content {
+    width: min(920px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--bg-charcoal);
+    border: 3px solid var(--primary-red);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+}
+
+.manager-player-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.manager-player-modal-header h3 {
+    font-family: var(--font-title);
+    font-size: var(--text-2xl);
+    color: var(--accent-yellow);
+    letter-spacing: 1px;
+}
+
+.manager-player-modal-close {
+    border: none;
+    background: transparent;
+    color: var(--text-gray);
+    font-size: var(--text-xl);
+    cursor: pointer;
+}
+
+.manager-player-modal-close:hover {
+    color: var(--primary-red);
+}
+
+.manager-player-subtle {
+    color: var(--text-gray);
+    margin-bottom: var(--space-lg);
+}
+
+.manager-player-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.manager-player-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+}
+
+.manager-player-grid.two-col {
+    grid-template-columns: 1fr;
+}
+
+.manager-player-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.manager-player-field span {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-gray);
+    font-weight: 700;
+}
+
+.manager-player-field input,
+.manager-player-field textarea,
+.manager-player-field select {
+    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--text-white);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+}
+
+.manager-player-field textarea {
+    resize: vertical;
+}
+
+.manager-player-field-full {
+    grid-column: 1 / -1;
+}
+
+.manager-player-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+}
+
+@media (min-width: 768px) {
+    .manager-player-grid.two-col {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ============================================
    UTILITY CLASSES
    ============================================ */
 .text-center { text-align: center; }

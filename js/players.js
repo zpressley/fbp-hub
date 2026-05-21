@@ -15,6 +15,7 @@ let currentFilters = {
 let displayedCount = 50;
 const LOAD_MORE_INCREMENT = 50;
 let selectedPlayer = null;
+let managerPlayerUpdateListenerBound = false;
 
 /**
  * Initialize players page
@@ -30,6 +31,10 @@ function initPlayersPage() {
     
     // Setup quick filters
     setupQuickFilters();
+
+    // Setup manager player actions
+    setupManagerPlayerActions();
+    setupManagerPlayerUpdateListener();
     
     // Setup filter toggle
     setupFilterToggle();
@@ -44,11 +49,72 @@ function initPlayersPage() {
     displayPlayers();
 }
 
+function editPlayerFromPlayers(upid) {
+    try {
+        if (!window.ManagerPlayerTools?.openEditPlayerModal) {
+            showToast('Manager edit tools are unavailable.');
+            return;
+        }
+        const player = FBPHub.data.players.find(p => String(p.upid) === String(upid));
+        if (!player) {
+            showToast('Could not find player to edit.');
+            return;
+        }
+        window.ManagerPlayerTools.openEditPlayerModal(player);
+    } catch (e) {
+        console.error('Edit player launch failed', e);
+        showToast('Failed to open edit player modal.');
+    }
+}
+
+function setupManagerPlayerActions() {
+    const addBtn = document.getElementById('addPlayerBtn');
+    if (!addBtn) return;
+
+    const canManage = Boolean(window.ManagerPlayerTools?.canManagePlayers && window.ManagerPlayerTools.canManagePlayers());
+    if (!canManage) {
+        addBtn.classList.add('hidden');
+        return;
+    }
+
+    addBtn.classList.remove('hidden');
+    addBtn.addEventListener('click', () => {
+        window.ManagerPlayerTools.openAddPlayerRequestModal();
+    });
+}
+
+function setupManagerPlayerUpdateListener() {
+    if (managerPlayerUpdateListenerBound) return;
+    managerPlayerUpdateListenerBound = true;
+
+    window.addEventListener('manager-player-updated', event => {
+        const updated = event.detail?.player;
+        if (!updated?.upid || !Array.isArray(FBPHub?.data?.players)) return;
+
+        const idx = FBPHub.data.players.findIndex(p => String(p.upid) === String(updated.upid));
+        if (idx === -1) return;
+
+        Object.assign(FBPHub.data.players[idx], updated);
+
+        const selectedUpid = selectedPlayer?.upid ? String(selectedPlayer.upid) : null;
+        const isSelected = selectedUpid && selectedUpid === String(updated.upid);
+
+        displayedCount = Math.max(displayedCount, LOAD_MORE_INCREMENT);
+        displayPlayers();
+
+        if (isSelected) {
+            openPlayerDetail(String(updated.upid));
+            const row = document.querySelector(`.player-list-item[data-player-id="${String(updated.upid)}"]`);
+            if (row) row.classList.add('selected');
+        }
+    });
+}
+
 /**
  * Setup quick filter chips
  */
 function setupQuickFilters() {
-    const chips = document.querySelectorAll('.filter-chip');
+    const chips = document.querySelectorAll('.filter-chip[data-filter]');
     
     chips.forEach(chip => {
         chip.addEventListener('click', () => {
@@ -249,7 +315,7 @@ function setupClearFilters() {
         document.getElementById('managerFilter').value = '';
         
         // Reset quick filter chips
-        document.querySelectorAll('.filter-chip').forEach(chip => {
+        document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
             chip.classList.remove('active');
             if (chip.dataset.filter === 'all') {
                 chip.classList.add('active');
@@ -422,7 +488,7 @@ function openPlayerDetail(playerId) {
     
     // Find player data
     const player = FBPHub.data.players.find(p => 
-        (p.upid && p.upid === playerId) || p.name === playerId
+        (p.upid && String(p.upid) === String(playerId)) || p.name === playerId
     );
     
     if (!player) {
@@ -455,6 +521,7 @@ function openPlayerDetail(playerId) {
             </div>
             <div class="player-detail-actions">
                 ${getAddToTradeActionHTML(player)}
+                ${getEditPlayerActionHTML(player)}
                 <a href="${profileLink}" class="btn btn-profile-accent">
                     <i class="fas fa-user"></i>
                     View Full Profile
@@ -521,6 +588,18 @@ function getAddToTradeActionHTML(player) {
     `;
 }
 
+
+function getEditPlayerActionHTML(player) {
+    if (!window.ManagerPlayerTools?.canManagePlayers || !window.ManagerPlayerTools.canManagePlayers()) return '';
+    if (!player?.upid) return '';
+
+    return `
+        <button type="button" class="btn btn-profile-accent" onclick="editPlayerFromPlayers('${String(player.upid)}')">
+            <i class="fas fa-pen"></i>
+            Edit Player
+        </button>
+    `;
+}
 function addPlayerToTradeFromPlayers(upid) {
     try {
         const player = FBPHub.data.players.find(p => String(p.upid) === String(upid));
@@ -651,3 +730,4 @@ window.initPlayersPage = initPlayersPage;
 window.openPlayerDetail = openPlayerDetail;
 window.closePlayerDetail = closePlayerDetail;
 window.addPlayerToTradeFromPlayers = addPlayerToTradeFromPlayers;
+window.editPlayerFromPlayers = editPlayerFromPlayers;

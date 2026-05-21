@@ -932,6 +932,10 @@
     margin-top: var(--space-md);
 }
 
+#editPlayerContainer {
+    margin-top: var(--space-sm);
+}
+
 .btn-add-to-trade {
     display: inline-flex;
     align-items: center;

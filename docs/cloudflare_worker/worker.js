@@ -1,8 +1,3 @@
-// NOTE: This file is a reference snapshot of the Cloudflare Worker code
-// deployed at: https://fbp-auth.zpressley.workers.dev
-//
-// It is not executed from this repository; deploy via Cloudflare Workers.
-// Keep env var names in sync with Cloudflare secrets.
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -135,6 +130,14 @@ export default {
       // --- Manager Self-Service APIs ---
       if (path === '/api/manager/contract-purchase' && request.method === 'POST') {
         return await proxyToBot('/api/manager/contract-purchase', env, request);
+      }
+
+      if (path === '/api/manager/player-update' && request.method === 'POST') {
+        return await proxyToBotAsManager('/api/manager/player-update', env, request);
+      }
+
+      if (path === '/api/manager/add-player-request' && request.method === 'POST') {
+        return await proxyToBotAsManager('/api/manager/add-player-request', env, request);
       }
 
       // --- Settings APIs ---

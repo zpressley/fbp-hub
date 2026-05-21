@@ -13,6 +13,7 @@ let PLAYER_DATA = {
     // Prospect tags data (badges, FV, status) from prospect_tags.json
     prospectTags: null
 };
+let managerProfileUpdateListenerBound = false;
 
 /**
  * Initialize player profile page
@@ -46,6 +47,9 @@ async function initPlayerProfile() {
     
     // Setup tabs
     setupTabs();
+
+    // Setup manager edit hooks
+    setupManagerPlayerProfileUpdateListener();
     
     // Check if user can purchase contract for this player
     checkContractPurchaseEligibility();
@@ -62,7 +66,7 @@ async function loadPlayerData(upid, playerName) {
     // Load player from combined_players.json
     if (typeof FBPHub !== 'undefined' && FBPHub.data?.players) {
         if (upid) {
-            PLAYER_DATA.player = FBPHub.data.players.find(p => p.upid === upid);
+            PLAYER_DATA.player = FBPHub.data.players.find(p => String(p.upid) === String(upid));
         } else if (playerName) {
             PLAYER_DATA.player = FBPHub.data.players.find(p => 
                 p.name.toLowerCase() === playerName.toLowerCase()
@@ -91,7 +95,7 @@ async function loadPlayerData(upid, playerName) {
         if (statsResponse.ok) {
             const allStats = await statsResponse.json();
             const playerStats = (Array.isArray(allStats) ? allStats : []).filter(row =>
-                row.upid === PLAYER_DATA.upid ||
+                String(row.upid) === String(PLAYER_DATA.upid) ||
                 row.player_name === PLAYER_DATA.player.name
             );
 
@@ -156,7 +160,7 @@ async function loadPlayerData(upid, playerName) {
 
         PLAYER_DATA.history = combined
             .filter(entry =>
-                entry.upid === PLAYER_DATA.upid ||
+                String(entry.upid) === String(PLAYER_DATA.upid) ||
                 entry.player_name === PLAYER_DATA.player.name
             )
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -187,7 +191,7 @@ function getMockPlayer(upid, playerName) {
     ];
     
     if (upid) {
-        return mockPlayers.find(p => p.upid === upid);
+        return mockPlayers.find(p => String(p.upid) === String(upid));
     } else if (playerName) {
         return mockPlayers.find(p => p.name.toLowerCase() === playerName.toLowerCase());
     }
@@ -246,6 +250,7 @@ function displayPlayerHeader() {
     // Service-time based progress has been deprecated; keep the service card hidden for now.
 
     renderAddToTradeButton();
+    renderEditPlayerButton();
 
     // External research links (BBRef, FG, MLB, Yahoo)
     const linksRow = document.getElementById('externalLinksRow');
@@ -287,6 +292,68 @@ function renderAddToTradeButton() {
             <span>ADD TO TRADE</span>
         </button>
     `;
+}
+
+function renderEditPlayerButton() {
+    const container = document.getElementById('editPlayerContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!window.ManagerPlayerTools?.canManagePlayers || !window.ManagerPlayerTools.canManagePlayers()) {
+        return;
+    }
+
+    const player = PLAYER_DATA.player;
+    if (!player?.upid) return;
+
+    container.innerHTML = `
+        <button type="button" class="btn-add-to-trade" onclick="openEditPlayerFromProfile()">
+            <i class="fas fa-pen"></i>
+            <span>EDIT PLAYER</span>
+        </button>
+    `;
+}
+
+function openEditPlayerFromProfile() {
+    try {
+        const player = PLAYER_DATA.player;
+        if (!player?.upid) {
+            showProfileToast('Could not determine player to edit.', 'error');
+            return;
+        }
+        if (!window.ManagerPlayerTools?.openEditPlayerModal) {
+            showProfileToast('Manager edit tools are unavailable.', 'error');
+            return;
+        }
+        window.ManagerPlayerTools.openEditPlayerModal(player);
+    } catch (e) {
+        console.error('Edit player launch failed', e);
+        showProfileToast('Failed to open edit player modal.', 'error');
+    }
+}
+
+function setupManagerPlayerProfileUpdateListener() {
+    if (managerProfileUpdateListenerBound) return;
+    managerProfileUpdateListenerBound = true;
+
+    window.addEventListener('manager-player-updated', event => {
+        const updated = event.detail?.player;
+        if (!updated?.upid || !PLAYER_DATA?.player?.upid) return;
+        if (String(updated.upid) !== String(PLAYER_DATA.player.upid)) return;
+
+        PLAYER_DATA.player = { ...PLAYER_DATA.player, ...updated };
+
+        if (Array.isArray(FBPHub?.data?.players)) {
+            const idx = FBPHub.data.players.findIndex(p => String(p.upid) === String(updated.upid));
+            if (idx !== -1) {
+                Object.assign(FBPHub.data.players[idx], updated);
+            }
+        }
+
+        displayPlayerHeader();
+        displayOverview();
+    });
 }
 
 function addPlayerToTradeFromProfile() {
@@ -1263,7 +1330,7 @@ async function confirmPlayerContractPurchase(upid, upgradeType, cost, newContrac
         
         // Update local player data
         PLAYER_DATA.player = result.player;
-        const idx = FBPHub.data.players.findIndex(p => p.upid === upid);
+        const idx = FBPHub.data.players.findIndex(p => String(p.upid) === String(upid));
         if (idx !== -1) {
             FBPHub.data.players[idx] = result.player;
         }
@@ -1338,3 +1405,4 @@ window.selectPlayerContractUpgrade = selectPlayerContractUpgrade;
 window.closePlayerConfirmModal = closePlayerConfirmModal;
 window.confirmPlayerContractPurchase = confirmPlayerContractPurchase;
 window.addPlayerToTradeFromProfile = addPlayerToTradeFromProfile;
+window.openEditPlayerFromProfile = openEditPlayerFromProfile;
