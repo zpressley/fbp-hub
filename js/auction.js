@@ -35,6 +35,7 @@
   let _obEligible = [];  // sorted eligible prospects for OB search
   let _teamColorData = {};     // loaded from team_colors.json
   let _badgeColorCache = {};   // memoized computed badge colors
+  let _detailPanelLastFocused = null;
 
   // ── Fetch helpers ────────────────────────────────────────────────────────────
   async function fetchJSON(path) {
@@ -141,6 +142,111 @@
   function resolvePos(pid) {
     const p = _byUpid[String(pid)];
     return p?.position || '';
+  }
+
+  function getAuctionPlayerDetailPlaceholderHTML() {
+    return `<div class="auc-player-detail-placeholder"><i class="fas fa-hand-pointer"></i><p>Click a player name to view details</p></div>`;
+  }
+
+  function resolveProfileLink(player) {
+    if (typeof window.createPlayerLink === 'function') {
+      try {
+        const link = window.createPlayerLink(player);
+        if (link) return link;
+      } catch { /* fallback */ }
+    }
+    const params = new URLSearchParams();
+    if (player?.upid) params.set('upid', String(player.upid));
+    else params.set('name', String(player?.name || ''));
+    return `player-profile.html?${params.toString()}`;
+  }
+
+  function openAuctionPlayerDetail(prospectId) {
+    const panel = document.getElementById('auctionPlayerDetailPanel');
+    if (!panel) return;
+
+    const player = _byUpid[String(prospectId)];
+    if (!player) return;
+
+    if (document.activeElement instanceof HTMLElement) {
+      _detailPanelLastFocused = document.activeElement;
+    }
+
+    const position = player.position || 'N/A';
+    const mlbTeam = player.team || 'FA';
+    const type = player.player_type === 'MLB' ? 'Keeper' : 'Prospect';
+    const owner = player.FBP_Team || player.manager || 'Free Agent';
+    const profileLink = resolveProfileLink(player);
+
+    panel.innerHTML = `
+      <div class="auc-player-detail-header">
+        <button type="button" class="auc-player-detail-close" aria-label="Close player details">
+          <i class="fas fa-times"></i> CLOSE
+        </button>
+        <div class="auc-player-detail-name">${esc(player.name || '')}</div>
+        <div class="auc-player-detail-title">${esc(position)} - ${esc(mlbTeam)}</div>
+        <div class="auc-player-detail-actions">
+          <a href="${esc(profileLink)}" class="auc-player-profile-link">
+            <i class="fas fa-user"></i>
+            View Full Profile
+          </a>
+        </div>
+      </div>
+      <div class="auc-player-detail-content">
+        <div class="auc-player-detail-section">
+          <h3>PLAYER INFORMATION</h3>
+          <div class="auc-player-info-grid">
+            <div class="auc-player-info-item">
+              <div class="auc-player-info-label">Position</div>
+              <div class="auc-player-info-value">${esc(position)}</div>
+            </div>
+            <div class="auc-player-info-item">
+              <div class="auc-player-info-label">MLB Team</div>
+              <div class="auc-player-info-value">${esc(mlbTeam)}</div>
+            </div>
+            <div class="auc-player-info-item">
+              <div class="auc-player-info-label">Player Type</div>
+              <div class="auc-player-info-value">${esc(type)}</div>
+            </div>
+            <div class="auc-player-info-item">
+              <div class="auc-player-info-label">FBP Manager</div>
+              <div class="auc-player-info-value">${esc(owner)}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    panel.classList.add('active');
+    panel.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('auc-detail-open');
+
+    const closeBtn = panel.querySelector('.auc-player-detail-close');
+    closeBtn?.addEventListener('click', closeAuctionPlayerDetail);
+    closeBtn?.focus();
+  }
+
+  function closeAuctionPlayerDetail() {
+    const panel = document.getElementById('auctionPlayerDetailPanel');
+    if (!panel || !panel.classList.contains('active')) return;
+    panel.classList.remove('active');
+    panel.setAttribute('aria-hidden', 'true');
+    panel.innerHTML = getAuctionPlayerDetailPlaceholderHTML();
+    document.body.classList.remove('auc-detail-open');
+    if (_detailPanelLastFocused && typeof _detailPanelLastFocused.focus === 'function') {
+      _detailPanelLastFocused.focus();
+    }
+    _detailPanelLastFocused = null;
+  }
+
+  function bindAuctionProspectLinks(root) {
+    if (!root) return;
+    root.querySelectorAll('.auc-prospect-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pid = btn.dataset.pid;
+        if (!pid) return;
+        openAuctionPlayerDetail(pid);
+      });
+    });
   }
 
   function getMyTeam() {
@@ -343,7 +449,7 @@
         <td class="td-team">${esc(obTeam)}</td>
         <td class="td-balance">$${obBal}</td>
         <td class="td-spend">$${obCom}</td>
-        <td class="td-claim">${posStr}<span class="prospect-name">${esc(name)}</span></td>
+        <td class="td-claim">${posStr}<button type="button" class="prospect-name auc-prospect-trigger" data-pid="${esc(pid)}">${esc(name)}</button></td>
         <td class="td-time">${time}</td>`;
 
       for (const team of cols) {
@@ -419,6 +525,8 @@
         <tfoot><tr>${foot}</tr></tfoot>
       </table>`;
 
+    bindAuctionProspectLinks(wrapper);
+
     // Events — pass UPID as pid, resolve name for display
     wrapper.querySelectorAll('.auc-bid-cell.clickable').forEach(cell => {
       cell.addEventListener('click', () => openBidModal(cell.dataset.pid, resolveName(cell.dataset.pid), 'CB'));
@@ -439,7 +547,7 @@
       const w = computeWinner(pid, bids);
       const name = resolveName(pid);
       return `<tr>
-        <td class="td-claim"><span class="prospect-name">${esc(name)}</span></td>
+        <td class="td-claim"><button type="button" class="prospect-name auc-prospect-trigger" data-pid="${esc(pid)}">${esc(name)}</button></td>
         <td class="td-team" style="color:${w ? '#22c55e' : 'rgba(170,170,170,.3)'}">${w ? esc(w.team) : '\u2013'}</td>
         <td class="td-balance">${w ? '$' + w.amount : '\u2013'}</td>
       </tr>`;
@@ -450,6 +558,8 @@
         <thead><tr><th class="th-claim">Prospect</th><th class="th-team">Winner</th><th class="th-balance">Amount</th></tr></thead>
         <tbody>${rows || '<tr><td colspan="3" style="color:rgba(170,170,170,.3);text-align:center;padding:30px;">No bids this week</td></tr>'}</tbody>
       </table>`;
+
+    bindAuctionProspectLinks(wrapper);
   }
 
   // ── Prospect search (OB row) ─────────────────────────────────────────────────────
@@ -742,6 +852,19 @@
     document.getElementById('bidModal')?.addEventListener('click', e => {
       if (e.target.id === 'bidModal') document.getElementById('bidModal').style.display = 'none';
     });
+    document.getElementById('auctionPlayerDetailPanel')?.addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeAuctionPlayerDetail();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const bidModal = document.getElementById('bidModal');
+      if (bidModal?.style.display === 'flex') {
+        bidModal.style.display = 'none';
+        return;
+      }
+      closeAuctionPlayerDetail();
+    });
     document.getElementById('bidSubmitBtn')?.addEventListener('click', submitBid);
 
     document.getElementById('bidModal')?.addEventListener('click', e => {
@@ -762,5 +885,7 @@
       input.value = Math.min(max, Math.max(min, val));
     });
   };
+
+  window.closeAuctionPlayerDetail = closeAuctionPlayerDetail;
 
 })();
