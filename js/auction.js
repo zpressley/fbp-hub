@@ -4,8 +4,8 @@
  * Constitution Art 5 Sec 4 enforced on the frontend:
  *
  *   OB  • Mon 3pm – Tue 6:00am  · min $10  · 1 per team per week
- *        · OBs win ALL tiebreaks
  *   CB  • Tue 6:00am – Fri 9:00pm  · min current high + $5  · 1 per team per prospect per day
+ *        · Lower-seeded team (worse record) may priority-match at current high amount
  *   Match/Forfeit  • Saturday only, OB manager only
  *   Processing     • Sunday — read-only results view
  *
@@ -290,9 +290,11 @@
   /**
    * Winning bid per prospect.
    * 1. Highest amount.
-   * 2. Tie → OB beats CB.
-   * 3. Tie OB vs OB → earliest timestamp.
-   * 4. Tie CB vs CB → leftmost in _priority (worst record = higher priority).
+   * 2. Tie (any type) → priority order wins (worst record = leftmost in _priority).
+   *    Exception: multiple OBs (shouldn't happen) → earliest timestamp.
+   * Note: OBs do NOT automatically beat CBs in a tie — a lower-seeded CB can
+   * priority-match an OB at the same amount and tentatively win (OB team then
+   * decides match/forfeit during the OB Final window).
    */
   function computeWinner(prospectId, bids) {
     const pid  = String(prospectId);
@@ -310,18 +312,20 @@
 
     if (tied.length === 1) return { team: tied[0].team, amount: maxAmt, type: tied[0].bid_type };
 
+    // Multiple OBs at same amount (rare edge case): earliest timestamp wins.
     const obs = tied.filter(b => b.bid_type === 'OB');
-    if (obs.length === 1) return { team: obs[0].team, amount: maxAmt, type: 'OB' };
-    if (obs.length > 1) {
+    if (obs.length > 1 && obs.length === tied.length) {
       obs.sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''));
       return { team: obs[0].team, amount: maxAmt, type: 'OB' };
     }
 
+    // All other ties (OB vs CB priority match, CB vs CB): priority order wins.
     const cols = _priority;
     for (const t of cols) {
-      if (tied.some(b => b.team === t)) return { team: t, amount: maxAmt, type: 'CB' };
+      const b = tied.find(b => b.team === t);
+      if (b) return { team: t, amount: maxAmt, type: b.bid_type };
     }
-    return { team: tied[0].team, amount: maxAmt, type: 'CB' };
+    return { team: tied[0].team, amount: maxAmt, type: tied[0].bid_type };
   }
 
   function getTeamBid(prospectId, teamAbbr, bids) {
@@ -693,8 +697,18 @@
       info = 'Originating bid \u00B7 $10 minimum \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
     } else {
       const high = winner?.amount ?? (ob ? Number(ob.amount) : 10);
-      minAmt = high + 5;
-      info = `Current high: $${high} \u00B7 Minimum raise: $5 \u2192 bid at least $${minAmt}`;
+      // Priority match: a lower-seeded team (earlier in _priority = worse record)
+      // may match at the current high amount instead of raising +$5.
+      const highTeam = winner?.team ?? ob?.team;
+      const myPIdx   = _myTeam ? _priority.indexOf(_myTeam) : -1;
+      const hiPIdx   = highTeam ? _priority.indexOf(highTeam) : -1;
+      const canPriorityMatch = myPIdx >= 0 && hiPIdx >= 0 && myPIdx < hiPIdx;
+      minAmt = canPriorityMatch ? high : high + 5;
+      if (canPriorityMatch) {
+        info = `Current high: $${high} \u00B7 Priority match available \u2014 you may bid $${high} (worse standings = higher CB priority)`;
+      } else {
+        info = `Current high: $${high} \u00B7 Minimum raise: $5 \u2192 bid at least $${minAmt}`;
+      }
       if (myBid) info += ` \u00B7 Your current bid: $${myBid.amount}`;
       info += ' \u00B7 \u26A0\uFE0F Committed bids cannot be removed.';
     }
