@@ -174,19 +174,27 @@ function displayQuickStats() {
  * Update Weekly Auction tile from auction_current.json.
  */
 async function updateAuctionTile() {
-    const bidsEl = document.getElementById('activeBids');
-    if (!bidsEl) return;
+    const el = document.getElementById('auctionTotal');
+    if (!el) return;
     try {
         const dataPath = window.FBPHub?.config?.dataPath || './data/';
         const res = await fetch(`${dataPath}auction_current.json`, { cache: 'no-store' });
-        if (!res.ok) { bidsEl.textContent = '0'; return; }
+        if (!res.ok) { el.textContent = '$0'; return; }
         const state = await res.json();
-        if (!state) { bidsEl.textContent = '0'; return; }
+        if (!state) { el.textContent = '$0'; return; }
         const phase = state.phase || 'off_week';
         const bids  = Array.isArray(state.bids) ? state.bids : [];
-        if (!bids.length || phase === 'off_week' || phase === 'processing') { bidsEl.textContent = '0'; return; }
-        bidsEl.textContent = new Set(bids.map(b => String(b.prospect_id))).size.toLocaleString();
-    } catch { bidsEl.textContent = '0'; }
+        if (!bids.length || phase === 'off_week' || phase === 'processing') { el.textContent = '$0'; return; }
+        // Sum the highest bid per prospect (the current winning bid)
+        const highByProspect = {};
+        bids.forEach(b => {
+            const pid = String(b.prospect_id);
+            const amt = parseInt(b.amount, 10) || 0;
+            if (!highByProspect[pid] || amt > highByProspect[pid]) highByProspect[pid] = amt;
+        });
+        const total = Object.values(highByProspect).reduce((s, v) => s + v, 0);
+        el.textContent = `$${total.toLocaleString()}`;
+    } catch { el.textContent = '$0'; }
 }
 
 /**
