@@ -438,10 +438,14 @@ function displaySearchResults() {
  * Clear search
  */
 function clearSearch() {
-    document.getElementById('adminPlayerSearch').value = '';
-    document.getElementById('searchOwnerFilter').value = '';
-    document.getElementById('searchTypeFilter').value = '';
-    document.getElementById('searchContractFilter').value = '';
+    const ids = ['adminPlayerSearch', 'searchOwnerFilter', 'searchTypeFilter',
+        'searchContractTypeFilter', 'searchPositionFilter', 'searchLevelFilter',
+        'searchYearsFilter', 'searchFypdFilter', 'searchOwnershipFilter',
+        'searchAgeMin', 'searchAgeMax'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
     
     ADMIN_STATE.filteredPlayers = [...ADMIN_STATE.allPlayers];
     displaySearchResults();

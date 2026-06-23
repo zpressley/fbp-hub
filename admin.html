@@ -261,20 +261,47 @@
                                 <option value="Farm">Farm</option>
                             </select>
                             
-                            <select id="searchContractFilter" class="filter-select">
+                            <select id="searchContractTypeFilter" class="filter-select">
                                 <option value="">All Contracts</option>
-                                <option value="TC">TC (All)</option>
-                                <option value="VC">VC (All)</option>
-                                <option value="FC">FC (All)</option>
-                                <option value="DC">DC</option>
-                                <option value="PC">PC</option>
-                                <option value="BC">BC</option>
                             </select>
+                            
+                            <select id="searchPositionFilter" class="filter-select">
+                                <option value="">All Positions</option>
+                            </select>
+                            
+                            <select id="searchLevelFilter" class="filter-select">
+                                <option value="">All Levels</option>
+                            </select>
+                            
+                            <select id="searchYearsFilter" class="filter-select">
+                                <option value="">All Tiers</option>
+                            </select>
+                            
+                            <select id="searchFypdFilter" class="filter-select">
+                                <option value="">FYPD: All</option>
+                                <option value="yes">FYPD Only</option>
+                                <option value="no">Non-FYPD</option>
+                            </select>
+                            
+                            <select id="searchOwnershipFilter" class="filter-select">
+                                <option value="">All Ownership</option>
+                                <option value="owned">Owned</option>
+                                <option value="unowned">Unowned</option>
+                            </select>
+                            
+                            <input type="number" id="searchAgeMin" class="filter-select" placeholder="Min age" min="0">
+                            <input type="number" id="searchAgeMax" class="filter-select" placeholder="Max age" min="0">
                         </div>
                     </div>
                     
                     <div class="search-results-meta">
                         <span id="searchResultsCount">0 players found</span>
+                        <button class="btn-secondary btn-sm" onclick="exportFilteredPlayersCSV()">
+                            <i class="fas fa-file-csv"></i> Export Filtered
+                        </button>
+                        <button class="btn-secondary btn-sm" onclick="exportAllPlayersCSV()">
+                            <i class="fas fa-download"></i> Export All
+                        </button>
                         <button class="btn-secondary btn-sm" onclick="clearSearch()">
                             <i class="fas fa-times"></i> Clear
                         </button>

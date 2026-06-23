@@ -962,7 +962,7 @@ function displaySearchResults() {
         return;
     }
     
-    const displayPlayers = ADMIN_STATE.filteredPlayers.slice(0, 100);
+    const displayPlayers = ADMIN_STATE.filteredPlayers.slice(0, 500);
     
     container.innerHTML = displayPlayers.map(p => {
         const isSelected = ADMIN_STATE.bulkSelected.has(p.upid);
@@ -996,10 +996,10 @@ function displaySearchResults() {
         `;
     }).join('');
     
-    if (count > 100) {
+    if (count > 500) {
         container.innerHTML += `
             <div class="empty-state">
-                <p>Showing first 100 of ${count} results. Refine your search to see more.</p>
+                <p>Showing first 500 of ${count} results. Refine your search to see more.</p>
             </div>
         `;
     }
@@ -1079,6 +1079,23 @@ function populateDropdowns() {
         if (el) el.innerHTML = levelOptions;
     });
     
+    // Player Search filter dropdowns
+    const searchPositionFilter = document.getElementById('searchPositionFilter');
+    if (searchPositionFilter) searchPositionFilter.innerHTML = '<option value="">All Positions</option>' +
+        POSITIONS.map(p => `<option value="${p}">${p}</option>`).join('');
+    
+    const searchLevelFilter = document.getElementById('searchLevelFilter');
+    if (searchLevelFilter) searchLevelFilter.innerHTML = '<option value="">All Levels</option>' +
+        LEVELS.map(l => `<option value="${l}">${l}</option>`).join('');
+    
+    const searchYearsFilter = document.getElementById('searchYearsFilter');
+    if (searchYearsFilter) searchYearsFilter.innerHTML = '<option value="">All Tiers</option>' +
+        YEARS_SIMPLE.filter(y => y).map(y => `<option value="${y}">${y}</option>`).join('');
+    
+    const searchContractTypeFilter = document.getElementById('searchContractTypeFilter');
+    if (searchContractTypeFilter) searchContractTypeFilter.innerHTML = '<option value="">All Contracts</option>' +
+        CONTRACT_TYPES.filter(c => c).map(c => `<option value="${c}">${c}</option>`).join('');
+    
     // Update types
     const updateOptions = UPDATE_TYPES.map(u => `<option value="${u}">${u}</option>`).join('');
     
@@ -1126,13 +1143,27 @@ function setupSearch() {
     const searchInput = document.getElementById('adminPlayerSearch');
     const ownerFilter = document.getElementById('searchOwnerFilter');
     const typeFilter = document.getElementById('searchTypeFilter');
-    const contractFilter = document.getElementById('searchContractFilter');
+    const contractTypeFilter = document.getElementById('searchContractTypeFilter');
+    const positionFilter = document.getElementById('searchPositionFilter');
+    const levelFilter = document.getElementById('searchLevelFilter');
+    const yearsFilter = document.getElementById('searchYearsFilter');
+    const fypdFilter = document.getElementById('searchFypdFilter');
+    const ownershipFilter = document.getElementById('searchOwnershipFilter');
+    const ageMinInput = document.getElementById('searchAgeMin');
+    const ageMaxInput = document.getElementById('searchAgeMax');
     
     const performSearch = () => {
         const query = searchInput.value.toLowerCase();
         const owner = ownerFilter.value;
         const type = typeFilter.value;
-        const contract = contractFilter.value;
+        const contractType = contractTypeFilter ? contractTypeFilter.value : '';
+        const position = positionFilter ? positionFilter.value.toLowerCase() : '';
+        const level = levelFilter ? levelFilter.value : '';
+        const years = yearsFilter ? yearsFilter.value : '';
+        const fypd = fypdFilter ? fypdFilter.value : '';
+        const ownership = ownershipFilter ? ownershipFilter.value : '';
+        const ageMin = ageMinInput && ageMinInput.value !== '' ? parseInt(ageMinInput.value, 10) : null;
+        const ageMax = ageMaxInput && ageMaxInput.value !== '' ? parseInt(ageMaxInput.value, 10) : null;
         
         ADMIN_STATE.filteredPlayers = ADMIN_STATE.allPlayers.filter(p => {
             const matchesQuery = !query || 
@@ -1143,11 +1174,25 @@ function setupSearch() {
             
             const matchesOwner = !owner || p.manager === owner;
             const matchesType = !type || p.player_type === type;
-            const matchesContract = !contract || 
-                (p.contract_type || '').toLowerCase().includes(contract.toLowerCase()) ||
-                (p.years_simple || '').toLowerCase().includes(contract.toLowerCase());
+            const matchesContractType = !contractType || (p.contract_type || '') === contractType;
+            const matchesPosition = !position || (p.position || '').toLowerCase().includes(position);
+            const matchesLevel = !level || p.level === level;
+            const matchesYears = !years || p.years_simple === years;
+            const matchesFypd = !fypd ||
+                (fypd === 'yes' && p.fypd === true) ||
+                (fypd === 'no' && p.fypd !== true);
+            const isOwned = !!(p.manager && String(p.manager).trim() !== '');
+            const matchesOwnership = !ownership ||
+                (ownership === 'owned' && isOwned) ||
+                (ownership === 'unowned' && !isOwned);
+            const ageVal = typeof p.age === 'number' ? p.age : parseInt(p.age, 10);
+            const hasAge = !isNaN(ageVal);
+            const matchesAgeMin = ageMin === null || (hasAge && ageVal >= ageMin);
+            const matchesAgeMax = ageMax === null || (hasAge && ageVal <= ageMax);
             
-            return matchesQuery && matchesOwner && matchesType && matchesContract;
+            return matchesQuery && matchesOwner && matchesType && matchesContractType &&
+                matchesPosition && matchesLevel && matchesYears && matchesFypd &&
+                matchesOwnership && matchesAgeMin && matchesAgeMax;
         });
         
         displaySearchResults();
@@ -1156,7 +1201,12 @@ function setupSearch() {
     searchInput.addEventListener('input', performSearch);
     ownerFilter.addEventListener('change', performSearch);
     typeFilter.addEventListener('change', performSearch);
-    contractFilter.addEventListener('change', performSearch);
+    [contractTypeFilter, positionFilter, levelFilter, yearsFilter, fypdFilter, ownershipFilter].forEach(el => {
+        if (el) el.addEventListener('change', performSearch);
+    });
+    [ageMinInput, ageMaxInput].forEach(el => {
+        if (el) el.addEventListener('input', performSearch);
+    });
     
     displaySearchResults();
 }
@@ -1387,6 +1437,79 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 5000);
 }
 
+// ============================================
+// CSV EXPORT
+// ============================================
+
+// Preferred leading columns; remaining keys are appended alphabetically
+const CSV_CORE_COLUMNS = [
+    'upid', 'name', 'team', 'position', 'manager', 'FBP_Team',
+    'player_type', 'contract_type', 'years_simple', 'status'
+];
+
+/**
+ * Build a CSV string from player objects using the union of all keys.
+ */
+function playersToCSV(players) {
+    const keySet = new Set();
+    players.forEach(p => Object.keys(p || {}).forEach(k => keySet.add(k)));
+    
+    const core = CSV_CORE_COLUMNS.filter(k => keySet.has(k));
+    const rest = [...keySet].filter(k => !core.includes(k)).sort();
+    const columns = [...core, ...rest];
+    
+    const escape = (v) => {
+        if (v === null || v === undefined) return '""';
+        return `"${String(v).replace(/"/g, '""')}"`;
+    };
+    
+    const headerRow = columns.map(escape).join(',');
+    const rows = players.map(p => columns.map(col => escape(p ? p[col] : '')).join(','));
+    
+    return [headerRow, ...rows].join('\n');
+}
+
+/**
+ * Trigger a CSV file download (UTF-8 BOM so accents render in Excel/Sheets).
+ */
+function downloadCSV(csv, filename) {
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+/**
+ * Export every player in combined_players.json to CSV.
+ */
+function exportAllPlayersCSV() {
+    const players = ADMIN_STATE.allPlayers || [];
+    if (players.length === 0) {
+        showToast('No players to export', 'warning');
+        return;
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    downloadCSV(playersToCSV(players), `combined_players_${date}.csv`);
+    showToast(`Exported ${players.length} players to CSV`, 'success');
+}
+
+/**
+ * Export the current filtered player list to CSV.
+ */
+function exportFilteredPlayersCSV() {
+    const players = ADMIN_STATE.filteredPlayers || [];
+    if (players.length === 0) {
+        showToast('No filtered players to export', 'warning');
+        return;
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    downloadCSV(playersToCSV(players), `combined_players_filtered_${date}.csv`);
+    showToast(`Exported ${players.length} filtered players to CSV`, 'success');
+}
+
 // Expose globally
 window.initAdminPortal = initAdminPortal;
 window.showAddPlayerModal = showAddPlayerModal;
@@ -1406,3 +1529,5 @@ window.applyWBAdjustment = applyWBAdjustment;
 window.selectPlayerForEdit = selectPlayerForEdit;
 window.clearSearch = clearSearch;
 window.cancelAddPlayer = cancelAddPlayer;
+window.exportAllPlayersCSV = exportAllPlayersCSV;
+window.exportFilteredPlayersCSV = exportFilteredPlayersCSV;
