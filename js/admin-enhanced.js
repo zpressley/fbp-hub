@@ -1081,8 +1081,9 @@ function populateDropdowns() {
     
     // Player Search filter dropdowns
     const searchPositionFilter = document.getElementById('searchPositionFilter');
-    if (searchPositionFilter) searchPositionFilter.innerHTML = '<option value="">All Positions</option>' +
-        POSITIONS.map(p => `<option value="${p}">${p}</option>`).join('');
+    if (searchPositionFilter) searchPositionFilter.innerHTML =
+        '<span class="position-filter-label">Positions:</span>' +
+        BASE_POSITIONS.map(pos => `<label class="position-chip"><input type="checkbox" value="${pos}"> ${pos}</label>`).join('');
     
     const searchLevelFilter = document.getElementById('searchLevelFilter');
     if (searchLevelFilter) searchLevelFilter.innerHTML = '<option value="">All Levels</option>' +
@@ -1144,7 +1145,8 @@ function setupSearch() {
     const ownerFilter = document.getElementById('searchOwnerFilter');
     const typeFilter = document.getElementById('searchTypeFilter');
     const contractTypeFilter = document.getElementById('searchContractTypeFilter');
-    const positionFilter = document.getElementById('searchPositionFilter');
+    const positionGroup = document.getElementById('searchPositionFilter');
+    const positionCheckboxes = positionGroup ? Array.from(positionGroup.querySelectorAll('input[type="checkbox"]')) : [];
     const levelFilter = document.getElementById('searchLevelFilter');
     const yearsFilter = document.getElementById('searchYearsFilter');
     const fypdFilter = document.getElementById('searchFypdFilter');
@@ -1155,9 +1157,10 @@ function setupSearch() {
     const performSearch = () => {
         const query = searchInput.value.toLowerCase();
         const owner = ownerFilter.value;
+        const ownerName = owner && ADMIN_STATE.managers ? (ADMIN_STATE.managers[owner]?.name || '') : '';
         const type = typeFilter.value;
         const contractType = contractTypeFilter ? contractTypeFilter.value : '';
-        const position = positionFilter ? positionFilter.value.toLowerCase() : '';
+        const selectedPositions = positionCheckboxes.filter(cb => cb.checked).map(cb => cb.value.toUpperCase());
         const level = levelFilter ? levelFilter.value : '';
         const years = yearsFilter ? yearsFilter.value : '';
         const fypd = fypdFilter ? fypdFilter.value : '';
@@ -1172,10 +1175,11 @@ function setupSearch() {
                 (p.team || '').toLowerCase().includes(query) ||
                 (p.position || '').toLowerCase().includes(query);
             
-            const matchesOwner = !owner || p.manager === owner;
+            const matchesOwner = !owner || p.FBP_Team === owner || (!!ownerName && p.manager === ownerName);
             const matchesType = !type || p.player_type === type;
             const matchesContractType = !contractType || (p.contract_type || '') === contractType;
-            const matchesPosition = !position || (p.position || '').toLowerCase().includes(position);
+            const playerPositions = (p.position || '').split(/[,/]/).map(s => s.trim().toUpperCase()).filter(Boolean);
+            const matchesPosition = selectedPositions.length === 0 || selectedPositions.some(sp => playerPositions.includes(sp));
             const matchesLevel = !level || p.level === level;
             const matchesYears = !years || p.years_simple === years;
             const matchesFypd = !fypd ||
@@ -1201,9 +1205,10 @@ function setupSearch() {
     searchInput.addEventListener('input', performSearch);
     ownerFilter.addEventListener('change', performSearch);
     typeFilter.addEventListener('change', performSearch);
-    [contractTypeFilter, positionFilter, levelFilter, yearsFilter, fypdFilter, ownershipFilter].forEach(el => {
+    [contractTypeFilter, levelFilter, yearsFilter, fypdFilter, ownershipFilter].forEach(el => {
         if (el) el.addEventListener('change', performSearch);
     });
+    positionCheckboxes.forEach(cb => cb.addEventListener('change', performSearch));
     [ageMinInput, ageMaxInput].forEach(el => {
         if (el) el.addEventListener('input', performSearch);
     });

@@ -28,6 +28,13 @@ const POSITIONS = [
     '2B, 3B, SS', '2B, 3B, SS, OF', 'C, 1B', 'C, OF'
 ];
 
+// Base (atomic) positions for the Player Search multi-pick filter.
+// A player matches if any selected token appears in their comma-joined position.
+const BASE_POSITIONS = [
+    'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'OF', 'DH', 'UTIL',
+    'SP', 'RP', 'RHP', 'LHP', 'SIRP', 'MIRP', 'P'
+];
+
 // Contract type options (from FBP Constitution Article 2 & 3)
 // Values match what's stored in combined_players.json
 const CONTRACT_TYPES = [
@@ -439,13 +446,14 @@ function displaySearchResults() {
  */
 function clearSearch() {
     const ids = ['adminPlayerSearch', 'searchOwnerFilter', 'searchTypeFilter',
-        'searchContractTypeFilter', 'searchPositionFilter', 'searchLevelFilter',
+        'searchContractTypeFilter', 'searchLevelFilter',
         'searchYearsFilter', 'searchFypdFilter', 'searchOwnershipFilter',
         'searchAgeMin', 'searchAgeMax'];
     ids.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    document.querySelectorAll('#searchPositionFilter input[type="checkbox"]').forEach(cb => { cb.checked = false; });
     
     ADMIN_STATE.filteredPlayers = [...ADMIN_STATE.allPlayers];
     displaySearchResults();
