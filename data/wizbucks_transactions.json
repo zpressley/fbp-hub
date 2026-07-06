@@ -4094,5 +4094,89 @@
       "amount": 10,
       "source": "auction_resolve_backfill"
     }
+  },
+  {
+    "txn_id": "wb_LFB_contract_purchase_1783366671",
+    "timestamp": "2026-07-06T19:37:51.202159Z",
+    "team": "LFB",
+    "amount": -10,
+    "balance_before": 55,
+    "balance_after": 45,
+    "transaction_type": "contract_purchase",
+    "description": "Dashboard Self-Service: Alfredo Duno PC \u2192 BC",
+    "related_player": {
+      "upid": "6140",
+      "name": "Alfredo Duno"
+    },
+    "metadata": {
+      "season": 2026,
+      "source": "Dashboard Self-Service",
+      "upgrade": "PC \u2192 BC",
+      "from_contract": "Purchased Contract",
+      "to_contract": "Blue Chip Contract"
+    }
+  },
+  {
+    "txn_id": "wb_LFB_contract_purchase_1783366690",
+    "timestamp": "2026-07-06T19:38:10.156729Z",
+    "team": "LFB",
+    "amount": -10,
+    "balance_before": 45,
+    "balance_after": 35,
+    "transaction_type": "contract_purchase",
+    "description": "Dashboard Self-Service: Ryan Sloan PC \u2192 BC",
+    "related_player": {
+      "upid": "7710",
+      "name": "Ryan Sloan"
+    },
+    "metadata": {
+      "season": 2026,
+      "source": "Dashboard Self-Service",
+      "upgrade": "PC \u2192 BC",
+      "from_contract": "Purchased Contract",
+      "to_contract": "Blue Chip Contract"
+    }
+  },
+  {
+    "txn_id": "wb_LFB_contract_purchase_1783366709",
+    "timestamp": "2026-07-06T19:38:29.620599Z",
+    "team": "LFB",
+    "amount": -10,
+    "balance_before": 35,
+    "balance_after": 25,
+    "transaction_type": "contract_purchase",
+    "description": "Dashboard Self-Service: Jarlin Susana PC \u2192 BC",
+    "related_player": {
+      "upid": "3875",
+      "name": "Jarlin Susana"
+    },
+    "metadata": {
+      "season": 2026,
+      "source": "Dashboard Self-Service",
+      "upgrade": "PC \u2192 BC",
+      "from_contract": "Purchased Contract",
+      "to_contract": "Blue Chip Contract"
+    }
+  },
+  {
+    "txn_id": "wb_LFB_contract_purchase_1783366737",
+    "timestamp": "2026-07-06T19:38:57.620759Z",
+    "team": "LFB",
+    "amount": -10,
+    "balance_before": 25,
+    "balance_after": 15,
+    "transaction_type": "contract_purchase",
+    "description": "Dashboard Self-Service: Ralphy Velazquez PC \u2192 BC",
+    "related_player": {
+      "upid": "6617",
+      "name": "Ralphy Velazquez"
+    },
+    "metadata": {
+      "season": 2026,
+      "source": "Dashboard Self-Service",
+      "upgrade": "PC \u2192 BC",
+      "from_contract": "Purchased Contract",
+      "to_contract": "Blue Chip Contract"
+    }
   }
 ]
