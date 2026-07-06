@@ -2,38 +2,29 @@
   "bids": [
     {
       "amount": 10,
-      "bid_id": "bid-36001e227bea",
+      "bid_id": "bid-49ac5d0b8ebb",
       "bid_type": "OB",
-      "date": "2026-06-30",
-      "prospect_id": "6574",
-      "team": "JEP",
-      "timestamp": "2026-06-30T13:19:04.078376+00:00"
-    },
-    {
-      "amount": 10,
-      "bid_id": "bid-593c87b15b8d",
-      "bid_type": "OB",
-      "date": "2026-06-30",
-      "prospect_id": "4579",
-      "team": "DMN",
-      "timestamp": "2026-06-30T16:57:07.418601+00:00"
+      "date": "2026-07-06",
+      "prospect_id": "7922",
+      "team": "RV",
+      "timestamp": "2026-07-06T19:01:37.339011+00:00"
     }
   ],
-  "last_updated": "2026-06-30T16:57:07.418601+00:00",
+  "last_updated": "2026-07-06T19:01:37.339011+00:00",
   "matches": [],
   "phase": "ob_window",
   "priority_order": [
     "DRO",
     "RV",
-    "JEP",
-    "WAR",
     "CFL",
+    "WAR",
+    "JEP",
     "B2J",
     "TBB",
     "WIZ",
     "HAM",
-    "SAD",
     "DMN",
+    "SAD",
     "LFB"
   ],
   "schedule_meta": {
@@ -42,5 +33,5 @@
     "playoffs_start": "2026-09-07",
     "season_start": "2026-03-16"
   },
-  "week_start": "2026-06-29"
+  "week_start": "2026-07-06"
 }
