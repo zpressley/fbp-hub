@@ -1,0 +1,54 @@
+name: Auto Cache-Bust HTML
+
+# Automatically stamps every <script src="js/...js"> and <link href="css/...css">
+# reference in every HTML page with a fresh ?v=<timestamp> whenever JS, CSS,
+# or HTML changes are pushed to main. This exists so cache-busting no longer
+# depends on someone remembering to run scripts/add-cache-busting.sh by hand
+# before committing (see docs/CACHE_BUSTING_STRATEGY.md — that manual step
+# was only ever applied to 2 of ~24 pages in practice).
+#
+# The follow-up commit this workflow makes includes "[skip ci]" so it does
+# not re-trigger this (or any other push-triggered) workflow.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**/*.html'
+      - 'js/**'
+      - 'css/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cache-bust-main
+  cancel-in-progress: false
+
+jobs:
+  cache-bust:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Run cache-busting script
+        run: |
+          chmod +x scripts/add-cache-busting.sh
+          ./scripts/add-cache-busting.sh
+
+      - name: Commit and push if anything changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A -- '*.html'
+          if git diff --staged --quiet; then
+            echo "No HTML changes to commit — versions already current."
+          else
+            git commit -m "🔄 Auto cache-bust JS/CSS references [skip ci]"
+            git push
+          fi

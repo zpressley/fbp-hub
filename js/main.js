@@ -3,6 +3,104 @@
  * Handles data loading, navigation, and global utilities
  */
 
+// ---------------------------------------------------------------------
+// Global client-error reporter
+// ---------------------------------------------------------------------
+// Ships uncaught JS errors, unhandled promise rejections, and console.error()
+// calls to the bot backend (via the Cloudflare Worker) so they show up in
+// Railway's log stream instead of only being visible in a manager's own
+// browser console. This is intentionally the very first thing in main.js —
+// main.js loads before every other page script on every page — so it
+// catches as much as possible.
+//
+// See docs/CLOUDFLARE_WORKER_REFERENCE.md for the Worker route
+// (/api/log/client-error -> proxied to the bot) and
+// fbp-trade-bot/api_client_log.py for the backend side.
+(function () {
+    const REPORT_URL = 'https://fbp-auth.zpressley.workers.dev/api/log/client-error';
+    const MAX_REPORTS_PER_LOAD = 25; // hard cap so a page stuck in a retry/error loop can't spam the endpoint
+    const host = window.location.hostname;
+    const isLocal = host === 'localhost' || host === '127.0.0.1';
+    let reportCount = 0;
+
+    function currentTeam() {
+        try {
+            return localStorage.getItem('fbp_team') || (window.FBPHub && window.FBPHub._currentTeam) || null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function send(payload) {
+        if (isLocal || reportCount >= MAX_REPORTS_PER_LOAD) return;
+        reportCount++;
+        try {
+            fetch(REPORT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                keepalive: true,
+            }).catch(() => {}); // reporting an error must never itself throw
+        } catch (e) {
+            // swallow — a broken error-reporter shouldn't break the page
+        }
+    }
+
+    function report(kind, message, extra) {
+        send(Object.assign(
+            {
+                kind: kind,
+                message: String(message == null ? '(no message)' : message).slice(0, 2000),
+                source: window.location.href,
+                userAgent: navigator.userAgent,
+                team: currentTeam(),
+                timestamp: new Date().toISOString(),
+            },
+            extra || {}
+        ));
+    }
+
+    window.addEventListener('error', function (event) {
+        report('onerror', event.message, {
+            lineno: event.lineno,
+            colno: event.colno,
+            stack: event.error && event.error.stack ? String(event.error.stack).slice(0, 4000) : undefined,
+        });
+    });
+
+    window.addEventListener('unhandledrejection', function (event) {
+        const reason = event.reason;
+        const message = reason && reason.message ? reason.message : String(reason);
+        report('unhandledrejection', message, {
+            stack: reason && reason.stack ? String(reason.stack).slice(0, 4000) : undefined,
+        });
+    });
+
+    // A lot of this codebase logs failures via console.error(...) instead of
+    // throwing (e.g. failed fetches with a .catch()) — those never reach
+    // window.onerror at all, so mirror console.error too.
+    const originalConsoleError = console.error.bind(console);
+    console.error = function (...args) {
+        originalConsoleError(...args);
+        try {
+            const message = args
+                .map((a) => {
+                    if (a instanceof Error) return a.stack || a.message;
+                    if (typeof a === 'string') return a;
+                    try {
+                        return JSON.stringify(a);
+                    } catch (e) {
+                        return String(a);
+                    }
+                })
+                .join(' ');
+            report('console.error', message);
+        } catch (e) {
+            // ignore — see comment above
+        }
+    };
+})();
+
 // Global state
 const FBPHub = {
     data: {

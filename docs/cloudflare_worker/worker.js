@@ -250,6 +250,11 @@ export default {
         return await proxyToBot(path, env, request);
       }
 
+      // --- Client-side error logging (fbp-hub JS errors -> bot stdout / Railway logs) ---
+      if (path === '/api/log/client-error' && request.method === 'POST') {
+        return await proxyToBot('/api/log/client-error', env, request);
+      }
+
       // --- Auth endpoints ---
       if (path === '/token' && request.method === 'POST') {
         return await handleTokenExchange(request, env);

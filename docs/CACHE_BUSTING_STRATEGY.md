@@ -1,5 +1,11 @@
 # Cache Busting Strategy for FBP Hub
 
+> **Update (2026-07-13): this is now automated.** `.github/workflows/cache-bust.yml`
+> runs `scripts/add-cache-busting.sh` automatically on every push to `main`
+> that touches `**/*.html`, `js/**`, or `css/**`, and pushes the version
+> bump back itself. You no longer need to run the script by hand — the
+> manual steps below are kept for reference/local testing only.
+
 ## Problem
 Browser caching causes users to load old JavaScript/CSS files after updates are deployed, leading to broken functionality.
 
