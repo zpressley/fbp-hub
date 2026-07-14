@@ -5,6 +5,14 @@ node_modules/
 .env
 .vscode/
 
+# Salesforce CLI artifacts (unrelated to this app, accidentally committed)
+.sfdx/
+
+# One-off pre-migration snapshot files (kept locally, not in git going forward)
+/data/combined_players.owners_2026_backup.json
+/data/combined_players.owners_backup.json
+/data/combined_players.positions_backup.json
+
 # Secrets (if any)
 config/secrets.json
 
