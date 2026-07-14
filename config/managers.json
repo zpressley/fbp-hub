@@ -51,7 +51,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Whiz Kids",
+      "yahoo_team_id": "1",
+      "role": "admin",
+      "standing": 1
     },
     "B2J": {
       "name": "Btwn2Jackies",
@@ -61,7 +65,7 @@
       "kap_rollover_2026": 0,
       "wizbucks": {
         "2026": {
-          "_comment": "Season 13 (2026) WizBucks config, including Optional Rollover and Leftovers (PAD\u2192KAP, KAP\u2192APA).",
+          "_comment": "Season 13 (2026) WizBucks config, including Optional Rollover and Leftovers (PAD→KAP, KAP→APA).",
           "meta": {
             "season": 2026,
             "finalRank": 6,
@@ -103,7 +107,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Btwn2Jackies",
+      "yahoo_team_id": "3",
+      "role": "",
+      "standing": 6
     },
     "CFL": {
       "name": "Country Fried Lamb",
@@ -155,7 +163,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Country Fried Lamb",
+      "yahoo_team_id": "4",
+      "role": "",
+      "standing": 8
     },
     "HAM": {
       "name": "Hammers",
@@ -207,7 +219,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Hammers",
+      "yahoo_team_id": "5",
+      "role": "",
+      "standing": 9
     },
     "RV": {
       "name": "Rick Vaughn",
@@ -259,7 +275,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Rick Vaughn",
+      "yahoo_team_id": "10",
+      "role": "",
+      "standing": 10
     },
     "DMN": {
       "name": "The Damn Yankees",
@@ -311,7 +331,10 @@
             }
           }
         }
-      }
+      },
+      "full_name": "The Damn Yankees",
+      "yahoo_team_id": "8",
+      "standing": 7
     },
     "LFB": {
       "name": "La Flama Blanca",
@@ -363,7 +386,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "La Flama Blanca",
+      "yahoo_team_id": "7",
+      "role": "",
+      "standing": 2
     },
     "JEP": {
       "name": "Jepordizers!",
@@ -415,7 +442,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Jepordizers!",
+      "yahoo_team_id": "6",
+      "role": "",
+      "standing": 11
     },
     "TBB": {
       "name": "The Bluke Blokes",
@@ -467,7 +498,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "The Bluke Blokes",
+      "yahoo_team_id": "11",
+      "role": "admin",
+      "standing": 5
     },
     "DRO": {
       "name": "Andromedans",
@@ -519,7 +554,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Andromedans",
+      "yahoo_team_id": "2",
+      "role": "",
+      "standing": 4
     },
     "SAD": {
       "name": "not much of a donkey",
@@ -571,7 +610,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "not much of a donkey",
+      "yahoo_team_id": "9",
+      "role": "admin",
+      "standing": 3
     },
     "WAR": {
       "name": "Weekend Warriors",
@@ -623,7 +666,11 @@
             }
           }
         }
-      }
+      },
+      "full_name": "Weekend Warriors",
+      "yahoo_team_id": "12",
+      "role": "admin",
+      "standing": 12
     }
   },
   "commissioner": "161967242118955008"
