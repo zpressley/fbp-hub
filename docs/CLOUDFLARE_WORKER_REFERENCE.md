@@ -15,7 +15,7 @@ The Worker source snapshot is stored here:
 
 ## Environment variables (Cloudflare)
 Required secrets/vars:
-- `BOT_API_URL` – base URL of the Render FastAPI service (the bot)
+- `BOT_API_URL` – base URL of the FastAPI service (the bot), hosted on Railway
 - `BOT_API_KEY` – shared secret forwarded as `X-API-Key`
 - `DISCORD_CLIENT_ID_ENV`
 - `DISCORD_CLIENT_SECRET_ENV`
@@ -35,6 +35,8 @@ Required secrets/vars:
 - Auth:
   - `POST /token`
   - `GET /user`
+- Client-side error logging:
+  - `POST /api/log/client-error`
 
 ## Notes
 - The Worker proxies requests to the bot with `X-API-Key`.

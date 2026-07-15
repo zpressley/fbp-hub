@@ -54,7 +54,7 @@ git commit -m "Add buy-in API endpoints for keeper draft picks
 - Admin role check uses managers.json 'role' field"
 git push
 
-# Restart your bot service (Render/deployment platform)
+# Restart your bot service (Railway)
 # The bot will automatically load the new endpoints
 ```
 

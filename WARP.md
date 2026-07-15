@@ -18,7 +18,7 @@ For fbp-trade-bot and fbp-hub repos make sure to always run player data through 
 
 
 
-The primary documentation for the project lives in `data/README.md` and Phase 2 auth setup details in `PHASE2_SETUP.md`.
+The primary documentation for the project lives in `README.md`, data shape reference in `FBP_Data_Architecture_Spec.md`, and Phase 2 auth setup details in `PHASE2_SETUP.md`.
 
 ## Commands & Local Development
 
@@ -41,19 +41,11 @@ This repo has no Node/tooling-based build, lint, or test commands. It is a stati
 
 The live site expects JSON payloads under `data/` (see next section). A typical workflow using the external data pipeline (e.g., `fbp-trade-bot`) is:
 
-1. Run the data pipeline in that repo to regenerate league JSON files (players, standings, WizBucks, etc.).
-2. Copy the resulting JSON outputs into this repo’s `data/` directory, overwriting existing files.
-3. Commit and push changes to this repo so GitHub Pages (or your host) deploys the updated data.
+1. `fbp-trade-bot`'s `daily-update.yml` workflow runs its data pipeline, then pushes a short list of files (rosters/contracts/standings) directly to this repo.
+2. This repo's own `.github/workflows/sync-data.yml` independently pulls a broader list of files from `fbp-trade-bot` every 15 minutes (or immediately via `repository_dispatch`), as a backup/catch-up sync.
+3. Either path commits and pushes to `main`, which GitHub Pages then redeploys automatically.
 
-Concrete example (adapted from `data/README.md`):
-- In your data pipeline repo (such as `fbp-trade-bot`):
-  - `python3 data_pipeline/update_all.py`
-- Then from the pipeline repo:
-  - `cp ../fbp-trade-bot/data/*.json ../fbp-hub/data/`
-- From `fbp-hub`:
-  - `git add data/`
-  - `git commit -m "Update data"`
-  - `git push`
+In practice you don't need to run anything manually — both mechanisms are already scheduled. If you're debugging a specific file not showing up as current, check whether it's actually covered by either mechanism (`sync-data.yml`'s download list, or `daily-update.yml`'s copy step) — some files in `data/` are generated in place rather than mirrored, and a real staleness bug from an uncovered file was found and fixed here in July 2026.
 
 There is currently no automated test suite or lint configuration in this repo as of 2025-12-27.
 
@@ -61,7 +53,7 @@ There is currently no automated test suite or lint configuration in this repo as
 
 ### Data directory (`data/`)
 
-All user-visible league state comes from JSON under `data/`. The core files (documented in `data/README.md`) include:
+All user-visible league state comes from JSON under `data/`. The core files (documented in `FBP_Data_Architecture_Spec.md`) include:
 - `combined_players.json` – master list of all players and prospects (names, positions, team, manager, contract info, etc.)
 - `standings.json` – current standings and this week’s matchups
 - `wizbucks.json` – WizBucks balances keyed by FBP manager abbreviation
@@ -73,7 +65,7 @@ The loader in `js/main.js` uses:
 - `FBPHub.config.dataPath` (default `./data/`) for local development and static hosting
 - `FBPHub.config.githubRaw` as a fallback when running on GitHub Pages
 
-If you modify data shapes, remember that multiple pages assume the structures shown in `data/README.md` (especially for `combined_players.json`, `standings.json`, and `wizbucks.json`). Any breaking change here will likely impact:
+If you modify data shapes, remember that multiple pages assume the structures shown in `FBP_Data_Architecture_Spec.md` (especially for `combined_players.json`, `standings.json`, and `wizbucks.json`). Any breaking change here will likely impact:
 - `js/homepage.js` (standings, matchups, quick stats)
 - `js/players.js` (player list, filters)
 - `js/rosters.js` (keeper/prospect rosters)
@@ -214,7 +206,7 @@ The Worker is still deployed/configured separately in your Cloudflare account; t
 - The site is designed to be hosted as a static site, with GitHub Pages as the primary target.
 - When configured, GitHub Pages should serve from the `main` branch and the repository root.
 - Deployments are triggered by `git push` to the configured branch; there is no separate CLI deployment step in this repo.
-- `data/README.md` includes an example GitHub Actions workflow (`.github/workflows/deploy.yml`) for automating data updates and commits; that workflow file is not currently present in this repo by default but can be added if you want automated daily refreshes.
+- Data updates are already automated via `.github/workflows/sync-data.yml` (scheduled pull from `fbp-trade-bot`) and `fbp-trade-bot`'s own `daily-update.yml` (direct push) — see `README.md` for details.
 
 ## Trade portal draft-pick UI (temporarily disabled)
 
@@ -230,7 +222,7 @@ To re-enable draft-pick buttons next year:
 ## Implementation Notes & Gotchas for Agents
 
 - **No build/test tooling**: Do not assume `npm`, `jest`, `eslint`, or similar tooling exists. Any changes should be directly in HTML/CSS/JS/JSON.
-- **Data shape coupling**: Many modules depend on the exact structure of JSON files described in `data/README.md`. When changing data fields, search across `js/` for usages (e.g., `player_type`, `years_simple`, `wizbucks`, `standings.matchups`).
+- **Data shape coupling**: Many modules depend on the exact structure of JSON files described in `FBP_Data_Architecture_Spec.md`. When changing data fields, search across `js/` for usages (e.g., `player_type`, `years_simple`, `wizbucks`, `standings.matchups`).
 - **Global function wiring**: Page controllers rely on initializers being exposed on `window` and invoked from `initializePage()` in `js/main.js`. If you rename a page or its initializer, make sure to update both sides.
 - **DOM ID contracts**: JS files assume specific element IDs and class names in the HTML templates. When refactoring markup (especially navigation, filters, and containers), keep these IDs or update the corresponding JS selectors.
 - **Season/year values**: The season/year (“Season 13 - 2025”) is repeated in multiple HTML templates and colors in CSS. If you advance the league year, update these strings consistently and review hard-coded season-specific logic (e.g., deadline dates).

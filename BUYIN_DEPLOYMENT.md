@@ -45,7 +45,7 @@ The buy-in system allows managers to purchase keeper draft picks (Rounds 1-3) us
    ```
 
 2. **Verify BOT_API_KEY environment variable**:
-   - Ensure `BOT_API_KEY` is set in your deployment environment (Render/etc)
+   - Ensure `BOT_API_KEY` is set in Railway's environment variables
    - This is the authentication key for API requests
 
 3. **Restart the bot service** to load new endpoints
@@ -256,7 +256,7 @@ If issues arise:
 
 ### Logs
 
-Backend logs location (Render/deployment):
+Backend logs location (Railway):
 - Check stdout for API request logs
 - Look for "✅ Posted to Discord"
 - Watch for file save errors
