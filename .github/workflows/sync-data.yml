@@ -156,6 +156,13 @@ jobs:
           download_file "draft_order_2026.json" || FAILED=$((FAILED + 1))
           # Team colors (global Settings)
           download_file "team_colors.json" || FAILED=$((FAILED + 1))
+          # UPID reference DB + MLB team map, used by admin-enhanced.js —
+          # previously never synced by any mechanism, drifted stale
+          # (confirmed hub's upid_database.json was ~145KB behind bot repo)
+          download_file "upid_database.json" || FAILED=$((FAILED + 1))
+          download_file "mlb_team_map.json" || FAILED=$((FAILED + 1))
+          # Full transaction ledger, used by player_log.js / player-profile.js
+          download_file "transactions_history.json" || FAILED=$((FAILED + 1))
           # Per-player season stats used by player-profile page
           download_file "player_stats.json" || FAILED=$((FAILED + 1))
 

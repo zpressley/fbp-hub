@@ -16,8 +16,12 @@ Client ID: YOUR_DISCORD_CLIENT_ID_HERE
 Client Secret: YOUR_DISCORD_CLIENT_SECRET_HERE (keep secret!)
 
 Redirect URIs:
-https://yourusername.github.io/fbp-hub/callback.html
+https://www.pantheonleagues.com/callback.html
 ```
+
+Note: fbp-hub is served via a custom domain (see `CNAME`), not the default
+`yourusername.github.io/fbp-hub` GitHub Pages URL. Use the custom domain for
+all redirect/URL values below.
 
 ---
 
@@ -27,12 +31,12 @@ https://yourusername.github.io/fbp-hub/callback.html
 
 ```
 Worker Name: fbp-auth
-Worker URL: https://fbp-auth.your-subdomain.workers.dev
+Worker URL: https://fbp-auth.zpressley.workers.dev
 
 Environment Variables (Secrets):
 DISCORD_CLIENT_ID_ENV = YOUR_DISCORD_CLIENT_ID_HERE
 DISCORD_CLIENT_SECRET_ENV = YOUR_DISCORD_CLIENT_SECRET_HERE
-REDIRECT_URI_ENV = https://yourusername.github.io/fbp-hub/callback.html
+REDIRECT_URI_ENV = https://www.pantheonleagues.com/callback.html
 ```
 
 ---
@@ -46,8 +50,8 @@ Find this section and update:
 ```javascript
 const AUTH_CONFIG = {
     clientId: 'YOUR_DISCORD_CLIENT_ID_HERE',
-    workerUrl: 'https://fbp-auth.your-subdomain.workers.dev',
-    redirectUri: 'https://yourusername.github.io/fbp-hub/callback.html',
+    workerUrl: 'https://fbp-auth.zpressley.workers.dev',
+    redirectUri: 'https://www.pantheonleagues.com/callback.html',
     scopes: ['identify', 'guilds'],
     sessionDuration: 7 * 24 * 60 * 60 * 1000
 };
@@ -63,7 +67,7 @@ const MANAGER_MAPPING = {
     '689911142432112657': 'RV',
     '689952988957245578': 'B2J',
     '689887002887454815': 'CFL',
-    '892152416718422056': 'LAW',
+    '1085200118149562419': 'DMN',
     '890059214586773574': 'LFB',
     '814294382529347594': 'JEP',
     '161932197308137473': 'TBB',
@@ -113,10 +117,10 @@ const COMMISSIONER_IDS = [
 
 **Replace these placeholders throughout:**
 
-- `yourusername` → Your GitHub username
+- `www.pantheonleagues.com` → fbp-hub's custom domain (see `CNAME`)
 - `YOUR_DISCORD_CLIENT_ID` → From Discord Developer Portal
 - `YOUR_DISCORD_CLIENT_SECRET` → From Discord Developer Portal (Cloudflare only!)
-- `fbp-auth.your-subdomain.workers.dev` → Your Cloudflare Worker URL
+- `fbp-auth.zpressley.workers.dev` → The live Cloudflare Worker URL
 
 ---
 
@@ -150,7 +154,7 @@ git commit -m "Phase 2: Discord OAuth authentication"
 git push origin main
 
 # 5. Test production
-# Visit https://yourusername.github.io/fbp-hub/login.html
+# Visit https://www.pantheonleagues.com/login.html
 ```
 
 ---
