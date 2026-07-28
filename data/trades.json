@@ -5271,7 +5271,7 @@
       "RV"
     ],
     "initiator_team": "HAM",
-    "status": "pending",
+    "status": "admin_review",
     "created_at": "2026-07-28T16:40:15.936197Z",
     "expires_at": "2026-08-11T16:40:15.936197Z",
     "transfers": [
@@ -5289,7 +5289,8 @@
       }
     ],
     "acceptances": [
-      "HAM"
+      "HAM",
+      "RV"
     ],
     "receives": {
       "HAM": [
@@ -5302,7 +5303,9 @@
     "discord": {
       "thread_id": null,
       "thread_url": null,
-      "admin_review_message_id": null
-    }
+      "admin_review_message_id": "1531703512780767292",
+      "admin_review_channel_id": "875594022033436683"
+    },
+    "manager_approved_at": "2026-07-28T16:42:52.925689Z"
   }
 }
