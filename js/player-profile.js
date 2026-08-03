@@ -217,14 +217,22 @@ function displayPlayerHeader() {
     // Set page title
     document.title = `${player.name} - FBP Hub`;
     
-    // Handle photo
-    if (player.photo_url) {
-        document.getElementById('playerPhoto').src = player.photo_url;
-        document.getElementById('playerPhoto').style.display = 'block';
-        document.getElementById('photoPlaceholder').style.display = 'none';
+    // Handle photo — prefer an explicit photo_url if one is ever set, else
+    // fall back to the MLB headshot CDN via mlb_id.
+    const photoUrl = player.photo_url || (window.getPlayerPhotoUrl && getPlayerPhotoUrl(player, 240));
+    const photoEl = document.getElementById('playerPhoto');
+    const placeholderEl = document.getElementById('photoPlaceholder');
+    if (photoUrl) {
+        photoEl.onerror = () => {
+            photoEl.style.display = 'none';
+            placeholderEl.style.display = 'flex';
+        };
+        photoEl.src = photoUrl;
+        photoEl.style.display = 'block';
+        placeholderEl.style.display = 'none';
     } else {
-        document.getElementById('playerPhoto').style.display = 'none';
-        document.getElementById('photoPlaceholder').style.display = 'flex';
+        photoEl.style.display = 'none';
+        placeholderEl.style.display = 'flex';
     }
     
     // Update stat cards

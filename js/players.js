@@ -446,6 +446,7 @@ function displayPlayersList(players, container) {
         
         return `
             <div class="player-list-item" data-player-id="${player.upid || player.name}">
+                ${createPlayerAvatarHTML(player, 44)}
                 <div class="player-list-main">
                     <div class="player-list-name">${player.name}</div>
                     <div class="player-list-meta">
@@ -510,6 +511,7 @@ function openPlayerDetail(playerId) {
             <button class="detail-close-btn" onclick="closePlayerDetail()">
                 <i class="fas fa-times"></i> CLOSE
             </button>
+            ${createPlayerAvatarHTML(player, 120, 'player-photo')}
             <div class="player-detail-name">${player.name}</div>
             <div class="player-detail-title">${player.position} - ${player.team || 'Free Agent'}</div>
             <div class="player-detail-badges">

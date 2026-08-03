@@ -290,6 +290,15 @@ a:hover {
     border: 2px solid var(--primary-red);
 }
 
+/* Player headshot avatar — shared across players/rosters/trade pages.
+   Size is set per-usage via inline style; this just handles the crop. */
+.player-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
 .user-team-abbr {
     font-family: var(--font-mono);
     font-weight: 700;

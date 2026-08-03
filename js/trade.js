@@ -349,6 +349,7 @@ function renderTransferItem(t, idx, showRemove = true) {
     const label = p ? formatPlayerLabel(p) : `UPID ${t.upid}`;
     return `
       <div class="trade-asset-card">
+        ${p ? createPlayerAvatarHTML(p, 36) : ''}
         <div class="trade-asset-info">
           <div class="trade-asset-name">${label}</div>
           <div class="trade-asset-meta"><span>from ${t.from_team}</span></div>
@@ -540,6 +541,7 @@ function displayPlayerPickerResults(players = PLAYER_PICKER_ROSTER) {
             onclick="togglePlayerSelection(event, '${upid}')"
           />
         </div>
+        ${createPlayerAvatarHTML(p, 36)}
         <div class="player-result-info">
           <div class="player-result-name">${p.name}</div>
           <div class="player-result-meta">

@@ -865,6 +865,55 @@ function createContractBadge(contract) {
 }
 
 /**
+ * Build an MLB Stats headshot image URL for a player, sized to the given
+ * pixel width. Backed by MLB's public photo CDN (img.mlbstatic.com), keyed
+ * off mlb_id. The `d_...` default-image param means Cloudinary itself falls
+ * back to a generic silhouette for players with no photo on file, so this
+ * only returns null when we don't even have an mlb_id to try.
+ */
+function getPlayerPhotoUrl(player, size = 120) {
+    const mlbId = player && player.mlb_id;
+    if (!mlbId) return null;
+    return `https://img.mlbstatic.com/mlb-photos/image/upload/w_${size},q_auto:best,d_people:generic:headshot:67:current.png/v1/people/${mlbId}/headshot/67/current`;
+}
+
+// Local silhouette shown when a player has no mlb_id at all, or their
+// headshot image fails to load for some other reason.
+const PLAYER_PHOTO_FALLBACK = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+    '<rect width="100" height="100" fill="#2a2a2a"/>' +
+    '<circle cx="50" cy="38" r="18" fill="#5a5a5a"/>' +
+    '<path d="M50 62c-22 0-34 12-34 30v8h68v-8c0-18-12-30-34-30z" fill="#5a5a5a"/>' +
+    '</svg>'
+);
+
+/**
+ * onerror handler for player headshot <img> tags — swaps to the local
+ * silhouette so a bad/missing photo never shows a broken-image icon.
+ */
+function handlePlayerPhotoError(imgEl) {
+    if (!imgEl) return;
+    imgEl.onerror = null;
+    imgEl.src = PLAYER_PHOTO_FALLBACK;
+}
+
+/**
+ * Render a ready-to-use <img> avatar for a player. Always returns an <img>
+ * (falling back to the local silhouette when there's no mlb_id) so callers
+ * can drop it into cards, table cells, or list rows with no extra markup.
+ *
+ * @param {Object} player - a combined_players record (needs mlb_id)
+ * @param {number} size - display size in px (a 2x image is requested for retina)
+ * @param {string} extraClass - additional CSS class(es) to add
+ */
+function createPlayerAvatarHTML(player, size = 40, extraClass = '') {
+    const name = (player && player.name) || 'Player';
+    const safeName = name.replace(/"/g, '&quot;');
+    const url = getPlayerPhotoUrl(player, Math.max(size * 2, 60)) || PLAYER_PHOTO_FALLBACK;
+    return `<img src="${url}" alt="${safeName}" title="${safeName}" loading="lazy" class="player-avatar ${extraClass}" style="width:${size}px;height:${size}px;" onerror="handlePlayerPhotoError(this)">`;
+}
+
+/**
  * Normalize a raw position string into an array of uppercase tokens.
  *
  * Example: "1B,3B" → ["1B", "3B"]
@@ -1126,3 +1175,6 @@ window.getUniqueValues = getUniqueValues;
 window.debounce = debounce;
 window.getColorLuminance = getColorLuminance;
 window.getContrastTextColor = getContrastTextColor;
+window.getPlayerPhotoUrl = getPlayerPhotoUrl;
+window.createPlayerAvatarHTML = createPlayerAvatarHTML;
+window.handlePlayerPhotoError = handlePlayerPhotoError;

@@ -397,7 +397,7 @@ function createProspectTableRow(player) {
     return `
         <tr class="${top100Rank ? 'has-top100' : ''}">
             <td class="prospect-rank-cell">${rankDisplay}</td>
-            <td class="roster-name"><a href="${profileLink}">${player.name}</a></td>
+            <td class="roster-name"><div class="roster-name-cell">${createPlayerAvatarHTML(player, 26)}<a href="${profileLink}">${player.name}</a></div></td>
             <td class="roster-team">${org}</td>
             <td class="roster-pos">${pos}</td>
             <td class="roster-age">${age}</td>
@@ -499,7 +499,7 @@ function createDepthTableRow(player) {
     return `
         <tr>
             <td><span class="roster-status ${statusClass}">${status}</span></td>
-            <td class="roster-name"><a href="${profileLink}">${player.name}</a></td>
+            <td class="roster-name"><div class="roster-name-cell">${createPlayerAvatarHTML(player, 26)}<a href="${profileLink}">${player.name}</a></div></td>
             <td class="roster-team">${team}</td>
             <td class="roster-pos">${pos}</td>
             <td class="roster-age">${age}</td>

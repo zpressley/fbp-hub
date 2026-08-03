@@ -212,6 +212,12 @@
     font-size: var(--text-sm);
 }
 
+.roster-name-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
 .roster-name a {
     color: var(--text-white);
     text-decoration: none;
