@@ -114,86 +114,33 @@
                         </button>
                     </div>
                     <p class="manager-player-subtle">
-                        Requests go to admins for approval in Discord.
+                        Requests go to admins for approval in Discord. Just identify the player below --
+                        team, position, bio, etc. get filled in automatically (or an admin can add them
+                        when reviewing) rather than you having to type them all in.
                     </p>
                     <form id="managerAddPlayerForm" class="manager-player-form">
                         <div class="manager-player-grid two-col">
-                            <label class="manager-player-field">
+                            <label class="manager-player-field manager-player-field-full">
                                 <span>Name *</span>
-                                <input type="text" id="managerAddName" required>
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Player Type</span>
-                                <select id="managerAddPlayerType">
-                                    <option value="Farm">Farm</option>
-                                    <option value="MLB">MLB</option>
-                                </select>
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Team</span>
-                                <input type="text" id="managerAddTeam" placeholder="SD">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Position</span>
-                                <input type="text" id="managerAddPosition" placeholder="SP">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Primary Position</span>
-                                <input type="text" id="managerAddPrimaryPosition" placeholder="P">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Age</span>
-                                <input type="number" id="managerAddAge" min="0">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Bats</span>
-                                <input type="text" id="managerAddBats" placeholder="R">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Throws</span>
-                                <input type="text" id="managerAddThrows" placeholder="R">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Height</span>
-                                <input type="text" id="managerAddHeight" placeholder="6' 2&quot;">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Weight</span>
-                                <input type="number" id="managerAddWeight" min="0">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Birth Date</span>
-                                <input type="date" id="managerAddBirthDate">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Debut Date</span>
-                                <input type="date" id="managerAddDebutDate">
-                            </label>
-                            <label class="manager-player-field">
-                                <span>Debuted</span>
-                                <select id="managerAddDebuted">
-                                    <option value="">Unknown</option>
-                                    <option value="true">Yes</option>
-                                    <option value="false">No</option>
-                                </select>
+                                <input type="text" id="managerAddName" required placeholder="e.g., Bobby Witt Jr.">
                             </label>
                             <label class="manager-player-field">
                                 <span>MLB ID</span>
-                                <input type="number" id="managerAddMlbId" min="0">
+                                <input type="number" id="managerAddMlbId" min="0" placeholder="e.g., 683734">
                             </label>
                             <label class="manager-player-field">
                                 <span>Yahoo ID</span>
-                                <input type="text" id="managerAddYahooId">
+                                <input type="text" id="managerAddYahooId" placeholder="e.g., 12345">
                             </label>
                             <label class="manager-player-field manager-player-field-full">
-                                <span>Proof URL *</span>
-                                <input type="url" id="managerAddProofUrl" required placeholder="https://www.baseball-reference.com/...">
-                            </label>
-                            <label class="manager-player-field manager-player-field-full">
-                                <span>Alternate Names (comma or newline separated)</span>
-                                <textarea id="managerAddAltNames" rows="3" placeholder="e.g. Bobby Witt Jr., Robert Witt Jr."></textarea>
+                                <span>Proof URL</span>
+                                <input type="url" id="managerAddProofUrl" placeholder="https://www.baseball-reference.com/... (optional if you gave an MLB or Yahoo ID above)">
                             </label>
                         </div>
+                        <p class="manager-player-subtle" id="managerAddIdHint">
+                            Provide an MLB ID or Yahoo ID for an exact match, and/or a Proof URL --
+                            at least one of the three is required.
+                        </p>
                         <div class="manager-player-actions">
                             <button type="button" class="btn-secondary" data-close-modal="managerAddPlayerModal">Cancel</button>
                             <button type="submit" class="btn-primary" id="managerAddPlayerSubmit">Submit Request</button>
@@ -460,30 +407,16 @@
             return Number.isFinite(num) ? num : null;
         };
 
-        const debutedRaw = read('managerAddDebuted').toLowerCase();
-        const debuted = debutedRaw === 'true' ? true : debutedRaw === 'false' ? false : null;
-
-        const playerData = {
+        // Team/position/age/bio fields are intentionally not asked for here
+        // -- the backend's enrichment step fills them in from the MLB ID (or
+        // name, as a fallback) after submission, and there's a separate
+        // edit-player flow for anything that still needs fixing after that.
+        return {
             name: read('managerAddName'),
-            player_type: read('managerAddPlayerType') || 'Farm',
-            team: read('managerAddTeam').toUpperCase(),
-            position: read('managerAddPosition').toUpperCase(),
-            mlb_primary_position: read('managerAddPrimaryPosition').toUpperCase(),
-            age: readInt('managerAddAge'),
-            bats: read('managerAddBats').toUpperCase(),
-            throws: read('managerAddThrows').toUpperCase(),
-            height: read('managerAddHeight'),
-            weight: readInt('managerAddWeight'),
-            birth_date: read('managerAddBirthDate') || null,
-            debut_date: read('managerAddDebutDate') || null,
-            debuted: debuted,
             mlb_id: readInt('managerAddMlbId'),
             yahoo_id: read('managerAddYahooId'),
             proof_url: read('managerAddProofUrl'),
-            alt_names: parseAltNames(read('managerAddAltNames')),
         };
-
-        return playerData;
     }
 
     async function parseErrorResponse(response) {
@@ -516,8 +449,8 @@
             showManagerToast('Player name is required.', 'error');
             return;
         }
-        if (!playerData.proof_url) {
-            showManagerToast('Proof URL is required.', 'error');
+        if (!playerData.mlb_id && !playerData.yahoo_id && !playerData.proof_url) {
+            showManagerToast('Provide an MLB ID, a Yahoo ID, or a Proof URL.', 'error');
             return;
         }
 
