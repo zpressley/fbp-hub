@@ -133,7 +133,22 @@
         .ip-risk-green { color: #22c55e; font-weight: 700; }
 
         /* Category leader highlight (Leaders toggle) */
-        .cat-leader { color: var(--accent-yellow); font-weight: 800; }
+        .cat-leader-league { color: var(--accent-yellow); font-weight: 800; }
+        .cat-leader-division { color: #38bdf8; font-weight: 800; }
+
+        .leaders-legend {
+            display: none;
+            flex-basis: 100%;
+            font-family: var(--font-title);
+            font-size: .68rem;
+            letter-spacing: .3px;
+            color: rgba(170,170,170,.8);
+        }
+        .leaders-legend.visible { display: flex; gap: 14px; margin-top: 2px; }
+        .leaders-legend .legend-item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+        .leaders-legend .legend-swatch { width: 8px; height: 8px; border-radius: 2px; }
+        .leaders-legend .legend-swatch.league { background: var(--accent-yellow); }
+        .leaders-legend .legend-swatch.division { background: #38bdf8; }
 
         .th-gb { min-width: 46px; }
         .td-gb { font-family: var(--font-mono); font-size: .82rem; color: var(--text-gray); }
@@ -265,6 +280,7 @@
                     <button class="view-toggle-btn" data-view="divisional" type="button">Divisional</button>
                 </div>
                 <button class="view-toggle-btn" id="leadersToggle" type="button"><i class="fas fa-star"></i> Leaders</button>
+                <div class="leaders-legend" id="leadersLegend"></div>
             </div>
         </div>
 
@@ -497,7 +513,7 @@
             });
         }
 
-        function renderRow(s, derivedRankMap, categoryLeaders) {
+        function renderRow(s, derivedRankMap, categoryLeaders, divCategoryLeaders) {
             const isMe = myTeam && s.team.toUpperCase() === myTeam;
             const w = parseInt(s.score) || 0;
             const l = parseInt(s.opponent_score) || 0;
@@ -516,7 +532,15 @@
                 const cls = (i === 0 ? ` ${startCls}` : '') + (c.display_only ? ' td-display' : '');
                 const val = s.categories?.[c.display_name] ?? '—';
                 let extra = c.display_name === 'IP' ? ipRiskClass(val) : '';
-                if (showLeaders && categoryLeaders[c.display_name]?.has(s.team)) extra += ' cat-leader';
+                // League leader wins the color if a team is both (it always is,
+                // within its own division) -- division-only leaders get the 2nd color.
+                if (showLeaders) {
+                    if (categoryLeaders[c.display_name]?.has(s.team)) {
+                        extra += ' cat-leader-league';
+                    } else if (divCategoryLeaders && divCategoryLeaders[c.display_name]?.has(s.team)) {
+                        extra += ' cat-leader-division';
+                    }
+                }
                 return `<td class="td-cat${cls}${extra}">${val}</td>`;
             };
 
@@ -531,21 +555,34 @@
         function renderBody() {
             const rows = data.standings || [];
             const derivedRankMap = buildDerivedRankMap(rows);
-            const leaderTeam = rows.find(r => (derivedRankMap.get(r.team) || 99) === 1) || rows[0];
+            const leagueLeader = rows.find(r => (derivedRankMap.get(r.team) || 99) === 1) || rows[0];
             const categoryLeaders = showLeaders ? computeCategoryLeaders(rows) : {};
-
-            rows.forEach(r => { r.gb = leaderTeam ? computeGB(r, leaderTeam) : 0; });
 
             let html = '';
             if (viewMode === 'divisional') {
                 for (const divName of DIVISION_ORDER) {
                     const teamList = TEAM_DIVISIONS[divName] || [];
-                    const groupRows = sortRows(rows.filter(r => teamList.includes(r.team)), derivedRankMap);
-                    if (!groupRows.length) continue;
+                    const groupRowsRaw = rows.filter(r => teamList.includes(r.team));
+                    if (!groupRowsRaw.length) continue;
+
+                    // GB is relative to this division's own #1 seed here, not
+                    // the league leader -- the LR column still shows league-wide
+                    // rank, matching how Yahoo's own standings page splits it.
+                    const divRankMap = buildDerivedRankMap(groupRowsRaw);
+                    const divLeader = groupRowsRaw.find(r => (divRankMap.get(r.team) || 99) === 1) || groupRowsRaw[0];
+                    groupRowsRaw.forEach(r => { r.gb = computeGB(r, divLeader); });
+
+                    // Division-only category leaders (best within just these 4
+                    // teams) -- kept separate from the league-wide categoryLeaders
+                    // so renderRow can color the two distinctly.
+                    const divCategoryLeaders = showLeaders ? computeCategoryLeaders(groupRowsRaw) : {};
+
+                    const groupRows = sortRows(groupRowsRaw, derivedRankMap);
                     html += `<tr class="division-header-row"><td colspan="${totalCols}">${divName}</td></tr>`;
-                    groupRows.forEach(s => { html += renderRow(s, derivedRankMap, categoryLeaders); });
+                    groupRows.forEach(s => { html += renderRow(s, derivedRankMap, categoryLeaders, divCategoryLeaders); });
                 }
             } else {
+                rows.forEach(r => { r.gb = leagueLeader ? computeGB(r, leagueLeader) : 0; });
                 sortRows(rows, derivedRankMap).forEach(s => { html += renderRow(s, derivedRankMap, categoryLeaders); });
             }
             document.getElementById('standingsBody').innerHTML = html;
@@ -567,12 +604,31 @@
             renderBody();
         });
 
+        // Leaders legend -- shown only while the Leaders toggle is active;
+        // text adapts depending on whether Divisional grouping is also on.
+        function updateLeadersLegend() {
+            const el = document.getElementById('leadersLegend');
+            if (!el) return;
+            if (!showLeaders) {
+                el.classList.remove('visible');
+                el.innerHTML = '';
+                return;
+            }
+            let html = '<span class="legend-item"><span class="legend-swatch league"></span>League leader</span>';
+            if (viewMode === 'divisional') {
+                html += '<span class="legend-item"><span class="legend-swatch division"></span>Division leader</span>';
+            }
+            el.innerHTML = html;
+            el.classList.add('visible');
+        }
+
         // League / Divisional toggle
         document.getElementById('viewToggle')?.addEventListener('click', e => {
             const btn = e.target.closest('.view-toggle-btn');
             if (!btn) return;
             viewMode = btn.dataset.view;
             document.querySelectorAll('#viewToggle .view-toggle-btn').forEach(b => b.classList.toggle('active', b === btn));
+            updateLeadersLegend();
             renderBody();
         });
 
@@ -580,6 +636,7 @@
         document.getElementById('leadersToggle')?.addEventListener('click', () => {
             showLeaders = !showLeaders;
             document.getElementById('leadersToggle').classList.toggle('active', showLeaders);
+            updateLeadersLegend();
             renderBody();
         });
 
