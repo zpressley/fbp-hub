@@ -55,7 +55,8 @@
       "full_name": "Whiz Kids",
       "yahoo_team_id": "1",
       "role": "admin",
-      "standing": 1
+      "standing": 1,
+      "division": "Colossus of Clout"
     },
     "B2J": {
       "name": "Btwn2Jackies",
@@ -111,7 +112,8 @@
       "full_name": "Btwn2Jackies",
       "yahoo_team_id": "3",
       "role": "",
-      "standing": 6
+      "standing": 6,
+      "division": "Stanky's Grave"
     },
     "CFL": {
       "name": "Country Fried Lamb",
@@ -167,7 +169,8 @@
       "full_name": "Country Fried Lamb",
       "yahoo_team_id": "4",
       "role": "",
-      "standing": 8
+      "standing": 8,
+      "division": "Colossus of Clout"
     },
     "HAM": {
       "name": "Hammers",
@@ -223,7 +226,8 @@
       "full_name": "Hammers",
       "yahoo_team_id": "5",
       "role": "",
-      "standing": 9
+      "standing": 9,
+      "division": "Charlie Hustle"
     },
     "RV": {
       "name": "Rick Vaughn",
@@ -279,7 +283,8 @@
       "full_name": "Rick Vaughn",
       "yahoo_team_id": "10",
       "role": "",
-      "standing": 10
+      "standing": 10,
+      "division": "Stanky's Grave"
     },
     "DMN": {
       "name": "The Damn Yankees",
@@ -334,7 +339,8 @@
       },
       "full_name": "The Damn Yankees",
       "yahoo_team_id": "8",
-      "standing": 7
+      "standing": 7,
+      "division": "Stanky's Grave"
     },
     "LFB": {
       "name": "La Flama Blanca",
@@ -390,7 +396,8 @@
       "full_name": "La Flama Blanca",
       "yahoo_team_id": "7",
       "role": "",
-      "standing": 2
+      "standing": 2,
+      "division": "Charlie Hustle"
     },
     "JEP": {
       "name": "Jepordizers!",
@@ -446,7 +453,8 @@
       "full_name": "Jepordizers!",
       "yahoo_team_id": "6",
       "role": "",
-      "standing": 11
+      "standing": 11,
+      "division": "Colossus of Clout"
     },
     "TBB": {
       "name": "The Bluke Blokes",
@@ -502,7 +510,8 @@
       "full_name": "The Bluke Blokes",
       "yahoo_team_id": "11",
       "role": "admin",
-      "standing": 5
+      "standing": 5,
+      "division": "Charlie Hustle"
     },
     "DRO": {
       "name": "Andromedans",
@@ -558,7 +567,8 @@
       "full_name": "Andromedans",
       "yahoo_team_id": "2",
       "role": "",
-      "standing": 4
+      "standing": 4,
+      "division": "Charlie Hustle"
     },
     "SAD": {
       "name": "not much of a donkey",
@@ -614,7 +624,8 @@
       "full_name": "not much of a donkey",
       "yahoo_team_id": "9",
       "role": "admin",
-      "standing": 3
+      "standing": 3,
+      "division": "Colossus of Clout"
     },
     "WAR": {
       "name": "Weekend Warriors",
@@ -670,7 +681,8 @@
       "full_name": "Weekend Warriors",
       "yahoo_team_id": "12",
       "role": "admin",
-      "standing": 12
+      "standing": 12,
+      "division": "Stanky's Grave"
     }
   },
   "commissioner": "161967242118955008"

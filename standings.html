@@ -127,6 +127,69 @@
         .th-display { color: rgba(170,170,170,.35); font-style: italic; }
         .td-display { color: rgba(170,170,170,.45); }
 
+        /* IP Min risk coloring — placed after .td-display so it wins the tie */
+        .ip-risk-red { color: #ef4444; font-weight: 700; }
+        .ip-risk-yellow { color: #eab308; font-weight: 700; }
+        .ip-risk-green { color: #22c55e; font-weight: 700; }
+
+        /* Category leader highlight (Leaders toggle) */
+        .cat-leader { color: var(--accent-yellow); font-weight: 800; }
+
+        .th-gb { min-width: 46px; }
+        .td-gb { font-family: var(--font-mono); font-size: .82rem; color: var(--text-gray); }
+
+        /* League / Divisional + Leaders toggle controls */
+        .standings-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 14px;
+        }
+        .standings-view-toggle {
+            display: inline-flex;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .view-toggle-btn {
+            background: transparent;
+            border: none;
+            color: rgba(170,170,170,.8);
+            font-family: var(--font-title);
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: background .12s, color .12s;
+        }
+        .standings-view-toggle .view-toggle-btn + .view-toggle-btn {
+            border-left: 1px solid rgba(255,255,255,.15);
+        }
+        .view-toggle-btn.active { background: var(--primary-red); color: #fff; }
+        .view-toggle-btn:not(.active):hover { background: rgba(255,255,255,.06); }
+        #leadersToggle {
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 6px;
+        }
+        #leadersToggle.active { background: var(--accent-yellow); color: #1a1a1a; border-color: var(--accent-yellow); }
+
+        .division-header-row td {
+            background: #1a1a1a;
+            color: var(--accent-yellow);
+            font-family: var(--font-title);
+            font-weight: 800;
+            font-size: .72rem;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 8px;
+            border-top: 2px solid rgba(255,255,255,.1);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
         .scroll-hint {
             text-align: center;
             color: rgba(170,170,170,.3);
@@ -196,6 +259,13 @@
         <div class="standings-header">
             <h2><i class="fas fa-chart-line"></i> LIVE STANDINGS</h2>
             <div class="standings-meta" id="standingsMeta">Loading…</div>
+            <div class="standings-controls">
+                <div class="standings-view-toggle" id="viewToggle">
+                    <button class="view-toggle-btn active" data-view="league" type="button">League</button>
+                    <button class="view-toggle-btn" data-view="divisional" type="button">Divisional</button>
+                </div>
+                <button class="view-toggle-btn" id="leadersToggle" type="button"><i class="fas fa-star"></i> Leaders</button>
+            </div>
         </div>
 
         <div class="scroll-hint"><i class="fas fa-arrows-left-right"></i> Scroll to see all categories</div>
@@ -227,17 +297,43 @@
 
         const DATA = window.FBPHub?.config?.dataPath || './data/';
 
-        // Load standings
-        let data;
+        // ── Category direction (Leaders toggle) ─────────────────────────
+        // Explicitly "lower is better": ERA, P_HR (pitching HR allowed).
+        // ER / H/9 / BB/9 / P_TB added on the same logic (fewer runs/
+        // baserunners allowed = better pitching) — remove any of these if
+        // that's not how your scoring treats them.
+        const LOWER_IS_BETTER = new Set(['ERA', 'ER', 'P_HR', 'H/9', 'BB/9', 'P_TB']);
+
+        // Load standings + manager/division data
+        let data, managersData;
         try {
-            const r = await fetch(DATA + 'standings.json', { cache: 'no-store' });
-            data = r.ok ? await r.json() : null;
-        } catch { data = null; }
+            const [sr, mr] = await Promise.all([
+                fetch(DATA + 'standings.json', { cache: 'no-store' }),
+                fetch('./config/managers.json', { cache: 'no-store' }),
+            ]);
+            data = sr.ok ? await sr.json() : null;
+            managersData = mr.ok ? await mr.json() : null;
+        } catch { data = null; managersData = null; }
 
         if (!data || !data.standings) {
             document.getElementById('standingsMeta').textContent = 'No standings data available.';
             return;
         }
+
+        // Division groupings — sourced from config/managers.json's per-team
+        // "division" field (Constitution Article 7: Stanky's Grave / Charlie
+        // Hustle / Colossus of Clout). If managers.json is ever missing the
+        // field, the Divisional toggle just renders empty groups rather than
+        // guessing.
+        const DIVISION_ORDER = ["Stanky's Grave", "Charlie Hustle", "Colossus of Clout"];
+        const TEAM_DIVISIONS = {};
+        DIVISION_ORDER.forEach(d => { TEAM_DIVISIONS[d] = []; });
+        Object.entries(managersData?.teams || {}).forEach(([abbr, info]) => {
+            const div = info?.division;
+            if (!div) return;
+            if (!TEAM_DIVISIONS[div]) TEAM_DIVISIONS[div] = [];
+            TEAM_DIVISIONS[div].push(abbr);
+        });
 
         // Meta
         document.getElementById('standingsMeta').textContent =
@@ -256,10 +352,14 @@
         const pitchIdx = cats.findIndex(c => parseInt(c.stat_id) >= 24);
         const batCats = pitchIdx > 0 ? cats.slice(0, pitchIdx) : cats;
         const pitchCats = pitchIdx > 0 ? cats.slice(pitchIdx) : [];
+        const allCats = [...batCats, ...pitchCats];
+        const totalCols = 6 + allCats.length; // LR, Team, Record, GB, vs, Score + categories
 
-        // Sort state
+        // Sort / view state
         let sortKey = 'live_rank';
         let sortAsc = true;
+        let viewMode = 'league';   // 'league' | 'divisional'
+        let showLeaders = false;
 
         function parseRecord(rec) {
             try {
@@ -299,12 +399,51 @@
             return map;
         }
 
+        // Games back off the same overall-live record the rank column uses.
+        function computeGB(team, leader) {
+            const [tw, tl] = parseRecord(computeOverallRecord(team));
+            const [lw, ll] = parseRecord(computeOverallRecord(leader));
+            return ((lw - tw) + (tl - ll)) / 2;
+        }
+
+        // League-wide best value per scored category (skips display-only cats).
+        function computeCategoryLeaders(rows) {
+            const leaders = {};
+            allCats.forEach(c => {
+                if (c.display_only) return;
+                const lowerBetter = LOWER_IS_BETTER.has(c.display_name);
+                let best = null;
+                rows.forEach(r => {
+                    const val = parseFloat(r.categories?.[c.display_name]);
+                    if (isNaN(val)) return;
+                    if (best === null || (lowerBetter ? val < best : val > best)) best = val;
+                });
+                if (best === null) return;
+                const winners = new Set();
+                rows.forEach(r => {
+                    const val = parseFloat(r.categories?.[c.display_name]);
+                    if (!isNaN(val) && val === best) winners.add(r.team);
+                });
+                leaders[c.display_name] = winners;
+            });
+            return leaders;
+        }
+
+        function ipRiskClass(val) {
+            const n = parseFloat(val);
+            if (isNaN(n)) return '';
+            if (n < 25) return ' ip-risk-red';
+            if (n < 35) return ' ip-risk-yellow';
+            return ' ip-risk-green';
+        }
+
         // Build header
         function renderHead() {
             let html = '<tr>';
             html += `<th class="th-rank" data-sort="live_rank">LR</th>`;
             html += `<th class="th-team" data-sort="team">Team</th>`;
             html += `<th class="th-record" data-sort="live_win_pct">Record</th>`;
+            html += `<th class="th-gb" data-sort="gb">GB</th>`;
             html += `<th data-sort="opponent">vs</th>`;
             html += `<th data-sort="score">Score</th>`;
 
@@ -330,10 +469,8 @@
             });
         }
 
-        // Build body
-        function renderBody() {
-            const derivedRankMap = buildDerivedRankMap(data.standings || []);
-            const sorted = [...data.standings].sort((a, b) => {
+        function sortRows(rows, derivedRankMap) {
+            return [...rows].sort((a, b) => {
                 let va, vb;
                 if (sortKey.startsWith('cat_')) {
                     const catName = sortKey.slice(4);
@@ -358,34 +495,58 @@
                 }
                 return sortAsc ? va - vb : vb - va;
             });
+        }
+
+        function renderRow(s, derivedRankMap, categoryLeaders) {
+            const isMe = myTeam && s.team.toUpperCase() === myTeam;
+            const w = parseInt(s.score) || 0;
+            const l = parseInt(s.opponent_score) || 0;
+            const t = parseInt(s.ties) || 0;
+            const rank = derivedRankMap.get(s.team) || s.live_rank || '—';
+
+            let html = `<tr class="${isMe ? 'my-team' : ''}">`;
+            html += `<td class="td-rank">${rank}</td>`;
+            html += `<td class="td-team"><span class="td-team-abbr">${s.team}</span></td>`;
+            html += `<td class="td-record">${computeOverallRecord(s)}</td>`;
+            html += `<td class="td-gb">${(s.gb || 0) <= 0.05 ? '—' : s.gb.toFixed(1)}</td>`;
+            html += `<td class="td-opponent">${s.opponent || '—'}</td>`;
+            html += `<td class="td-score"><span class="win">${w}</span>-<span class="loss">${l}</span>-<span class="tie">${t}</span></td>`;
+
+            const catCell = (c, i, startCls) => {
+                const cls = (i === 0 ? ` ${startCls}` : '') + (c.display_only ? ' td-display' : '');
+                const val = s.categories?.[c.display_name] ?? '—';
+                let extra = c.display_name === 'IP' ? ipRiskClass(val) : '';
+                if (showLeaders && categoryLeaders[c.display_name]?.has(s.team)) extra += ' cat-leader';
+                return `<td class="td-cat${cls}${extra}">${val}</td>`;
+            };
+
+            batCats.forEach((c, i) => { html += catCell(c, i, 'td-bat-start'); });
+            pitchCats.forEach((c, i) => { html += catCell(c, i, 'td-pitch-start'); });
+
+            html += '</tr>';
+            return html;
+        }
+
+        // Build body
+        function renderBody() {
+            const rows = data.standings || [];
+            const derivedRankMap = buildDerivedRankMap(rows);
+            const leaderTeam = rows.find(r => (derivedRankMap.get(r.team) || 99) === 1) || rows[0];
+            const categoryLeaders = showLeaders ? computeCategoryLeaders(rows) : {};
+
+            rows.forEach(r => { r.gb = leaderTeam ? computeGB(r, leaderTeam) : 0; });
 
             let html = '';
-            for (const s of sorted) {
-                const isMe = myTeam && s.team.toUpperCase() === myTeam;
-                const w = parseInt(s.score) || 0;
-                const l = parseInt(s.opponent_score) || 0;
-                const t = parseInt(s.ties) || 0;
-                const rank = derivedRankMap.get(s.team) || s.live_rank || '—';
-
-                html += `<tr class="${isMe ? 'my-team' : ''}">`;
-                html += `<td class="td-rank">${rank}</td>`;
-                html += `<td class="td-team"><span class="td-team-abbr">${s.team}</span></td>`;
-                html += `<td class="td-record">${computeOverallRecord(s)}</td>`;
-                html += `<td class="td-opponent">${s.opponent || '—'}</td>`;
-                html += `<td class="td-score"><span class="win">${w}</span>-<span class="loss">${l}</span>-<span class="tie">${t}</span></td>`;
-
-                batCats.forEach((c, i) => {
-                    const cls = (i === 0 ? ' td-bat-start' : '') + (c.display_only ? ' td-display' : '');
-                    const val = s.categories?.[c.display_name] ?? '—';
-                    html += `<td class="td-cat${cls}">${val}</td>`;
-                });
-                pitchCats.forEach((c, i) => {
-                    const cls = (i === 0 ? ' td-pitch-start' : '') + (c.display_only ? ' td-display' : '');
-                    const val = s.categories?.[c.display_name] ?? '—';
-                    html += `<td class="td-cat${cls}">${val}</td>`;
-                });
-
-                html += '</tr>';
+            if (viewMode === 'divisional') {
+                for (const divName of DIVISION_ORDER) {
+                    const teamList = TEAM_DIVISIONS[divName] || [];
+                    const groupRows = sortRows(rows.filter(r => teamList.includes(r.team)), derivedRankMap);
+                    if (!groupRows.length) continue;
+                    html += `<tr class="division-header-row"><td colspan="${totalCols}">${divName}</td></tr>`;
+                    groupRows.forEach(s => { html += renderRow(s, derivedRankMap, categoryLeaders); });
+                }
+            } else {
+                sortRows(rows, derivedRankMap).forEach(s => { html += renderRow(s, derivedRankMap, categoryLeaders); });
             }
             document.getElementById('standingsBody').innerHTML = html;
         }
@@ -399,10 +560,26 @@
                 sortAsc = !sortAsc;
             } else {
                 sortKey = key;
-                // Default descending for stats, ascending for rank/team
-                sortAsc = (key === 'live_rank' || key === 'team' || key === 'opponent');
+                // Default descending for stats, ascending for rank/team/gb
+                sortAsc = (key === 'live_rank' || key === 'team' || key === 'opponent' || key === 'gb');
             }
             renderHead();
+            renderBody();
+        });
+
+        // League / Divisional toggle
+        document.getElementById('viewToggle')?.addEventListener('click', e => {
+            const btn = e.target.closest('.view-toggle-btn');
+            if (!btn) return;
+            viewMode = btn.dataset.view;
+            document.querySelectorAll('#viewToggle .view-toggle-btn').forEach(b => b.classList.toggle('active', b === btn));
+            renderBody();
+        });
+
+        // Leaders toggle
+        document.getElementById('leadersToggle')?.addEventListener('click', () => {
+            showLeaders = !showLeaders;
+            document.getElementById('leadersToggle').classList.toggle('active', showLeaders);
             renderBody();
         });
 
