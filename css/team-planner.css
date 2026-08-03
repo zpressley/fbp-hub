@@ -176,6 +176,12 @@
   letter-spacing: 0.4px; padding: 1px 6px; border-radius: 3px; margin-left: 4px;
   background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.35); color: var(--green);
 }
+.free-badge {
+  display: inline-block; font-family: var(--T); font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.4px; padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+  background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.35); color: var(--green);
+}
+.free-cost { font-family: var(--T); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.3px; color: var(--green); }
 
 /* ── Tool buttons (IL / RaT) + row actions ─────────────────────────────── */
 .tool-btn {
@@ -186,6 +192,7 @@
 .tool-btn:hover:not(:disabled) { border-color: rgba(255,255,255,.3); color: var(--white); }
 .tool-btn.on { background: rgba(99,179,237,.14); border-color: rgba(99,179,237,.5); color: #63b3ed; }
 .tool-btn.on.rat { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.45); color: var(--amber); }
+.tool-btn.top100-btn.on { background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.5); color: var(--green); }
 .tool-btn:disabled { opacity: 0.28; cursor: not-allowed; }
 
 .link-x { color: var(--dimmer); cursor: pointer; transition: color .1s; padding: 4px; }
@@ -230,6 +237,28 @@
 }
 .stepper button:hover { border-color: var(--red); color: var(--red); }
 .stepper .n { font-family: var(--M); font-weight: 700; font-size: 0.95rem; min-width: 46px; text-align: center; }
+
+/* ── Potential PAD/KAP allotment preview (WizBucks adjustment section) ──── */
+.wb-projection {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 12px 14px; margin-top: 4px;
+}
+.wb-projection .nm { font-family: var(--T); font-weight: 700; font-size: 0.85rem; color: var(--white); }
+.wb-projection .sub { font-family: var(--T); font-size: 0.68rem; color: var(--dimmer); margin-top: 1px; margin-bottom: 4px; }
+.bracket-picker { display: flex; gap: 5px; margin-top: 8px; }
+.bracket-btn {
+  flex: 1; font-family: var(--T); font-weight: 700; font-size: 0.72rem; letter-spacing: 0.2px;
+  padding: 7px 8px; border-radius: 4px; border: 1px solid var(--border); color: var(--dim);
+  background: var(--bg3); transition: all .1s; cursor: pointer;
+}
+.bracket-btn:hover { color: var(--white); border-color: rgba(255,255,255,.2); }
+.bracket-btn.active { background: rgba(239,62,66,.14); border-color: rgba(239,62,66,.4); color: var(--white); }
+.wb-projection-result { margin-top: 10px; }
+.proj-row { display: flex; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,.06); }
+.proj-row:last-child { border-bottom: none; }
+.proj-lbl { font-family: var(--T); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.4px; color: var(--dimmer); width: 34px; flex-shrink: 0; }
+.proj-amt { font-family: var(--M); font-weight: 700; font-size: 1.05rem; color: var(--white); flex-shrink: 0; }
+.proj-note { font-family: var(--T); font-size: 0.68rem; color: var(--dimmer); }
 
 /* ── PAD mode ──────────────────────────────────────────────────────────── */
 .pad-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
@@ -358,6 +387,8 @@
   .mini-tool { width: 24px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,.14); background: transparent; color: var(--dim); font-family: var(--T); font-weight: 700; font-size: 0.56rem; display: flex; align-items: center; justify-content: center; }
   .mini-tool.on { background: rgba(99,179,237,.16); border-color: rgba(99,179,237,.5); color: #63b3ed; }
   .mini-tool.on.rat { background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.45); color: var(--amber); }
+  .mini-tool.top100 { width: auto; padding: 0 6px; }
+  .mini-tool.top100.on { background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.5); color: var(--green); }
   .mini-tool:disabled { opacity: .25; }
   .mini-tool.drop { color: var(--dimmer); }
 

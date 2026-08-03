@@ -212,6 +212,19 @@
             <button onclick="adjustWB(5)">+</button>
           </div>
         </div>
+
+        <div class="wb-projection">
+          <div class="nm">Potential 2027 allotment</div>
+          <div class="sub">Next year's finish isn't decided yet — preview PAD &amp; KAP by projected bracket</div>
+          <div class="bracket-picker" id="bracketPicker">
+            <button class="bracket-btn" data-bracket="championship" onclick="setProjectedBracket('championship')">Championship</button>
+            <button class="bracket-btn" data-bracket="consolation" onclick="setProjectedBracket('consolation')">Consolation</button>
+            <button class="bracket-btn" data-bracket="elimination" onclick="setProjectedBracket('elimination')">Elimination</button>
+          </div>
+          <div class="wb-projection-result" id="wbProjectionResult">
+            <div class="hint" style="align-self:auto">Pick a projected finish above to preview next year's potential PAD and KAP allotment.</div>
+          </div>
+        </div>
       </div>
     </div>
 

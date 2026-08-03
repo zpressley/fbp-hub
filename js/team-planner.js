@@ -25,6 +25,20 @@ const TAX_BRACKETS = [
 const BUYIN_COSTS = { 1: 55, 2: 35, 3: 10 };
 const PROSPECT_COSTS = { DC: 5, PC: 10, BC: 20 };
 const MAX_TAXABLE_SPEND = 435;
+// Constitution Article 4 §04.4: a Blue-Chip prospect who maintains Top 100 status on
+// MLB Pipeline's rankings on November 1st retains BC status at the following PAD for
+// free (no repurchase/reassignment cost). There's no live Pipeline feed wired in, so
+// this is a manual per-prospect flag (see toggleProspectTop100 / prospectCost below).
+const BRACKET_ALLOTMENTS = {
+    // PAD base is set by *last* year's finish bracket (Art. 1 §02.1.1); KAP is a flat
+    // $375 for everyone. Only Consolation and Elimination carry a seasonal-finish WB
+    // bonus on top of the base -- Consolation's bonus lands in KAP, Elimination's in
+    // PAD, and Championship gets no WB bonus at all (its reward is Champions Purse
+    // cash + draft position instead). See Art. 1 §02.3 and Art. 6 §02-04.
+    championship: { padBase: 100, kapBase: 375, padBonus: [], kapBonus: [] },
+    consolation: { padBase: 120, kapBase: 375, padBonus: [], kapBonus: [{ label: 'Runner-up', amt: 25 }, { label: 'Bracket champion', amt: 50 }] },
+    elimination: { padBase: 140, kapBase: 375, padBonus: [{ label: 'Runner-up', amt: 10 }, { label: 'Top team', amt: 20 }], kapBonus: [] }
+};
 // Next year's keeper draft hasn't happened yet, so there's no real pick-order/ownership
 // file to read (data/draft_order_2026.json is *last* year's already-executed draft, built
 // from the prior season's final standings — see docs/TRADE_PLANNER_PLAN.md). Until that
@@ -43,6 +57,7 @@ let TP_STATE = {
     wbAdjust: 0,
     dcSlots: 0,
     bcSlots: 0,
+    projectedBracket: null, // 'championship' | 'consolation' | 'elimination' | null -- next season's projected finish, for the PAD/KAP potential-allotment preview
     picker: { kind: null, selected: new Set() } // kind: 'keeper' | 'prospect' | 'pick'
 };
 
@@ -61,6 +76,14 @@ function prospectTierFor(p) {
     if (ct.includes('purchased')) return 'PC';
     if (ct.includes('development')) return 'DC';
     return 'DC';
+}
+
+// A BC prospect flagged as Top 100 (Nov 1) retains BC for free next PAD -- see the
+// BRACKET_ALLOTMENTS comment above for the constitution citation.
+function prospectCost(p) {
+    if (p.dropped) return 0;
+    if (p.tier === 'BC' && p.top100) return 0;
+    return PROSPECT_COSTS[p.tier] || 0;
 }
 
 function tierGroup(tier) { return tier.split('-')[0]; }
@@ -157,7 +180,7 @@ async function loadTeamPlan(abbr) {
         } else if (p.player_type === 'Farm') {
             TP_STATE.prospects.push({
                 upid: String(p.upid || ''), name: p.name, pos: p.position || '?', team: p.team || '',
-                tier: prospectTierFor(p), dropped: false, added: false, fromTeam: null
+                tier: prospectTierFor(p), dropped: false, added: false, fromTeam: null, top100: false
             });
         }
     });
@@ -184,6 +207,7 @@ function renderAll() {
     renderPicks();
     renderSummary();
     renderPad();
+    renderWbProjection();
 }
 
 function keeperRowHtml(k) {
@@ -239,29 +263,40 @@ function renderKeepers() {
 }
 
 function prospectRowHtml(p) {
+    const isBC = p.tier === 'BC';
+    const isFree = isBC && p.top100 && !p.dropped;
+    const top100Btn = (isBC && !p.dropped)
+        ? `<button class="tool-btn top100-btn ${p.top100 ? 'on' : ''}" onclick="toggleProspectTop100('${p.upid}')" title="MLB Pipeline Top 100 on Nov 1 — keeps Blue-Chip status free at next PAD">T100</button>`
+        : '';
     return `<tr class="${p.dropped ? 'dropped' : ''}${p.added ? ' added' : ''}">
         <td><span class="td-pos">${p.pos}</span></td>
         <td class="td-name">${p.name}${p.added ? ' <span class="badge b-new">NEW</span>' : ''}
             ${p.fromTeam ? `<span class="from-tag">via ${p.fromTeam}</span>` : ''}</td>
         <td>${p.team || ''}</td>
-        <td><span class="badge ${badgeClass(p.tier)}">${p.tier}</span></td>
-        <td class="cost">$${p.dropped ? 0 : PROSPECT_COSTS[p.tier]}</td>
-        <td class="c">${p.dropped
+        <td><span class="badge ${badgeClass(p.tier)}">${p.tier}</span>${isFree ? ' <span class="badge free-badge" title="Top 100 on Nov 1 — free keep">FREE KEEP</span>' : ''}</td>
+        <td class="cost">${isFree ? '<span class="free-cost">FREE</span>' : '$' + prospectCost(p)}</td>
+        <td class="c">${top100Btn}${p.dropped
             ? `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Undo"><i class="fas fa-rotate-left"></i></span>`
             : `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Drop"><i class="fas fa-xmark"></i></span>`}</td>
     </tr>`;
 }
 function prospectCardHtml(p) {
+    const isBC = p.tier === 'BC';
+    const isFree = isBC && p.top100 && !p.dropped;
+    const top100Btn = (isBC && !p.dropped)
+        ? `<button class="mini-tool top100 ${p.top100 ? 'on' : ''}" onclick="toggleProspectTop100('${p.upid}')" title="Top 100 on Nov 1 — free BC keep">T100</button>`
+        : '';
     return `<div class="crow ${p.dropped ? 'dropped' : ''}${p.added ? ' added' : ''}">
         <div class="crow-top">
             <span class="crow-pos">${p.pos}</span>
             <span class="crow-name">${p.name}${p.added ? ' <span class="badge b-new">NEW</span>' : ''}</span>
-            <span class="crow-cost">$${p.dropped ? 0 : PROSPECT_COSTS[p.tier]}</span>
+            <span class="crow-cost">${isFree ? '<span class="free-cost">FREE</span>' : '$' + prospectCost(p)}</span>
         </div>
         <div class="crow-sub">
-            <span class="badge ${badgeClass(p.tier)}">${p.tier}</span>
+            <span class="badge ${badgeClass(p.tier)}">${p.tier}</span>${isFree ? ' <span class="badge free-badge">FREE</span>' : ''}
             <span class="crow-team">${p.team || ''}${p.fromTeam ? ' · via ' + p.fromTeam : ''}</span>
             <div class="crow-tools">
+                ${top100Btn}
                 <button class="mini-tool drop" onclick="toggleProspectDrop('${p.upid}')"><i class="fas fa-${p.dropped ? 'rotate-left' : 'xmark'}"></i></button>
             </div>
         </div>
@@ -350,7 +385,7 @@ function renderSummary() {
 }
 
 function renderPad() {
-    const prospectSpend = TP_STATE.prospects.reduce((s, p) => s + (p.dropped ? 0 : PROSPECT_COSTS[p.tier]), 0);
+    const prospectSpend = TP_STATE.prospects.reduce((s, p) => s + prospectCost(p), 0);
     const slotSpend = TP_STATE.dcSlots * 5 + TP_STATE.bcSlots * 20;
     const total = prospectSpend + slotSpend;
     const balance = getWizbucksBalance(TP_STATE.team);
@@ -411,6 +446,12 @@ function toggleProspectDrop(upid) {
     else { p.dropped = !p.dropped; }
     renderAll();
 }
+function toggleProspectTop100(upid) {
+    const p = TP_STATE.prospects.find(x => x.upid === upid);
+    if (!p || p.tier !== 'BC' || p.dropped) return;
+    p.top100 = !p.top100;
+    renderAll();
+}
 function togglePickBuyin(i) { TP_STATE.picks[i].buyinChecked = !TP_STATE.picks[i].buyinChecked; renderAll(); }
 function togglePickDrop(i) {
     const pk = TP_STATE.picks[i];
@@ -426,6 +467,37 @@ function adjustSlot(kind, delta) {
     if (kind === 'dc') TP_STATE.dcSlots = Math.max(0, Math.min(15, TP_STATE.dcSlots + delta));
     if (kind === 'bc') TP_STATE.bcSlots = Math.max(0, Math.min(2, TP_STATE.bcSlots + delta));
     renderPad();
+}
+
+// ── PAD/KAP potential-allotment preview (next season's finish is unknown until the
+// playoffs resolve -- this just previews what each of the 3 finish brackets would be
+// worth so a plan can be sanity-checked against a range of outcomes). Purely
+// informational: it does NOT feed into wbAdjust or any of the live budget totals.
+function setProjectedBracket(bracket) {
+    TP_STATE.projectedBracket = TP_STATE.projectedBracket === bracket ? null : bracket;
+    renderWbProjection();
+}
+function renderWbProjection() {
+    const picker = document.getElementById('bracketPicker');
+    if (picker) {
+        picker.querySelectorAll('.bracket-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.bracket === TP_STATE.projectedBracket);
+        });
+    }
+    const out = document.getElementById('wbProjectionResult');
+    if (!out) return;
+    const b = TP_STATE.projectedBracket && BRACKET_ALLOTMENTS[TP_STATE.projectedBracket];
+    if (!b) {
+        out.innerHTML = `<div class="hint" style="align-self:auto">Pick a projected finish above to preview next year's potential PAD and KAP allotment.</div>`;
+        return;
+    }
+    const bonusNote = (bonuses, currency) => bonuses.length
+        ? bonuses.map(x => `+$${x.amt} ${currency} if ${x.label}`).join(' · ')
+        : 'no seasonal WB bonus at this bracket';
+    out.innerHTML = `
+        <div class="proj-row"><span class="proj-lbl">PAD</span><span class="proj-amt">$${b.padBase}</span><span class="proj-note">${bonusNote(b.padBonus, 'PAD')}</span></div>
+        <div class="proj-row"><span class="proj-lbl">KAP</span><span class="proj-amt">$${b.kapBase}</span><span class="proj-note">${bonusNote(b.kapBonus, 'KAP')}</span></div>
+    `;
 }
 
 // ── Mobile-only accordion sections ────────────────────────────────────────
@@ -537,7 +609,7 @@ function confirmPlayerPickerAdd() {
         const p = players.find(x => String(x.upid) === upid);
         if (!p) return;
         if (kind === 'prospect') {
-            TP_STATE.prospects.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', tier: prospectTierFor(p), dropped: false, added: true, fromTeam: p.FBP_Team || null });
+            TP_STATE.prospects.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', tier: prospectTierFor(p), dropped: false, added: true, fromTeam: p.FBP_Team || null, top100: false });
         } else {
             const contract = normalizeContract(p.years_simple) || 'TC-1';
             TP_STATE.keepers.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', contract, il: false, rat: false, dropped: false, added: true, fromTeam: p.FBP_Team || null });
@@ -633,11 +705,13 @@ function buildPlanPayload() {
             rat_applications: TP_STATE.keepers.filter(k => k.rat).map(k => k.upid),
             prospects_dropped: TP_STATE.prospects.filter(p => p.dropped).map(p => p.upid),
             prospects_added: TP_STATE.prospects.filter(p => p.added).map(p => p.upid),
+            prospects_top100: TP_STATE.prospects.filter(p => p.tier === 'BC' && p.top100).map(p => p.upid),
             picks_added: TP_STATE.picks.filter(p => p.added).map(p => ({ round: p.round, fromTeam: p.originalOwner })),
             picks_dropped: TP_STATE.picks.filter(p => !p.added && p.dropped).map(p => p.round),
             wb_adjust: TP_STATE.wbAdjust,
             dc_slots: TP_STATE.dcSlots,
-            bc_slots: TP_STATE.bcSlots
+            bc_slots: TP_STATE.bcSlots,
+            projected_bracket: TP_STATE.projectedBracket || null
         }
     };
 }
@@ -660,8 +734,9 @@ function applyPlanState(plan) {
         if (TP_STATE.prospects.some(x => x.upid === upid)) return;
         const p = players.find(x => String(x.upid) === upid);
         if (!p) return;
-        TP_STATE.prospects.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', tier: prospectTierFor(p), dropped: false, added: true, fromTeam: p.FBP_Team || null });
+        TP_STATE.prospects.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', tier: prospectTierFor(p), dropped: false, added: true, fromTeam: p.FBP_Team || null, top100: false });
     });
+    (plan.prospects_top100 || []).forEach(upid => { const p = TP_STATE.prospects.find(x => x.upid === upid); if (p && p.tier === 'BC') p.top100 = true; });
     (plan.picks_dropped || []).forEach(round => {
         const pk = TP_STATE.picks.find(p => !p.added && p.round === round);
         if (pk) pk.dropped = true;
@@ -678,6 +753,7 @@ function applyPlanState(plan) {
     TP_STATE.wbAdjust = plan.wb_adjust || 0;
     TP_STATE.dcSlots = plan.dc_slots || 0;
     TP_STATE.bcSlots = plan.bc_slots || 0;
+    TP_STATE.projectedBracket = plan.projected_bracket || null;
 }
 
 function updateSavedMeta(text) {
