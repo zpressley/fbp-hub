@@ -612,7 +612,7 @@
     if (showPad) actions.push({ href: 'pad.html', icon: 'fa-seedling', label: 'PAD' });
     if (showKap) actions.push({ href: 'kap.html', icon: 'fa-file-signature', label: 'KAP' });
     
-    actions.push({ href: 'team-builder.html', icon: 'fa-drafting-compass', label: 'Team Builder' });
+    actions.push({ href: 'team-planner.html', icon: 'fa-drafting-compass', label: 'Team Planner' });
     actions.push({ action: 'purchase', icon: 'fa-file-contract', label: 'Purchase Contracts' });
     actions.push({ href: 'trade.html', icon: 'fa-handshake', label: 'Trade Portal' });
     

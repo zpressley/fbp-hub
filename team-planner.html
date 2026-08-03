@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Planner – FBP Hub</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#EF3E42">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260714212330">
+  <link rel="stylesheet" href="css/team-planner.css?v=20260714212330">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="mobile-nav">
+  <div class="nav-container">
+    <button class="nav-toggle" id="navToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="nav-brand">
+      <h1>FBP HUB 3.0</h1>
+      <p class="season-year">Est. 2012</p>
+    </div>
+    <div class="user-menu" id="userMenu">
+      <button class="user-menu-toggle" id="userMenuToggle">
+        <i class="fas fa-user-circle"></i>
+        <span>Menu</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <a href="login.html">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html" class="nav-link">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="constitution.html" class="nav-link">
+      <i class="fas fa-scroll"></i>
+      <span>Constitution</span>
+    </a>
+    <a href="players.html" class="nav-link">
+      <i class="fas fa-users"></i>
+      <span>Players</span>
+    </a>
+    <a href="rosters.html" class="nav-link">
+      <i class="fas fa-baseball-ball"></i>
+      <span>Rosters</span>
+    </a>
+    <a href="transactions.html" class="nav-link">
+      <i class="fas fa-exchange-alt"></i>
+      <span>Transactions</span>
+    </a>
+    <div class="nav-item-dropdown" id="frontOfficeDropdown">
+        <button class="nav-dropdown-toggle" id="frontOfficeDropdownToggle">
+            <span>
+                <i class="fas fa-briefcase"></i>
+                <span>Front Office</span>
+            </span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="nav-dropdown-menu" id="frontOfficeDropdownMenu">
+            <a href="trade.html" class="nav-dropdown-item">
+                <i class="fas fa-handshake"></i>
+                <span>Trade Portal</span>
+            </a>
+            <a href="auction.html" class="nav-dropdown-item">
+                <i class="fas fa-gavel"></i>
+                <span>Auction</span>
+            </a>
+            <a href="team-planner.html" class="nav-dropdown-item">
+                <i class="fas fa-drafting-compass"></i>
+                <span>Team Planner</span>
+            </a>
+            <a href="wizbucks.html" class="nav-dropdown-item">
+                <i class="fas fa-coins"></i>
+                <span>WizBucks</span>
+            </a>
+            <a href="pad.html" class="nav-dropdown-item">
+                <i class="fas fa-receipt"></i>
+                <span>PAD</span>
+            </a>
+            <a href="kap.html" class="nav-dropdown-item">
+                <i class="fas fa-trophy"></i>
+                <span>KAP</span>
+            </a>
+        </div>
+    </div>
+    <div class="nav-item-dropdown">
+      <button class="nav-dropdown-toggle" id="draftDropdownToggle">
+        <span>
+          <i class="fas fa-table-list"></i>
+          <span>Draft</span>
+        </span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="nav-dropdown-menu" id="draftDropdownMenu">
+        <a href="draft.html" class="nav-dropdown-item">
+          <i class="fas fa-list-ol"></i>
+          <span>Live Draft</span>
+        </a>
+        <a href="draft-preview.html" class="nav-dropdown-item">
+          <i class="fas fa-eye"></i>
+          <span>Draft Preview</span>
+        </a>
+        <a href="draft-picks.html" class="nav-dropdown-item">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Draft Picks</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main Content ───────────────────────────────────────────────────────── -->
+<div class="app">
+
+  <div class="page-hdr">
+    <div class="page-hdr-top">
+      <div>
+        <h1><i class="fas fa-drafting-compass"></i> Team Planner</h1>
+        <p>Plan your whole roster for next season · Add any real player, pick, or prospect from the league · Not contingent on what you currently own</p>
+      </div>
+      <div class="save-block">
+        <button class="btn-save" id="btnSaveTop" onclick="savePlan()"><i class="fas fa-floppy-disk"></i> Save plan</button>
+        <span class="saved-meta" id="savedMetaTop">Not saved yet</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Team</span>
+      <select class="ctrl-select" id="teamSelect">
+        <option value="">— Select Team —</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Mode</span>
+      <div class="mode-tabs">
+        <button class="m-tab active" id="modeTabKap" onclick="setMode('kap')">Keeper / KAP</button>
+        <button class="m-tab" id="modeTabPad" onclick="setMode('pad')">PAD</button>
+      </div>
+    </div>
+    <span class="hint">No login required — open to plan any team.</span>
+  </div>
+
+  <div class="summary-bar" id="kapSummaryBar">
+    <div class="stat-card"><div class="lbl">Taxable spend</div><div class="val" id="sumTaxable">$0</div></div>
+    <div class="stat-card"><div class="lbl">Tax-free spend</div><div class="val" id="sumTaxfree">$0</div></div>
+    <div class="stat-card"><div class="lbl">Total WB spend</div><div class="val" id="sumTotal">$0</div></div>
+    <div class="stat-card" id="bracketCard"><div class="lbl">Tax bracket</div><div class="val" id="sumBracket">—</div></div>
+    <div class="stat-card"><div class="lbl">WB balance</div><div class="val" id="sumWbBalance">$0</div></div>
+  </div>
+
+  <!-- ── Keeper / KAP Mode ────────────────────────────────────────────── -->
+  <div id="kapModeSection">
+
+    <div class="section-hdr">
+      <h3><i class="fas fa-baseball-ball"></i> Roster plan <span class="count-badge" id="keeperCount">0</span></h3>
+      <button class="btn-add" onclick="openPlayerPicker('keeper')"><i class="fas fa-magnifying-glass"></i> Add real player</button>
+    </div>
+    <div class="tb-wrap">
+      <table>
+        <thead><tr><th style="width:44px">Pos</th><th>Player</th><th>MLB</th><th>Contract</th><th class="r">Cost</th><th class="c">IL</th><th class="c">RaT</th><th class="c" style="width:40px"></th></tr></thead>
+        <tbody id="keeperBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-hdr" style="margin-top:20px">
+      <h3><i class="fas fa-ticket"></i> Draft picks</h3>
+      <button class="btn-add" onclick="openPickPicker()"><i class="fas fa-magnifying-glass"></i> Add pick</button>
+    </div>
+    <div class="picks-grid" id="picksGrid"></div>
+
+    <div class="section-hdr" style="margin-top:20px">
+      <h3><i class="fas fa-sack-dollar"></i> WizBucks adjustment</h3>
+    </div>
+    <div class="slot-row">
+      <div><div class="nm">Add / remove hypothetical WB</div><div class="sub">Model sending or receiving cash as part of an acquisition</div></div>
+      <div class="stepper">
+        <button onclick="adjustWB(-5)">−</button>
+        <span class="n" id="wbAdjustDisplay">$0</span>
+        <button onclick="adjustWB(5)">+</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── PAD Mode ─────────────────────────────────────────────────────── -->
+  <div id="padModeSection" style="display:none">
+    <div class="pad-grid">
+      <div>
+        <div class="section-hdr">
+          <h3><i class="fas fa-seedling"></i> Prospect plan <span class="count-badge" id="prospectCount">0</span></h3>
+          <button class="btn-add" onclick="openPlayerPicker('prospect')"><i class="fas fa-magnifying-glass"></i> Add projected prospect</button>
+        </div>
+        <div class="tb-wrap">
+          <table>
+            <thead><tr><th style="width:44px">Pos</th><th>Prospect</th><th>Org</th><th>Contract</th><th class="r">Cost</th><th class="c" style="width:40px"></th></tr></thead>
+            <tbody id="prospectBody"></tbody>
+          </table>
+        </div>
+
+        <div class="section-hdr" style="margin-top:18px">
+          <h3><i class="fas fa-lock"></i> Draft slots</h3>
+        </div>
+        <div class="slot-row">
+          <div><div class="nm">DC Slots</div><div class="sub">$5 each · unlocks Prospect Draft RD3+ · max 15</div></div>
+          <div class="stepper"><button onclick="adjustSlot('dc',-1)">−</button><span class="n" id="dcSlotCount">0</span><button onclick="adjustSlot('dc',1)">+</button></div>
+        </div>
+        <div class="slot-row">
+          <div><div class="nm">BC Slots</div><div class="sub">$20 each · unlocks FYPD RD1-2 · max 2</div></div>
+          <div class="stepper"><button onclick="adjustSlot('bc',-1)">−</button><span class="n" id="bcSlotCount">0</span><button onclick="adjustSlot('bc',1)">+</button></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-hdr"><h3><i class="fas fa-wallet"></i> PAD affordability</h3></div>
+        <div class="afford-card">
+          <div class="lbl">Current WizBucks balance</div>
+          <div class="big" id="padBalance">$0</div>
+          <div class="afford-sub" id="padAllotmentNote"></div>
+          <div class="afford-bar"><div class="afford-bar-fill" id="padBarFill" style="width:0%"></div></div>
+          <table class="afford-table">
+            <tr><td>Prospect + slot spend</td><td class="r cost" id="padSpend">$0</td></tr>
+            <tr><td>Remaining</td><td class="r cost" id="padRemaining">$0</td></tr>
+            <tr><td>Est. rollover to KAP (max $30)</td><td class="r cost" id="padRollover">$0</td></tr>
+          </table>
+          <div class="afford-status" id="padStatus">Within budget.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-save">
+    <button class="btn-save" id="btnSaveBottom" onclick="savePlan()"><i class="fas fa-floppy-disk"></i> Save plan</button>
+    <span class="saved-meta" id="savedMetaBottom">Not saved yet</span>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ── Player / Prospect Picker Modal ───────────────────────────────────── -->
+<div class="tp-modal-overlay" id="playerPickerModal">
+  <div class="tp-modal">
+    <button class="tp-modal-close" onclick="closePlayerPicker()">✕</button>
+    <div class="tp-modal-title" id="pickerTitle">Add real player</div>
+    <div class="tp-modal-filters">
+      <input type="text" id="pickerSearch" placeholder="Search by name..." oninput="filterPlayerPicker()">
+      <select id="pickerTeamFilter" onchange="filterPlayerPicker()"><option value="">All teams</option></select>
+    </div>
+    <div class="tp-modal-list" id="pickerResults"></div>
+    <button class="tp-modal-submit" onclick="confirmPlayerPickerAdd()"><i class="fas fa-plus"></i> Add selected</button>
+  </div>
+</div>
+
+<!-- ── Pick Picker Modal ─────────────────────────────────────────────────── -->
+<div class="tp-modal-overlay" id="pickPickerModal">
+  <div class="tp-modal">
+    <button class="tp-modal-close" onclick="closePickPicker()">✕</button>
+    <div class="tp-modal-title">Add pick</div>
+    <div class="tp-modal-filters">
+      <select id="pickPickerTeamFilter" onchange="filterPickPicker()"><option value="">All teams</option></select>
+      <select id="pickPickerRoundFilter" onchange="filterPickPicker()">
+        <option value="">All rounds</option>
+        <option value="1">RD1</option><option value="2">RD2</option><option value="3">RD3</option>
+        <option value="4">RD4</option><option value="5">RD5</option><option value="6">RD6</option>
+        <option value="7">RD7</option><option value="8">RD8</option><option value="9">RD9</option>
+        <option value="10">RD10</option>
+      </select>
+    </div>
+    <div class="tp-modal-list" id="pickPickerResults"></div>
+    <button class="tp-modal-submit" onclick="confirmPickPickerAdd()"><i class="fas fa-plus"></i> Add selected</button>
+  </div>
+</div>
+
+<div class="tp-toast" id="tpToast"></div>
+
+<!-- ── Bottom Navigation ──────────────────────────────────────────────────── -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bottom-nav-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="players.html" class="bottom-nav-item">
+    <i class="fas fa-search"></i>
+    <span>Search</span>
+  </a>
+  <a href="rosters.html" class="bottom-nav-item">
+    <i class="fas fa-baseball-ball"></i>
+    <span>Rosters</span>
+  </a>
+  <a href="dashboard.html" class="bottom-nav-item">
+    <i class="fas fa-tachometer-alt"></i>
+    <span>Dashboard</span>
+  </a>
+  <button class="bottom-nav-item" id="bottomMenuToggle" type="button">
+    <i class="fas fa-bars"></i>
+    <span>Menu</span>
+  </button>
+</nav>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <p><strong>Fantasy Baseball Pantheon</strong> &copy; 2012–2026</p>
+</footer>
+
+<!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+<script src="js/main.js?v=20260714212330"></script>
+<script src="js/auth.js?v=20260714212330"></script>
+<script src="js/team-planner.js?v=20260714212330"></script>
+
+</body>
+</html>

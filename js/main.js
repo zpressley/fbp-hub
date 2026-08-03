@@ -376,7 +376,7 @@ function highlightActivePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-link');
     const draftPages = ['draft.html', 'draft-preview.html', 'draft-picks.html', 'draft-board.html'];
-    const frontOfficePages = ['trade.html', 'auction.html', 'team-builder.html', 'wizbucks.html', 'pad.html', 'kap.html'];
+    const frontOfficePages = ['trade.html', 'auction.html', 'team-planner.html', 'wizbucks.html', 'pad.html', 'kap.html'];
     
     // Handle regular nav links
     navLinks.forEach(link => {
@@ -667,6 +667,11 @@ function initializePage(pageName) {
         case 'kap':
             if (typeof initKAPPage === 'function') {
                 initKAPPage();
+            }
+            break;
+        case 'team-planner':
+            if (typeof initTeamPlannerPage === 'function') {
+                initTeamPlannerPage();
             }
             break;
         case 'player-profile':

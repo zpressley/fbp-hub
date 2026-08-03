@@ -492,6 +492,10 @@ function addUserMenu() {
                 <i class="fas fa-baseball-ball"></i>
                 My Roster
             </a>
+            <a href="team-planner.html?team=${team?.abbreviation || ''}">
+                <i class="fas fa-drafting-compass"></i>
+                Team Planner
+            </a>
             <a href="trade.html">
                 <i class="fas fa-handshake"></i>
                 Trade Portal
