@@ -169,32 +169,49 @@
   <!-- ── Keeper / KAP Mode ────────────────────────────────────────────── -->
   <div id="kapModeSection">
 
-    <div class="section-hdr">
-      <h3><i class="fas fa-baseball-ball"></i> Roster plan <span class="count-badge" id="keeperCount">0</span></h3>
-      <button class="btn-add" onclick="openPlayerPicker('keeper')"><i class="fas fa-magnifying-glass"></i> Add real player</button>
-    </div>
-    <div class="tb-wrap">
-      <table>
-        <thead><tr><th style="width:44px">Pos</th><th>Player</th><th>MLB</th><th>Contract</th><th class="r">Cost</th><th class="c">IL</th><th class="c">RaT</th><th class="c" style="width:40px"></th></tr></thead>
-        <tbody id="keeperBody"></tbody>
-      </table>
+    <div class="acc-section open" id="accRoster">
+      <div class="section-hdr acc-hdr" onclick="toggleAccSection('accRoster')">
+        <h3><i class="fas fa-baseball-ball"></i> Roster plan <span class="count-badge" id="keeperCount">0</span></h3>
+        <button class="btn-add" onclick="event.stopPropagation(); openPlayerPicker('keeper')"><i class="fas fa-magnifying-glass"></i> Add real player</button>
+        <i class="fas fa-chevron-down acc-chev"></i>
+      </div>
+      <div class="acc-content">
+        <div class="tb-wrap tp-desktop-only">
+          <table>
+            <thead><tr><th style="width:44px">Pos</th><th>Player</th><th>MLB</th><th>Contract</th><th class="r">Cost</th><th class="c">IL</th><th class="c">RaT</th><th class="c" style="width:40px"></th></tr></thead>
+            <tbody id="keeperBody"></tbody>
+          </table>
+        </div>
+        <div class="crow-list tp-mobile-only" id="keeperCards"></div>
+      </div>
     </div>
 
-    <div class="section-hdr" style="margin-top:20px">
-      <h3><i class="fas fa-ticket"></i> Draft picks</h3>
-      <button class="btn-add" onclick="openPickPicker()"><i class="fas fa-magnifying-glass"></i> Add pick</button>
+    <div class="acc-section" id="accPicks" style="margin-top:12px">
+      <div class="section-hdr acc-hdr" onclick="toggleAccSection('accPicks')">
+        <h3><i class="fas fa-ticket"></i> Draft picks <span class="count-badge" id="picksSummaryBadge">29</span></h3>
+        <button class="btn-add" onclick="event.stopPropagation(); openPickPicker()"><i class="fas fa-magnifying-glass"></i> Add pick</button>
+        <i class="fas fa-chevron-down acc-chev"></i>
+      </div>
+      <div class="acc-content">
+        <p class="hint" style="margin:4px 0 10px">Projected: one pick per round — next year's draft hasn't happened, so nothing's been traded yet. Use "Add pick" to model acquiring one, or the × on a pick to model trading it away.</p>
+        <div class="picks-grid" id="picksGrid"></div>
+      </div>
     </div>
-    <div class="picks-grid" id="picksGrid"></div>
 
-    <div class="section-hdr" style="margin-top:20px">
-      <h3><i class="fas fa-sack-dollar"></i> WizBucks adjustment</h3>
-    </div>
-    <div class="slot-row">
-      <div><div class="nm">Add / remove hypothetical WB</div><div class="sub">Model sending or receiving cash as part of an acquisition</div></div>
-      <div class="stepper">
-        <button onclick="adjustWB(-5)">−</button>
-        <span class="n" id="wbAdjustDisplay">$0</span>
-        <button onclick="adjustWB(5)">+</button>
+    <div class="acc-section" id="accWB" style="margin-top:12px">
+      <div class="section-hdr acc-hdr" onclick="toggleAccSection('accWB')">
+        <h3><i class="fas fa-sack-dollar"></i> WizBucks adjustment <span class="count-badge" id="wbAdjustBadge">$0</span></h3>
+        <i class="fas fa-chevron-down acc-chev"></i>
+      </div>
+      <div class="acc-content">
+        <div class="slot-row">
+          <div><div class="nm">Add / remove hypothetical WB</div><div class="sub">Model sending or receiving cash as part of an acquisition</div></div>
+          <div class="stepper">
+            <button onclick="adjustWB(-5)">−</button>
+            <span class="n" id="wbAdjustDisplay">$0</span>
+            <button onclick="adjustWB(5)">+</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -204,27 +221,38 @@
   <div id="padModeSection" style="display:none">
     <div class="pad-grid">
       <div>
-        <div class="section-hdr">
-          <h3><i class="fas fa-seedling"></i> Prospect plan <span class="count-badge" id="prospectCount">0</span></h3>
-          <button class="btn-add" onclick="openPlayerPicker('prospect')"><i class="fas fa-magnifying-glass"></i> Add projected prospect</button>
-        </div>
-        <div class="tb-wrap">
-          <table>
-            <thead><tr><th style="width:44px">Pos</th><th>Prospect</th><th>Org</th><th>Contract</th><th class="r">Cost</th><th class="c" style="width:40px"></th></tr></thead>
-            <tbody id="prospectBody"></tbody>
-          </table>
+        <div class="acc-section open" id="accProspects">
+          <div class="section-hdr acc-hdr" onclick="toggleAccSection('accProspects')">
+            <h3><i class="fas fa-seedling"></i> Prospect plan <span class="count-badge" id="prospectCount">0</span></h3>
+            <button class="btn-add" onclick="event.stopPropagation(); openPlayerPicker('prospect')"><i class="fas fa-magnifying-glass"></i> Add projected prospect</button>
+            <i class="fas fa-chevron-down acc-chev"></i>
+          </div>
+          <div class="acc-content">
+            <div class="tb-wrap tp-desktop-only">
+              <table>
+                <thead><tr><th style="width:44px">Pos</th><th>Prospect</th><th>Org</th><th>Contract</th><th class="r">Cost</th><th class="c" style="width:40px"></th></tr></thead>
+                <tbody id="prospectBody"></tbody>
+              </table>
+            </div>
+            <div class="crow-list tp-mobile-only" id="prospectCards"></div>
+          </div>
         </div>
 
-        <div class="section-hdr" style="margin-top:18px">
-          <h3><i class="fas fa-lock"></i> Draft slots</h3>
-        </div>
-        <div class="slot-row">
-          <div><div class="nm">DC Slots</div><div class="sub">$5 each · unlocks Prospect Draft RD3+ · max 15</div></div>
-          <div class="stepper"><button onclick="adjustSlot('dc',-1)">−</button><span class="n" id="dcSlotCount">0</span><button onclick="adjustSlot('dc',1)">+</button></div>
-        </div>
-        <div class="slot-row">
-          <div><div class="nm">BC Slots</div><div class="sub">$20 each · unlocks FYPD RD1-2 · max 2</div></div>
-          <div class="stepper"><button onclick="adjustSlot('bc',-1)">−</button><span class="n" id="bcSlotCount">0</span><button onclick="adjustSlot('bc',1)">+</button></div>
+        <div class="acc-section" id="accSlots" style="margin-top:12px">
+          <div class="section-hdr acc-hdr" onclick="toggleAccSection('accSlots')">
+            <h3><i class="fas fa-lock"></i> Draft slots <span class="count-badge" id="slotsSummaryBadge">0</span></h3>
+            <i class="fas fa-chevron-down acc-chev"></i>
+          </div>
+          <div class="acc-content">
+            <div class="slot-row">
+              <div><div class="nm">DC Slots</div><div class="sub">$5 each · unlocks Prospect Draft RD3+ · max 15</div></div>
+              <div class="stepper"><button onclick="adjustSlot('dc',-1)">−</button><span class="n" id="dcSlotCount">0</span><button onclick="adjustSlot('dc',1)">+</button></div>
+            </div>
+            <div class="slot-row">
+              <div><div class="nm">BC Slots</div><div class="sub">$20 each · unlocks FYPD RD1-2 · max 2</div></div>
+              <div class="stepper"><button onclick="adjustSlot('bc',-1)">−</button><span class="n" id="bcSlotCount">0</span><button onclick="adjustSlot('bc',1)">+</button></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -271,16 +299,10 @@
 <div class="tp-modal-overlay" id="pickPickerModal">
   <div class="tp-modal">
     <button class="tp-modal-close" onclick="closePickPicker()">✕</button>
-    <div class="tp-modal-title">Add pick</div>
+    <div class="tp-modal-title">Add pick (hypothetical)</div>
     <div class="tp-modal-filters">
       <select id="pickPickerTeamFilter" onchange="filterPickPicker()"><option value="">All teams</option></select>
-      <select id="pickPickerRoundFilter" onchange="filterPickPicker()">
-        <option value="">All rounds</option>
-        <option value="1">RD1</option><option value="2">RD2</option><option value="3">RD3</option>
-        <option value="4">RD4</option><option value="5">RD5</option><option value="6">RD6</option>
-        <option value="7">RD7</option><option value="8">RD8</option><option value="9">RD9</option>
-        <option value="10">RD10</option>
-      </select>
+      <select id="pickPickerRoundFilter" onchange="filterPickPicker()"><option value="">All rounds</option></select>
     </div>
     <div class="tp-modal-list" id="pickPickerResults"></div>
     <button class="tp-modal-submit" onclick="confirmPickPickerAdd()"><i class="fas fa-plus"></i> Add selected</button>

@@ -25,6 +25,13 @@ const TAX_BRACKETS = [
 const BUYIN_COSTS = { 1: 55, 2: 35, 3: 10 };
 const PROSPECT_COSTS = { DC: 5, PC: 10, BC: 20 };
 const MAX_TAXABLE_SPEND = 435;
+// Next year's keeper draft hasn't happened yet, so there's no real pick-order/ownership
+// file to read (data/draft_order_2026.json is *last* year's already-executed draft, built
+// from the prior season's final standings — see docs/TRADE_PLANNER_PLAN.md). Until that
+// exists for next season, every team defaults to one natural pick per round; use "Add pick"
+// / the drop (×) control to model a hypothetical trade. 29 = deepest round currently used
+// league-wide in the keeper draft.
+const KEEPER_DRAFT_ROUNDS = 29;
 
 // ── State ────────────────────────────────────────────────────────────────
 let TP_STATE = {
@@ -32,11 +39,10 @@ let TP_STATE = {
     mode: 'kap', // 'kap' | 'pad'
     keepers: [],    // {upid,name,pos,team,contract,il,rat,dropped,added,fromTeam}
     prospects: [],  // {upid,name,pos,team,tier,dropped,added,fromTeam}
-    picks: [],      // {round,pick,originalOwner,currentOwner,buyinRequired,buyinPurchased,buyinCost,buyinChecked,added}
+    picks: [],      // {round,originalOwner,currentOwner,buyinRequired,buyinCost,buyinChecked,dropped,added}
     wbAdjust: 0,
     dcSlots: 0,
     bcSlots: 0,
-    draftOrder: null,
     picker: { kind: null, selected: new Set() } // kind: 'keeper' | 'prospect' | 'pick'
 };
 
@@ -107,23 +113,6 @@ function waitForHubReady() {
     });
 }
 
-async function loadDraftOrder() {
-    if (TP_STATE.draftOrder) return TP_STATE.draftOrder;
-    try {
-        let resp = await fetch('./data/draft_order_2026.json', { cache: 'no-store' });
-        if (!resp.ok && window.FBPHub?.config?.githubRaw) {
-            resp = await fetch(`${FBPHub.config.githubRaw}draft_order_2026.json`, { cache: 'no-store' });
-        }
-        if (!resp.ok) throw new Error('failed to load draft_order_2026.json');
-        const json = await resp.json();
-        TP_STATE.draftOrder = Array.isArray(json) ? json : [];
-    } catch (e) {
-        console.warn('Team Planner: draft_order_2026.json unavailable; pick features disabled', e);
-        TP_STATE.draftOrder = [];
-    }
-    return TP_STATE.draftOrder;
-}
-
 function getTeamName(abbr) {
     const meta = FBPHub.data.managers?.teams?.[abbr];
     return meta?.name || abbr;
@@ -175,15 +164,17 @@ async function loadTeamPlan(abbr) {
 
     TP_STATE.keepers.sort((a, b) => (KEEPER_SALARIES[b.contract] || 0) - (KEEPER_SALARIES[a.contract] || 0));
 
-    const order = await loadDraftOrder();
-    TP_STATE.picks = order
-        .filter(p => p && p.draft === 'keeper' && p.current_owner === abbr)
-        .map(p => ({
-            round: p.round, pick: p.pick, originalOwner: p.original_owner, currentOwner: p.current_owner,
-            buyinRequired: !!p.buyin_required, buyinPurchased: !!p.buyin_purchased, buyinCost: p.buyin_cost || 0,
-            buyinChecked: !!p.buyin_purchased, added: false
-        }))
-        .sort((a, b) => a.round - b.round);
+    // Next year's picks: no real trade ledger exists yet (see KEEPER_DRAFT_ROUNDS above),
+    // so default every team to one natural pick per round. Model a trade by dropping one
+    // of these (×) and/or adding a hypothetical incoming one via the picker.
+    TP_STATE.picks = [];
+    for (let r = 1; r <= KEEPER_DRAFT_ROUNDS; r++) {
+        TP_STATE.picks.push({
+            round: r, originalOwner: abbr, currentOwner: abbr,
+            buyinRequired: !!BUYIN_COSTS[r], buyinCost: BUYIN_COSTS[r] || 0,
+            buyinChecked: false, dropped: false, added: false
+        });
+    }
 }
 
 // ── Rendering ────────────────────────────────────────────────────────────
@@ -195,52 +186,97 @@ function renderAll() {
     renderPad();
 }
 
+function keeperRowHtml(k) {
+    const eff = effectiveTier(k);
+    const il = canILTag(k), rat = canRaT(k);
+    return `<tr class="${k.dropped ? 'dropped' : ''}${k.added ? ' added' : ''}">
+        <td><span class="td-pos">${k.pos}</span></td>
+        <td class="td-name">${k.name}${k.added ? ' <span class="badge b-new">NEW</span>' : ''}
+            ${k.fromTeam ? `<span class="from-tag">via ${k.fromTeam}</span>` : ''}</td>
+        <td>${k.team || ''}</td>
+        <td><span class="badge ${badgeClass(eff)}">${eff}</span>${k.rat ? ' <span class="badge ct-fc" style="border-color:var(--red)">RaT</span>' : ''}</td>
+        <td class="cost">$${playerCost(k)}</td>
+        <td class="c"><button class="tool-btn ${k.il ? 'on' : ''}" ${il ? '' : 'disabled'} onclick="toggleIL('${k.upid}')" title="IL Tag">IL</button></td>
+        <td class="c"><button class="tool-btn ${k.rat ? 'on rat' : ''}" ${rat ? '' : 'disabled'} onclick="toggleRat('${k.upid}')" title="Reduce a Tier">RaT</button></td>
+        <td class="c">${k.dropped
+            ? `<span class="link-x" onclick="toggleDrop('${k.upid}')" title="Undo"><i class="fas fa-rotate-left"></i></span>`
+            : `<span class="link-x" onclick="toggleDrop('${k.upid}')" title="Drop"><i class="fas fa-xmark"></i></span>`}</td>
+    </tr>`;
+}
+function keeperCardHtml(k) {
+    const eff = effectiveTier(k);
+    const il = canILTag(k), rat = canRaT(k);
+    return `<div class="crow ${k.dropped ? 'dropped' : ''}${k.added ? ' added' : ''}">
+        <div class="crow-top">
+            <span class="crow-pos">${k.pos}</span>
+            <span class="crow-name">${k.name}${k.added ? ' <span class="badge b-new">NEW</span>' : ''}</span>
+            <span class="crow-cost">$${playerCost(k)}</span>
+        </div>
+        <div class="crow-sub">
+            <span class="badge ${badgeClass(eff)}">${eff}</span>${k.rat ? ' <span class="badge ct-fc" style="border-color:var(--red)">RaT</span>' : ''}
+            <span class="crow-team">${k.team || ''}${k.fromTeam ? ' · via ' + k.fromTeam : ''}</span>
+            <div class="crow-tools">
+                <button class="mini-tool ${k.il ? 'on' : ''}" ${il ? '' : 'disabled'} onclick="toggleIL('${k.upid}')">IL</button>
+                <button class="mini-tool ${k.rat ? 'on rat' : ''}" ${rat ? '' : 'disabled'} onclick="toggleRat('${k.upid}')">RaT</button>
+                <button class="mini-tool drop" onclick="toggleDrop('${k.upid}')"><i class="fas fa-${k.dropped ? 'rotate-left' : 'xmark'}"></i></button>
+            </div>
+        </div>
+    </div>`;
+}
 function renderKeepers() {
     const tbody = document.getElementById('keeperBody');
-    if (!tbody) return;
+    const cards = document.getElementById('keeperCards');
+    if (!tbody && !cards) return;
     if (!TP_STATE.keepers.length) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No keeper-contract players yet — select a team, or use "Add real player" to start building a plan from scratch.</td></tr>`;
+        if (tbody) tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No keeper-contract players yet — select a team, or use "Add real player" to start building a plan from scratch.</td></tr>`;
+        if (cards) cards.innerHTML = `<div class="empty-row">No keeper-contract players yet — select a team, or use "Add real player" to start.</div>`;
     } else {
-        tbody.innerHTML = TP_STATE.keepers.map(k => {
-            const eff = effectiveTier(k);
-            const il = canILTag(k), rat = canRaT(k);
-            return `<tr class="${k.dropped ? 'dropped' : ''}${k.added ? ' added' : ''}">
-                <td><span class="td-pos">${k.pos}</span></td>
-                <td class="td-name">${k.name}${k.added ? ' <span class="badge b-new">NEW</span>' : ''}
-                    ${k.fromTeam ? `<span class="from-tag">via ${k.fromTeam}</span>` : ''}</td>
-                <td>${k.team || ''}</td>
-                <td><span class="badge ${badgeClass(eff)}">${eff}</span>${k.rat ? ' <span class="badge ct-fc" style="border-color:var(--red)">RaT</span>' : ''}</td>
-                <td class="cost">$${playerCost(k)}</td>
-                <td class="c"><button class="tool-btn ${k.il ? 'on' : ''}" ${il ? '' : 'disabled'} onclick="toggleIL('${k.upid}')" title="IL Tag">IL</button></td>
-                <td class="c"><button class="tool-btn ${k.rat ? 'on rat' : ''}" ${rat ? '' : 'disabled'} onclick="toggleRat('${k.upid}')" title="Reduce a Tier">RaT</button></td>
-                <td class="c">${k.dropped
-                    ? `<span class="link-x" onclick="toggleDrop('${k.upid}')" title="Undo"><i class="fas fa-rotate-left"></i></span>`
-                    : `<span class="link-x" onclick="toggleDrop('${k.upid}')" title="Drop"><i class="fas fa-xmark"></i></span>`}</td>
-            </tr>`;
-        }).join('');
+        if (tbody) tbody.innerHTML = TP_STATE.keepers.map(keeperRowHtml).join('');
+        if (cards) cards.innerHTML = TP_STATE.keepers.map(keeperCardHtml).join('');
     }
     const count = document.getElementById('keeperCount');
     if (count) count.textContent = TP_STATE.keepers.filter(k => !k.dropped).length;
 }
 
+function prospectRowHtml(p) {
+    return `<tr class="${p.dropped ? 'dropped' : ''}${p.added ? ' added' : ''}">
+        <td><span class="td-pos">${p.pos}</span></td>
+        <td class="td-name">${p.name}${p.added ? ' <span class="badge b-new">NEW</span>' : ''}
+            ${p.fromTeam ? `<span class="from-tag">via ${p.fromTeam}</span>` : ''}</td>
+        <td>${p.team || ''}</td>
+        <td><span class="badge ${badgeClass(p.tier)}">${p.tier}</span></td>
+        <td class="cost">$${p.dropped ? 0 : PROSPECT_COSTS[p.tier]}</td>
+        <td class="c">${p.dropped
+            ? `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Undo"><i class="fas fa-rotate-left"></i></span>`
+            : `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Drop"><i class="fas fa-xmark"></i></span>`}</td>
+    </tr>`;
+}
+function prospectCardHtml(p) {
+    return `<div class="crow ${p.dropped ? 'dropped' : ''}${p.added ? ' added' : ''}">
+        <div class="crow-top">
+            <span class="crow-pos">${p.pos}</span>
+            <span class="crow-name">${p.name}${p.added ? ' <span class="badge b-new">NEW</span>' : ''}</span>
+            <span class="crow-cost">$${p.dropped ? 0 : PROSPECT_COSTS[p.tier]}</span>
+        </div>
+        <div class="crow-sub">
+            <span class="badge ${badgeClass(p.tier)}">${p.tier}</span>
+            <span class="crow-team">${p.team || ''}${p.fromTeam ? ' · via ' + p.fromTeam : ''}</span>
+            <div class="crow-tools">
+                <button class="mini-tool drop" onclick="toggleProspectDrop('${p.upid}')"><i class="fas fa-${p.dropped ? 'rotate-left' : 'xmark'}"></i></button>
+            </div>
+        </div>
+    </div>`;
+}
 function renderProspects() {
     const tbody = document.getElementById('prospectBody');
-    if (!tbody) return;
+    const cards = document.getElementById('prospectCards');
+    if (!tbody && !cards) return;
     if (!TP_STATE.prospects.length) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No farm-system players yet.</td></tr>`;
+        if (tbody) tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No farm-system players yet.</td></tr>`;
+        if (cards) cards.innerHTML = `<div class="empty-row">No farm-system players yet.</div>`;
     } else {
-        tbody.innerHTML = TP_STATE.prospects.map(p => `
-            <tr class="${p.dropped ? 'dropped' : ''}${p.added ? ' added' : ''}">
-                <td><span class="td-pos">${p.pos}</span></td>
-                <td class="td-name">${p.name}${p.added ? ' <span class="badge b-new">NEW</span>' : ''}
-                    ${p.fromTeam ? `<span class="from-tag">via ${p.fromTeam}</span>` : ''}</td>
-                <td>${p.team || ''}</td>
-                <td><span class="badge ${badgeClass(p.tier)}">${p.tier}</span></td>
-                <td class="cost">$${p.dropped ? 0 : PROSPECT_COSTS[p.tier]}</td>
-                <td class="c">${p.dropped
-                    ? `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Undo"><i class="fas fa-rotate-left"></i></span>`
-                    : `<span class="link-x" onclick="toggleProspectDrop('${p.upid}')" title="Drop"><i class="fas fa-xmark"></i></span>`}</td>
-            </tr>`).join('');
+        if (tbody) tbody.innerHTML = TP_STATE.prospects.map(prospectRowHtml).join('');
+        if (cards) cards.innerHTML = TP_STATE.prospects.map(prospectCardHtml).join('');
     }
     const count = document.getElementById('prospectCount');
     if (count) count.textContent = TP_STATE.prospects.filter(p => !p.dropped).length;
@@ -250,31 +286,37 @@ function renderPicks() {
     const grid = document.getElementById('picksGrid');
     if (!grid) return;
     if (!TP_STATE.picks.length) {
-        grid.innerHTML = `<div class="empty-row">No keeper-draft picks on file for this team yet.</div>`;
+        grid.innerHTML = `<div class="empty-row">Select a team to see next year's projected picks.</div>`;
         return;
     }
     const bracket = getBracket(computeTaxable());
+    const taxedCount = TP_STATE.picks.filter(p => !p.dropped && bracket.rounds.includes(p.round)).length;
+    const activeCount = TP_STATE.picks.filter(p => !p.dropped).length;
+    setText('picksSummaryBadge', `${activeCount}${taxedCount ? ' · ' + taxedCount + ' taxed' : ''}`);
     grid.innerHTML = TP_STATE.picks.map((pk, i) => {
-        const taxed = bracket.rounds.includes(pk.round);
+        const taxed = !pk.dropped && bracket.rounds.includes(pk.round);
         let buyinHtml = '';
-        if (pk.buyinRequired && !pk.buyinPurchased) {
+        if (!pk.dropped && pk.buyinRequired) {
             buyinHtml = `<label><input type="checkbox" ${pk.buyinChecked ? 'checked' : ''} onchange="togglePickBuyin(${i})"> Buy in ($${pk.buyinCost})</label>`;
-        } else if (pk.buyinRequired && pk.buyinPurchased) {
-            buyinHtml = `<div class="from-tag" style="color:var(--success)">Bought in</div>`;
         }
-        return `<div class="pick-chip ${taxed ? 'taxed' : ''} ${pk.added ? 'new' : ''}">
+        const fromLabel = pk.added ? `hypothetically via ${pk.originalOwner}` : 'your pick';
+        return `<div class="pick-chip ${taxed ? 'taxed' : ''} ${pk.added ? 'new' : ''} ${pk.dropped ? 'dropped' : ''}">
             ${taxed ? '<div class="taxflag">TAXED</div>' : ''}
-            <div class="rd">RD${pk.round}<span class="from-tag"> · P${pk.pick}</span></div>
-            <div class="from-tag">${pk.originalOwner && pk.originalOwner !== TP_STATE.team ? 'via ' + pk.originalOwner : 'original'}${pk.added ? ' · NEW' : ''}</div>
+            <div class="rd">RD${pk.round}</div>
+            <div class="from-tag">${pk.dropped ? 'traded away' : fromLabel}</div>
             ${buyinHtml}
-            ${pk.added ? `<span class="link-x" onclick="removeAddedPick(${i})" title="Remove"><i class="fas fa-xmark"></i></span>` : ''}
+            ${pk.added
+                ? `<span class="link-x" onclick="removeAddedPick(${i})" title="Remove"><i class="fas fa-xmark"></i></span>`
+                : (pk.dropped
+                    ? `<span class="link-x" onclick="togglePickDrop(${i})" title="Undo"><i class="fas fa-rotate-left"></i></span>`
+                    : `<span class="link-x" onclick="togglePickDrop(${i})" title="Model trading this away"><i class="fas fa-xmark"></i></span>`)}
         </div>`;
     }).join('');
 }
 
 function computeTaxable() {
     const salary = TP_STATE.keepers.reduce((s, k) => s + playerCost(k), 0);
-    const buyin = TP_STATE.picks.reduce((s, pk) => s + ((pk.buyinRequired && !pk.buyinPurchased && pk.buyinChecked) ? pk.buyinCost : 0), 0);
+    const buyin = TP_STATE.picks.reduce((s, pk) => s + ((!pk.dropped && pk.buyinRequired && pk.buyinChecked) ? pk.buyinCost : 0), 0);
     return salary + buyin;
 }
 function computeTaxFree() { return TP_STATE.keepers.filter(k => k.rat && !k.dropped).length * 75; }
@@ -287,6 +329,7 @@ function renderSummary() {
     setText('sumTaxfree', '$' + taxfree);
     setText('sumTotal', '$' + total);
     setText('wbAdjustDisplay', (TP_STATE.wbAdjust >= 0 ? '$' : '-$') + Math.abs(TP_STATE.wbAdjust));
+    setText('wbAdjustBadge', (TP_STATE.wbAdjust >= 0 ? '$' : '-$') + Math.abs(TP_STATE.wbAdjust));
 
     const card = document.getElementById('bracketCard');
     const val = document.getElementById('sumBracket');
@@ -316,6 +359,7 @@ function renderPad() {
 
     setText('dcSlotCount', TP_STATE.dcSlots);
     setText('bcSlotCount', TP_STATE.bcSlots);
+    setText('slotsSummaryBadge', `DC ${TP_STATE.dcSlots} · BC ${TP_STATE.bcSlots}`);
     setText('padSpend', '$' + total);
     setText('padRemaining', '$' + remaining);
     setText('padRollover', '$' + rollover);
@@ -368,6 +412,13 @@ function toggleProspectDrop(upid) {
     renderAll();
 }
 function togglePickBuyin(i) { TP_STATE.picks[i].buyinChecked = !TP_STATE.picks[i].buyinChecked; renderAll(); }
+function togglePickDrop(i) {
+    const pk = TP_STATE.picks[i];
+    if (!pk || pk.added) return;
+    pk.dropped = !pk.dropped;
+    if (pk.dropped) pk.buyinChecked = false;
+    renderAll();
+}
 function removeAddedPick(i) { TP_STATE.picks.splice(i, 1); renderAll(); }
 
 function adjustWB(delta) { TP_STATE.wbAdjust += delta; renderAll(); }
@@ -375,6 +426,42 @@ function adjustSlot(kind, delta) {
     if (kind === 'dc') TP_STATE.dcSlots = Math.max(0, Math.min(15, TP_STATE.dcSlots + delta));
     if (kind === 'bc') TP_STATE.bcSlots = Math.max(0, Math.min(2, TP_STATE.bcSlots + delta));
     renderPad();
+}
+
+// ── Mobile-only accordion sections ────────────────────────────────────────
+// Purely a DOM/UI concern (no data implications), so this just flips a class
+// rather than touching TP_STATE — desktop CSS ignores the class entirely and
+// always shows .acc-content, so this is a no-op above the mobile breakpoint.
+function toggleAccSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('open');
+}
+
+// Keeps the sticky mobile summary strip parked just below the site's own
+// sticky/auto-hiding nav, mirroring the established kap.js/pad.js pattern
+// (see css/kap.css .kap-sticky-bar) so it never overlaps or hides under it.
+function setupStickySummary() {
+    const bar = document.querySelector('.summary-bar');
+    const nav = document.querySelector('.mobile-nav');
+    if (!bar || !nav) return;
+
+    const updateOffset = () => {
+        const isNavHidden = nav.classList.contains('nav-hidden');
+        const navHeight = isNavHidden ? 0 : (nav.getBoundingClientRect().height || 0);
+        bar.style.top = `${navHeight + 8}px`;
+    };
+    updateOffset();
+
+    const debouncedUpdate = typeof debounce === 'function' ? debounce(updateOffset, 75) : updateOffset;
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('scroll', debouncedUpdate);
+
+    if (typeof IntersectionObserver === 'function') {
+        const observer = new IntersectionObserver(([entry]) => {
+            bar.classList.toggle('is-stuck', !entry.isIntersecting);
+        }, { threshold: [1] });
+        observer.observe(bar);
+    }
 }
 
 // ── Mode toggle ──────────────────────────────────────────────────────────
@@ -466,34 +553,45 @@ function confirmPlayerPickerAdd() {
 function openPickPicker() {
     TP_STATE.picker = { kind: 'pick', selected: new Set() };
     const teamFilter = document.getElementById('pickPickerTeamFilter');
-    if (teamFilter) teamFilter.innerHTML = '<option value="">All teams</option>' + getTeamOptions().map(t => `<option value="${t.abbr}">${t.name} (${t.abbr})</option>`).join('');
+    const otherTeams = getTeamOptions().filter(t => t.abbr !== TP_STATE.team);
+    if (teamFilter) teamFilter.innerHTML = '<option value="">All teams</option>' + otherTeams.map(t => `<option value="${t.abbr}">${t.name} (${t.abbr})</option>`).join('');
+    const roundFilter = document.getElementById('pickPickerRoundFilter');
+    if (roundFilter) roundFilter.innerHTML = '<option value="">All rounds</option>' + Array.from({ length: KEEPER_DRAFT_ROUNDS }, (_, i) => i + 1).map(r => `<option value="${r}">RD${r}</option>`).join('');
     document.getElementById('pickPickerModal').classList.add('open');
     filterPickPicker();
 }
 function closePickPicker() { document.getElementById('pickPickerModal').classList.remove('open'); }
 function filterPickPicker() {
+    // No real 2027 trade ledger exists yet — this models a *hypothetical* incoming pick
+    // (some round, from some other team) purely for trade-evaluation purposes.
     const teamFilter = document.getElementById('pickPickerTeamFilter').value;
     const roundFilter = document.getElementById('pickPickerRoundFilter').value;
-    const order = TP_STATE.draftOrder || [];
-    const already = new Set(TP_STATE.picks.map(p => p.round + ':' + p.pick));
+    const already = new Set(TP_STATE.picks.filter(p => p.added).map(p => p.round + ':' + p.originalOwner));
+    const teams = getTeamOptions().filter(t => t.abbr !== TP_STATE.team && (!teamFilter || t.abbr === teamFilter));
 
-    let results = order.filter(p => p && p.draft === 'keeper' && !already.has(p.round + ':' + p.pick));
-    if (teamFilter) results = results.filter(p => p.current_owner === teamFilter);
-    if (roundFilter) results = results.filter(p => String(p.round) === roundFilter);
-    results = results.sort((a, b) => a.round - b.round).slice(0, 60);
+    let results = [];
+    for (let r = 1; r <= KEEPER_DRAFT_ROUNDS; r++) {
+        if (roundFilter && String(r) !== roundFilter) continue;
+        for (const t of teams) {
+            const key = r + ':' + t.abbr;
+            if (already.has(key)) continue;
+            results.push({ round: r, team: t.abbr, teamName: t.name });
+        }
+    }
+    results = results.slice(0, 60);
 
     const container = document.getElementById('pickPickerResults');
     if (!results.length) {
-        container.innerHTML = '<div class="empty-row">No matching picks.</div>';
+        container.innerHTML = '<div class="empty-row">No matching hypothetical picks.</div>';
         return;
     }
-    container.innerHTML = results.map(p => {
-        const key = p.round + ':' + p.pick;
+    container.innerHTML = results.map(r => {
+        const key = r.round + ':' + r.team;
         const checked = TP_STATE.picker.selected.has(key);
         return `<div class="picker-row" onclick="togglePickPickerSelect('${key}')">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
                 <input type="checkbox" ${checked ? 'checked' : ''} onclick="event.stopPropagation();togglePickPickerSelect('${key}')">
-                <span>RD${p.round} P${p.pick} <span class="picker-meta">${p.current_owner}${p.buyin_purchased ? ' · bought in' : ''}</span></span>
+                <span>RD${r.round} <span class="picker-meta">hypothetically from ${r.teamName} (${r.team})</span></span>
             </label>
         </div>`;
     }).join('');
@@ -504,22 +602,21 @@ function togglePickPickerSelect(key) {
     filterPickPicker();
 }
 function confirmPickPickerAdd() {
-    const order = TP_STATE.draftOrder || [];
     let added = 0;
     TP_STATE.picker.selected.forEach(key => {
-        const [round, pick] = key.split(':').map(Number);
-        const src = order.find(p => p.draft === 'keeper' && p.round === round && p.pick === pick);
-        if (!src) return;
+        const [roundStr, fromTeam] = key.split(':');
+        const round = Number(roundStr);
+        if (!round || !fromTeam) return;
         TP_STATE.picks.push({
-            round: src.round, pick: src.pick, originalOwner: src.original_owner, currentOwner: src.current_owner,
-            buyinRequired: !!src.buyin_required, buyinPurchased: !!src.buyin_purchased, buyinCost: src.buyin_cost || 0,
-            buyinChecked: !!src.buyin_purchased, added: true
+            round, originalOwner: fromTeam, currentOwner: TP_STATE.team,
+            buyinRequired: !!BUYIN_COSTS[round], buyinCost: BUYIN_COSTS[round] || 0,
+            buyinChecked: false, dropped: false, added: true
         });
         added++;
     });
     closePickPicker();
     renderAll();
-    showToast(added ? `Added ${added} pick${added === 1 ? '' : 's'}` : 'Nothing selected', added ? 'success' : 'warning');
+    showToast(added ? `Added ${added} hypothetical pick${added === 1 ? '' : 's'}` : 'Nothing selected', added ? 'success' : 'warning');
 }
 
 // ── Save / load plan ─────────────────────────────────────────────────────
@@ -536,8 +633,8 @@ function buildPlanPayload() {
             rat_applications: TP_STATE.keepers.filter(k => k.rat).map(k => k.upid),
             prospects_dropped: TP_STATE.prospects.filter(p => p.dropped).map(p => p.upid),
             prospects_added: TP_STATE.prospects.filter(p => p.added).map(p => p.upid),
-            picks_added: TP_STATE.picks.filter(p => p.added).map(p => ({ round: p.round, pick: p.pick })),
-            picks_removed: [],
+            picks_added: TP_STATE.picks.filter(p => p.added).map(p => ({ round: p.round, fromTeam: p.originalOwner })),
+            picks_dropped: TP_STATE.picks.filter(p => !p.added && p.dropped).map(p => p.round),
             wb_adjust: TP_STATE.wbAdjust,
             dc_slots: TP_STATE.dcSlots,
             bc_slots: TP_STATE.bcSlots
@@ -565,14 +662,17 @@ function applyPlanState(plan) {
         if (!p) return;
         TP_STATE.prospects.push({ upid, name: p.name, pos: p.position || '?', team: p.team || '', tier: prospectTierFor(p), dropped: false, added: true, fromTeam: p.FBP_Team || null });
     });
-    (plan.picks_added || []).forEach(({ round, pick }) => {
-        if (TP_STATE.picks.some(p => p.round === round && p.pick === pick)) return;
-        const src = (TP_STATE.draftOrder || []).find(p => p.draft === 'keeper' && p.round === round && p.pick === pick);
-        if (!src) return;
+    (plan.picks_dropped || []).forEach(round => {
+        const pk = TP_STATE.picks.find(p => !p.added && p.round === round);
+        if (pk) pk.dropped = true;
+    });
+    (plan.picks_added || []).forEach(({ round, fromTeam }) => {
+        if (!round || !fromTeam) return;
+        if (TP_STATE.picks.some(p => p.added && p.round === round && p.originalOwner === fromTeam)) return;
         TP_STATE.picks.push({
-            round: src.round, pick: src.pick, originalOwner: src.original_owner, currentOwner: src.current_owner,
-            buyinRequired: !!src.buyin_required, buyinPurchased: !!src.buyin_purchased, buyinCost: src.buyin_cost || 0,
-            buyinChecked: !!src.buyin_purchased, added: true
+            round, originalOwner: fromTeam, currentOwner: TP_STATE.team,
+            buyinRequired: !!BUYIN_COSTS[round], buyinCost: BUYIN_COSTS[round] || 0,
+            buyinChecked: false, dropped: false, added: true
         });
     });
     TP_STATE.wbAdjust = plan.wb_adjust || 0;
@@ -663,6 +763,7 @@ async function onTeamSelect(abbr) {
 }
 
 function initTeamPlannerPage() {
+    setupStickySummary();
     waitForHubReady().then(async () => {
         const teamSelect = document.getElementById('teamSelect');
         const params = new URLSearchParams(window.location.search);
@@ -677,8 +778,6 @@ function initTeamPlannerPage() {
             teamSelect.addEventListener('change', (e) => onTeamSelect(e.target.value));
             if (defaultTeam) teamSelect.value = defaultTeam;
         }
-
-        await loadDraftOrder();
 
         if (defaultTeam) {
             await onTeamSelect(defaultTeam);

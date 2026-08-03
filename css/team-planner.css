@@ -28,6 +28,13 @@
 
 /* ── Scoped base styles (don't leak to site nav/footer) ──────────────── */
 .app { max-width: 1200px; margin: 0 auto; padding: 16px 14px 80px; font-size: 14px; color: var(--white); font-family: var(--B); }
+
+/* Mobile-only compact layout switches (see the max-width:767px block near
+   the bottom for the actual mobile rules) — these two base defaults are
+   what make it "mobile-only": without them the card-list markup would
+   render visible right alongside the desktop table on every screen size. */
+.tp-mobile-only { display: none; }
+.acc-chev { display: none; }
 .app button { cursor: pointer; font-family: var(--T); }
 .app input, .app select { font-family: var(--B); }
 
@@ -197,6 +204,7 @@
 }
 .pick-chip.taxed { border-color: rgba(239,62,66,.4); background: rgba(239,62,66,.05); }
 .pick-chip.new { border-left: 2px solid var(--green); }
+.pick-chip.dropped { opacity: 0.4; }
 .pick-chip .rd { font-family: var(--T); font-weight: 900; font-size: 1rem; letter-spacing: 0.5px; color: var(--white); }
 .pick-chip .from-tag { margin-left: 0; display: block; }
 .pick-chip label { display: flex; align-items: center; gap: 5px; font-family: var(--T); font-size: 0.7rem; color: var(--dim); cursor: pointer; }
@@ -299,12 +307,70 @@
   .pad-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 767px) {
-  .summary-bar { grid-template-columns: 1fr 1fr; }
   .page-hdr-top { flex-direction: column; align-items: stretch; }
   .save-block { align-items: stretch; flex-direction: row; justify-content: space-between; }
+
+  /* ── Mobile-only compact layout ───────────────────────────────────────
+     Desktop/tablet keep the original table + always-open sections above
+     this breakpoint; nothing below changes how the page looks ≥768px. */
+
+  /* Sticky summary strip: one scrollable row instead of a wrapping grid,
+     pinned just below the site nav (offset set dynamically by
+     setupStickySummary() in team-planner.js; this is the pre-JS fallback,
+     matching the convention already used by kap.css / pad.css). */
+  .summary-bar {
+    display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    gap: 6px; position: sticky; top: 80px; z-index: 120; background: var(--bg0);
+    padding: 6px 2px 10px; margin: 0 -2px 12px; scroll-snap-type: x proximate;
+  }
+  .summary-bar::-webkit-scrollbar { display: none; }
+  .summary-bar .stat-card { flex-shrink: 0; min-width: 92px; scroll-snap-align: start; padding: 7px 10px; }
+  .summary-bar .stat-card .val { font-size: 0.95rem; }
+  .summary-bar.is-stuck { box-shadow: 0 6px 14px rgba(0,0,0,.4); }
+
+  /* Accordion sections (Roster/Prospects default open; Picks/WB/Slots
+     default closed via the HTML's initial class — see team-planner.html).
+     On desktop .acc-content is always visible; only mobile makes it
+     collapsible, so this entire block is scoped to this media query. */
+  .acc-section { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px 4px; margin-bottom: 10px; background: var(--bg1); }
+  .acc-section .section-hdr { margin: 0; }
+  .acc-hdr { cursor: pointer; }
+  .acc-chev { display: inline-block; color: var(--dimmer); font-size: 0.75rem; margin-left: 4px; transition: transform .18s; flex-shrink: 0; }
+  .acc-section .acc-content { display: none; padding-top: 8px; }
+  .acc-section.open .acc-content { display: block; }
+  .acc-section.open .acc-chev { transform: rotate(180deg); }
+
+  /* Card rows instead of a wide table (kills the horizontal-scroll table) */
+  .tp-desktop-only { display: none !important; }
+  .tp-mobile-only { display: block; }
+  .crow-list { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .crow { padding: 7px 10px; display: flex; flex-direction: column; gap: 3px; border-bottom: 1px solid rgba(255,255,255,.045); background: var(--bg2); }
+  .crow:last-child { border-bottom: none; }
+  .crow.dropped { opacity: .4; }
+  .crow.added { border-left: 2px solid var(--green); }
+  .crow-top { display: flex; align-items: center; gap: 7px; }
+  .crow-pos { font-family: var(--M); font-size: 0.6rem; font-weight: 700; color: rgba(170,170,170,.5); background: rgba(255,255,255,.05); padding: 1px 4px; border-radius: 3px; flex-shrink: 0; }
+  .crow-name { flex: 1; font-weight: 600; font-size: 0.83rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .crow-cost { font-family: var(--M); font-weight: 700; font-size: 0.83rem; flex-shrink: 0; }
+  .crow-sub { display: flex; align-items: center; gap: 6px; padding-left: 24px; flex-wrap: wrap; }
+  .crow-team { font-family: var(--T); font-size: 0.64rem; color: var(--dimmer); }
+  .crow-tools { margin-left: auto; display: flex; gap: 4px; }
+  .mini-tool { width: 24px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,.14); background: transparent; color: var(--dim); font-family: var(--T); font-weight: 700; font-size: 0.56rem; display: flex; align-items: center; justify-content: center; }
+  .mini-tool.on { background: rgba(99,179,237,.16); border-color: rgba(99,179,237,.5); color: #63b3ed; }
+  .mini-tool.on.rat { background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.45); color: var(--amber); }
+  .mini-tool:disabled { opacity: .25; }
+  .mini-tool.drop { color: var(--dimmer); }
+
+  /* Denser pick-chip grid (still inside the Draft Picks accordion, which
+     is closed by default, but tighter for whenever it's opened) */
+  .picks-grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  .pick-chip { padding: 6px 5px; }
+  .pick-chip .rd { font-size: 0.76rem; }
+  .pick-chip .from-tag { font-size: 0.56rem; }
+
+  /* Sticky save bar, parked just above the site's fixed bottom tab bar */
+  .bottom-save { position: sticky; bottom: 56px; z-index: 60; margin-top: 14px; box-shadow: 0 -4px 14px rgba(0,0,0,.35); }
 }
 @media (max-width: 480px) {
   .controls-bar { flex-direction: column; align-items: stretch; }
-  .summary-bar { grid-template-columns: 1fr 1fr; }
-  .picks-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
 }
