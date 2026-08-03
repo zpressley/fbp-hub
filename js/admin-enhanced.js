@@ -133,14 +133,14 @@ function getNextUPID() {
 function checkForDuplicates(name) {
     const key = name.toLowerCase().trim();
     const matches = ADMIN_STATE.upidDatabase?.name_index?.[key] || [];
-    
+
     if (matches.length === 0) return null;
-    
+
     // Get full player records
     const duplicates = matches.map(upid => {
         const dbEntry = ADMIN_STATE.upidDatabase.by_upid[upid];
         const combinedEntry = ADMIN_STATE.allPlayers.find(p => String(p.upid) === String(upid));
-        
+
         return {
             upid,
             name: dbEntry?.name || combinedEntry?.name || 'Unknown',
@@ -149,8 +149,35 @@ function checkForDuplicates(name) {
             owner: combinedEntry?.manager || 'Unowned'
         };
     });
-    
+
     return duplicates;
+}
+
+/**
+ * Check for an existing player sharing the same MLB ID or Yahoo ID.
+ *
+ * A far more reliable duplicate signal than name matching, which has
+ * repeatedly missed real duplicates in this system on accent/suffix
+ * mismatches -- an exact ID match can't have that problem.
+ */
+function checkForDuplicatesByIds(mlbId, yahooId) {
+    mlbId = (mlbId || '').trim();
+    yahooId = (yahooId || '').trim();
+    if (!mlbId && !yahooId) return null;
+
+    const duplicates = (ADMIN_STATE.allPlayers || [])
+        .filter(p => (mlbId && String(p.mlb_id || '').trim() === mlbId) ||
+                     (yahooId && String(p.yahoo_id || '').trim() === yahooId))
+        .map(p => ({
+            upid: p.upid,
+            name: p.name || 'Unknown',
+            team: p.team || 'N/A',
+            position: p.position || 'N/A',
+            owner: p.manager || 'Unowned',
+            matchedVia: (mlbId && String(p.mlb_id || '').trim() === mlbId) ? 'MLB ID' : 'Yahoo ID',
+        }));
+
+    return duplicates.length ? duplicates : null;
 }
 
 // ============================================
@@ -181,20 +208,29 @@ function showAddPlayerModal() {
  */
 function checkAddPlayerDuplicates() {
     const name = document.getElementById('addPlayerName').value.trim();
+    const mlbId = document.getElementById('addPlayerMLBId').value.trim();
+    const yahooId = document.getElementById('addPlayerYahooId').value.trim();
     const dupesContainer = document.getElementById('addPlayerDuplicates');
-    
-    if (name.length < 3) {
+
+    const byName = name.length >= 3 ? checkForDuplicates(name) : null;
+    const byId = checkForDuplicatesByIds(mlbId, yahooId);
+
+    // Merge, de-duped by upid (an ID match already implies "same UPID" --
+    // don't show it twice if the name check also happened to catch it).
+    const seen = new Set();
+    const duplicates = [];
+    for (const d of [...(byId || []), ...(byName || [])]) {
+        const key = String(d.upid);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        duplicates.push(d);
+    }
+
+    if (duplicates.length === 0) {
         dupesContainer.style.display = 'none';
         return;
     }
-    
-    const duplicates = checkForDuplicates(name);
-    
-    if (!duplicates || duplicates.length === 0) {
-        dupesContainer.style.display = 'none';
-        return;
-    }
-    
+
     // Show duplicates warning
     dupesContainer.innerHTML = `
         <div class="duplicate-warning">
@@ -205,6 +241,7 @@ function checkAddPlayerDuplicates() {
                     <strong>${d.name}</strong> (UPID: ${d.upid})
                     • ${d.team} ${d.position}
                     • Owner: ${d.owner}
+                    ${d.matchedVia ? `• Matched on: ${d.matchedVia}` : ''}
                 </div>
             `).join('')}
             <p>Make sure this is a different player before continuing.</p>
@@ -304,27 +341,33 @@ function setSelectValueWithFallback(selectEl, value, labelSuffix = ' (from API)'
 async function enrichPlayerData() {
     const name = document.getElementById('addPlayerName').value.trim();
     const team = document.getElementById('addPlayerTeam').value;
-    
-    if (!name) {
-        showToast('Enter player name first', 'warning');
+    const mlbId = document.getElementById('addPlayerMLBId').value.trim();
+
+    if (!mlbId && !name) {
+        showToast('Enter an MLB ID or a player name first', 'warning');
         return;
     }
-    
+
     const enrichContainer = document.getElementById('addPlayerEnrichment');
     enrichContainer.style.display = 'block';
-    enrichContainer.innerHTML = '<div class="enrichment-loading"><i class="fas fa-spinner fa-spin"></i> Fetching data from APIs...</div>';
-    
+    enrichContainer.innerHTML = `<div class="enrichment-loading"><i class="fas fa-spinner fa-spin"></i> ${mlbId ? 'Looking up MLB ID ' + mlbId + '...' : 'Fetching data from APIs...'}</div>`;
+
     const session = authManager?.getSession();
     const token = session?.token;
-    
+
     if (!token) {
         enrichContainer.innerHTML = '<div class="enrichment-error">Session expired. Please log in again.</div>';
         return;
     }
-    
+
     try {
-        const payload = { name, team: team || null };
-        
+        // Prefer the exact mlb_id lookup when one's provided -- unambiguous,
+        // unlike the name search, which can match the wrong same-named
+        // player or miss on an accent/suffix mismatch.
+        const payload = mlbId
+            ? { mlb_id: mlbId, name: name || null, team: team || null }
+            : { name, team: team || null };
+
         const res = await fetch(`${AUTH_CONFIG.workerUrl}/api/admin/enrich-player`, {
             method: 'POST',
             headers: {
@@ -344,6 +387,11 @@ async function enrichPlayerData() {
         displayEnrichedData(data);
         
         // Auto-fill form fields
+        const nameEl = document.getElementById('addPlayerName');
+        if (data.name && nameEl && !nameEl.value.trim()) {
+            nameEl.value = data.name;
+            checkAddPlayerDuplicates(); // name just got filled in from an ID lookup -- re-check
+        }
         if (data.mlb_id) document.getElementById('addPlayerMLBId').value = data.mlb_id;
         if (data.yahoo_id) document.getElementById('addPlayerYahooId').value = data.yahoo_id;
         if (data.birth_date) document.getElementById('addPlayerBirthDate').value = data.birth_date;
@@ -384,6 +432,7 @@ function displayEnrichedData(data) {
     const container = document.getElementById('addPlayerEnrichment');
     
     const fields = [
+        { label: 'Name', value: data.name, icon: 'fa-user' },
         { label: 'MLB ID', value: data.mlb_id, icon: 'fa-baseball' },
         { label: 'Yahoo ID', value: data.yahoo_id, icon: 'fa-y' },
         { label: 'Birth Date', value: data.birth_date, icon: 'fa-birthday-cake' },

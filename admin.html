@@ -976,48 +976,71 @@
             </div>
             
             <form id="addPlayerForm" onsubmit="return false;">
+                <!-- Identify the Player Section -->
+                <div class="add-player-section">
+                    <h4><i class="fas fa-id-card"></i> Identify the Player</h4>
+                    <p class="form-hint">Enter an MLB ID or Yahoo ID for an exact match — this is
+                        the preferred way to add a player, since it can't be thrown off by a name
+                        spelling/accent/suffix mismatch the way a name search can. No ID handy? Skip
+                        this and use the name search below instead.</p>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>MLB ID</label>
+                            <input type="text" id="addPlayerMLBId" class="form-input"
+                                   placeholder="e.g., 683734" oninput="checkAddPlayerDuplicates()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Yahoo ID</label>
+                            <input type="text" id="addPlayerYahooId" class="form-input"
+                                   placeholder="e.g., 12345" oninput="checkAddPlayerDuplicates()">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Basic Info Section -->
                 <div class="add-player-section">
                     <h4><i class="fas fa-user"></i> Basic Information</h4>
-                    
+
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label>Player Name (Required)</label>
-                            <input type="text" id="addPlayerName" class="form-input" 
+                            <input type="text" id="addPlayerName" class="form-input"
                                    placeholder="e.g., Bobby Witt Jr." oninput="checkAddPlayerDuplicates()" required>
                             <small class="form-hint" id="addPlayerUpidSuggestion">Next available: ...</small>
                         </div>
-                        
+
                         <div id="addPlayerDuplicates" class="full-width" style="display: none;"></div>
-                        
+
                         <div class="form-group">
                             <label>MLB Team</label>
                             <select id="addPlayerTeam" class="form-input"></select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Position</label>
                             <select id="addPlayerPosition" class="form-input" required></select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Age</label>
                             <input type="number" id="addPlayerAge" class="form-input" min="16" max="50">
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Level</label>
                             <select id="addPlayerLevel" class="form-input"></select>
                         </div>
                     </div>
-                    
+
                     <div class="enrich-action">
                         <button type="button" class="btn-secondary" onclick="enrichPlayerData()">
-                            <i class="fas fa-magic"></i> Auto-Fill from APIs
+                            <i class="fas fa-magic"></i> Look Up Player
                         </button>
-                        <span class="enrich-hint">Searches MLB Stats API</span>
+                        <span class="enrich-hint">Uses the MLB ID/Yahoo ID above if provided, otherwise searches MLB Stats API by name</span>
                     </div>
-                    
+
                     <div id="addPlayerEnrichment" class="enrichment-container" style="display: none;"></div>
                 </div>
                 
@@ -1056,16 +1079,6 @@
                     <h4><i class="fas fa-database"></i> Advanced Fields</h4>
                     
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>MLB ID</label>
-                            <input type="text" id="addPlayerMLBId" class="form-input" placeholder="Auto-filled">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Yahoo ID</label>
-                            <input type="text" id="addPlayerYahooId" class="form-input" placeholder="Auto-filled">
-                        </div>
-                        
                         <div class="form-group">
                             <label>Birth Date</label>
                             <input type="date" id="addPlayerBirthDate" class="form-input">
