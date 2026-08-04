@@ -250,6 +250,15 @@ export default {
         return await proxyToBot(path, env, request);
       }
 
+      // --- Team Planner ---
+      if (path.match(/^\/api\/team-planner\/[A-Z]{2,4}$/i) && request.method === 'GET') {
+        return await proxyToBot(path, env);
+      }
+
+      if (path === '/api/team-planner/save' && request.method === 'POST') {
+        return await proxyToBot('/api/team-planner/save', env, request);
+      }
+
       // --- Client-side error logging (fbp-hub JS errors -> bot stdout / Railway logs) ---
       if (path === '/api/log/client-error' && request.method === 'POST') {
         return await proxyToBot('/api/log/client-error', env, request);
