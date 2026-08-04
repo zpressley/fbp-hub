@@ -146,15 +146,145 @@ FBPHub.emit = function(eventName, payload) {
     });
 };
 
+// ---------------------------------------------------------------------
+// Website Theme
+// ---------------------------------------------------------------------
+// 5 predefined palettes, covering both CSS variable systems on the site:
+// the legacy styles.css tokens (--bg-charcoal, --primary-red, etc. -- every
+// page except Team Planner/Team Builder) and the team-planner.css /
+// team-builder.css tokens (--bg0-4, --red, --gold, etc). Applied by setting
+// custom properties directly on <html>, mirroring the existing
+// --team-primary/--team-secondary pattern from Team Colors (js/settings.js
+// applyTeamColorsGlobally). Saving a theme requires login (see
+// js/settings.js saveSiteTheme + fbp-trade-bot/api_settings.py
+// set_site_theme) -- this just handles *applying* whatever's already saved.
+const THEME_PALETTES = {
+    'red-gold': {
+        legacy: { bgPage: '#1C1C1C', panel: '#2B2B2B', accent: '#EF3E42', accent2: '#FFB612', text: '#EEEEEE', muted: '#999999', row: '#262626', rowAlt: '#212121', highlight: '#2F3A2B', buy: '#2F6B3A', sell: '#7A2B2B', hold: '#5C5C1F', watch: '#2B4A6B' },
+        planner: { bg0: '#1C1C1C', bg1: '#262626', bg2: '#2B2B2B', bg3: '#212121', bg4: '#2B2B2B', red: '#EF3E42', gold: '#FFB612', white: '#EEEEEE', dim: '#999999', highlight: '#2F3A2B', buy: '#2F6B3A', sell: '#7A2B2B', hold: '#5C5C1F', watch: '#2B4A6B' }
+    },
+    'diamond-dusk': {
+        legacy: { bgPage: '#12161F', panel: '#1B2230', accent: '#C97A3D', accent2: '#4FA8D8', text: '#E8ECF1', muted: '#7C8AA0', row: '#1A2029', rowAlt: '#161B23', highlight: '#223327', buy: '#2F6B4A', sell: '#7A3535', hold: '#6B5A2B', watch: '#2B4A6B' },
+        planner: { bg0: '#12161F', bg1: '#1A2029', bg2: '#1B2230', bg3: '#161B23', bg4: '#1B2230', red: '#C97A3D', gold: '#4FA8D8', white: '#E8ECF1', dim: '#7C8AA0', highlight: '#223327', buy: '#2F6B4A', sell: '#7A3535', hold: '#6B5A2B', watch: '#2B4A6B' }
+    },
+    'turf-green': {
+        legacy: { bgPage: '#10160F', panel: '#1A2318', accent: '#6FBF3F', accent2: '#D9E86B', text: '#EAF0E6', muted: '#8A9A82', row: '#182014', rowAlt: '#131A10', highlight: '#2A3D1F', buy: '#3D7A2F', sell: '#7A3A2B', hold: '#7A6B1F', watch: '#2B5A5A' },
+        planner: { bg0: '#10160F', bg1: '#182014', bg2: '#1A2318', bg3: '#131A10', bg4: '#1A2318', red: '#6FBF3F', gold: '#D9E86B', white: '#EAF0E6', dim: '#8A9A82', highlight: '#2A3D1F', buy: '#3D7A2F', sell: '#7A3A2B', hold: '#7A6B1F', watch: '#2B5A5A' }
+    },
+    'ballpark-cream': {
+        legacy: { bgPage: '#F4ECD8', panel: '#FFFAF0', accent: '#A3352B', accent2: '#1C3D5A', text: '#2B241A', muted: '#7A6F5C', row: '#FBF4E4', rowAlt: '#F4ECD8', highlight: '#D9E4D0', buy: '#4A6A3A', sell: '#A3352B', hold: '#8A6C1A', watch: '#1C3D5A' },
+        planner: { bg0: '#F4ECD8', bg1: '#FBF4E4', bg2: '#FFFAF0', bg3: '#F4ECD8', bg4: '#FFFAF0', red: '#A3352B', gold: '#1C3D5A', white: '#2B241A', dim: '#7A6F5C', highlight: '#D9E4D0', buy: '#4A6A3A', sell: '#A3352B', hold: '#8A6C1A', watch: '#1C3D5A' }
+    },
+    'steel-cyan': {
+        legacy: { bgPage: '#0B0F14', panel: '#131A22', accent: '#00B8D9', accent2: '#FF6B35', text: '#D6E4EE', muted: '#5C7285', row: '#101720', rowAlt: '#0C1219', highlight: '#163024', buy: '#1F6B4A', sell: '#8A2B2B', hold: '#6B5A1F', watch: '#1F4A6B' },
+        planner: { bg0: '#0B0F14', bg1: '#101720', bg2: '#131A22', bg3: '#0C1219', bg4: '#131A22', red: '#00B8D9', gold: '#FF6B35', white: '#D6E4EE', dim: '#5C7285', highlight: '#163024', buy: '#1F6B4A', sell: '#8A2B2B', hold: '#6B5A1F', watch: '#1F4A6B' }
+    }
+};
+const DEFAULT_THEME = 'red-gold';
+const THEME_STORAGE_KEY = 'fbp_site_theme';
+
+function applyTheme(themeId) {
+    const resolvedId = THEME_PALETTES[themeId] ? themeId : DEFAULT_THEME;
+    const theme = THEME_PALETTES[resolvedId];
+    const root = document.documentElement;
+    const L = theme.legacy, P = theme.planner;
+
+    // Legacy system (styles.css) -- every page except Team Planner/Builder
+    root.style.setProperty('--bg-page', L.bgPage);
+    root.style.setProperty('--bg-charcoal', L.panel);
+    root.style.setProperty('--row-bg', L.row);
+    root.style.setProperty('--row-alt-bg', L.rowAlt);
+    root.style.setProperty('--highlight-bg', L.highlight);
+    root.style.setProperty('--primary-red', L.accent);
+    root.style.setProperty('--accent-yellow', L.accent2);
+    root.style.setProperty('--text-white', L.text);
+    root.style.setProperty('--text-gray', L.muted);
+    root.style.setProperty('--success', L.buy);
+    root.style.setProperty('--warning', L.hold);
+    root.style.setProperty('--danger', L.sell);
+    root.style.setProperty('--info', L.watch);
+
+    // team-planner.css / team-builder.css system
+    root.style.setProperty('--bg0', P.bg0);
+    root.style.setProperty('--bg1', P.bg1);
+    root.style.setProperty('--bg2', P.bg2);
+    root.style.setProperty('--bg3', P.bg3);
+    root.style.setProperty('--bg4', P.bg4);
+    root.style.setProperty('--red', P.red);
+    root.style.setProperty('--gold', P.gold);
+    root.style.setProperty('--white', P.white);
+    root.style.setProperty('--dim', P.dim);
+    root.style.setProperty('--highlight', P.highlight);
+    root.style.setProperty('--status-buy', P.buy);
+    root.style.setProperty('--status-sell', P.sell);
+    root.style.setProperty('--status-hold', P.hold);
+    root.style.setProperty('--status-watch', P.watch);
+
+    root.setAttribute('data-theme', resolvedId);
+    FBPHub._currentTheme = resolvedId;
+}
+
+// Instant paint: apply whatever theme localStorage remembers (or the
+// default) immediately, at script-execution time -- well before
+// DOMContentLoaded, so pages don't sit on the default palette while the
+// rest of the page boots.
+(function () {
+    let saved = null;
+    try { saved = localStorage.getItem(THEME_STORAGE_KEY); } catch (e) {}
+    applyTheme(saved || DEFAULT_THEME);
+})();
+
+/**
+ * Reconcile with the git-committed backend value for a logged-in manager
+ * (data/site_theme.json, synced from fbp-trade-bot the same way
+ * team_colors.json is). Deliberately NOT called at main.js's own top level:
+ * auth.js loads after main.js (see each page's closing <script> tags), so
+ * `authManager` doesn't exist yet at that point -- this runs from the
+ * DOMContentLoaded handler below instead, by which time every earlier
+ * <script src> tag (main.js, auth.js, the page's own script) has already
+ * run. Only ever narrows/confirms the instant-paint value above; never
+ * causes a visible flash back to default.
+ */
+FBPHub.loadSiteTheme = async function () {
+    let team = null;
+    try {
+        team = (typeof authManager !== 'undefined' && authManager.isAuthenticated?.())
+            ? authManager.getTeam?.()?.abbreviation
+            : null;
+    } catch (e) { team = null; }
+    if (!team) return;
+
+    let localTheme = null;
+    try { localTheme = localStorage.getItem(THEME_STORAGE_KEY); } catch (e) {}
+    if (localTheme) return; // last save already reflected locally; synced copy can only lag behind it
+
+    try {
+        const response = await fetch(`${FBPHub.config.dataPath}site_theme.json`, { cache: 'no-store' });
+        if (!response.ok) return;
+        const synced = await response.json();
+        const savedTheme = synced?.[team];
+        if (savedTheme && THEME_PALETTES[savedTheme]) {
+            applyTheme(savedTheme);
+            try { localStorage.setItem(THEME_STORAGE_KEY, savedTheme); } catch (e) {}
+        }
+    } catch (e) {
+        console.warn('Site theme: no synced data/site_theme.json yet, using default');
+    }
+};
+
 /**
  * Initialize the application
  */
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 FBP Hub initializing...');
-    
+
+    // Reconcile the instant-paint theme (localStorage) with the logged-in
+    // manager's saved theme, if any -- see FBPHub.loadSiteTheme above.
+    FBPHub.loadSiteTheme();
+
     // Setup navigation
     setupNavigation();
-    
+
     // Load initial data
     await loadAllData();
     

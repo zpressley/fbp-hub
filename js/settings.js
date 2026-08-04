@@ -51,35 +51,134 @@ const PRESETS = {
 
 let currentTeam = null;
 
+// Display metadata for the Website Theme picker. Actual color values live in
+// THEME_PALETTES (js/main.js) -- this is just names/descriptions for the UI,
+// kept separate so main.js doesn't need to know anything about settings.html.
+const THEME_META = [
+    { id: 'red-gold', name: 'Red & Gold', desc: 'Bold red/gold on near-black — today\'s look' },
+    { id: 'diamond-dusk', name: 'Diamond Dusk', desc: 'Navy base, copper + sky-blue accents' },
+    { id: 'turf-green', name: 'Turf Green', desc: 'Near-black green with a bright lime pop' },
+    { id: 'ballpark-cream', name: 'Ballpark Cream', desc: 'Warm parchment, navy + brick-red — the light theme' },
+    { id: 'steel-cyan', name: 'Steel & Cyan', desc: 'Graphite black, electric cyan + orange' }
+];
+let selectedTheme = null; // previewed-but-not-yet-saved theme id
+
 /**
  * Initialize settings page
  */
 function initSettings() {
     console.log('⚙️ Initializing settings page...');
-    
+
     // Check authentication
     if (typeof authManager === 'undefined' || !authManager.isAuthenticated()) {
         document.getElementById('authRequired').style.display = 'flex';
         return;
     }
-    
+
     currentTeam = authManager.getTeam();
-    
+
     if (!currentTeam) {
         document.getElementById('authRequired').style.display = 'flex';
         return;
     }
-    
+
     document.getElementById('settingsContent').style.display = 'block';
-    
+
     // Load current team colors
     loadTeamColors();
-    
+
     // Setup color input synchronization
     setupColorInputs();
-    
+
     // Update preview
     updatePreview();
+
+    // Website Theme picker
+    loadSiteThemeUI();
+}
+
+/**
+ * Build the Website Theme swatch grid and mark whatever's currently applied
+ * (set by FBPHub.loadSiteTheme in js/main.js, which already ran on page load)
+ * as selected.
+ */
+function loadSiteThemeUI() {
+    const grid = document.getElementById('themeGrid');
+    if (!grid || typeof THEME_PALETTES === 'undefined') return;
+
+    selectedTheme = (typeof FBPHub !== 'undefined' && FBPHub._currentTheme) || DEFAULT_THEME;
+
+    grid.innerHTML = THEME_META.map(meta => {
+        const palette = THEME_PALETTES[meta.id]?.legacy;
+        if (!palette) return '';
+        const swatchColors = [palette.bgPage, palette.panel, palette.accent, palette.accent2];
+        return `<button type="button" class="theme-swatch-btn ${meta.id === selectedTheme ? 'selected' : ''}" data-theme-id="${meta.id}" onclick="selectThemeSwatch('${meta.id}')">
+            <div class="theme-swatch-preview">${swatchColors.map(c => `<span style="background:${c}"></span>`).join('')}</div>
+            <span class="theme-swatch-name">${meta.name}${meta.id === DEFAULT_THEME ? ' <span class="coming-soon">Default</span>' : ''}</span>
+            <span class="theme-swatch-desc">${meta.desc}</span>
+        </button>`;
+    }).join('');
+}
+
+/**
+ * Preview a theme immediately, sitewide (the settings page itself re-themes
+ * live) -- does NOT save anything until "Save Website Theme" is clicked.
+ */
+function selectThemeSwatch(themeId) {
+    if (typeof THEME_PALETTES === 'undefined' || !THEME_PALETTES[themeId]) return;
+    selectedTheme = themeId;
+    applyTheme(themeId);
+    document.querySelectorAll('.theme-swatch-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.themeId === themeId);
+    });
+}
+
+/**
+ * Save the previewed Website Theme -- requires login (same as Team Colors;
+ * the Worker needs the Discord token to resolve X-Manager-Team).
+ */
+async function saveSiteTheme() {
+    if (!selectedTheme || !THEME_PALETTES[selectedTheme]) {
+        showToast('Pick a theme first', 'error');
+        return;
+    }
+
+    const session = (typeof authManager !== 'undefined' && authManager.getSession)
+        ? authManager.getSession()
+        : null;
+
+    if (!session?.token) {
+        showToast('Please log in again to save settings', 'error');
+        return;
+    }
+
+    try {
+        console.log('💾 Saving website theme:', selectedTheme);
+
+        const resp = await fetch(`${AUTH_CONFIG.workerUrl}/api/settings/site-theme`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+            body: JSON.stringify({ theme: selectedTheme }),
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+            throw new Error(data.detail || data.error || 'Failed to save website theme');
+        }
+
+        // Save locally too for instant re-apply on the next page load (hub sync may lag)
+        try { localStorage.setItem('fbp_site_theme', selectedTheme); } catch (e) {}
+
+        applyTheme(selectedTheme);
+        showToast('Website theme saved!', 'success');
+
+    } catch (err) {
+        console.error('Failed saving website theme', err);
+        showToast(`Save failed: ${err.message || err}`, 'error');
+    }
 }
 
 /**
@@ -418,3 +517,5 @@ window.resetColor = resetColor;
 window.clearColor = clearColor;
 window.resetToDefaults = resetToDefaults;
 window.saveTeamColors = saveTeamColors;
+window.selectThemeSwatch = selectThemeSwatch;
+window.saveSiteTheme = saveSiteTheme;

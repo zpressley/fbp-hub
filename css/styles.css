@@ -11,23 +11,30 @@
    Change these values to update entire site
    ============================================ */
 :root {
-    /* BACKGROUND - Single Charcoal */
-    --bg-charcoal: #2B2B2B;           /* Main background - everywhere */
-    
+    /* BACKGROUND -- Website Theme swaps everything in this block via
+       FBPHub.applyTheme() (js/main.js). Values below are the "Red & Gold"
+       (default) palette; see THEME_PALETTES for the other 4. */
+    --bg-page: #1C1C1C;                /* Outer page background */
+    --bg-charcoal: #2B2B2B;            /* Panel/card background */
+    --row-bg: #262626;                 /* Table row background */
+    --row-alt-bg: #212121;             /* Alternating table row background */
+    --highlight-bg: #2F3A2B;           /* Highlighted row/element background */
+
     /* ACCENT COLORS */
     --primary-red: #EF3E42;           /* Primary accent - borders, highlights */
     --accent-yellow: #FFB612;         /* Secondary accent - hovers, buttons */
-    --legacy-blue: #1E88C7;           /* ONLY for PC badges (homage) */
-    
+    --legacy-blue: #1E88C7;           /* ONLY for PC badges (homage) -- fixed, not themed */
+
     /* TEXT COLORS */
-    --text-white: #FFFFFF;            /* Primary text */
-    --text-gray: #AAAAAA;             /* Secondary text, muted info */
-    
-    /* STATUS COLORS */
-    --success: #10B981;
-    --warning: #F59E0B;
-    --danger: var(--primary-red);
-    --info: var(--legacy-blue);
+    --text-white: #EEEEEE;            /* Primary text */
+    --text-gray: #999999;             /* Secondary text, muted info */
+
+    /* STATUS COLORS -- buy/sell/hold/watch, map to whatever categorical
+       state applies (active/inactive, win/loss, etc.) */
+    --success: #2F6B3A;
+    --warning: #5C5C1F;
+    --danger: #7A2B2B;
+    --info: #2B4A6B;
     
     /* TYPOGRAPHY - Font Assignment */
     --font-hero: 'Montserrat', sans-serif;           /* Hero headlines (900 weight) */
@@ -93,7 +100,7 @@ html {
 body {
     font-family: var(--font-body);
     font-weight: 400;
-    background-color: var(--bg-charcoal);
+    background-color: var(--bg-page);
     color: var(--text-white);
     line-height: 1.6;
     min-height: 100vh;

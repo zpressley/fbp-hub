@@ -1,6 +1,9 @@
 /* FBP Team Builder - Styles */
 
 /* ── Variables ─────────────────────────────────────────────────────────── */
+/* Website Theme swaps everything below (except fonts/border) via
+   FBPHub.applyTheme() (js/main.js). Values here are the "Red & Gold"
+   (default) palette; see THEME_PALETTES for the other 4. */
 :root {
   --red:    #EF3E42;
   --gold:   #FFB612;
@@ -9,15 +12,20 @@
   --purple: #a78bfa;
   --blue:   #63b3ed;
   --cyan:   #06b6d4;
-  --white:  #F5F5F5;
-  --dim:    rgba(170,170,170,.45);
-  --dimmer: rgba(170,170,170,.22);
-  --bg0:    #0d0d0d;
-  --bg1:    #141414;
-  --bg2:    #1a1a1a;
-  --bg3:    #1e1e1e;
-  --bg4:    #242424;
+  --white:  #EEEEEE;
+  --dim:    #999999;
+  --dimmer: color-mix(in srgb, var(--dim) 22%, transparent);
+  --bg0:    #1C1C1C;
+  --bg1:    #262626;
+  --bg2:    #2B2B2B;
+  --bg3:    #212121;
+  --bg4:    #2B2B2B;
   --border: rgba(255,255,255,.07);
+  --highlight: #2F3A2B;
+  --status-buy:   #2F6B3A;
+  --status-sell:  #7A2B2B;
+  --status-hold:  #5C5C1F;
+  --status-watch: #2B4A6B;
   --T:      'Barlow Condensed', sans-serif;
   --M:      'JetBrains Mono', monospace;
   --B:      'Barlow', sans-serif;

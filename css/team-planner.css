@@ -4,6 +4,9 @@
    variables and contract-badge conventions so it looks native. */
 
 /* ── Variables ─────────────────────────────────────────────────────────── */
+/* Website Theme swaps everything below (except fonts/border) via
+   FBPHub.applyTheme() (js/main.js). Values here are the "Red & Gold"
+   (default) palette; see THEME_PALETTES for the other 4. */
 :root {
   --red:    #EF3E42;
   --gold:   #FFB612;
@@ -12,15 +15,20 @@
   --purple: #a78bfa;
   --blue:   #63b3ed;
   --cyan:   #06b6d4;
-  --white:  #F5F5F5;
-  --dim:    rgba(170,170,170,.45);
-  --dimmer: rgba(170,170,170,.22);
-  --bg0:    #0d0d0d;
-  --bg1:    #141414;
-  --bg2:    #1a1a1a;
-  --bg3:    #1e1e1e;
-  --bg4:    #242424;
+  --white:  #EEEEEE;
+  --dim:    #999999;
+  --dimmer: color-mix(in srgb, var(--dim) 22%, transparent);
+  --bg0:    #1C1C1C;
+  --bg1:    #262626;
+  --bg2:    #2B2B2B;
+  --bg3:    #212121;
+  --bg4:    #2B2B2B;
   --border: rgba(255,255,255,.07);
+  --highlight: #2F3A2B;
+  --status-buy:   #2F6B3A;
+  --status-sell:  #7A2B2B;
+  --status-hold:  #5C5C1F;
+  --status-watch: #2B4A6B;
   --T:      'Barlow Condensed', sans-serif;
   --M:      'JetBrains Mono', monospace;
   --B:      'Barlow', sans-serif;
@@ -147,7 +155,7 @@
 .tb-wrap tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .1s; }
 .tb-wrap tbody tr:hover { background: rgba(255,255,255,.025); }
 .tb-wrap tbody tr.dropped { opacity: 0.38; }
-.tb-wrap tbody tr.added { border-left: 2px solid var(--green); }
+.tb-wrap tbody tr.added { border-left: 2px solid var(--green); background: var(--highlight); }
 .tb-wrap td { padding: 8px 10px; font-size: 0.88rem; vertical-align: middle; }
 
 .td-pos {
@@ -376,7 +384,7 @@
   .crow { padding: 7px 10px; display: flex; flex-direction: column; gap: 3px; border-bottom: 1px solid rgba(255,255,255,.045); background: var(--bg2); }
   .crow:last-child { border-bottom: none; }
   .crow.dropped { opacity: .4; }
-  .crow.added { border-left: 2px solid var(--green); }
+  .crow.added { border-left: 2px solid var(--green); background: var(--highlight); }
   .crow-top { display: flex; align-items: center; gap: 7px; }
   .crow-pos { font-family: var(--M); font-size: 0.6rem; font-weight: 700; color: rgba(170,170,170,.5); background: rgba(255,255,255,.05); padding: 1px 4px; border-radius: 3px; flex-shrink: 0; }
   .crow-name { flex: 1; font-weight: 600; font-size: 0.83rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
