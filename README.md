@@ -4,7 +4,7 @@ Website for **Fantasy Baseball Pantheon (FBP)**, a Yahoo Fantasy Sports
 dynasty league — live at
 [www.pantheonleagues.com](https://www.pantheonleagues.com). Static site
 (vanilla HTML/CSS/JS, no build step), backed by
-[fbp-trade-bot](../fbp-trade-bot)'s bot/API for anything that needs to write
+[fbp-trade-bot](https://github.com/zpressley/FBPTradeBot/tree/main)'s bot/API for anything that needs to write
 data or check identity.
 
 ## What this is
@@ -71,4 +71,4 @@ Hosted via **GitHub Pages** with a custom domain (see `CNAME`). Pushing to
 - `docs/{Master} FBP Constitution 2026 (1).md` — the league rulebook,
   fetched live by `constitution.html` rather than duplicated inline.
 - `WARP.md` — a more detailed structural walkthrough of the codebase.
-- [`fbp-trade-bot`](../fbp-trade-bot) — the backend this site talks to.
+- [`fbp-trade-bot`](https://github.com/zpressley/FBPTradeBot/tree/main) — the backend this site talks to.
