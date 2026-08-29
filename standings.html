@@ -219,6 +219,88 @@
             .standings-table th { font-size: .6rem; padding: 8px 5px; }
             .standings-table td { padding: 7px 5px; }
         }
+
+        /* ── Matchups: bracket-grouped cards with expandable category detail ──
+           Bracket comes from Yahoo's is_consolation flag, not from seeding --
+           the commissioner re-ranks by hand (1 seed picks its opponent), so
+           anything derived from rank would be wrong. */
+        .matchups-section { margin-bottom: var(--space-lg); }
+        .matchups-header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+        .matchups-header h3 {
+            font-family: var(--font-title);
+            font-size: .95rem;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        .matchups-meta {
+            font-family: var(--font-title);
+            font-size: .68rem;
+            letter-spacing: .3px;
+            color: rgba(170,170,170,.8);
+        }
+
+        .mu-group { margin-bottom: 14px; }
+        .mu-group-title {
+            font-family: var(--font-title);
+            font-weight: 800;
+            font-size: .72rem;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--accent-yellow);
+            background: #1a1a1a;
+            padding: 8px;
+            border-top: 2px solid rgba(255,255,255,.1);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .mu-card { border: 1px solid rgba(255,255,255,.08); border-top: none; }
+        .mu-card.mine { border-left: 3px solid var(--accent-yellow); }
+        .mu-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            text-align: left;
+        }
+        .mu-team { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+        .mu-team.right { align-items: flex-end; text-align: right; }
+        .mu-abbr { font-family: var(--font-title); font-weight: 800; font-size: .85rem; letter-spacing: .5px; }
+        .mu-rec { font-family: var(--font-mono); font-size: .7rem; color: var(--text-gray); }
+        .mu-score { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; }
+        .mu-score .lead { color: var(--accent-yellow); }
+        .mu-dash { color: rgba(170,170,170,.5); }
+        .mu-caret { color: rgba(170,170,170,.5); font-size: .75rem; transition: transform .15s ease; }
+        .mu-card.open .mu-caret { transform: rotate(180deg); }
+
+        .mu-body { display: none; padding: 0 12px 10px; }
+        .mu-card.open .mu-body { display: block; }
+        .mu-cats { width: 100%; border-collapse: collapse; }
+        .mu-cats td { padding: 4px 6px; font-family: var(--font-mono); font-size: .8rem; border-top: 1px solid rgba(255,255,255,.05); }
+        .mu-cats tr td:first-child { text-align: right; width: 38%; }
+        .mu-cats tr td:last-child { text-align: left; width: 38%; }
+        .mu-cat {
+            text-align: center;
+            font-family: var(--font-title);
+            font-size: .68rem;
+            letter-spacing: .4px;
+            color: rgba(170,170,170,.8);
+            text-transform: uppercase;
+        }
+        /* Same accent the standings Leaders toggle uses, so "winning this
+           category" reads identically in both places. */
+        .mu-val.leader { color: var(--accent-yellow); font-weight: 800; }
+        .mu-display { color: rgba(170,170,170,.45); font-style: italic; }
+
+        @media (max-width: 768px) {
+            .mu-abbr { font-size: .78rem; }
+            .mu-cats td { font-size: .74rem; }
+        }
     </style>
 </head>
 <body>
@@ -284,6 +366,14 @@
             </div>
         </div>
 
+        <section class="matchups-section" id="matchupsSection" hidden>
+            <div class="matchups-header">
+                <h3><i class="fas fa-trophy"></i> Matchups</h3>
+                <div class="matchups-meta" id="matchupsMeta"></div>
+            </div>
+            <div class="matchups-brackets" id="matchupsBrackets"></div>
+        </section>
+
         <div class="scroll-hint"><i class="fas fa-arrows-left-right"></i> Scroll to see all categories</div>
         <div class="standings-scroll">
             <table class="standings-table" id="standingsTable">
@@ -318,7 +408,24 @@
         // ER / H/9 / BB/9 / P_TB added on the same logic (fewer runs/
         // baserunners allowed = better pitching) — remove any of these if
         // that's not how your scoring treats them.
-        const LOWER_IS_BETTER = new Set(['ERA', 'ER', 'P_HR', 'H/9', 'BB/9', 'P_TB']);
+        // 'K' here is BATTING strikeouts (stat_id 21); pitching strikeouts are
+        // 'P_K' and stay higher-is-better. Confirmed against Yahoo's own scoring:
+        // in WIZ vs LFB (week 22) counting category winners gives 8-10 with K to
+        // WIZ, but Yahoo reports 7-11 -- which reconciles only if the lower
+        // strikeout total wins the category.
+        const LOWER_IS_BETTER = new Set(['ERA', 'ER', 'P_HR', 'H/9', 'BB/9', 'P_TB', 'K']);
+
+        // Yahoo sends sort_order per stat ("0" = lower is better, "1" = higher).
+        // Prefer it when present; fall back to the hand-maintained set above for
+        // data written before that field was captured. This also settles cases
+        // the hardcoded set never covered -- e.g. batting K, where "most
+        // strikeouts" was being flagged as the category leader.
+        function catLowerIsBetter(c) {
+            const so = c?.sort_order;
+            if (so === '0' || so === 0) return true;
+            if (so === '1' || so === 1) return false;
+            return LOWER_IS_BETTER.has(c?.display_name);
+        }
 
         // Load standings + manager/division data
         let data, managersData;
@@ -427,7 +534,7 @@
             const leaders = {};
             allCats.forEach(c => {
                 if (c.display_only) return;
-                const lowerBetter = LOWER_IS_BETTER.has(c.display_name);
+                const lowerBetter = catLowerIsBetter(c);
                 let best = null;
                 rows.forEach(r => {
                     const val = parseFloat(r.categories?.[c.display_name]);
@@ -588,6 +695,108 @@
             document.getElementById('standingsBody').innerHTML = html;
         }
 
+        // ── Matchups (bracket-grouped, per-category leaders) ────────────
+        // Bracket membership comes from Yahoo's own is_consolation flag. It is
+        // deliberately NOT derived from seeding: the commissioner re-ranks the
+        // bracket by hand (the 1 seed picks its opponent), so rank-based
+        // grouping would silently disagree with the real bracket.
+        const STATUS_LABEL = { preevent: 'Not started', midevent: 'In progress', postevent: 'Final' };
+
+        function standingsRow(abbr) {
+            const key = String(abbr || '').toUpperCase();
+            return (data.standings || []).find(s => String(s.team).toUpperCase() === key);
+        }
+
+        function matchupCard(mu) {
+            const t1 = mu.team1 || {}, t2 = mu.team2 || {};
+            const r1 = standingsRow(t1.team), r2 = standingsRow(t2.team);
+            const s1 = parseInt(t1.score) || 0, s2 = parseInt(t2.score) || 0;
+            const mine = !!myTeam && [t1.team, t2.team]
+                .some(x => String(x || '').toUpperCase() === myTeam);
+
+            let rows = '';
+            allCats.forEach(c => {
+                const nm = c.display_name;
+                const raw1 = t1.categories?.[nm], raw2 = t2.categories?.[nm];
+                let w1 = '', w2 = '';
+                // Display-only cats (H/AB, IP) are shown but never score, so
+                // they get no leader mark.
+                if (!c.display_only) {
+                    const a = parseFloat(raw1), b = parseFloat(raw2);
+                    if (!isNaN(a) && !isNaN(b) && a !== b) {
+                        if (catLowerIsBetter(c) ? a < b : a > b) w1 = ' leader';
+                        else w2 = ' leader';
+                    }
+                }
+                const dim = c.display_only ? ' mu-display' : '';
+                rows += `<tr>`
+                     +  `<td class="mu-val${w1}${dim}">${raw1 ?? '—'}</td>`
+                     +  `<td class="mu-cat${dim}" title="${c.name}">${nm}</td>`
+                     +  `<td class="mu-val${w2}${dim}">${raw2 ?? '—'}</td>`
+                     +  `</tr>`;
+            });
+
+            // The viewer's own matchup starts expanded; the rest collapse so
+            // four 22-row tables don't bury the standings below.
+            return `<div class="mu-card${mine ? ' mine open' : ''}">
+                <button class="mu-head" type="button" aria-expanded="${mine ? 'true' : 'false'}">
+                    <span class="mu-team">
+                        <span class="mu-abbr">${t1.team || '—'}</span>
+                        <span class="mu-rec">${r1?.live_record || ''}</span>
+                    </span>
+                    <span class="mu-score">
+                        <span class="${s1 > s2 ? 'lead' : ''}">${s1}</span>
+                        <span class="mu-dash">–</span>
+                        <span class="${s2 > s1 ? 'lead' : ''}">${s2}</span>
+                    </span>
+                    <span class="mu-team right">
+                        <span class="mu-abbr">${t2.team || '—'}</span>
+                        <span class="mu-rec">${r2?.live_record || ''}</span>
+                    </span>
+                    <i class="fas fa-chevron-down mu-caret"></i>
+                </button>
+                <div class="mu-body"><table class="mu-cats"><tbody>${rows}</tbody></table></div>
+            </div>`;
+        }
+
+        function renderMatchups() {
+            const section = document.getElementById('matchupsSection');
+            const wrap = document.getElementById('matchupsBrackets');
+            const mus = data.matchups || [];
+            if (!section || !wrap || !mus.length) return;
+
+            const status = STATUS_LABEL[mus[0]?.status] || '';
+            const round = data.playoff_round ? `Round ${data.playoff_round}` : `Week ${data.week ?? '?'}`;
+            const metaEl = document.getElementById('matchupsMeta');
+            if (metaEl) metaEl.textContent = [round, status].filter(Boolean).join(' · ');
+
+            // Playoff matchups arrive interleaved (championship, consolation,
+            // championship, consolation), so group explicitly rather than
+            // trusting array order.
+            const groups = mus.some(m => m.is_playoffs)
+                ? [
+                    ['Championship Bracket', mus.filter(m => m.is_playoffs && !m.is_consolation)],
+                    ['Consolation Bracket', mus.filter(m => m.is_consolation)],
+                  ].filter(g => g[1].length)
+                : [[`Week ${data.week ?? '?'} Matchups`, mus]];
+
+            wrap.innerHTML = groups.map(([label, list]) =>
+                `<div class="mu-group"><div class="mu-group-title">${label}</div>`
+                + list.map(matchupCard).join('')
+                + `</div>`
+            ).join('');
+            section.hidden = false;
+        }
+
+        document.getElementById('matchupsBrackets')?.addEventListener('click', e => {
+            const head = e.target.closest('.mu-head');
+            if (!head) return;
+            const card = head.closest('.mu-card');
+            const open = card.classList.toggle('open');
+            head.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        
+
         // Sort click handler
         document.getElementById('standingsTable').addEventListener('click', e => {
             const th = e.target.closest('th[data-sort]');
@@ -640,6 +849,7 @@
             renderBody();
         });
 
+        renderMatchups();
         renderHead();
         renderBody();
     })();
